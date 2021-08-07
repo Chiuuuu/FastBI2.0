@@ -1,0 +1,101 @@
+.model-menu{
+    display flex
+    flex-direction column
+    height 100%
+    width: 20%;
+    // height: 804px;
+    background-color: #ffffff;
+    .menu_title {
+        font-size: 16px;
+        font-family: Microsoft YaHei;
+        font-weight: 400;
+        color: rgba(1, 4, 15, 1);
+        line-height: 48px;
+        margin-left: 14px;
+        border-bottom: 1px solid rgba(239, 239, 239, 1);
+        display: flex;
+        justify-content: space-between;
+        .m-t-s {
+          font-size: 17px;
+          font-family: Microsoft YaHei;
+          font-weight: 500;
+          color: #020510;
+          line-height: 48px;
+        }
+        .menu_icon {
+            font-size: 18px;
+            margin-right: 14px;
+            margin-top: 16px;
+            color: #627CFF;
+        }
+    }
+    .menu_search {
+        height: 32px;
+        margin-left: 14px;
+        margin-right: 4px;
+        margin-top: 17px;
+        margin-bottom: 17px;
+        font-size: 14px;
+        .icon_search {
+          color: #627CFF;
+        }
+    }
+    .table_list-_empty{
+        color: rgba(0, 0, 0, 0.65);
+        margin-top: 50px;
+    }
+}
+.card-img{
+    height: 100px;
+}
+.card-title {
+    color: #333;
+    text-align: center;
+    text-transform: capitalize;
+}
+a.modal-item {
+    display: block;
+}
+.modal-item {
+    height: 32px;
+    line-height: 32px;
+    padding: 0 7px;
+    cursor: pointer;
+}
+@hoverColor: #e6e6e6;
+.hover {
+    &:hover {
+        background: @hoverColor;
+    }
+}
+.modal-wrap{
+    height: auto;
+    overflow: hidden;
+    .group {
+        .folder {
+            position: relative;
+            font-size: 14px;
+            font-family: Microsoft YaHei;
+            font-weight: 400;
+            color: #FFFFFF;
+            line-height: 48px;
+            &:hover {
+              background: #627CFF;
+              .title-span,
+              .folder-icon {
+                  color: #333333;
+              }
+            }
+          }
+        .items {
+            .item {
+                &:hover {
+                    background: @hoverColor;
+                    .title {
+                        color: #333333;
+                    }
+                }
+            }
+        }
+    }
+}

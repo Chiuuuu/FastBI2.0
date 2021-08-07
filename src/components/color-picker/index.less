@@ -1,0 +1,290 @@
+.color-picker-container {
+  background-color: #fff;
+  > .header {
+    border-bottom: 1px solid #ccc;
+    padding: 8px;
+    > ul {
+      li {
+        width: 22px;
+        height: 22px;
+        float: left;
+        margin-right: 8px;
+        -moz-border-radius: 2px;
+        border-radius: 2px;
+        cursor: pointer;
+        user-select: none;
+        &.pure {
+          background-color: #e0e0e0;
+          &.active {
+            background-color: #385ffb;
+          }
+        }
+        &.linear {
+          background: linear-gradient(180deg, hsla(0, 0%, 39.2%, 0.3), #646464);
+          &.active {
+            background: linear-gradient(
+              180deg,
+              rgba(52, 149, 233, 0.3),
+              #1881dc
+            );
+          }
+        }
+        &.radial {
+          background: radial-gradient(hsla(0, 0%, 39.2%, 0.3), #646464);
+          &.active {
+            background: radial-gradient(rgba(52, 149, 233, 0.3), #1881dc);
+          }
+        }
+        &.transparent {
+          float: right;
+          width: 42px;
+          font-size: 12px;
+          line-height: 19px;
+          border: 1px solid #ccc;
+          border-radius: 4px;
+          text-align: center;
+          margin-right: 0;
+        }
+      }
+    }
+  }
+  > .body {
+    .color-wrapper {
+      font-size: 12px;
+      padding: 8px;
+      padding-bottom: 0;
+      .color-block {
+        padding: 8px 0;
+        border-bottom: 1px solid #e6eaee;
+        position: relative;
+        overflow: hidden;
+        &.value {
+          padding-top: 0;
+          padding-bottom: 2px;
+        }
+        &:nth-child(2) {
+          max-height: 107px;
+          .box {
+            width: 14px;
+            height: 14px;
+            float: left;
+            box-sizing: border-box;
+            margin-right: 8px;
+            margin-bottom: 1px;
+            border: 1px solid #ccc;
+            cursor: pointer;
+            &:hover {
+              border-color: black;
+            }
+            &:nth-child(-n + 8) {
+              margin-bottom: 10px;
+            }
+            &:nth-child(8n) {
+              margin-right: 0;
+            }
+          }
+        }
+        &:last-child {
+          text-align: left;
+          border-bottom: 0px solid #e6eaee;
+          padding: 0;
+        }
+        .event-btn {
+          font-size: 12px;
+          display: inline-block;
+          padding: 3px 8px;
+          cursor: pointer;
+          user-select: none;
+          text-align: center;
+          vertical-align: middle;
+          color: #595959;
+          border: 1px solid #d9d9d9;
+          border-radius: 0px;
+          outline: 0;
+          background-color: #ffffff;
+          position: relative;
+          top: -2px;
+          margin-right: 5px;
+          &.submit {
+            background-color: #1890ff;
+            color: #fff;
+            border-color: #1890ff;
+          }
+        }
+        .btn {
+          display: inline-block;
+          border-radius: 2px;
+          padding: 0 8px;
+          user-select: none;
+          cursor: pointer;
+          padding-right: 16px;
+          width: 45%;
+          height: 34px;
+          line-height: 34px;
+          padding-left: 0;
+          background: #fff;
+          border: 0;
+          box-shadow: none;
+          text-align: left;
+          outline: none;
+        }
+        .btn-menu-right {
+          position: relative;
+          &::before {
+            position: absolute;
+            top: 50%;
+            right: 10px;
+            display: block;
+            width: 7px;
+            height: 7px;
+            border: 1px solid #525252;
+            border-top: 0;
+            border-right: 0;
+            content: "";
+            margin-top: -4px;
+            transform: rotate(-135deg);
+          }
+        }
+      }
+    }
+  }
+}
+.color-value-box {
+  position: relative;
+  .color-value-block {
+    display: flex;
+    text-align: center;
+    padding-right: 13px;
+    &.hex {
+      .color-value-unit {
+        > input {
+          width: 97%;
+        }
+      }
+    }
+    .color-value-unit {
+      flex: 1;
+      > input {
+        width: 90%;
+        text-align: center;
+        padding: 3px 0;
+        border: 1px solid #999;
+        outline: none;
+        border-radius: 1px;
+        font-size: 12px;
+        &:focus {
+          border-color: #0083ff;
+          color: #0083ff;
+        }
+      }
+      > .title {
+        color: #999;
+        font-size: 12px;
+      }
+    }
+  }
+  .color-model-change {
+    position: absolute;
+    top: 0;
+    right: 0;
+    > p {
+      margin: 0;
+      cursor: pointer;
+      user-select: none;
+    }
+  }
+}
+.color-correction-wrapper {
+  width: 100%;
+  border-bottom: 1px solid #e6eaee;
+  .color-panel {
+    width: 100%;
+    height: 130px;
+    overflow: hidden;
+    position: relative;
+    background-color: red;
+    &::before,
+    &::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+    }
+    &::before {
+      // 饱和度 一条从左往右，由纯白到透明的径向渐变
+      background: linear-gradient(to right, white, transparent);
+    }
+    &::after {
+      // 明度 一条从下往上，由纯黑到透明的径向渐变
+      background: linear-gradient(to top, black, transparent);
+    }
+    .color-panel-slider {
+      width: 15px;
+      height: 15px;
+      position: absolute;
+      border: 1px solid #ffffff;
+      border-radius: 50%;
+      right: 0;
+      top: 0;
+      transform: translate3d(7px, -7px, 0);
+      box-sizing: border-box;
+      outline: none;
+      z-index: 5;
+    }
+  }
+  .bar-block {
+    position: relative;
+    margin: 10px;
+    &.transparency {
+      background-image: linear-gradient(
+          45deg,
+          #c5c5c5 25%,
+          transparent 0,
+          transparent 75%,
+          #c5c5c5 0,
+          #c5c5c5
+        ),
+        linear-gradient(
+          45deg,
+          #c5c5c5 25%,
+          transparent 0,
+          transparent 75%,
+          #c5c5c5 0,
+          #c5c5c5
+        );
+      background-size: 10px 10px;
+      background-position: 0 0, 5px 5px;
+      .color-line {
+        background: linear-gradient(to right, transparent, red);
+      }
+    }
+    .color-line {
+      width: 100%;
+      height: 12px;
+      background: linear-gradient(
+        to right,
+        #f00 0%,
+        #ff0 16.66%,
+        #0f0 33.33%,
+        #0ff 50%,
+        #00f 66.66%,
+        #f0f 83.33%,
+        #f00 100%
+      );
+    }
+    .color-line-slider {
+      position: absolute;
+      width: 6px;
+      height: 15px;
+      margin-left: 0px;
+      background-color: #fff;
+      border: solid 1px black;
+      cursor: pointer;
+      transform: translateX(-50%);
+      left: 0;
+      top: -2px;
+    }
+  }
+}

@@ -1,0 +1,12 @@
+**/*.svg
+lib/
+coverage/
+.gitignore
+.npmignore
+.prettierignore
+.editorconfig
+.eslintignore
+**/assets/images
+.png
+.huskyrc
+*.png

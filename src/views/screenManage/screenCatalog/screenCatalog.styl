@@ -1,0 +1,252 @@
+.screen-catalog {
+  display: flex;
+  justify-content: space-between;
+  height: 100%;
+  margin-bottom:20px
+}
+
+.left {
+  width: 20%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  // height: 804px;
+  background-color: #ffffff;
+}
+
+.menu_title {
+  font-size: 16px;
+  font-family: Microsoft YaHei;
+  font-weight: 400;
+  color: rgba(1, 4, 15, 1);
+  line-height: 48px;
+  margin-left: 14px;
+  border-bottom: 1px solid rgba(239, 239, 239, 1);
+  display: flex;
+  justify-content: space-between;
+}
+
+.menu_collapse {
+  margin-top: 10px;
+}
+.menu_folder {
+  color: #3b3c43;
+  padding-left: 25px;
+  margin-bottom: 0;
+  line-height: 36px;
+  cursor: pointer;
+}
+.menu_folder:hover,
+.menu_folder.active {
+  background: #617bff;
+  line-height: 36px;
+  color: #fff;
+  margin: 0 -20px;
+  padding-left: 45px;
+}
+
+.menu_icon {
+  font-size: 18px;
+  margin-right: 14px;
+  margin-top: 16px;
+  color: #617bff;
+  cursor: pointer;
+}
+
+.menu_search {
+  height: 32px;
+  margin-left: 14px;
+  margin-right: 4px;
+  margin-top: 17px;
+  margin-bottom: 17px;
+  font-size: 14px;
+  .icon_search {
+    color: #627cff;
+  }
+}
+
+input::-webkit-input-placeholder {
+  font-size: 14px;
+  font-family: Microsoft YaHei;
+  font-weight: 400;
+  color: rgba(210, 210, 213, 1);
+}
+
+.right {
+  height: 100%;
+  width: 79%;
+  overflow-y: auto;
+  &-header {
+    height: 48px;
+    background-color: #fff;
+  }
+}
+
+.nav_title {
+  font-size: 16px;
+  font-family: Microsoft YaHei;
+  font-weight: bold;
+  color: rgba(1, 4, 15, 1);
+  line-height: 48px;
+  margin-left: 10px;
+}
+
+.btn_pr {
+  width: 88px;
+  height: 30px;
+  float: right;
+  margin-top: 9px;
+  margin-right: 12px;
+}
+
+.btn_n1 {
+  width: 88px;
+  height: 30px;
+  float: right;
+  margin-top: 9px;
+  margin-right: 18px;
+}
+
+.btn_n2 {
+  width: 88px;
+  height: 30px;
+  float: right;
+  margin-top: 9px;
+  margin-right: 12px;
+}
+
+.contain {
+  padding: 20px 0;
+  width: 100%;
+  height: 100%;
+}
+
+.empty {
+  margin: 30%;
+  margin-top: 15%;
+  text-align: center;
+}
+
+.empty_img {
+  width: 225px;
+  height: 210px;
+}
+
+.empty_word {
+  font-size: 12px;
+  font-family: Microsoft YaHei;
+  font-weight: 400;
+  color: rgba(147, 147, 149, 1);
+  line-height: 48px;
+  text-align: center;
+}
+
+.drow_menu {
+  width: 132px;
+  // height: 84px;
+}
+
+.mod_btn {
+  width: 310px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.mod_input {
+  width: 310px;
+}
+
+.mod_icon {
+  margin-top: 10px;
+}
+
+.mod_span {
+  margin-top: 5px;
+  font-size: 14px;
+  font-family: Microsoft YaHei;
+  font-weight: 400;
+  color: rgba(1, 3, 15, 1);
+}
+
+.add_input {
+  height: 28px;
+  border: 1px solid rgba(97, 123, 255, 1);
+}
+.releace-box {
+  position: relative;
+  padding: 5px;
+  .releace-line {
+    margin-bottom: 20px;
+    .label {
+      width: 20%;
+    }
+    .errortext {
+      color: red;
+    }
+    .has-error{
+        border-color:red;
+        &:hover{
+             border-color:red;
+             box-shadow: none;
+        }
+        &:focus{
+            border-color:red;
+            box-shadow: none;
+        }
+    }
+  }
+  .indent {
+    margin-left: 15%;
+    margin-bottom: 10px;
+    .indent-text {
+      color: #617BFF;
+      cursor: pointer;
+    }
+    .qrcode {
+      margin-left: 8px;
+    }
+  }
+  .code-show {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate3d(-50%, -50%, 0);
+    z-index: 99;
+  }
+}
+
+.ant-drawer-content{
+  position:relative;
+  .dvs-head-btns{
+    position: absolute;
+    right: 10px;
+    top: 0;
+    padding: 11px;
+    z-index: 999;
+    button{
+      margin:0 10px
+    }
+  }
+}
+.templeList {
+  display: flex;
+  .ant-card{
+    margin:0 10px;
+    width: 424px !important;
+    box-shadow: 0px 0px 16px 0px rgba(19, 44, 173, 0.2);
+  }
+  .ant-card.active{
+    border: 1px solid #617BFF;
+    box-shadow: 0px 0px 30px 0px rgba(19, 44, 173, 0.6);   
+    ::v-deep .ant-card-body{
+      background: #617BFF;
+      .ant-card-meta-title{
+        color:#fff;
+        font-weight:bold;
+      }
+    } 
+  }
+  ::v-deep .ant-card-body{
+    padding:15px !important;
+  }
+}

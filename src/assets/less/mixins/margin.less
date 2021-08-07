@@ -1,0 +1,33 @@
+.margin() {
+  .mt-columns(@n, @i: 1) when (@i =< @n) {
+    .mt-@{i} {
+      margin-top: (@i * 1px) !important;
+    }
+    .mt-columns(@n, (@i + 1));
+  }
+  .mt-columns(20);
+
+  .mr-columns(@n, @i: 1) when (@i =< @n) {
+    .mr-@{i} {
+      margin-right: (@i * 1px) !important;
+    }
+    .mr-columns(@n, (@i + 1));
+  }
+  .mr-columns(20);
+
+  .mb-columns(@n, @i: 1) when (@i =< @n) {
+    .mb-@{i} {
+      margin-bottom: (@i * 1px) !important;
+    }
+    .mb-columns(@n, (@i + 1));
+  }
+  .mb-columns(20);
+
+  .ml-columns(@n, @i: 1) when (@i =< @n) {
+    .ml-@{i} {
+      margin-left: (@i * 1px) !important;
+    }
+    .ml-columns(@n, (@i + 1));
+  }
+  .ml-columns(20);
+}

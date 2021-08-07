@@ -1,0 +1,41 @@
+@font-face {
+  font-family: 'fangsong';
+  src: url('./仿宋_GB2312.ttf');
+}
+@font-face {
+  font-family: 'simfang';
+  src: url('./simfang.ttf');
+}
+
+@font-face {
+  font-family: 'simkai';
+  src: url('./simkai.ttf');
+}
+@font-face {
+  font-family: 'times';
+  src: url('./times.ttf');
+}
+@font-face {
+  font-family: 'msyh';
+  src: url('./msyh.ttf');
+}
+
+@font-face {
+  font-family: 'pangmenzhengdao';
+  src: url('./庞门正道标题体.ttf');
+}
+
+@font-face {
+  font-family: 'HuXiaoBoNanShenTi-2';
+  src: url('./HuXiaoBoNanShenTi-2.otf');
+}
+
+@font-face {
+  font-family: 'youshe';
+  src: url('./优设标题黑.ttf');
+}
+
+@font-face {
+  font-family: 'digital-7-4';
+  src: url('./digital-7-4.ttf');
+}

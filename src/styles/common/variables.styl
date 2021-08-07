@@ -1,0 +1,42 @@
+// 覆盖ant_degign组件样式
+:global {
+  .ant-collapse{
+    background-color: $color-admin-options-bg;
+    border: none;  
+  }
+  .ant-collapse-content{
+    border-top: none ;
+  }
+  .ant-collapse-content > .ant-collapse-content-box{
+    padding-top: 0;
+  }
+  .model-main .ant-collapse-content > .ant-collapse-content-box{
+    padding-bottom: 0;
+  }
+  .ant-collapse > .ant-collapse-item > .ant-collapse-header{
+    padding: 5px 16px 5px 40px;
+  }
+  .ant-menu-submenu-selected{
+    color: rgba(0, 0, 0, 0.65)
+  }
+
+  .menu_collapse > .ant-collapse-item > .ant-collapse-header:hover {
+    background-color: #617BFF;
+    color: #fff;
+    .folder_icon{
+      color: #fff !important;
+    }
+  }
+
+  .dv-screen .ant-input[disabled]:hover {
+    border-right-width: auto !important;
+  }
+
+  .ant-input-affix-wrapper .ant-input:not(:first-child){
+    padding-left: 30px !important;
+  }
+  
+  a{
+    color: #617BFF;
+  }
+}

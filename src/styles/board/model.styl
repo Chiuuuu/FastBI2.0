@@ -1,0 +1,165 @@
+@import '../common/var.styl';
+
+// 8-14 数据模型侧栏
+.board-model {
+  position: absolute; // 控制位置
+  // height: 100%;
+  top: 40px;
+  right: 0;
+  bottom: 0;
+  box-sizing: border-box;
+  z-index: 0;
+  background: #ffffff;
+  box-shadow: -2px 0 2px 0 rgba(0, 0, 0, 0.1);
+  transition: all 0.3s;
+
+  .model-header {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    border-bottom: 1px solid rgba(239, 239, 239, 1);
+
+    .model-back{
+      color: rgba(1, 4, 15, 1);
+      margin-left: 10px;
+      cursor: pointer;
+    }
+
+    .model-span {
+      font-family: Microsoft YaHei;
+      color: rgba(1, 4, 15, 1);
+      line-height: 39px;
+      margin-left: 15px;
+    }
+
+    .model-icon {
+      opacity: 0.3;
+      color: #040E2E;
+      position: absolute;
+      right: 15px;
+      top: 15px;
+    }
+
+    &.is-expand {
+      transform: translate3d(0, 0, 0);
+    }
+  }
+
+  .model-contain {
+    .model-search {
+      margin-top: 16px;
+    }
+    .model-main{
+      height: 100%;
+      overflow-y: scroll;
+    }
+  }
+
+  .model-operation {
+    .operation {
+      margin: 10px 15px 0 15px;
+    }
+    .operation_main::-webkit-scrollbar {
+      width : 10px;
+      height: 1px;
+      }
+    .operation_main::-webkit-scrollbar-thumb {
+      border-radius: 10px;
+      box-shadow: inset 0 0 5px rgba(210, 210, 210, 1);
+      background:rgba(210, 210, 210, 1);
+      }
+    .operation_main::-webkit-scrollbar-track {
+      box-shadow: inset 0 0 5px rgba(210, 210, 210, 1);
+      border-radius: 10px;
+      background: #ededed;
+      }
+    .operation_main {
+      // overflow-y: scroll;
+      height:800px;
+      .operation {
+        height:32%;
+        border-bottom: 1px solid #EFEFEF;
+        .header {
+          display flex;
+          justify-content space-between;
+          width: 90%;
+          .d_h_s {
+            font-size:14px;
+            font-family:Microsoft YaHei;
+            font-weight:400;
+            color:rgba(1,4,15,1);
+            margin-top: 5px;
+            margin-left: 20px;
+            }
+          .dicon {
+            color:rgba(191,191,191,1);
+            margin-top: 7px;
+            font-size: 16px;
+            }
+        }
+        .filewrap{
+          margin-bottom: 0;
+          .filelist{
+            position: relative;
+            padding: 0 15px;
+            line-height: 28px;
+            color: #01040F;
+            font-size: 14px;
+            cursor: pointer;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            img{
+              margin-right: 10px;
+            }
+            .icon-more{
+              display: none;
+              position: absolute;
+              right: 5px;
+              top: 8px;
+              cursor: pointer;
+            }
+            &:hover{
+              background: #617BFF;
+              color: #fff;
+              .icon-more{
+                display: block;
+              }
+            }
+            &.error {
+              background-color: #f5b8b8 !important;
+            color: #e33131 !important; 
+        }
+          }
+          .active{
+            background: #617BFF;
+            color: #fff;
+          }
+        }
+        .mea_main{
+          height: calc(100% - 36px);
+        }
+      }
+    }
+    .operation_mea {
+      .mea_header {
+        display flex;
+        justify-content space-between;
+        width: 90%;
+        .m_h_s {
+          font-size:14px;
+          font-family:Microsoft YaHei;
+          font-weight:400;
+          color:rgba(1,4,15,1);
+          line-height:48px;
+          margin-left: 20px;
+          }
+        .micon {
+          color:rgba(191,191,191,1);
+          margin-top: 15px;
+          font-size: 16px;
+          }
+        }
+      }
+  }
+}

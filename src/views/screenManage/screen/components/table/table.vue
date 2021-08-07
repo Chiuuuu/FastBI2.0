@@ -1,0 +1,377 @@
+<template>
+  <div class="board-chart-unit-wrapper">
+    <div
+      class="board-chart-unit-title"
+      :style="titleStyle"
+      v-if="options.style.title.show"
+    >
+      {{ options.style.title.text }}
+    </div>
+    <div
+      class="board-chart-unit table-unit"
+      :style="chartStyle"
+      ref="js-board-chart-unit"
+    >
+      <div class="table-wrapper">
+        <Tcontainer
+          ref="js-thead"
+          :data="fields"
+          :cols="cols"
+          :tableStyle="tableStyle"
+          :theadStyle="theadStyle"
+          type="thead"
+          :key="refreshCount"
+        ></Tcontainer>
+        <Tcontainer
+          ref="js-tbody"
+          class="reset-scrollbar"
+          :style="{ top: tbodyPositionTop }"
+          :data="tbodyData"
+          :cols="cols"
+          :tableStyle="tableStyle"
+          :tbodyStyle="tbodyStyle"
+          :key="refreshCount + 1"
+          @hook:mounted="doWithWidth"
+          type="tbody"
+        ></Tcontainer>
+      </div>
+    </div>
+  </div>
+</template>
+<script>
+import BoardType from '@/views/screenManage/screen/setting/default-type'
+import BaseChart from '../chart/base'
+import defaultData from './default-data'
+import Tcontainer from './components/tcontainer'
+import { getStyle } from '@/utils'
+
+/**
+ * @description 表格图表
+ */
+
+export default {
+  name: `${BoardType.ChartProgress}View`,
+  extends: BaseChart,
+  components: {
+    Tcontainer
+  },
+  provide() {
+    return {
+      table: this
+    }
+  },
+  data() {
+    return {
+      fields: [
+        {
+          name: 'car_number'
+        },
+        {
+          name: 'o_place'
+        },
+        {
+          name: 'car_type'
+        }
+      ],
+      tbodyData: [], // 表格内容数据
+      maxCols: [], // 表格中每列最大宽度的数据
+      cols: [], // 表格列
+      tableStyle: {}, // 表格样式
+      theadStyle: {}, // 表头样式
+      tbodyStyle: {}, // 表格内容样式
+      refreshCount: 0 // 用来重置组件 https://cn.vuejs.org/v2/api/#key => 完整地触发组件的生命周期钩子
+    }
+  },
+  destroyed() {},
+  computed: {
+    tbodyPositionTop() {
+      // 距离表头高度
+      return this.options.style.echart.thead.height + 'px'
+    }
+  },
+  watch: {
+    'options.style': {
+      deep: true,
+      immediate: false,
+      handler(opt) {
+        // 1. 状态要是是停止（移动或者缩放情况下不更变）
+        // 2. 配置项发生改变
+        if (opt && this.currentComState && this.currentComState === 'stop') {
+          this.$nextTick(() => {
+            this.updateChartStyle()
+          })
+        }
+      }
+    },
+    'options.data': {
+      deep: true,
+      immediate: false,
+      handler(opt) {
+        if (opt && this.currentComState && this.currentComState === 'stop') {
+          this.$nextTick(() => {
+            this.getChartData()
+          })
+        }
+      }
+    }
+  },
+  methods: {
+    /**
+     * @description 等子组件挂载完成后处理对应的宽度
+     */
+    doWithWidth() {
+      this.tableStyle = {}
+      this.theadStyle = {}
+      this.tbodyStyle = {}
+
+      this.$nextTick(() => {
+        this.cols = this.$refs['js-tbody'].handleGetColWidth(this.maxCols)
+        const tableWidth = this.cols.reduce((sum, current) => {
+          return sum + current
+        }, 0)
+        this.tableStyle = Object.assign({}, this.tableStyle, {
+          width: `${tableWidth}px`
+        })
+        this.doWithThead()
+        this.doWithTbody()
+      })
+    },
+    /**
+     * @description 处理表头
+     */
+    doWithThead() {
+      const {
+        style: {
+          echart: { thead }
+        }
+      } = this.options
+
+      const theadStyle = getStyle(
+        {},
+        {
+          background: thead.background,
+          text: thead.text
+        },
+        ['size'],
+        ['background', 'text']
+      )
+
+      const fontStyle = {
+        height: `${thead.height}px`,
+        lineHeight: `${thead.height}px`,
+        fontSize: `${thead.font.size}px`,
+        color: thead.font.color
+      }
+
+      this.theadStyle = Object.assign({}, this.theadStyle, {
+        thead: {
+          ...theadStyle
+        },
+        font: fontStyle
+      })
+    },
+    /**
+     * @description 处理表格
+     */
+    doWithTbody() {
+      const {
+        style: {
+          echart: { tbody }
+        }
+      } = this.options
+
+      const tbodyStyle = {
+        textAlign: tbody.text.align
+      }
+
+      const fontStyle = {
+        height: `${tbody.height}px`,
+        lineHeight: `${tbody.height}px`,
+        fontSize: `${tbody.font.size}px`,
+        color: tbody.font.color
+      }
+
+      this.tbodyStyle = Object.assign({}, this.tbodyStyle, {
+        tbody: {
+          ...tbodyStyle
+        },
+        font: fontStyle,
+        even: tbody.even,
+        odd: tbody.odd
+      })
+    },
+    /**
+     * @description 初始化Echart图表
+     */
+    initChart() {},
+    /**
+     * @description 处理配置项
+     */
+    doWithOptions(fetchData) {
+      this.maxCols = []
+      this.tbodyData = []
+
+      const keys = this.fields.map(filed => filed.name)
+      const map = new Map()
+
+      this.tbodyData = fetchData.data.map((item, index) => {
+        const result = []
+        keys.forEach(key => {
+          const value = item[key]
+          result.push(value)
+          if (!map.has(key)) {
+            map.set(key, {
+              length: value.length,
+              index
+            })
+          } else {
+            const item = map.get(key)
+            if (value.length > item.length) {
+              map.set(key, {
+                length: value.length,
+                index
+              })
+            }
+          }
+        })
+        return result
+      })
+
+      this.maxCols = [...map.values()].map(item => {
+        return item.index
+      })
+    },
+    /**
+     * @description 判断是否获取服务端数据
+     */
+    isServerData() {
+      const { data } = this.options
+      return data.fields && data.fields.length
+    },
+    /**
+     * @description 图表获取数据
+     */
+    getChartData() {
+      this.isServerData() ? this.getServerData() : this.getDefaultData()
+    },
+    /**
+     * @description 图表获取服务端数据
+     */
+    async getServerData() {
+      this.serverData = {
+        data: [
+          {
+            car_number: '粤C154'
+          },
+          {
+            car_number: '粤C1541231316255'
+          },
+          {
+            car_number: '粤C154'
+          },
+          {
+            car_number: '粤C15462'
+          },
+          {
+            car_number: '粤C15462'
+          },
+          {
+            car_number: '粤C15462'
+          },
+          {
+            car_number: '粤C15462'
+          },
+          {
+            car_number: '粤C15462'
+          },
+          {
+            car_number: '粤C15462'
+          },
+          {
+            car_number: '粤C15462'
+          }
+        ]
+      }
+      this.fields = [
+        {
+          name: 'car_number'
+        }
+      ]
+      this.doWithOptions(this.serverData)
+      this.refreshCount += 1
+    },
+    /**
+     * @description 图表获取默认数据
+     */
+    getDefaultData() {
+      this.serverData = null
+      this.fields = this.$options.data().fields
+      this.doWithOptions(defaultData)
+      this.refreshCount += 1
+    },
+    /**
+     * @description 更新图表样式
+     */
+    updateChartStyle() {
+      this.doWithThead()
+      this.doWithTbody()
+    }
+  }
+}
+</script>
+<style lang="less">
+.table-unit {
+  position: relative;
+  .table-wrapper {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    .thead,
+    .tbody {
+      position: absolute;
+      left: 0;
+    }
+    .thead {
+      top: 0;
+    }
+    .tbody {
+      right: 0;
+      bottom: 0;
+      overflow: auto;
+      .content-wrap {
+        display: inline-block;
+      }
+    }
+    .content-wrap {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      word-wrap: normal;
+      white-space: nowrap;
+    }
+  }
+
+  table {
+    table-layout: fixed;
+    border-collapse: collapse;
+    border-spacing: 0;
+
+    margin-left: 0px;
+
+    thead,
+    tbody {
+      th,
+      td {
+        p {
+          position: relative;
+          vertical-align: middle;
+          background-clip: padding-box;
+          margin-bottom: 0;
+          padding: 0px 10px;
+        }
+      }
+    }
+  }
+}
+</style>

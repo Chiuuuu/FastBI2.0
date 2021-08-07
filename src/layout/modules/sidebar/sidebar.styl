@@ -1,0 +1,57 @@
+.sidebar {
+    background: #001529;
+    height: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    width: 220px;
+    .header {
+        height: 56px;
+        line-height: 56px;
+        padding-left: 20px;
+        padding-right: 20px;
+        position: relative;
+        img {
+            width: 100%;
+        }
+        span {
+            color: #fff;
+            font-weight: bold;
+            font-size: 18px;
+        }
+    }
+    .menu-body {
+        height calc(100% - 56px)    
+        overflow-y: auto
+    }
+    /* 滚动条样式 */
+    .menu-body::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+    }
+    .menu-body::-webkit-scrollbar-thumb {
+        background-color: #617BFF;
+        border-radius: 5px;
+        -webkit-box-shadow: inset 1px 1px 0 rgba(0, 0, 0, .1);
+    }
+    .menu-body:hover::-webkit-scrollbar-thumb {
+        background-color: #617BFF;
+        border-radius: 5px;
+        -webkit-box-shadow: inset 1px 1px 0 rgba(0, 0, 0, .1);
+    }
+    .menu-body::-webkit-scrollbar-thumb:hover {
+        background-color: #617BFF;
+        -webkit-box-shadow: inset 1px 1px 0 rgba(0, 0, 0, .1);
+    }
+    .menu-body::-webkit-scrollbar-track {
+        border-radius: 5px;
+        -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0);
+        background-color: #001529;
+    }
+    .menu-body::-webkit-scrollbar-track:hover {
+        -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, .4);
+        background-color: rgba(0, 0, 0, .01);
+    }
+}

@@ -1,0 +1,15 @@
+*.md
+.git/
+preview/
+node_modules/
+.vscode/
+.editorconfig
+.eslintignore
+.eslintrc.js
+.gitignore
+.huskyrc
+.lintstagedrc
+.npmignore
+.prettierignore
+.prettierrc
+.commitlint.config.js

@@ -1,0 +1,129 @@
+@deep: ~'>>>';
+.main {
+    position: relative;
+    height: 100%;
+    background-color: #ffffff;
+    color: #01040f;
+    .main-box, @{deep} .ant-spin-nested-loading, @{deep} .ant-spin-container {
+        height: 100%;
+    }
+    .main-empty {
+        position: absolute;
+        margin: 0 auto;
+        left: 0;
+        right: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        color: rgba(0, 0, 0, 0.65);
+    }
+    .main-button {
+        height: 32px;
+        padding: 0 27px;
+        border-radius: 4px;
+        margin-left: 20px;
+        margin-top: 4px;
+    }
+    .right {
+        height: 100%;
+        display: flex;
+        flex-direction: column;  
+        header {
+            height: 52px;
+            padding: 0 16px;
+            margin-bottom: 16px;
+            display: flex;
+            justify-content: space-between;
+        }
+        &.edit header {
+            font-size: 16px;
+            font-weight: bold;
+            align-items: center;
+            border-bottom: 1px solid #e8e8e8;
+        }
+        .tabs {
+            height: 100%;
+            overflow-y: auto;
+            @{deep}  .ant-tabs-content {
+                height: calc(100% - 60px);
+            }  
+            @{deep}  .ant-tabs-tabpane {
+                height: 100%;
+            }  
+        }
+        .tab {
+            height: 100%;
+            overflow-y: auto;
+        }
+        .flex-col {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+        .role-form {
+            display: flex;
+            & > div {
+                width: 50%;
+            }
+            @{deep}  .ant-form-item-label {
+                width: 86px;
+            }
+        }
+        .role-info {
+            width: calc(100% - 100px);
+            overflow: hidden;
+            .line {
+                width: 100%;
+                margin-top: 10px;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
+        }
+        .role-list-controller {
+            display: flex;
+            justify-content: space-between;
+            padding: 0 16px;
+            margin-bottom: 16px;
+            .searchbar {
+                display: flex;
+                .item {
+                    margin-right: 20px;
+                }
+            }
+        }
+        .role-list-table {
+            flex: 1;
+            padding-right: 16px;
+            overflow-y: auto;
+        }
+        .title {
+            height: 54px;
+            line-height: 54px;
+            padding: 0 16px;
+            background: #fafafa;
+            color: rgba(0, 0, 0, 0.65);
+        }
+        .content {
+            height: calc(50% - 88px);
+            overflow-y: auto;
+        }
+        &.edit .content {
+            height: calc(50% - 120px);
+        }
+        .line {
+            margin-bottom: 16px;
+        }
+    }
+    .edit-icon {
+      vertical-align: bottom;
+      font-size:20px;
+      cursor:pointer;
+    }
+    .handler-margin {
+        margin-right: 20px;
+    }
+    .btn-add {
+        margin-right: 10px;
+        margin-top: 4px;
+    }
+}

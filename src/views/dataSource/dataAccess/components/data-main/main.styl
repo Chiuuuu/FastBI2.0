@@ -1,0 +1,258 @@
+.main {
+    height: 100%;
+    background-color: #ffffff;
+    .right {
+        height 100%
+        display flex
+        flex-direction column    
+        .tab {
+            flex 1    
+            overflow-y auto
+        }
+        .tabs {
+            height 100%
+            .ant-tabs-content {
+                height calc(100% - 60px)
+            }  
+        }
+    }
+    .database_tips {
+        position absolute
+        right -28px
+        top 0   
+        font-size 18px
+    }
+    .data_con {
+        width: 201px;
+        height: 19px;
+        font-size: 16px;
+        font-family: Microsoft YaHei;
+        font-weight: bold;
+        color: rgba(1, 4, 15, 1);
+        line-height: 48px;
+        margin-left: 21px;
+    }
+    .data_category {
+        width: 201px;
+        height: 19px;
+        font-size: 16px;
+        font-family: Microsoft YaHei;
+        color: rgba(1, 4, 15, 1);
+        line-height: 48px;
+    }
+    .tab-excel{
+        height: calc(100% - 84px);
+        overflow-y: auto;
+        margin-top: 21px;
+        margin-left: 21px;
+        text-align: left;
+        .excel-list{
+            position relative
+            border: 1px dashed rgba(229,229,229,1);
+            height: 194px;
+            background-color: #fff;
+            overflow-y: auto;
+            &.drag{
+                border: 2px dashed #617BFF;
+            }
+            // *{
+            //     pointer-events: none;
+            // }
+            .mask {
+                position absolute
+                top 0
+                left 0
+                z-index 100
+                height 100%
+                width 100%
+                background-color rgba(220,220,220,.2)    
+            }
+        }
+        .excel-list-item {
+            display flex
+            justify-content space-between
+            align-items center
+            padding 0 10px
+            width 100%
+            height 40px
+            border-bottom 1px solid #e5e5e5
+            cursor pointer
+            &:hover {
+                background-color #617bff  
+                color #fff     
+            }
+            &.active {
+                background-color #617bff 
+                color #fff   
+            }
+            .text {
+                height 40px
+                line-height 40px
+                margin-right 15px
+                white-space nowrap
+                overflow hidden
+                text-overflow ellipsis   
+            }
+        }
+        .preview-list {
+            height: 426px;
+            border-top: 1px solid #e5e5e5;
+            margin-bottom: 20px;
+            .preview-tab {
+                height 100%
+                width 150px
+                background-color: #f6f6f6;
+                border: 1px solid #e8e8e8;
+                margin-top: 20px;
+                .tab-title {
+                    display block
+                    color: #000000D9;
+                    height: 38px;
+                    padding: 8px;
+                    // margin-top: 20px;
+                }
+            }
+            .preview-tab-item {
+                display block
+                overflow hidden
+                text-overflow: ellipsis
+                white-space nowrap
+                height: 38px;
+                padding: 8px;
+                cursor pointer
+                &:hover, &.active {
+                    background-color #617bff
+                }  
+            }
+            .preview-controller {
+                display flex
+                align-items: center
+                margin-top 20px
+            }
+            .preview-line {
+                display flex
+                margin 0 5px
+                .arrow-box {
+                    position relative  
+                }
+                .arrow {
+                    position absolute
+                    left 0
+                    font-size 16px  
+                    width 16px
+                    height 16px
+                    border 1px solid #bbb 
+                    cursor pointer 
+                    &:nth-child(1) {
+                        top 0   
+                    }
+                    &:nth-child(2) {
+                        top 16px    
+                    }
+                    &:hover {
+                        border-color #8aa1ff
+                        i {
+                            border-color #8aa1ff
+                        }
+                    }
+                    i {
+                        position absolute
+                        left 4px
+                        display block
+                        width 6px
+                        height 6px
+                        border 1px solid #bbb
+                        border-bottom 0    
+                        border-right 0
+                    }
+                }
+                .arrow-up {
+                    top 5px
+                    transform: rotate(45deg)
+                }
+                .arrow-down {
+                    top 3px
+                    transform: rotate(-135deg)
+                }
+            }
+        }
+    }
+    .tab-panel {
+        display flex
+        flex-direction column
+        height 100%
+        width 100%    
+        .tab-scroll {
+            flex 1
+            overflow-y auto    
+            padding-right 16px
+        }
+    }
+    .tab-empty{
+        position: absolute;
+        margin: 0 auto;
+        left: 0;
+        right: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        color: rgba(0, 0, 0, 0.65);
+    }
+    .tab-datasource {
+        height: 100%;
+        margin-top: 21px;
+        margin-left: 21px;
+        text-align: left;
+        .ant-form-item-label {
+            width: 150px !important;    
+        }
+    }
+    .tab-datasource-model {
+        height: calc(100% - 84px);
+        overflow-y: auto;
+        margin-bottom: 22px;
+    }
+    .btn_sub {
+        float: right;
+        margin-right: 32px;
+        margin-bottom: 32px;
+        width: 88px;
+        height: 30px;
+    }
+    .search_bar{
+        margin-right: 21px;
+        margin-bottom 24px
+        // height: 34px;
+    }
+    .search_radio {
+        margin-left: 20px;
+        margin-bottom: 20px;
+    }
+    .search_input {
+        // width: 200%;
+        height: 32px;
+        margin-left: 20px;
+    }
+    .search_select {
+        width: 300%;
+        height: 32px;
+        margin-left: 17px;
+    }
+    .search_button{
+        // margin-left: 291px;
+        margin-right: 21px;
+        }
+    .table a{
+        color: #627CFF;
+    }
+    .bar-all{
+        margin-left: 800px;
+        }
+}
+
+.ant-col-4 {
+    text-align: left;
+}
+
+.ant-form-explain {
+    float: left;
+}
