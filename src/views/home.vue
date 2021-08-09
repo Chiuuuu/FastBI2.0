@@ -13,35 +13,35 @@
 </template>
 
 <script>
-  import { initLocalData } from '../api/app/app-request'
+import { initLocalData } from '../api/app/app-request';
 
-  export default {
-    name: 'home',
-    data () {
-      return {
-        userId: ''
-      }
+export default {
+  name: 'home',
+  data() {
+    return {
+      userId: '',
+    };
+  },
+  created() {
+    this.userId = 'dv1e443967LZP2Dj';
+  },
+  methods: {
+    openAdmin() {
+      // let url = `${this.$base}/admin/${this.userId}`
+      // this.$util.open(url)
+      this.$router.push({ name: 'admin', params: { id: this.userId } });
     },
-    created () {
-      this.userId = 'dv1e443967LZP2Dj'
-    },
-    methods: {
-      openAdmin () {
-        // let url = `${this.$base}/admin/${this.userId}`
-        // this.$util.open(url)
-        this.$router.push({ name: 'admin', params: { id: this.userId } })
-      },
-      openScreen () {
-        // let url = `${this.$base}/screen/${this.userId}`
-        // this.$util.open(url)
+    openScreen() {
+      // let url = `${this.$base}/screen/${this.userId}`
+      // this.$util.open(url)
 
-        this.$router.push({ name: 'screen', params: { id: this.userId } })
-      },
-      resetLocalData () {
-        initLocalData().then(res => {
-          this.$message({ type: 'success', content: res.message })
-        })
-      }
-    }
-  }
+      this.$router.push({ name: 'screen', params: { id: this.userId } });
+    },
+    resetLocalData() {
+      initLocalData().then(res => {
+        this.$message({ type: 'success', content: res.message });
+      });
+    },
+  },
+};
 </script>

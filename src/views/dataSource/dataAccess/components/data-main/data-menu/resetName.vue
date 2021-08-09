@@ -12,7 +12,14 @@
     "
     @ok="handleOk"
   >
-    <a-form-model :model="form" :rules="rules" ref="resetNameForm" class="resetNameForm" :label-col="{ span: 5 }" :wrapper-col="{ span: 12 }">
+    <a-form-model
+      :model="form"
+      :rules="rules"
+      ref="resetNameForm"
+      class="resetNameForm"
+      :label-col="{ span: 5 }"
+      :wrapper-col="{ span: 12 }"
+    >
       <a-form-model-item label="名称" prop="name">
         <a-input v-model="form.name" placeholder="请输入文件夹名称" />
       </a-form-model-item>
@@ -25,62 +32,63 @@ export default {
   props: ['visible', 'resetName', 'resetType'],
   computed: {
     title() {
-      let title = this.resetName.type === 'reset' ? '重命名' : '新建'
-      const fileType = this.resetName.item.fileType
+      let title = this.resetName.type === 'reset' ? '重命名' : '新建';
+      const fileType = this.resetName.item.fileType;
       if (this.resetType === 1) {
-        title += (fileType === 1 ? '数据接入' : '文件夹')
+        title += fileType === 1 ? '数据接入' : '文件夹';
       } else if (this.resetType === 2) {
-        title += (fileType === 1 ? '数据模型' : '文件夹')
+        title += fileType === 1 ? '数据模型' : '文件夹';
       }
-      return title
-    }
+      return title;
+    },
   },
   data() {
     return {
       form: {
-        name: ''
+        name: '',
       },
       rules: {
         name: [
           {
             required: true,
-            message: '请填写名称'
+            message: '请填写名称',
           },
           {
             type: 'string',
             min: 1,
             max: 20,
-            message: '请输入1-20个字的文件夹名称'
-          }
-        ]
-      }
-    }
+            message: '请输入1-20个字的文件夹名称',
+          },
+        ],
+      },
+    };
   },
   watch: {
-    visible(newValue, oldValue) {
+    visible(newValue) {
       if (newValue) {
-        const type = this.resetName.type
-        const name = type === 'reset' ? this.resetName.item.name : ''
-        this.$set(this.form, 'name', name)
+        const type = this.resetName.type;
+        const name = type === 'reset' ? this.resetName.item.name : '';
+        this.$set(this.form, 'name', name);
       }
-    }
+    },
   },
   methods: {
     /**
      * 弹出框完成关闭后
-    */
+     */
     handleAfterClose() {
-      this.$refs.resetNameForm.resetFields()
+      this.$refs.resetNameForm.resetFields();
     },
     handleOk() {
-      this.$refs.resetNameForm.validate()
-        .then(res => {
-          this.$emit('create', this.form)
+      this.$refs.resetNameForm
+        .validate()
+        .then(() => {
+          this.$emit('create', this.form);
         })
-        .catch(err => err)
-    }
-  }
-}
+        .catch(err => err);
+    },
+  },
+};
 </script>
 <style lang="less" scoped>
 @deep: ~'>>>';

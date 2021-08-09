@@ -16,35 +16,35 @@
 </template>
 
 <script>
-import PersonManage from '../persn-content/personManage'
+import PersonManage from '../persn-content/personManage';
 // import UserProp from '../persn-content/userProp'
 
 export default {
   name: 'userMain',
   components: {
-    PersonManage
+    PersonManage,
     // UserProp
   },
   data() {
-   return {
+    return {
       spinning: false,
-      detailInfo: {}
-    }
+      detailInfo: {},
+    };
   },
   methods: {
     handleChangeModule(key) {
-      const tab = this.$refs[`${key}`]
+      const tab = this.$refs[`${key}`];
       if (tab) {
-        tab.handleGetData()
+        tab.handleGetData();
       }
     },
     handleSwitch(value, record) {
-      record.enable = value
-    }
-  }
-}
+      record.enable = value;
+    },
+  },
+};
 </script>
 
 <style lang="less" scoped>
-@import "../../../main.less";
+@import '../../../main.less';
 </style>

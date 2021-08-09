@@ -8,20 +8,20 @@ export const visualMapConfig = {
   inRange: {
     color: ['rgb(79,174,255)', 'rgb(55,115,205)', 'rgb(32,56,156)'],
     // color: ['#50a3ba', '#eac736', '#d94e5d'],
-    symbolSize: [10, 16]
+    symbolSize: [10, 16],
   },
   calculable: true,
   textStyle: {
     color: '#fff',
-    fontSize: 12
+    fontSize: 12,
   },
   left: 'left',
   top: 'bottom',
   itemGap: 10,
   itemSymbol: 'roundRect',
   align: 'left',
-  orient: 'vertical'
-}
+  orient: 'vertical',
+};
 
 // 填充图层
 export const mapSeries = {
@@ -34,12 +34,12 @@ export const mapSeries = {
   legendHoverLink: false,
   mapLocation: {
     x: 'left',
-    y: 'top'
+    y: 'top',
   },
   tooltip: {
     show: true,
     trigger: 'item',
-    confine: true
+    confine: true,
   },
   label: {
     normal: {
@@ -47,11 +47,11 @@ export const mapSeries = {
       fontSize: 12,
       color: '#fff',
       formatter: '{b}',
-      orient: 'vertical'
+      orient: 'vertical',
     },
     emphasis: {
-      show: false
-    }
+      show: false,
+    },
   },
   themeColor: 'blue', // 填充色数组标识
   pointShowList: [], // 指标显示
@@ -61,15 +61,15 @@ export const mapSeries = {
       areaColor: 'transparent', // 'rgba(1, 33, 92, 0.45)',
       borderColor: 'transparent', // '#215495',
       borderWidth: 1,
-      opacity: 1
+      opacity: 1,
     },
     emphasis: {
       borderColor: 'transparent', //'#073684',
-      areaColor: '#061E3D'
-    }
+      areaColor: '#061E3D',
+    },
   },
-  data: []
-}
+  data: [],
+};
 
 // 散点图层
 export const dotSeries = {
@@ -83,12 +83,12 @@ export const dotSeries = {
   showEffectOn: 'render',
   rippleEffect: {
     brushType: 'stroke',
-    scale: 3
+    scale: 3,
   },
   tooltip: {
     show: true,
     trigger: 'item',
-    confine: true
+    confine: true,
   },
   label: {
     normal: {
@@ -97,11 +97,11 @@ export const dotSeries = {
       color: '#fff',
       position: 'bottom', // 可选inside
       formatter: '{b} ：{a} : {c}',
-      orient: 'vertical'
+      orient: 'vertical',
     },
     emphasis: {
-      show: true
-    }
+      show: true,
+    },
   },
   pointShowList: [], // 指标显示
   tooltipShowList: [], // 提示框显示
@@ -109,21 +109,20 @@ export const dotSeries = {
     normal: {
       color: '#60b8f6',
       opacity: 1,
-      showSeries: true
+      showSeries: true,
     },
     emphasis: {
       borderColor: '#fff',
-      borderWidth: 1
-    }
+      borderWidth: 1,
+    },
   },
   zlevel: 1,
-  data: []
-}
+  data: [],
+};
 export function tooltipFormatter(params) {
-  let data = params.data
-  return `${params.seriesName}<br />${data.name}：${data.value[2] ||
-    data.value}`
+  let data = params.data;
+  return `${params.seriesName}<br />${data.name}：${data.value[2] || data.value}`;
 }
 export function labelFormatter(params) {
-  return params.data.value[2].toFixed(2)
+  return params.data.value[2].toFixed(2);
 }

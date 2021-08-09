@@ -17,25 +17,25 @@
   </a-row>
 </template>
 <script>
-import UserManage from './components/user'
+import UserManage from './components/user';
 // import RoleManage from './components/role'
 
 export default {
   name: 'users',
   components: {
-    UserManage
+    UserManage,
     // RoleManage
   },
   methods: {
     handleChangeModule(key) {
-      const tab = this.$refs[`${key}Manage`]
+      const tab = this.$refs[`${key}Manage`];
       if (tab) {
-        tab.handleGetData()
+        tab.handleGetData();
       }
-    }
-  }
-}
+    },
+  },
+};
 </script>
 <style lang="less" scoped>
-@import "../main.less";
+@import '../main.less';
 </style>

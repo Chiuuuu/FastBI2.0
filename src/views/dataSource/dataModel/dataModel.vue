@@ -6,35 +6,35 @@
 </template>
 
 <script>
-import Menu from './components/model-menu'
-import Main from './components/model-main/main'
-import { mapState } from 'vuex'
+import Menu from './components/model-menu';
+import Main from './components/model-main/main';
+import { mapState } from 'vuex';
 export default {
   components: {
     Menu,
-    Main
+    Main,
   },
   computed: {
     ...mapState({
-      fileSelectId: state => state.common.menuSelectId
-    })
+      fileSelectId: state => state.common.menuSelectId,
+    }),
   },
   mounted() {
     if (this.fileSelectId !== -1) {
-      this.handleEmitMainGetData(this.fileSelectId)
+      this.handleEmitMainGetData(this.fileSelectId);
     }
   },
   beforeDestroy() {
-    this.$store.dispatch('dataModel/setModelId', -1)
-    this.$store.commit('dataModel/SET_MODELNAME', '')
-    this.$store.commit('common/SET_MENUSELECTID', -1)
+    this.$store.dispatch('dataModel/setModelId', -1);
+    this.$store.commit('dataModel/SET_MODELNAME', '');
+    this.$store.commit('common/SET_MENUSELECTID', -1);
   },
   methods: {
     handleEmitMainGetData(id) {
-      this.$refs.modelMainRef.handleGetData(id)
-    }
-  }
-}
+      this.$refs.modelMainRef.handleGetData(id);
+    },
+  },
+};
 </script>
 
 <style lang="styl" scoped>

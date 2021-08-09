@@ -51,6 +51,7 @@ const StyleMethodMixin = {
           : {
               [key]: val,
             },
+        // eslint-disable-next-line no-unneeded-ternary
         afterExecute: afterExecute ? afterExecute : () => {},
       });
     },

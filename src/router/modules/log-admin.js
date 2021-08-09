@@ -1,7 +1,5 @@
-import PERMISSION_CODE from '@/config/permission'
-
-const RouteView = () => import('@/layout/routeView')
-const recordView = () => import('@/views/log-admin/record')
+const RouteView = () => import('@/layout/routeView');
+const recordView = () => import('@/views/log-admin/record');
 
 export default {
   path: '/logAdmin',
@@ -18,7 +16,7 @@ export default {
       component: recordView,
       meta: {
         title: '操作记录',
-      }
+      },
     },
-  ]
-}
+  ],
+};

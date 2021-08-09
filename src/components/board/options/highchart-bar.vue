@@ -35,12 +35,9 @@
           size="small"
           @change="setSelfProperty"
         >
-          <a-select-option
-            :value="font.value"
-            v-for="(font, index) in fontFamilyList"
-            :key="index"
-            >{{ font.label }}</a-select-option
-          >
+          <a-select-option :value="font.value" v-for="(font, index) in fontFamilyList" :key="index">
+            {{ font.label }}
+          </a-select-option>
         </a-select>
       </gui-field>
       <gui-field label="粗细">
@@ -56,31 +53,19 @@
         </a-select>
       </gui-field>
       <gui-field label="对齐方式">
-        <a-radio-group
-          :value="HighConfig.setting.config.title.align"
-          size="small"
-        >
+        <a-radio-group :value="HighConfig.setting.config.title.align" size="small">
           <a-tooltip placement="top" title="左对齐">
-            <a-radio-button
-              value="left"
-              @click.native.stop="onRadioChange('title', 'align', 'left')"
-            >
+            <a-radio-button value="left" @click.native.stop="onRadioChange('title', 'align', 'left')">
               <a-icon type="align-left" value="left" />
             </a-radio-button>
           </a-tooltip>
           <a-tooltip placement="top" title="居中">
-            <a-radio-button
-              value="center"
-              @click.native.stop="onRadioChange('title', 'align', 'center')"
-            >
+            <a-radio-button value="center" @click.native.stop="onRadioChange('title', 'align', 'center')">
               <a-icon type="align-center" value="center" />
             </a-radio-button>
           </a-tooltip>
           <a-tooltip placement="top" title="右对齐">
-            <a-radio-button
-              value="right"
-              @click.native.stop="onRadioChange('title', 'align', 'right')"
-            >
+            <a-radio-button value="right" @click.native.stop="onRadioChange('title', 'align', 'right')">
               <a-icon type="align-right" value="right" />
             </a-radio-button>
           </a-tooltip>
@@ -142,10 +127,7 @@
         <gui-inline label="字号">
           <a-input-number
             class="longwidth"
-            v-model="
-              HighConfig.setting.config.plotOptions.column.dataLabels.style
-                .fontSize
-            "
+            v-model="HighConfig.setting.config.plotOptions.column.dataLabels.style.fontSize"
             size="small"
             :min="12"
             :max="40"
@@ -154,9 +136,7 @@
         </gui-inline>
         <gui-inline label="颜色">
           <el-color-picker
-            v-model="
-              HighConfig.setting.config.plotOptions.column.dataLabels.color
-            "
+            v-model="HighConfig.setting.config.plotOptions.column.dataLabels.color"
             @change="setSelfProperty"
           ></el-color-picker>
         </gui-inline>
@@ -193,12 +173,7 @@
         ></a-switch>
       </gui-field> -->
       <gui-field label="堆叠柱状图">
-        <a-switch
-          size="small"
-          @change="a => setHistogram(a, 'plotOptions')"
-          v-model="isdd"
-          clearable
-        ></a-switch>
+        <a-switch size="small" @change="a => setHistogram(a, 'plotOptions')" v-model="isdd" clearable></a-switch>
       </gui-field>
       <!-- <gui-field label="柱条宽度">
         <a-input-number
@@ -286,76 +261,43 @@
       </gui-field>
       <gui-field label="位置">
         <gui-inline>
-          <a-radio-group
-            :value="HighConfig.setting.config.legend.align"
-            size="small"
-          >
-            <a-radio-button
-              value="left"
-              @click.native.stop="onRadioChange('legend', 'align', 'left')"
-              >左</a-radio-button
-            >
-            <a-radio-button
-              value="center"
-              @click.native.stop="onRadioChange('legend', 'align', 'center')"
-              >中</a-radio-button
-            >
-            <a-radio-button
-              value="right"
-              @click.native.stop="onRadioChange('legend', 'align', 'right')"
-              >右</a-radio-button
-            >
+          <a-radio-group :value="HighConfig.setting.config.legend.align" size="small">
+            <a-radio-button value="left" @click.native.stop="onRadioChange('legend', 'align', 'left')">
+              左
+            </a-radio-button>
+            <a-radio-button value="center" @click.native.stop="onRadioChange('legend', 'align', 'center')">
+              中
+            </a-radio-button>
+            <a-radio-button value="right" @click.native.stop="onRadioChange('legend', 'align', 'right')">
+              右
+            </a-radio-button>
           </a-radio-group>
         </gui-inline>
       </gui-field>
       <gui-field>
         <gui-inline>
-          <a-radio-group
-            :value="HighConfig.setting.config.legend.verticalAlign"
-            size="small"
-          >
-            <a-radio-button
-              value="top"
-              @click.native.stop="
-                onRadioChange('legend', 'verticalAlign', 'top')
-              "
-              >顶部</a-radio-button
-            >
-            <a-radio-button
-              value="middle"
-              @click.native.stop="
-                onRadioChange('legend', 'verticalAlign', 'middle')
-              "
-              >居中</a-radio-button
-            >
-            <a-radio-button
-              value="bottom"
-              @click.native.stop="
-                onRadioChange('legend', 'verticalAlign', 'bottom')
-              "
-              >底部</a-radio-button
-            >
+          <a-radio-group :value="HighConfig.setting.config.legend.verticalAlign" size="small">
+            <a-radio-button value="top" @click.native.stop="onRadioChange('legend', 'verticalAlign', 'top')">
+              顶部
+            </a-radio-button>
+            <a-radio-button value="middle" @click.native.stop="onRadioChange('legend', 'verticalAlign', 'middle')">
+              居中
+            </a-radio-button>
+            <a-radio-button value="bottom" @click.native.stop="onRadioChange('legend', 'verticalAlign', 'bottom')">
+              底部
+            </a-radio-button>
           </a-radio-group>
         </gui-inline>
       </gui-field>
       <gui-field label="排列">
         <gui-inline>
-          <a-radio-group
-            :value="HighConfig.setting.config.legend.layout"
-            size="small"
-          >
-            <a-radio-button
-              value="horizontal"
-              @click.native.stop="
-                onRadioChange('legend', 'layout', 'horizontal')
-              "
-              >水平</a-radio-button
-            >
-            <a-radio-button
-              value="vertical"
-              @click.native.stop="onRadioChange('legend', 'layout', 'vertical')"
-              >垂直</a-radio-button
-            >
+          <a-radio-group :value="HighConfig.setting.config.legend.layout" size="small">
+            <a-radio-button value="horizontal" @click.native.stop="onRadioChange('legend', 'layout', 'horizontal')">
+              水平
+            </a-radio-button>
+            <a-radio-button value="vertical" @click.native.stop="onRadioChange('legend', 'layout', 'vertical')">
+              垂直
+            </a-radio-button>
           </a-radio-group>
         </gui-inline>
       </gui-field>
@@ -371,11 +313,7 @@
         size="small"
       />
       <gui-field label="轴名称">
-        <a-input
-          v-model="HighConfig.setting.config.xAxis.title.text"
-          @change="setSelfProperty"
-          size="small"
-        ></a-input>
+        <a-input v-model="HighConfig.setting.config.xAxis.title.text" @change="setSelfProperty" size="small"></a-input>
       </gui-field>
       <gui-field label="标题文本">
         <gui-inline label="字号">
@@ -396,20 +334,9 @@
         </gui-inline>
       </gui-field>
       <gui-field label="标题位置">
-        <a-radio-group
-          :value="HighConfig.setting.config.xAxis.title.align"
-          size="small"
-        >
-          <a-radio-button
-            value="middle"
-            @click.native.stop="getBtnRadio('xAxis', 'middle')"
-            >中部</a-radio-button
-          >
-          <a-radio-button
-            value="high"
-            @click.native.stop="getBtnRadio('xAxis', 'high')"
-            >末尾</a-radio-button
-          >
+        <a-radio-group :value="HighConfig.setting.config.xAxis.title.align" size="small">
+          <a-radio-button value="middle" @click.native.stop="getBtnRadio('xAxis', 'middle')">中部</a-radio-button>
+          <a-radio-button value="high" @click.native.stop="getBtnRadio('xAxis', 'high')">末尾</a-radio-button>
         </a-radio-group>
       </gui-field>
       <gui-field label="x轴文本">
@@ -467,11 +394,7 @@
         size="small"
       />
       <gui-field label="y轴名称">
-        <a-input
-          v-model="HighConfig.setting.config.yAxis.title.text"
-          @change="setSelfProperty"
-          size="small"
-        ></a-input>
+        <a-input v-model="HighConfig.setting.config.yAxis.title.text" @change="setSelfProperty" size="small"></a-input>
       </gui-field>
       <gui-field label="标题文本">
         <gui-inline label="字号">
@@ -492,20 +415,9 @@
         </gui-inline>
       </gui-field>
       <gui-field label="标题位置">
-        <a-radio-group
-          :value="HighConfig.setting.config.yAxis.title.align"
-          size="small"
-        >
-          <a-radio-button
-            value="middle"
-            @click.native.stop="getBtnRadio('yAxis', 'middle')"
-            >中部</a-radio-button
-          >
-          <a-radio-button
-            value="high"
-            @click.native.stop="getBtnRadio('yAxis', 'high')"
-            >末尾</a-radio-button
-          >
+        <a-radio-group :value="HighConfig.setting.config.yAxis.title.align" size="small">
+          <a-radio-button value="middle" @click.native.stop="getBtnRadio('yAxis', 'middle')">中部</a-radio-button>
+          <a-radio-button value="high" @click.native.stop="getBtnRadio('yAxis', 'high')">末尾</a-radio-button>
         </a-radio-group>
       </gui-field>
       <gui-field label="y轴文本">
@@ -562,31 +474,16 @@
         style="width: 100%"
         @change="handleFormatter($event, 'tooltip')"
       >
-        <a-select-option
-          :key="0"
-          value="dimensions"
-          >维度</a-select-option
-        >
-        <a-select-option
-          :key="0"
-          value="measures"
-          >度量</a-select-option
-        >
+        <a-select-option :key="0" value="dimensions">维度</a-select-option>
+        <a-select-option :key="0" value="measures">度量</a-select-option>
       </a-select>
     </a-collapse-panel>
 
     <!-- <a-collapse-panel key="indicator" header="指标设置"> </a-collapse-panel> -->
 
     <a-collapse-panel key="background" header="背景和边框">
-      <a-radio-group
-        v-model="HighConfig.setting.background.backgroundType"
-        name="radioGroup"
-      >
-        <a-radio
-          :style="radioStyle"
-          value="1"
-          @click.native.stop="onBgChange('backgroundType', '1')"
-        >
+      <a-radio-group v-model="HighConfig.setting.background.backgroundType" name="radioGroup">
+        <a-radio :style="radioStyle" value="1" @click.native.stop="onBgChange('backgroundType', '1')">
           <gui-field label="背景颜色">
             <el-color-picker
               v-model="HighConfig.setting.background.backgroundColor"
@@ -595,18 +492,15 @@
             ></el-color-picker>
           </gui-field>
         </a-radio>
-        <a-radio
-          :style="radioStyle"
-          value="2"
-          @click.native.stop="onBgChange('backgroundType', '2')"
-        >
+        <a-radio :style="radioStyle" value="2" @click.native.stop="onBgChange('backgroundType', '2')">
           <gui-field label="背景图片">
             <a-button
               size="small"
               @click.native.stop="addbgPhoto"
               :disabled="HighConfig.setting.background.backgroundType !== '2'"
-              >上传</a-button
             >
+              上传
+            </a-button>
             <input
               id="bgPhoto"
               ref="img_input1"
@@ -661,85 +555,77 @@
   </a-collapse>
 </template>
 <script>
-import GuiField from './gui-field'
-import GuiInline from './gui-inline'
-import HighMinxins from '@/mixins/hight'
+import GuiField from './gui-field';
+import GuiInline from './gui-inline';
+import HighMinxins from '@/mixins/hight';
 
 export default {
   props: {
     HighConfig: {
       type: Object,
-      required: true
-    }
+      required: true,
+    },
   },
   mixins: [HighMinxins],
   components: { GuiField, GuiInline },
   data() {
     return {
       collapseActive: [],
-      tooltipShowList: []
+      tooltipShowList: [],
       // bartype: {
       //   isyz: false, //是否圆柱图
       //   isdd: false //是否堆叠图
       // }
-    }
+    };
   },
   computed: {
     isdd() {
-      let flag = this.HighConfig.setting.config.plotOptions.column.stacking
+      let flag = this.HighConfig.setting.config.plotOptions.column.stacking;
       if (flag == null) {
-        return false
+        return false;
       } else {
-        return true
+        return true;
       }
-    }
+    },
   },
   mounted() {},
   methods: {
     setHistogram(val, key) {
       // 圆柱
       if (key === 'chart') {
-        this.$set(
-          this.HighConfig.setting.config[key],
-          'type',
-          val ? 'cylinder' : 'column'
-        )
+        this.$set(this.HighConfig.setting.config[key], 'type', val ? 'cylinder' : 'column');
       } else {
-        this.$set(
-          this.HighConfig.setting.config[key].column,
-          'stacking',
-          val ? 'normal' : null
-        )
+        this.$set(this.HighConfig.setting.config[key].column, 'stacking', val ? 'normal' : null);
       }
-      this.setSelfProperty()
-      console.clear()
+      this.setSelfProperty();
+      console.clear();
     },
     getBtnRadio(key, val) {
-      this.$set(this.HighConfig.setting.config[key].title, 'align', val)
-      this.setSelfProperty()
+      this.$set(this.HighConfig.setting.config[key].title, 'align', val);
+      this.setSelfProperty();
     },
     handleFormatter(value, type) {
-      let result = ''
+      let result = '';
       if (value.includes('dimensions')) {
-        result += '{series.name}'
+        result += '{series.name}';
       }
       if (value.includes('measures')) {
         if (!result) {
-          result = '{point.y}'
+          result = '{point.y}';
         } else {
-          result += ': {point.y}'
+          result += ': {point.y}';
         }
       }
       if (type === 'tooltip') {
-        this.HighConfig.setting.config.tooltip.pointFormat = result
+        this.HighConfig.setting.config.tooltip.pointFormat = result;
       } else {
-        this.HighConfig.setting.config.plotOptions.column.dataLabels.pointFormat = result
+        this.HighConfig.setting.config.plotOptions.column.dataLabels.pointFormat = result;
       }
-      this.setSelfProperty()
-    }
+      this.setSelfProperty();
+    },
   },
-  watch: {}
-}
+  watch: {},
+};
 </script>
 <style lang="less" scoped>
 .gui-field {

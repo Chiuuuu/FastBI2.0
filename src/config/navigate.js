@@ -1,8 +1,8 @@
-import { DEFAULT_COLORS } from '../utils/defaultColors'
-import guangzhou from '../utils/guangdong.json'
+import { DEFAULT_COLORS } from '../utils/defaultColors';
+import guangzhou from '../utils/guangdong.json';
 
 function chartClick(e) {
-  console.log(e)
+  console.log(e);
 }
 
 /**
@@ -49,27 +49,27 @@ const list = [
                   dataIndex: 'date',
                   key: 'date',
                   scopedSlots: {
-                    customRender: 'date'
-                  }
+                    customRender: 'date',
+                  },
                 },
                 {
                   title: '访问用户',
                   dataIndex: 'user1',
                   key: 'user1',
-                  width: 80
+                  width: 80,
                 },
                 {
                   title: '下单用户',
                   dataIndex: 'user2',
                   key: 'user2',
-                  ellipsis: true
+                  ellipsis: true,
                 },
                 {
                   title: '下单率',
                   dataIndex: 'rate',
                   key: 'rate',
-                  ellipsis: true
-                }
+                  ellipsis: true,
+                },
               ],
               rows: [
                 {
@@ -77,45 +77,45 @@ const list = [
                   date: '1/1',
                   user1: 1393,
                   user2: '1093',
-                  rate: '10%'
+                  rate: '10%',
                 },
                 {
                   // key: '2',
                   date: '1/2',
                   user1: 2341,
                   user2: '2312',
-                  rate: '12%'
+                  rate: '12%',
                 },
                 {
                   // key: '3',
                   date: '1/3',
                   user1: 2378,
                   user2: '2555',
-                  rate: '34%'
+                  rate: '34%',
                 },
                 {
                   // key: '4',
                   date: '1/4',
                   user1: 3256,
                   user2: '5488',
-                  rate: '45%'
+                  rate: '45%',
                 },
                 {
                   // key: '5',
                   date: '1/5',
                   user1: 3452,
                   user2: '3210',
-                  rate: '33%'
+                  rate: '33%',
                 },
                 {
                   // key: '6',
                   date: '1/6',
                   user1: 1234,
                   user2: '3321',
-                  rate: '30%'
-                }
+                  rate: '30%',
+                },
               ],
-              options: {}
+              options: {},
             },
             apis: {},
             background: {
@@ -124,11 +124,11 @@ const list = [
               borderColor: '#fff',
               borderWidth: 0,
               borderStyle: '',
-              borderRadius: 0
+              borderRadius: 0,
             },
             config: {
               index: {
-                show: false
+                show: false,
               },
               title: {
                 show: true,
@@ -138,8 +138,8 @@ const list = [
                   color: '#fff',
                   fontSize: 20,
                   fontFamily: 'not specified',
-                  fontWeight: 'normal'
-                }
+                  fontWeight: 'normal',
+                },
               },
               header: {
                 show: true,
@@ -147,29 +147,29 @@ const list = [
                   color: '#fff',
                   fontSize: 20,
                   fontWeight: 'bold',
-                  textAlign: 'left'
+                  textAlign: 'left',
                 },
-                backgroundColor: ''
+                backgroundColor: '',
               },
               table: {
                 textStyle: {
                   color: '#fff',
                   fontSize: 20,
                   fontWeight: 'bold',
-                  textAlign: 'left'
+                  textAlign: 'left',
                 },
                 oddBackgroundColor: '',
                 evenBackgroundColor: '',
                 pageSize: 10,
-                ellipsis: true
-              }
+                ellipsis: true,
+              },
             },
             view: {
               width: 500,
               height: 400,
               x: 710,
-              y: 340
-            } // 计算中间值(1920-500)*0.5,(1080-400)*0.5
+              y: 340,
+            }, // 计算中间值(1920-500)*0.5,(1080-400)*0.5
           },
           {
             title: '折线图',
@@ -188,42 +188,42 @@ const list = [
                 {
                   日期: '1/1',
                   访问用户: 1393,
-                  下单用户: 1093
+                  下单用户: 1093,
                 },
                 {
                   日期: '1/2',
                   访问用户: 3530,
-                  下单用户: 3230
+                  下单用户: 3230,
                 },
                 {
                   日期: '1/3',
                   访问用户: 2923,
-                  下单用户: 2623
+                  下单用户: 2623,
                 },
                 {
                   日期: '1/4',
                   访问用户: 1723,
-                  下单用户: 1423
+                  下单用户: 1423,
                 },
                 {
                   日期: '1/5',
                   访问用户: 3792,
-                  下单用户: 3492
+                  下单用户: 3492,
                 },
                 {
                   日期: '1/6',
                   访问用户: 4593,
-                  下单用户: 4293
-                }
+                  下单用户: 4293,
+                },
               ],
-              options: {}
+              options: {},
             },
             apis: {
               labelMap: {
                 x: '类目',
                 y: '值',
-                s: '系列1'
-              }
+                s: '系列1',
+              },
             },
             background: {
               backgroundType: '1',
@@ -231,7 +231,7 @@ const list = [
               borderColor: '#fff',
               borderWidth: 0,
               borderStyle: '',
-              borderRadius: 0
+              borderRadius: 0,
             },
             config: {
               title: {
@@ -242,14 +242,14 @@ const list = [
                   color: '#ffffff',
                   fontSize: 20,
                   fontFamily: 'not specified',
-                  fontWeight: 'normal'
-                }
+                  fontWeight: 'normal',
+                },
               },
               grid: {
                 left: 50,
                 top: 60,
                 right: 50,
-                bottom: 50
+                bottom: 50,
               },
               legend: {
                 show: true,
@@ -257,14 +257,14 @@ const list = [
                 align: 'left',
                 textStyle: {
                   color: '#ffffff',
-                  fontSize: 12
+                  fontSize: 12,
                 },
                 itemGap: 12,
                 icon: 'roundRect',
                 left: 'center',
                 top: 'top',
                 right: 'auto',
-                bottom: 'auto'
+                bottom: 'auto',
               },
               xAxis: {
                 name: '',
@@ -275,31 +275,31 @@ const list = [
                   color: '#fff',
                   fontSize: '12',
                   align: 'right',
-                  padding: [30, 0, 0, 0]
+                  padding: [30, 0, 0, 0],
                 },
                 axisLabel: {
                   show: true,
                   color: '#ffffff',
                   fontSize: 12,
-                  rotate: 0
+                  rotate: 0,
                 },
                 axisLine: {
                   show: true,
                   lineStyle: {
-                    color: '#fff'
-                  }
+                    color: '#fff',
+                  },
                 },
                 splitLine: {
                   show: false,
                   lineStyle: {
                     width: 2,
                     type: 'solid',
-                    color: '#fff'
-                  }
+                    color: '#fff',
+                  },
                 },
                 axisTick: {
-                  show: true
-                }
+                  show: true,
+                },
               },
               yAxis: {
                 name: '单位:个',
@@ -309,33 +309,33 @@ const list = [
                 nameTextStyle: {
                   color: '#fff',
                   fontSize: 12,
-                  padding: [0, 0, 40, 0]
+                  padding: [0, 0, 40, 0],
                 },
                 axisLabel: {
                   show: true,
                   color: '#ffffff',
-                  fontSize: 12
+                  fontSize: 12,
                 },
                 axisLine: {
                   show: true,
                   lineStyle: {
-                    color: '#fff'
-                  }
+                    color: '#fff',
+                  },
                 },
                 splitLine: {
                   show: true,
                   lineStyle: {
                     type: 'solid',
-                    color: '#fff'
-                  }
+                    color: '#fff',
+                  },
                 },
                 axisTick: {
-                  show: true
-                }
+                  show: true,
+                },
               },
               tooltip: {
                 show: true,
-                formatter: '{b} {c}'
+                formatter: '{b} {c}',
               },
               series: {
                 type: 'line',
@@ -343,30 +343,30 @@ const list = [
                 smooth: false, // 可选的
                 step: false, // step line
                 lineStyle: {
-                  width: 1
+                  width: 1,
                 },
                 label: {
                   show: false,
                   color: '#fff',
                   fontSize: 12,
-                  position: 'top'
+                  position: 'top',
                 },
                 areaStyle: {
                   // 可选的
-                  opacity: 0
+                  opacity: 0,
                 },
                 itemStyle: {
-                  normal: {}
-                }
+                  normal: {},
+                },
               },
-              color: DEFAULT_COLORS
+              color: DEFAULT_COLORS,
             },
             view: {
               width: 500,
               height: 400,
               x: 710,
-              y: 340
-            } // 计算中间值(1920-500)*0.5,(1080-400)*0.5
+              y: 340,
+            }, // 计算中间值(1920-500)*0.5,(1080-400)*0.5
           },
           {
             title: '柱状图',
@@ -383,40 +383,40 @@ const list = [
                   日期: '1/1',
                   访问用户: 1393,
                   下单用户: 1093,
-                  下单率: 0.32
+                  下单率: 0.32,
                 },
                 {
                   日期: '1/2',
                   访问用户: 3530,
                   下单用户: 3230,
-                  下单率: 0.26
+                  下单率: 0.26,
                 },
                 {
                   日期: '1/3',
                   访问用户: 2923,
                   下单用户: 2623,
-                  下单率: 0.76
+                  下单率: 0.76,
                 },
                 {
                   日期: '1/4',
                   访问用户: 1723,
                   下单用户: 1423,
-                  下单率: 0.49
+                  下单率: 0.49,
                 },
                 {
                   日期: '1/5',
                   访问用户: 3792,
                   下单用户: 3492,
-                  下单率: 0.323
+                  下单率: 0.323,
                 },
                 {
                   日期: '1/6',
                   访问用户: 4593,
                   下单用户: 4293,
-                  下单率: 0.78
-                }
+                  下单率: 0.78,
+                },
               ],
-              options: {}
+              options: {},
             },
             apis: {
               // stack: { '用户': ['系列1', '系列2'] },
@@ -426,8 +426,8 @@ const list = [
               labelMap: {
                 x: '类目',
                 y: '值',
-                s: '系列1'
-              }
+                s: '系列1',
+              },
             },
             background: {
               backgroundType: '1',
@@ -435,7 +435,7 @@ const list = [
               borderColor: '#fff',
               borderWidth: 0,
               borderStyle: '',
-              borderRadius: 0
+              borderRadius: 0,
             },
             config: {
               stack: false, // 是否是堆叠柱状图
@@ -448,14 +448,14 @@ const list = [
                   color: '#ffffff',
                   fontSize: 20,
                   fontFamily: 'not specified',
-                  fontWeight: 'normal'
-                }
+                  fontWeight: 'normal',
+                },
               },
               grid: {
                 left: 50,
                 top: 60,
                 right: 50,
-                bottom: 50
+                bottom: 50,
               },
               legend: {
                 show: true,
@@ -463,18 +463,18 @@ const list = [
                 align: 'left',
                 textStyle: {
                   color: '#ffffff',
-                  fontSize: 12
+                  fontSize: 12,
                 },
                 itemGap: 12,
                 icon: 'roundRect',
                 left: 'center',
                 top: 'top',
                 right: 'auto',
-                bottom: 'auto'
+                bottom: 'auto',
               },
               tooltip: {
                 show: true,
-                formatter: '{b} {c}'
+                formatter: '{b} {c}',
               },
               xAxis: {
                 name: '',
@@ -485,30 +485,30 @@ const list = [
                   color: '#fff',
                   fontSize: '12',
                   align: 'right',
-                  padding: [30, 0, 0, 0]
+                  padding: [30, 0, 0, 0],
                 },
                 axisLabel: {
                   show: true,
                   color: '#ffffff',
                   fontSize: 12,
-                  rotate: 0
+                  rotate: 0,
                 },
                 axisLine: {
                   show: true,
                   lineStyle: {
-                    color: '#fff'
-                  }
+                    color: '#fff',
+                  },
                 },
                 splitLine: {
                   show: false,
                   lineStyle: {
                     type: 'solid',
-                    color: '#fff'
-                  }
+                    color: '#fff',
+                  },
                 },
                 axisTick: {
-                  show: true
-                }
+                  show: true,
+                },
               },
               yAxis: {
                 name: '单位:个',
@@ -518,29 +518,29 @@ const list = [
                 nameTextStyle: {
                   color: '#fff',
                   fontSize: 12,
-                  padding: [0, 0, 40, 0]
+                  padding: [0, 0, 40, 0],
                 },
                 axisLabel: {
                   show: true,
                   color: '#ffffff',
-                  fontSize: 12
+                  fontSize: 12,
                 },
                 axisLine: {
                   show: true,
                   lineStyle: {
-                    color: '#fff'
-                  }
+                    color: '#fff',
+                  },
                 },
                 splitLine: {
                   show: true,
                   lineStyle: {
                     type: 'solid',
-                    color: '#fff'
-                  }
+                    color: '#fff',
+                  },
                 },
                 axisTick: {
-                  show: true
-                }
+                  show: true,
+                },
               },
               series: {
                 selectedMode: 'single',
@@ -548,25 +548,25 @@ const list = [
                   show: false,
                   color: '#fff',
                   fontSize: 12,
-                  position: 'top'
+                  position: 'top',
                 },
                 itemStyle: {
                   normal: {
-                    barBorderRadius: [0]
-                  }
+                    barBorderRadius: [0],
+                  },
                 },
                 barWidth: '20%',
                 barGap: '40%',
-                barCategoryGap: '40%'
+                barCategoryGap: '40%',
               },
-              color: DEFAULT_COLORS
+              color: DEFAULT_COLORS,
             },
             view: {
               width: 500,
               height: 400,
               x: 710,
-              y: 340
-            }
+              y: 340,
+            },
           },
           {
             title: '条形图',
@@ -583,47 +583,47 @@ const list = [
                   日期: '1/1',
                   访问用户: 1393,
                   下单用户: 1093,
-                  下单率: 0.32
+                  下单率: 0.32,
                 },
                 {
                   日期: '1/2',
                   访问用户: 3530,
                   下单用户: 3230,
-                  下单率: 0.26
+                  下单率: 0.26,
                 },
                 {
                   日期: '1/3',
                   访问用户: 2923,
                   下单用户: 2623,
-                  下单率: 0.76
+                  下单率: 0.76,
                 },
                 {
                   日期: '1/4',
                   访问用户: 1723,
                   下单用户: 1423,
-                  下单率: 0.49
+                  下单率: 0.49,
                 },
                 {
                   日期: '1/5',
                   访问用户: 3792,
                   下单用户: 3492,
-                  下单率: 0.323
+                  下单率: 0.323,
                 },
                 {
                   日期: '1/6',
                   访问用户: 4593,
                   下单用户: 4293,
-                  下单率: 0.78
-                }
+                  下单率: 0.78,
+                },
               ],
-              options: {}
+              options: {},
             },
             apis: {
               labelMap: {
                 x: '类目',
                 y: '值',
-                s: '系列1'
-              }
+                s: '系列1',
+              },
             },
             background: {
               backgroundType: '1',
@@ -631,7 +631,7 @@ const list = [
               borderColor: '#fff',
               borderWidth: 0,
               borderStyle: '',
-              borderRadius: 0
+              borderRadius: 0,
             },
             config: {
               title: {
@@ -642,14 +642,14 @@ const list = [
                   color: '#ffffff',
                   fontSize: 20,
                   fontFamily: 'not specified',
-                  fontWeight: 'normal'
-                }
+                  fontWeight: 'normal',
+                },
               },
               grid: {
                 left: 50,
                 top: 60,
                 right: 50,
-                bottom: 50
+                bottom: 50,
               },
               legend: {
                 show: true,
@@ -657,14 +657,14 @@ const list = [
                 align: 'left',
                 textStyle: {
                   color: '#ffffff',
-                  fontSize: 12
+                  fontSize: 12,
                 },
                 itemGap: 12,
                 icon: 'roundRect',
                 left: 'center',
                 top: 'top',
                 right: 'auto',
-                bottom: 'auto'
+                bottom: 'auto',
               },
               xAxis: {
                 name: '',
@@ -675,30 +675,30 @@ const list = [
                   color: '#fff',
                   fontSize: '12',
                   //   align: "right",
-                  padding: [30, 0, 0, 0]
+                  padding: [30, 0, 0, 0],
                 },
                 axisLabel: {
                   show: true,
                   color: '#ffffff',
                   fontSize: 12,
-                  rotate: 0
+                  rotate: 0,
                 },
                 axisLine: {
                   show: true,
                   lineStyle: {
-                    color: '#fff'
-                  }
+                    color: '#fff',
+                  },
                 },
                 splitLine: {
                   show: true,
                   lineStyle: {
                     type: 'solid',
-                    color: '#fff'
-                  }
+                    color: '#fff',
+                  },
                 },
                 axisTick: {
-                  show: true
-                }
+                  show: true,
+                },
               },
               yAxis: {
                 name: '单位:个',
@@ -708,33 +708,33 @@ const list = [
                 nameTextStyle: {
                   color: '#fff',
                   fontSize: 12,
-                  padding: [0, 0, 30, 0]
+                  padding: [0, 0, 30, 0],
                 },
                 axisLabel: {
                   show: true,
                   color: '#ffffff',
-                  fontSize: 12
+                  fontSize: 12,
                 },
                 axisLine: {
                   show: true,
                   lineStyle: {
-                    color: '#fff'
-                  }
+                    color: '#fff',
+                  },
                 },
                 splitLine: {
                   show: true,
                   lineStyle: {
                     type: 'solid',
-                    color: '#fff'
-                  }
+                    color: '#fff',
+                  },
                 },
                 axisTick: {
-                  show: true
-                }
+                  show: true,
+                },
               },
               tooltip: {
                 show: true,
-                formatter: '{b} {c}'
+                formatter: '{b} {c}',
               },
               series: {
                 selectedMode: 'single',
@@ -742,24 +742,24 @@ const list = [
                   show: false,
                   color: '#fff',
                   fontSize: 12,
-                  position: 'inside'
+                  position: 'inside',
                   // offset: [0, 1]
                 },
                 barWidth: '20%', // 可选
                 barGap: '40%',
                 barCategoryGap: '40%',
                 itemStyle: {
-                  normal: {}
-                }
+                  normal: {},
+                },
               },
-              color: DEFAULT_COLORS
+              color: DEFAULT_COLORS,
             },
             view: {
               width: 500,
               height: 450,
               x: 710,
-              y: 340
-            }
+              y: 340,
+            },
           },
           {
             title: '饼图',
@@ -774,30 +774,30 @@ const list = [
               rows: [
                 {
                   日期: '1/1',
-                  访问用户: 1393
+                  访问用户: 1393,
                 },
                 {
                   日期: '1/2',
-                  访问用户: 3530
+                  访问用户: 3530,
                 },
                 {
                   日期: '1/3',
-                  访问用户: 2923
+                  访问用户: 2923,
                 },
                 {
                   日期: '1/4',
-                  访问用户: 1723
+                  访问用户: 1723,
                 },
                 {
                   日期: '1/5',
-                  访问用户: 3792
+                  访问用户: 3792,
                 },
                 {
                   日期: '1/6',
-                  访问用户: 4593
-                }
+                  访问用户: 4593,
+                },
               ],
-              options: {}
+              options: {},
             },
             apis: {},
             background: {
@@ -806,7 +806,7 @@ const list = [
               borderColor: '#fff',
               borderWidth: 0,
               borderStyle: '',
-              borderRadius: 0
+              borderRadius: 0,
             },
             config: {
               title: {
@@ -817,14 +817,14 @@ const list = [
                   color: '#ffffff',
                   fontSize: 20,
                   fontFamily: 'not specified',
-                  fontWeight: 'normal'
-                }
+                  fontWeight: 'normal',
+                },
               },
               grid: {
                 left: 20,
                 top: 60,
                 right: 20,
-                bottom: 30
+                bottom: 30,
               },
               legend: {
                 show: true,
@@ -834,18 +834,18 @@ const list = [
                 type: 'scroll',
                 pageIconColor: '#fff',
                 pageTextStyle: {
-                  color: '#fff'
+                  color: '#fff',
                 },
                 textStyle: {
                   color: '#ffffff',
-                  fontSize: 12
+                  fontSize: 12,
                 },
                 itemGap: 12,
                 icon: 'roundRect',
                 left: 'center',
                 top: 'top',
                 right: 'auto',
-                bottom: 'auto'
+                bottom: 'auto',
               },
               xAxis: {
                 show: false,
@@ -853,40 +853,40 @@ const list = [
                   show: true,
                   color: '#ffffff',
                   fontSize: 12,
-                  rotate: 0
+                  rotate: 0,
                 },
                 axisLine: {
                   show: true,
                   lineStyle: {
-                    color: '#cccccc'
-                  }
+                    color: '#cccccc',
+                  },
                 },
                 splitLine: {
                   show: false,
                   lineStyle: {
-                    color: '#cccccc'
-                  }
-                }
+                    color: '#cccccc',
+                  },
+                },
               },
               yAxis: {
                 show: false,
                 axisLabel: {
                   show: true,
                   color: '#ffffff',
-                  fontSize: 12
+                  fontSize: 12,
                 },
                 axisLine: {
                   show: true,
                   lineStyle: {
-                    color: '#cccccc'
-                  }
+                    color: '#cccccc',
+                  },
                 },
                 splitLine: {
                   show: false,
                   lineStyle: {
-                    color: '#cccccc'
-                  }
-                }
+                    color: '#cccccc',
+                  },
+                },
               },
               series: {
                 // selectedMode: 'single',
@@ -896,32 +896,32 @@ const list = [
                   fontSize: 12,
                   position: 'outside', // 可选inside
                   formatter: '{b}: {@2012} ({d}%)',
-                  formatterSelect: ['name', 'value', 'percent']
+                  formatterSelect: ['name', 'value', 'percent'],
                 },
                 // 选中时样式
                 select: {
                   itemStyle: {
-                    normal: {}
-                  }
+                    normal: {},
+                  },
                 },
                 roseType: false, // 饼图可选玫瑰图
                 center: ['50%', '50%'], // 饼图可选
                 radius: ['0', '70%'], // 饼图可选
                 itemStyle: {
-                  normal: {}
-                }
+                  normal: {},
+                },
               },
-              color: DEFAULT_COLORS
+              color: DEFAULT_COLORS,
             },
             chartEvents: {
-              click: chartClick
+              click: chartClick,
             },
             view: {
               width: 400,
               height: 400,
               x: 760,
-              y: 340
-            }
+              y: 340,
+            },
           },
           {
             title: '雷达图',
@@ -938,28 +938,28 @@ const list = [
                   measure: '1/1',
                   访问用户: 1393,
                   下单用户: 1093,
-                  下单率: 0.32
+                  下单率: 0.32,
                 },
                 {
                   measure: '1/2',
                   访问用户: 3530,
                   下单用户: 3230,
-                  下单率: 0.26
+                  下单率: 0.26,
                 },
                 {
                   measure: '1/3',
                   访问用户: 2923,
                   下单用户: 2623,
-                  下单率: 0.76
+                  下单率: 0.76,
                 },
                 {
                   measure: '1/4',
                   访问用户: 1723,
                   下单用户: 1423,
-                  下单率: 0.49
-                }
+                  下单率: 0.49,
+                },
               ],
-              options: {}
+              options: {},
             },
             apis: {
               //   metrics: [访问用户, 下单用户, 下单率]
@@ -970,7 +970,7 @@ const list = [
               borderColor: '#fff',
               borderWidth: 0,
               borderStyle: '',
-              borderRadius: 0
+              borderRadius: 0,
             },
             config: {
               title: {
@@ -981,14 +981,14 @@ const list = [
                   color: '#ffffff',
                   fontSize: 20,
                   fontFamily: 'not specified',
-                  fontWeight: 'normal'
-                }
+                  fontWeight: 'normal',
+                },
               },
               grid: {
                 left: 20,
                 top: 60,
                 right: 20,
-                bottom: 30
+                bottom: 30,
               },
               legend: {
                 show: true,
@@ -996,14 +996,14 @@ const list = [
                 align: 'left',
                 textStyle: {
                   color: '#ffffff',
-                  fontSize: 12
+                  fontSize: 12,
                 },
                 itemGap: 12,
                 icon: 'roundRect',
                 left: 'center',
                 top: 'top',
                 right: 'auto',
-                bottom: 'auto'
+                bottom: 'auto',
               },
               radar: {
                 // 雷达图可选
@@ -1014,33 +1014,33 @@ const list = [
                   formatter: '{value}',
                   textStyle: {
                     fontSize: 12, // 外圈标签字体大小
-                    color: '#fff' // 外圈标签字体颜色
-                  }
+                    color: '#fff', // 外圈标签字体颜色
+                  },
                 },
                 splitArea: {
                   areaStyle: {
                     color: 'transparent', // 圆环颜色
                     shadowColor: 'aqua', // 圆颜色
-                    shadowBlur: 10
-                  }
+                    shadowBlur: 10,
+                  },
                 },
                 axisLine: {
                   lineStyle: {
-                    color: '#fff' // 分割线
-                  }
+                    color: '#fff', // 分割线
+                  },
                 },
                 splitLine: {
                   lineStyle: {
                     color: '#fff', // 圆线
-                    width: 1
-                  }
-                }
+                    width: 1,
+                  },
+                },
               },
               xAxis: {
-                show: false
+                show: false,
               },
               yAxis: {
-                show: false
+                show: false,
               },
               series: {
                 type: 'radar',
@@ -1049,24 +1049,24 @@ const list = [
                   show: false,
                   color: '',
                   fontSize: 12,
-                  position: 'inside' // 可选inside
+                  position: 'inside', // 可选inside
                 },
                 areaStyle: {
                   // 可选的
-                  opacity: 0.3
+                  opacity: 0.3,
                 },
                 itemStyle: {
-                  normal: {}
-                }
+                  normal: {},
+                },
               },
-              color: DEFAULT_COLORS
+              color: DEFAULT_COLORS,
             },
             view: {
               width: 400,
               height: 400,
               x: 760,
-              y: 340
-            }
+              y: 340,
+            },
           },
           {
             title: '仪表盘',
@@ -1081,10 +1081,10 @@ const list = [
               rows: [
                 {
                   type: 'speed',
-                  value: 60
-                }
+                  value: 60,
+                },
               ],
-              options: {}
+              options: {},
               // source: [
               //   { x: 'type', y: 60, s: 'value' }
               // ]
@@ -1093,8 +1093,8 @@ const list = [
               labelMap: {
                 x: '类目',
                 y: '值',
-                s: '系列1'
-              }
+                s: '系列1',
+              },
             },
             background: {
               backgroundType: '1',
@@ -1102,7 +1102,7 @@ const list = [
               borderColor: '#fff',
               borderWidth: 0,
               borderStyle: '',
-              borderRadius: 0
+              borderRadius: 0,
             },
             config: {
               title: {
@@ -1113,23 +1113,23 @@ const list = [
                   color: '#ffffff',
                   fontSize: 20,
                   fontFamily: 'not specified',
-                  fontWeight: 'normal'
-                }
+                  fontWeight: 'normal',
+                },
               },
               tooltip: {
-                show: false
+                show: false,
               },
               grid: {
                 left: 0,
                 top: 60,
                 right: 0,
-                bottom: 30
+                bottom: 30,
               },
               xAxis: {
-                show: false
+                show: false,
               },
               yAxis: {
-                show: false
+                show: false,
               },
               legend: {
                 show: false,
@@ -1138,14 +1138,14 @@ const list = [
                 data: [],
                 textStyle: {
                   color: '#ffffff',
-                  fontSize: 12
+                  fontSize: 12,
                 },
                 itemGap: 12,
                 icon: 'roundRect',
                 left: 'center',
                 top: 'top',
                 right: 'auto',
-                bottom: 'auto'
+                bottom: 'auto',
               },
               series: {
                 name: '',
@@ -1164,46 +1164,46 @@ const list = [
                     color: [[1, '#f5c942']],
                     shadowColor: '#ccc',
                     shadowBlur: 2,
-                    width: 15
-                  }
+                    width: 15,
+                  },
                 },
                 splitLine: {
                   show: true,
                   length: 25, // 刻度节点线长度
                   lineStyle: {
                     width: 2,
-                    color: '#fff'
-                  } // 刻度节点线
+                    color: '#fff',
+                  }, // 刻度节点线
                 },
                 axisTick: {
-                  show: false
+                  show: false,
                 },
                 axisLabel: {
                   show: true,
                   textStyle: {
                     fontSize: 14,
-                    color: '#fff'
-                  }
+                    color: '#fff',
+                  },
                 },
                 // title: {
                 //   show: true
                 // },
                 detail: {
-                  show: true
+                  show: true,
                 },
                 pointer: {
                   // 指针样式
-                  length: '60%'
-                }
-              }
+                  length: '60%',
+                },
+              },
               // color: DEFAULT_COLORS
             },
             view: {
               width: 400,
               height: 400,
               x: 760,
-              y: 340
-            }
+              y: 340,
+            },
           },
           {
             title: '地图',
@@ -1221,9 +1221,9 @@ const list = [
               labelMap: {
                 x: '位置',
                 y: '人口',
-                s: '系列1'
+                s: '系列1',
               },
-              selectedMode: false
+              selectedMode: false,
             },
             background: {
               backgroundType: '1',
@@ -1231,7 +1231,7 @@ const list = [
               borderColor: '#fff',
               borderWidth: 0,
               borderStyle: '',
-              borderRadius: 0
+              borderRadius: 0,
             },
             config: {
               title: {
@@ -1242,23 +1242,23 @@ const list = [
                   color: '#ffffff',
                   fontSize: 20,
                   fontFamily: 'not specified',
-                  fontWeight: 'normal'
-                }
+                  fontWeight: 'normal',
+                },
               },
               grid: {
                 left: 0,
                 top: 10,
                 right: 0,
-                bottom: 10
+                bottom: 10,
               },
               legend: {
                 show: false,
                 textStyle: {
                   color: '#ffffff',
-                  fontSize: 12
+                  fontSize: 12,
                 },
                 itemStyle: {
-                  color: DEFAULT_COLORS[0]
+                  color: DEFAULT_COLORS[0],
                 },
                 itemGap: 12,
                 icon: 'roundRect',
@@ -1268,7 +1268,7 @@ const list = [
                 bottom: 'auto',
                 orient: 'horizontal',
                 align: 'left',
-                data: ['人口']
+                data: ['人口'],
               },
               // 地图独有的
               geo: {
@@ -1284,11 +1284,11 @@ const list = [
                 label: {
                   normal: {
                     show: false,
-                    color: '#fff'
+                    color: '#fff',
                   },
                   emphasis: {
-                    show: false
-                  }
+                    show: false,
+                  },
                 },
                 itemStyle: {
                   normal: {
@@ -1297,23 +1297,23 @@ const list = [
                     borderWidth: 2,
                     // shadowColor: 'rgba(0,54,255, 1)',
                     // shadowBlur: 100,
-                    opacity: 1
+                    opacity: 1,
                   },
                   emphasis: {
                     borderColor: '#073684',
-                    areaColor: '#061E3D'
-                  }
-                }
+                    areaColor: '#061E3D',
+                  },
+                },
               },
-              series: []
+              series: [],
               //   color: DEFAULT_COLORS
             },
             view: {
               width: 300,
               height: 500,
               x: 710,
-              y: 290
-            }
+              y: 290,
+            },
           },
           {
             title: '嵌套饼图',
@@ -1332,18 +1332,21 @@ const list = [
                 { 日期: '1/3', 访问用户: 2923 },
                 { 日期: '1/4', 访问用户: 1723 },
                 { 日期: '1/5', 访问用户: 3792 },
-                { 日期: '1/6', 访问用户: 4593 }
+                { 日期: '1/6', 访问用户: 4593 },
               ],
-              options: {}
+              options: {},
             },
             apis: {
-              level: [['1/1', '1/2', '1/3'], ['1/4', '1/5']],
+              level: [
+                ['1/1', '1/2', '1/3'],
+                ['1/4', '1/5'],
+              ],
               labelMap: {
                 x: '类目',
                 y: '值',
-                s: '系列1'
+                s: '系列1',
               },
-              radius: 100
+              radius: 100,
             },
             background: {
               backgroundType: '1',
@@ -1351,7 +1354,7 @@ const list = [
               borderColor: '#fff',
               borderWidth: 0,
               borderStyle: '',
-              borderRadius: 0
+              borderRadius: 0,
             },
             config: {
               title: {
@@ -1362,8 +1365,8 @@ const list = [
                   color: '#ffffff',
                   fontSize: 20,
                   fontFamily: 'not specified',
-                  fontWeight: 'normal'
-                }
+                  fontWeight: 'normal',
+                },
               },
               chartTitle: {
                 show: true,
@@ -1375,17 +1378,17 @@ const list = [
                   color: '#ffffff',
                   fontFamily: 'not specified',
                   fontSize: 20,
-                  fontWeight: 'normal'
-                }
+                  fontWeight: 'normal',
+                },
               },
               tooltip: {
-                show: false
+                show: false,
               },
               grid: {
                 left: 20,
                 top: 20,
                 right: 20,
-                bottom: 30
+                bottom: 30,
               },
               legend: {
                 show: true,
@@ -1394,53 +1397,53 @@ const list = [
                 data: [],
                 textStyle: {
                   color: '#ffffff',
-                  fontSize: 12
+                  fontSize: 12,
                 },
                 itemGap: 12,
                 icon: 'roundRect',
                 left: 'center',
                 top: 'top',
                 right: 'auto',
-                bottom: 'auto'
+                bottom: 'auto',
               },
               xAxis: {
                 show: false,
                 axisLabel: {
                   color: '#ffffff',
                   fontSize: 12,
-                  rotate: 0
+                  rotate: 0,
                 },
                 axisLine: {
                   show: false,
                   lineStyle: {
-                    color: '#cccccc'
-                  }
+                    color: '#cccccc',
+                  },
                 },
                 splitLine: {
                   show: false,
                   lineStyle: {
-                    color: '#cccccc'
-                  }
-                }
+                    color: '#cccccc',
+                  },
+                },
               },
               yAxis: {
                 show: false,
                 axisLabel: {
                   color: '#ffffff',
-                  fontSize: 12
+                  fontSize: 12,
                 },
                 axisLine: {
                   show: false,
                   lineStyle: {
-                    color: '#cccccc'
-                  }
+                    color: '#cccccc',
+                  },
                 },
                 splitLine: {
                   show: false,
                   lineStyle: {
-                    color: '#cccccc'
-                  }
-                }
+                    color: '#cccccc',
+                  },
+                },
               },
               series: {
                 label: {
@@ -1449,21 +1452,21 @@ const list = [
                   fontSize: 12,
                   position: 'outside', // 可选inside
                   formatter: '{b}: {@2012} ({d}%)',
-                  formatterSelect: ['name', 'value', 'percent']
+                  formatterSelect: ['name', 'value', 'percent'],
                 },
-                center: ['50%', '50%'] // 饼图可选
+                center: ['50%', '50%'], // 饼图可选
               },
-              color: DEFAULT_COLORS
+              color: DEFAULT_COLORS,
             },
             chartEvents: {
-              click: chartClick
+              click: chartClick,
             },
             view: {
               width: 400,
               height: 400,
               x: 760,
-              y: 340
-            }
+              y: 340,
+            },
           },
           {
             title: '进度条',
@@ -1483,8 +1486,8 @@ const list = [
                   color: '#fff',
                   fontSize: 20,
                   fontFamily: 'not specified',
-                  fontWeight: 'normal'
-                }
+                  fontWeight: 'normal',
+                },
               },
               common: {
                 height: 5,
@@ -1492,21 +1495,21 @@ const list = [
                 isShowValue: true,
                 textStyle: {
                   color: '#fff',
-                  fontSize: 20
+                  fontSize: 20,
                 },
-                location: 'inside' // inside/outside
+                location: 'inside', // inside/outside
               },
               buttonBar: {
                 background: '#f5f5f5',
-                borderRadius: 100
+                borderRadius: 100,
               },
               valueBar: {
                 backgroundType: '1',
                 background: '#1890ff',
                 lineColor: ['#108ee9', '#87d068'],
                 radialColor: ['#108ee9', '#87d068'],
-                borderRadius: 100
-              } // 背景类型(单色:1||线性渐变:2||径向渐变:3)
+                borderRadius: 100,
+              }, // 背景类型(单色:1||线性渐变:2||径向渐变:3)
             },
             background: {
               backgroundType: '1',
@@ -1514,14 +1517,14 @@ const list = [
               borderColor: '#fff',
               borderWidth: 0,
               borderStyle: '',
-              borderRadius: 0
+              borderRadius: 0,
             },
             view: {
               width: 400,
               height: 200,
               x: 760,
-              y: 340
-            }
+              y: 340,
+            },
           },
           {
             title: '环形图',
@@ -1535,22 +1538,22 @@ const list = [
               rows: [
                 {
                   日期: '1/1',
-                  访问用户: 3530
+                  访问用户: 3530,
                 },
                 {
                   日期: '1/2',
-                  访问用户: 1393
-                }
+                  访问用户: 1393,
+                },
               ],
-              options: {}
+              options: {},
             },
             apis: {
               hoverAnimation: false,
               labelMap: {
                 x: '类目',
                 y: '值',
-                s: '系列1'
-              }
+                s: '系列1',
+              },
             },
             background: {
               backgroundType: '1',
@@ -1558,7 +1561,7 @@ const list = [
               borderColor: '#fff',
               borderWidth: 0,
               borderStyle: '',
-              borderRadius: 0
+              borderRadius: 0,
             },
             config: {
               topTitle: {
@@ -1569,8 +1572,8 @@ const list = [
                   color: '#ffffff',
                   fontSize: 20,
                   fontFamily: 'not specified',
-                  fontWeight: 'normal'
-                }
+                  fontWeight: 'normal',
+                },
               },
               chartTitle: {
                 show: true,
@@ -1582,17 +1585,17 @@ const list = [
                   color: '#ffffff',
                   fontFamily: 'not specified',
                   fontSize: 20,
-                  fontWeight: 'normal'
-                }
+                  fontWeight: 'normal',
+                },
               },
               tooltip: {
-                show: false
+                show: false,
               },
               grid: {
                 left: 20,
                 top: 20,
                 right: 20,
-                bottom: 30
+                bottom: 30,
               },
               legend: {
                 show: false,
@@ -1602,24 +1605,24 @@ const list = [
                 type: 'scroll',
                 pageIconColor: '#fff',
                 pageTextStyle: {
-                  color: '#fff'
+                  color: '#fff',
                 },
                 textStyle: {
                   color: '#ffffff',
-                  fontSize: 12
+                  fontSize: 12,
                 },
                 itemGap: 12,
                 icon: 'roundRect',
                 left: 'center',
                 top: 'top',
                 right: 'auto',
-                bottom: 'auto'
+                bottom: 'auto',
               },
               xAxis: {
-                show: false
+                show: false,
               },
               yAxis: {
-                show: false
+                show: false,
               },
               series: {
                 radius: ['60%', '70%'],
@@ -1629,32 +1632,32 @@ const list = [
                     show: false,
                     position: 'center',
                     textStyle: {
-                      fontSize: '30'
-                    }
+                      fontSize: '30',
+                    },
                   },
                   emphasis: {
                     show: false,
                     textStyle: {
                       fontSize: '30',
-                      fontWeight: 'bold'
-                    }
-                  }
+                      fontWeight: 'bold',
+                    },
+                  },
                 },
                 itemStyle: {
-                  normal: {}
-                }
+                  normal: {},
+                },
               },
-              color: ['#0185FE', '#9ED1FF']
+              color: ['#0185FE', '#9ED1FF'],
             },
             chartEvents: {
-              click: chartClick
+              click: chartClick,
             },
             view: {
               width: 400,
               height: 400,
               x: 760,
-              y: 340
-            }
+              y: 340,
+            },
           },
           {
             title: '散点图',
@@ -1679,14 +1682,14 @@ const list = [
                 // { 日期: '1/5', x: 3792, y: 3492 },
                 // { 日期: '1/6', x: 4593, y: 4293 }
               ],
-              options: {}
+              options: {},
             },
             apis: {
               // level: [['1/1', '1/2', '1/3'], ['1/4', '1/5']],
               labelMap: {
                 x: '值',
                 y: '值',
-                s: '类目'
+                s: '类目',
               },
               radius: 100,
               // 自定义参数
@@ -1697,40 +1700,40 @@ const list = [
                   data: [
                     {
                       name: '',
-                      value: [1000, 1000, '广州1', 'x', 'y', '地区']
+                      value: [1000, 1000, '广州1', 'x', 'y', '地区'],
                     },
                     {
                       name: '',
-                      value: [130, 1050, '广州1', 'x', 'y', '地区']
-                    }
-                  ]
+                      value: [130, 1050, '广州1', 'x', 'y', '地区'],
+                    },
+                  ],
                 },
                 {
                   label: '广州2',
                   data: [
                     {
                       name: '',
-                      value: [550, 700, '广州2', 'x', 'y', '地区']
+                      value: [550, 700, '广州2', 'x', 'y', '地区'],
                     },
                     {
                       name: '',
-                      value: [660, 120, '广州2', 'x', 'y', '地区']
-                    }
-                  ]
+                      value: [660, 120, '广州2', 'x', 'y', '地区'],
+                    },
+                  ],
                 },
                 {
                   label: '广州3',
                   data: [
                     {
                       name: '',
-                      value: [660, 700, '广州3', 'x', 'y', '地区']
+                      value: [660, 700, '广州3', 'x', 'y', '地区'],
                     },
                     {
                       name: '',
-                      value: [880, 120, '广州3', 'x', 'y', '地区']
-                    }
-                  ]
-                }
+                      value: [880, 120, '广州3', 'x', 'y', '地区'],
+                    },
+                  ],
+                },
               ],
               scatterColor: '1', // 散点颜色 0单色 1按维度
               scatterSize: '', // 散点大小  0：按度量1  1：按度量2  默认空，为无
@@ -1738,7 +1741,7 @@ const list = [
               arrange: 'horizontal', // 指标-排列 horizontal水平  vertical垂直
               scatterTargetColor: '0', // 0使用图例 1：自定义
               xMax: 1000, // 度量1 最大值
-              yMax: 1000 // 度量2 最大值
+              yMax: 1000, // 度量2 最大值
             },
             background: {
               backgroundType: '1',
@@ -1746,7 +1749,7 @@ const list = [
               borderColor: '#fff',
               borderWidth: 0,
               borderStyle: '',
-              borderRadius: 0
+              borderRadius: 0,
             },
             config: {
               title: {
@@ -1757,20 +1760,20 @@ const list = [
                   color: '#ffffff',
                   fontSize: 20,
                   fontFamily: 'not specified',
-                  fontWeight: 'normal'
-                }
+                  fontWeight: 'normal',
+                },
               },
               tooltip: {
                 show: true,
                 trigger: 'item',
                 confine: true,
-                formatter: ''
+                formatter: '',
               },
               grid: {
                 left: 50,
                 top: 60,
                 right: 50,
-                bottom: 50
+                bottom: 50,
               },
               legend: {
                 show: false,
@@ -1780,11 +1783,11 @@ const list = [
                 type: 'scroll',
                 pageIconColor: '#fff',
                 pageTextStyle: {
-                  color: '#fff'
+                  color: '#fff',
                 },
                 textStyle: {
                   color: '#ffffff',
-                  fontSize: 12
+                  fontSize: 12,
                 },
                 itemGap: 12,
                 icon: 'roundRect',
@@ -1792,7 +1795,7 @@ const list = [
                 top: 'top',
                 right: 'auto',
                 bottom: 'auto',
-                data: []
+                data: [],
               },
               xAxis: {
                 type: 'value',
@@ -1804,30 +1807,30 @@ const list = [
                   color: '#fff',
                   fontSize: '12',
                   align: 'right',
-                  padding: [30, 0, 0, 0]
+                  padding: [30, 0, 0, 0],
                 },
                 axisLabel: {
                   show: true,
                   color: '#ffffff',
                   fontSize: 12,
-                  rotate: 0
+                  rotate: 0,
                 },
                 axisLine: {
                   show: true,
                   lineStyle: {
-                    color: '#fff'
-                  }
+                    color: '#fff',
+                  },
                 },
                 splitLine: {
                   show: true,
                   lineStyle: {
                     type: 'solid',
-                    color: '#fff'
-                  }
+                    color: '#fff',
+                  },
                 },
                 axisTick: {
-                  show: true
-                }
+                  show: true,
+                },
               },
               yAxis: {
                 type: 'value',
@@ -1838,29 +1841,29 @@ const list = [
                 nameTextStyle: {
                   color: '#fff',
                   fontSize: 12,
-                  padding: [0, 0, 40, 0]
+                  padding: [0, 0, 40, 0],
                 },
                 axisLabel: {
                   show: true,
                   color: '#ffffff',
-                  fontSize: 12
+                  fontSize: 12,
                 },
                 axisLine: {
                   show: true,
                   lineStyle: {
-                    color: '#fff'
-                  }
+                    color: '#fff',
+                  },
                 },
                 splitLine: {
                   show: false,
                   lineStyle: {
                     type: 'solid',
-                    color: '#fff'
-                  }
+                    color: '#fff',
+                  },
                 },
                 axisTick: {
-                  show: false
-                }
+                  show: false,
+                },
               },
               series: {
                 name: '',
@@ -1873,20 +1876,20 @@ const list = [
                   position: 'outside', // 可选inside
                   align: 'left',
                   offset: [-10, 0],
-                  formatter: '{@5}：{@2} ({@0},{@1})'
-                }
+                  formatter: '{@5}：{@2} ({@0},{@1})',
+                },
               },
-              color: DEFAULT_COLORS
+              color: DEFAULT_COLORS,
             },
             chartEvents: {
-              click: chartClick
+              click: chartClick,
             },
             view: {
               width: 400,
               height: 400,
               x: 760,
-              y: 340
-            }
+              y: 340,
+            },
           },
           {
             title: '旭日图',
@@ -1900,7 +1903,7 @@ const list = [
             api_data: {
               columns: ['日期', '访问用户'],
               rows: [],
-              options: {}
+              options: {},
             },
             apis: {},
             background: {
@@ -1909,7 +1912,7 @@ const list = [
               borderColor: '#fff',
               borderWidth: 0,
               borderStyle: '',
-              borderRadius: 0
+              borderRadius: 0,
             },
             config: {
               title: {
@@ -1921,8 +1924,8 @@ const list = [
                   color: '#ffffff',
                   fontSize: 20,
                   fontFamily: 'not specified',
-                  fontWeight: 'normal'
-                }
+                  fontWeight: 'normal',
+                },
               },
               // grid: {
               //   left: 20,
@@ -1931,7 +1934,7 @@ const list = [
               //   bottom: 30
               // },
               tooltip: {
-                trigger: 'item'
+                trigger: 'item',
               },
               visualMap: {
                 type: 'continuous',
@@ -1944,20 +1947,20 @@ const list = [
                 top: 'bottom', // 上 中 下
                 // bottom: '5%',
                 inRange: {
-                  color: ['#f69f2e', '#0fabf1', '#ed8693', '#ffff0d', '#0d8686']
+                  color: ['#f69f2e', '#0fabf1', '#ed8693', '#ffff0d', '#0d8686'],
                 },
                 textStyle: {
                   color: '#fff',
                   fontSize: 15,
-                  fontFamily: 'not specified'
-                }
+                  fontFamily: 'not specified',
+                },
               },
               series: {
                 type: 'sunburst',
                 nodeClick: false,
                 sort: null,
                 emphasis: {
-                  focus: 'ancestor'
+                  focus: 'ancestor',
                 },
                 center: ['50%', '50%'],
                 radius: [0, '80%'],
@@ -1966,7 +1969,7 @@ const list = [
                 tooltip: {
                   show: true,
                   formatter: '{b}',
-                  position: 'top'
+                  position: 'top',
                 },
                 label: {
                   show: true,
@@ -1975,11 +1978,11 @@ const list = [
                   formatter: '{b}',
                   position: 'inside',
                   rotate: 'radial',
-                  orient: 'vertical'
+                  orient: 'vertical',
                 },
                 itemStyle: {
                   borderColor: '#fff',
-                  borderWidth: 1
+                  borderWidth: 1,
                 },
                 data: [
                   {
@@ -1989,9 +1992,9 @@ const list = [
                       {
                         name: '男',
                         value: 78,
-                        children: []
-                      }
-                    ]
+                        children: [],
+                      },
+                    ],
                   },
                   {
                     name: '张明2',
@@ -2000,9 +2003,9 @@ const list = [
                       {
                         name: '男',
                         value: 42,
-                        children: []
-                      }
-                    ]
+                        children: [],
+                      },
+                    ],
                   },
                   {
                     name: '张明3',
@@ -2011,9 +2014,9 @@ const list = [
                       {
                         name: '男',
                         value: 88,
-                        children: []
-                      }
-                    ]
+                        children: [],
+                      },
+                    ],
                   },
                   {
                     name: '张明4',
@@ -2022,9 +2025,9 @@ const list = [
                       {
                         name: '男',
                         value: 32,
-                        children: []
-                      }
-                    ]
+                        children: [],
+                      },
+                    ],
                   },
                   {
                     name: '张明5',
@@ -2033,12 +2036,12 @@ const list = [
                       {
                         name: '男',
                         value: 20,
-                        children: []
-                      }
-                    ]
-                  }
-                ]
-              }
+                        children: [],
+                      },
+                    ],
+                  },
+                ],
+              },
               // series: {
               //   label: {
               //     show: true,
@@ -2051,14 +2054,14 @@ const list = [
               // },
             },
             chartEvents: {
-              click: chartClick
+              click: chartClick,
             },
             view: {
               width: 400,
               height: 400,
               x: 760,
-              y: 340
-            }
+              y: 340,
+            },
           },
           {
             title: '矩形树图',
@@ -2075,14 +2078,14 @@ const list = [
               source: {},
               columns: [],
               rows: [],
-              options: {}
+              options: {},
             },
             apis: {
               labelMap: {
                 x: '值',
                 y: '值',
-                s: '类目'
-              }
+                s: '类目',
+              },
             },
             background: {
               backgroundType: '1',
@@ -2090,7 +2093,7 @@ const list = [
               borderColor: '#fff',
               borderWidth: 0,
               borderStyle: '',
-              borderRadius: 0
+              borderRadius: 0,
             },
             config: {
               title: {
@@ -2102,14 +2105,14 @@ const list = [
                   fontSize: 20,
                   fontFamily: 'not specified',
                   fontWeight: 'normal',
-                  overflow: 'break'
-                }
+                  overflow: 'break',
+                },
               },
               grid: {
                 left: 50,
                 top: 60,
                 right: 50,
-                bottom: 50
+                bottom: 50,
               },
               legend: {
                 show: false,
@@ -2119,18 +2122,18 @@ const list = [
                 type: 'scroll',
                 pageIconColor: '#fff',
                 pageTextStyle: {
-                  color: '#fff'
+                  color: '#fff',
                 },
                 textStyle: {
                   color: '#ffffff',
-                  fontSize: 12
+                  fontSize: 12,
                 },
                 itemGap: 12,
                 icon: 'roundRect',
                 left: 'center',
                 top: 'top',
                 right: 'auto',
-                bottom: 'auto'
+                bottom: 'auto',
               },
               visualMap: {
                 show: true,
@@ -2140,10 +2143,10 @@ const list = [
                 max: 0,
                 textStyle: {
                   color: '#ffffff',
-                  fontSize: 12
+                  fontSize: 12,
                 },
                 inRange: {
-                  color: ['#f69f2e', '#0fabf1', '#ed8693', '#ffff0d', '#0d8686']
+                  color: ['#f69f2e', '#0fabf1', '#ed8693', '#ffff0d', '#0d8686'],
                 },
                 pieces: [
                   { label: '广州市', value: 800 },
@@ -2151,13 +2154,13 @@ const list = [
                   { label: '东莞市', value: 100 },
                   { label: '南京市', value: 700 },
                   { label: '苏州市', value: 200 },
-                  { label: '无锡市', value: 100 }
+                  { label: '无锡市', value: 100 },
                 ],
                 itemGap: 12,
                 left: 'center',
                 top: 'auto',
                 right: 'auto',
-                bottom: 'auto'
+                bottom: 'auto',
               },
               xAxis: {
                 type: 'value',
@@ -2169,23 +2172,23 @@ const list = [
                   color: '#fff',
                   fontSize: '12',
                   align: 'right',
-                  padding: [30, 0, 0, 0]
+                  padding: [30, 0, 0, 0],
                 },
                 axisLabel: {
                   show: false,
                   color: '#ffffff',
                   fontSize: 12,
-                  rotate: 0
+                  rotate: 0,
                 },
                 axisLine: {
-                  show: false
+                  show: false,
                 },
                 splitLine: {
-                  show: false
+                  show: false,
                 },
                 axisTick: {
-                  show: false
-                }
+                  show: false,
+                },
               },
               yAxis: {
                 type: 'value',
@@ -2196,22 +2199,22 @@ const list = [
                 nameTextStyle: {
                   color: '#fff',
                   fontSize: 12,
-                  padding: [0, 0, 40, 0]
+                  padding: [0, 0, 40, 0],
                 },
                 axisLabel: {
                   show: false,
                   color: '#ffffff',
-                  fontSize: 12
+                  fontSize: 12,
                 },
                 axisLine: {
-                  show: false
+                  show: false,
                 },
                 splitLine: {
-                  show: false
+                  show: false,
                 },
                 axisTick: {
-                  show: false
-                }
+                  show: false,
+                },
               },
               series: {
                 name: '矩形树图',
@@ -2221,21 +2224,15 @@ const list = [
                 visualMaxList: [],
                 // 由于visualMap数组中的颜色定义, 即使隐藏了也会优先取piecewise的颜色集, 所以这里才去分开记录重新赋值到visualMap的方式解决
                 continuousColors: ['#ffff0d', '#f69f2e'],
-                piecewiseColors: [
-                  '#f69f2e',
-                  '#0fabf1',
-                  '#ed8693',
-                  '#ffff0d',
-                  '#0d8686'
-                ],
+                piecewiseColors: ['#f69f2e', '#0fabf1', '#ed8693', '#ffff0d', '#0d8686'],
                 nodeClick: false,
                 roam: false,
                 breadcrumb: {
-                  show: false
+                  show: false,
                 },
                 tooltip: {
                   show: true,
-                  formatter: '{b} {c}'
+                  formatter: '{b} {c}',
                 },
                 // 由于JSON.stringfy不支持转换function类型, 所以需要2个数组记录formatter的字段
                 tooltipShowList: [], // 记录tooltip需要展示的字段
@@ -2247,19 +2244,19 @@ const list = [
                   fontSize: 12,
                   color: '#fff',
                   ellipsis: true,
-                  formatter: '{b}'
+                  formatter: '{b}',
                 },
                 emphasis: {
                   upperLabel: {
                     show: true,
                     align: 'center',
                     position: 'inside',
-                    height: 30
-                  }
+                    height: 30,
+                  },
                 },
                 itemStyle: {
                   color: 'transparent',
-                  borderWidth: 0.2
+                  borderWidth: 0.2,
                 },
                 data: [
                   {
@@ -2268,17 +2265,17 @@ const list = [
                     children: [
                       {
                         name: '广州市',
-                        value: [800, 800]
+                        value: [800, 800],
                       },
                       {
                         name: '深圳市',
-                        value: [100, 100]
+                        value: [100, 100],
                       },
                       {
                         name: '东莞市',
-                        value: [100, 100]
-                      }
-                    ]
+                        value: [100, 100],
+                      },
+                    ],
                   },
                   {
                     name: '江苏省',
@@ -2286,31 +2283,31 @@ const list = [
                     children: [
                       {
                         name: '南京市',
-                        value: [700, 700]
+                        value: [700, 700],
                       },
                       {
                         name: '苏州市',
-                        value: [200, 200]
+                        value: [200, 200],
                       },
                       {
                         name: '无锡市',
-                        value: [100, 100]
-                      }
-                    ]
-                  }
-                ]
-              }
+                        value: [100, 100],
+                      },
+                    ],
+                  },
+                ],
+              },
               // color: DEFAULT_COLORS
             },
             chartEvents: {
-              click: chartClick
+              click: chartClick,
             },
             view: {
               width: 400,
               height: 400,
               x: 760,
-              y: 340
-            }
+              y: 340,
+            },
           },
           {
             title: '矩形热力图',
@@ -2327,14 +2324,14 @@ const list = [
               source: {},
               columns: [],
               rows: [],
-              options: {}
+              options: {},
             },
             apis: {
               labelMap: {
                 x: '值',
                 y: '值',
-                s: '类目'
-              }
+                s: '类目',
+              },
             },
             background: {
               backgroundType: '1',
@@ -2342,7 +2339,7 @@ const list = [
               borderColor: '#fff',
               borderWidth: 0,
               borderStyle: '',
-              borderRadius: 0
+              borderRadius: 0,
             },
             config: {
               title: {
@@ -2354,14 +2351,14 @@ const list = [
                   color: '#ffffff',
                   fontSize: 20,
                   fontFamily: 'not specified',
-                  fontWeight: 'normal'
-                }
+                  fontWeight: 'normal',
+                },
               },
               grid: {
                 left: 60,
                 top: 60,
                 right: 80,
-                bottom: 60
+                bottom: 60,
               },
               xAxis: {
                 type: 'category',
@@ -2373,33 +2370,33 @@ const list = [
                   color: '#fff',
                   fontSize: '12',
                   align: 'right',
-                  padding: [30, 0, 0, 0]
+                  padding: [30, 0, 0, 0],
                 },
                 axisLabel: {
                   show: true,
                   color: '#ffffff',
                   fontSize: 12,
-                  rotate: 0
+                  rotate: 0,
                 },
                 axisLine: {
                   show: true,
                   lineStyle: {
-                    color: '#fff'
-                  }
+                    color: '#fff',
+                  },
                 },
                 splitLine: {
                   show: false,
                   lineStyle: {
                     type: 'solid',
-                    color: '#fff'
-                  }
+                    color: '#fff',
+                  },
                 },
                 axisTick: {
-                  show: true
+                  show: true,
                 },
                 splitArea: {
-                  show: true
-                }
+                  show: true,
+                },
               },
               yAxis: {
                 type: 'category',
@@ -2410,32 +2407,32 @@ const list = [
                 nameTextStyle: {
                   color: '#fff',
                   fontSize: 12,
-                  padding: [0, 0, 40, 0]
+                  padding: [0, 0, 40, 0],
                 },
                 axisLabel: {
                   show: true,
                   color: '#ffffff',
-                  fontSize: 12
+                  fontSize: 12,
                 },
                 axisLine: {
                   show: true,
                   lineStyle: {
-                    color: '#fff'
-                  }
+                    color: '#fff',
+                  },
                 },
                 splitLine: {
                   show: false,
                   lineStyle: {
                     type: 'solid',
-                    color: '#fff'
-                  }
+                    color: '#fff',
+                  },
                 },
                 axisTick: {
-                  show: false
+                  show: false,
                 },
                 splitArea: {
-                  show: true
-                }
+                  show: true,
+                },
               },
               visualMap: {
                 min: 0,
@@ -2447,16 +2444,16 @@ const list = [
                 top: 'bottom', // 上 中 下
                 bottom: '5%',
                 inRange: {
-                  color: ['#ffff35', '#f69f2e']
+                  color: ['#ffff35', '#f69f2e'],
                 },
                 textStyle: {
                   color: '#fff',
                   fontSize: 15,
-                  fontFamily: 'not specified'
-                }
+                  fontFamily: 'not specified',
+                },
               },
               tooltip: {
-                trigger: 'item'
+                trigger: 'item',
               },
               series: {
                 name: '',
@@ -2474,14 +2471,14 @@ const list = [
                   ['9a', 'Tuesday', 24],
                   ['10a', 'Saturday', 5],
                   ['11a', 'Monday', 20],
-                  ['12a', 'Saturday', 12]
+                  ['12a', 'Saturday', 12],
                 ],
                 labelShowList: [], // 记录指标显示的字段
                 tooltipShowList: [], // 记录气泡显示的字段
                 tooltip: {
                   show: true,
                   formatter: '{b}',
-                  position: 'top'
+                  position: 'top',
                 },
                 label: {
                   show: true,
@@ -2489,27 +2486,27 @@ const list = [
                   fontSize: 14,
                   position: 'inside',
                   formatter: '{b}',
-                  offset: [0, 0]
+                  offset: [0, 0],
                 },
                 emphasis: {
                   itemStyle: {
                     shadowBlur: 10,
-                    shadowColor: 'rgba(0, 0, 0, 0.5)'
-                  }
-                }
-              }
+                    shadowColor: 'rgba(0, 0, 0, 0.5)',
+                  },
+                },
+              },
               // color: DEFAULT_COLORS
             },
             chartEvents: {
-              click: chartClick
+              click: chartClick,
             },
             view: {
               width: 500,
               height: 400,
               x: 760,
-              y: 340
-            }
-          }
+              y: 340,
+            },
+          },
           // {
           //   title: '立体饼图',
           //   name: 'high-pie',
@@ -2939,9 +2936,9 @@ const list = [
           //     },
           //     view: { width: 500, height: 400, x: 710, y: 340 }
           //   }
-        ]
-      }
-    ]
+        ],
+      },
+    ],
   },
   {
     type: 'Tool',
@@ -2968,7 +2965,7 @@ const list = [
               borderColor: '#fff',
               borderWidth: 0,
               borderStyle: '',
-              borderRadius: 0
+              borderRadius: 0,
             },
             config: {
               title: {
@@ -2979,17 +2976,17 @@ const list = [
                   color: '#ffffff',
                   fontSize: 20,
                   fontFamily: 'not specified',
-                  fontWeight: 'normal'
-                }
+                  fontWeight: 'normal',
+                },
               },
-              htmlText: '<p><br></p>'
+              htmlText: '<p><br></p>',
             },
             view: {
               width: 500,
               height: 400,
               x: 710,
-              y: 340
-            }
+              y: 340,
+            },
           },
           {
             title: '图片',
@@ -3002,8 +2999,8 @@ const list = [
             config: {
               noTitle: true,
               title: {
-                content: '图片'
-              }
+                content: '图片',
+              },
             },
             background: {
               backgroundType: '1',
@@ -3011,18 +3008,18 @@ const list = [
               borderColor: '#fff',
               borderWidth: 0,
               borderStyle: '',
-              borderRadius: 0
+              borderRadius: 0,
             },
             view: {
               width: 400,
               height: 400,
               x: 760,
-              y: 340
-            }
-          }
-        ]
-      }
-    ]
+              y: 340,
+            },
+          },
+        ],
+      },
+    ],
   },
   {
     type: 'Figure',
@@ -3052,8 +3049,8 @@ const list = [
                 borderWidth: 1,
                 borderStyle: 'solid',
                 shadowColor: '#fff',
-                showShadow: false
-              }
+                showShadow: false,
+              },
             },
             api_data: {},
             apis: {},
@@ -3062,8 +3059,8 @@ const list = [
               height: 1,
               x: 760,
               y: 340,
-              rotate: 0
-            }
+              rotate: 0,
+            },
           },
           {
             key: 1,
@@ -3082,8 +3079,8 @@ const list = [
                 borderColor: '#000',
                 borderRadius: '50%',
                 borderWidth: 1,
-                borderStyle: 'solid'
-              }
+                borderStyle: 'solid',
+              },
             },
             api_data: {},
             apis: {},
@@ -3092,8 +3089,8 @@ const list = [
               height: 400,
               x: 760,
               y: 340,
-              rotate: 0
-            }
+              rotate: 0,
+            },
           },
           {
             key: 2,
@@ -3112,8 +3109,8 @@ const list = [
                 borderColor: '#000',
                 borderRadius: 0,
                 borderWidth: 1,
-                borderStyle: 'solid'
-              }
+                borderStyle: 'solid',
+              },
             },
             api_data: {},
             apis: {},
@@ -3122,12 +3119,12 @@ const list = [
               height: 400,
               x: 760,
               y: 340,
-              rotate: 0
-            }
-          }
-        ]
-      }
-    ]
+              rotate: 0,
+            },
+          },
+        ],
+      },
+    ],
   },
   {
     type: 'Base',
@@ -3151,21 +3148,20 @@ const list = [
             config: {
               title: '图片',
               noTitle: true, // 默认写死没有标题
-              name: 'material'
+              name: 'material',
             },
-            url:
-              'http://10.10.20.66:8080/profile/avatar/2021/04/12/0f4667b1-34a6-44f6-a503-c815534a0efb.gif',
+            url: 'http://10.10.20.66:8080/profile/avatar/2021/04/12/0f4667b1-34a6-44f6-a503-c815534a0efb.gif',
             view: {
               width: 400,
               height: 400,
               x: 760,
-              y: 340
-            }
-          }
-        ]
-      }
-    ]
-  }
+              y: 340,
+            },
+          },
+        ],
+      },
+    ],
+  },
   // {
   //     type: 'Sort',
   //     title: '排序',
@@ -3199,6 +3195,6 @@ const list = [
   //     icon: 'compass',
   //     children: []
   // }
-]
+];
 
-export default list
+export default list;

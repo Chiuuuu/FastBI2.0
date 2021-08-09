@@ -10,54 +10,49 @@ export default {
   props: {
     setting: {
       type: Object,
-      required: true
-    }
+      required: true,
+    },
   },
   created() {
-    this.handleStyle(this.setting)
+    this.handleStyle(this.setting);
   },
   watch: {
     setting: {
-      handler(newValue, oldValue) {
-        this.handleStyle(newValue)
+      handler(newValue) {
+        this.handleStyle(newValue);
       },
       deep: true,
-      immediate: true
-    }
+      immediate: true,
+    },
   },
   data() {
     return {
-      style: {}
-    }
+      style: {},
+    };
   },
   methods: {
     handleStyle(setting) {
-      const view = setting.view
-      const config = setting.config.style
+      const view = setting.view;
+      const config = setting.config.style;
       const style = {
         ...config,
         width: view.width + 'px',
         transform: `translate3d(0,0,0)`,
-        borderRadius:
-          typeof config.borderRadius === 'string'
-            ? config.borderRadius
-            : config.borderRadius + 'px'
-      }
+        borderRadius: typeof config.borderRadius === 'string' ? config.borderRadius : config.borderRadius + 'px',
+      };
       if (this.setting.config.title === '直线') {
         if (config.showShadow) {
-          style.boxShadow = `0 ${view.height / 2}px ${
-            view.height
-          }px ${config.shadowColor}`
+          style.boxShadow = `0 ${view.height / 2}px ${view.height}px ${config.shadowColor}`;
         }
-        style.borderWidth = view.height + 'px 0 0' // 直线只显示上边框
+        style.borderWidth = view.height + 'px 0 0'; // 直线只显示上边框
       } else {
-        style.height = view.height + 'px'
-        style.borderWidth = config.borderWidth + 'px'
+        style.height = view.height + 'px';
+        style.borderWidth = config.borderWidth + 'px';
       }
-      this.style = style
-    }
-  }
-}
+      this.style = style;
+    },
+  },
+};
 </script>
 
 <style lang="less" scoped>

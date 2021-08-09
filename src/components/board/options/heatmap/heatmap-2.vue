@@ -9,49 +9,41 @@
       style="width: 100%"
       @change="setSelfProperty"
     >
-      <a-select-option
-        v-for="i in concatDimAndMea"
-        :key="i.alias"
-        :value="i.alias"
-        >{{ i.alias }}</a-select-option
-      >
+      <a-select-option v-for="i in concatDimAndMea" :key="i.alias" :value="i.alias">{{ i.alias }}</a-select-option>
     </a-select>
   </div>
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
-import GuiField from '../gui-field'
+import { mapGetters } from 'vuex';
+import GuiField from '../gui-field';
 export default {
   data() {
     return {
-      tooltipShowList: []
-    }
+      tooltipShowList: [],
+    };
   },
   inject: ['switchChange', 'setSelfProperty'],
   props: {
     selfConfig: {
       type: Object,
       default() {
-        return {}
-      }
-    }
+        return {};
+      },
+    },
   },
   computed: {
     ...mapGetters(['currSelected']),
     // 维度度量合并列表
     concatDimAndMea() {
-      const {
-        dimensions = [],
-        measures = []
-      } = this.currSelected.setting.api_data
-      return dimensions.concat(measures)
-    }
+      const { dimensions = [], measures = [] } = this.currSelected.setting.api_data;
+      return dimensions.concat(measures);
+    },
   },
   components: {
-    GuiField
-  }
-}
+    GuiField,
+  },
+};
 </script>
 
 <style scoped></style>

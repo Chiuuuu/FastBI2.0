@@ -8,17 +8,13 @@
         <div class="header">
           <span class="data_con">{{ modelName }}</span>
           <div class="data_btn">
-            <a-button v-if="hasEditPermission" type="primary" v-on:click="edit"
-              >编辑模型</a-button
-            >
+            <a-button v-if="hasEditPermission" type="primary" v-on:click="edit">编辑模型</a-button>
             <a-button @click="handleGetData">刷新数据</a-button>
           </div>
         </div>
         <div class="scrollable scrollbar">
           <div class="description">
-            <span class="d-s" :title="detailInfo.description"
-              >描述：{{ detailInfo.description }}</span
-            >
+            <span class="d-s" :title="detailInfo.description">描述：{{ detailInfo.description }}</span>
           </div>
           <!-- <p class="tips"><a-icon theme="filled" type="exclamation-circle" style="margin-right: 2px;" />下方表显示红色表示表在数据源已被删除，请您删除此表。表显示黄色表示表中列字段发生了变动，请您重新构建表关联关系。</p> -->
           <div class="draw_board scrollbar">
@@ -58,10 +54,7 @@
                           <div class="icon">
                             <img src="@/assets/images/icon_dimension.png" />
                           </div>
-                          <div
-                            class="name"
-                            :class="{ 'line-through': !item.visible }"
-                          >
+                          <div class="name" :class="{ 'line-through': !item.visible }">
                             {{ item.alias }}
                           </div>
                         </div>
@@ -87,10 +80,7 @@
                           <div class="icon">
                             <img src="@/assets/images/icon_measure.png" />
                           </div>
-                          <div
-                            class="name"
-                            :class="{ 'line-through': !item.visible }"
-                          >
+                          <div class="name" :class="{ 'line-through': !item.visible }">
                             {{ item.alias }}
                           </div>
                         </div>
@@ -108,16 +98,16 @@
 </template>
 
 <script>
-import TreeNode from './show-tree-node'
-import { Node, conversionTree } from '../../util'
-import { hasPermission } from '@/utils/permission'
-import { mapState } from 'vuex'
-import groupBy from 'lodash/groupBy'
-import keys from 'lodash/keys'
+import TreeNode from './show-tree-node';
+import { Node, conversionTree } from '../../util';
+import { hasPermission } from '@/utils/permission';
+import { mapState } from 'vuex';
+import groupBy from 'lodash/groupBy';
+import keys from 'lodash/keys';
 export default {
   name: 'model-main',
   components: {
-    TreeNode
+    TreeNode,
   },
   data() {
     return {
@@ -129,8 +119,8 @@ export default {
       renderTables: [], // 用来渲染树组件
       dimensionsActiveKey: [],
       measuresActiveKey: [],
-      customStyle: 'border: 0'
-    }
+      customStyle: 'border: 0',
+    };
   },
   computed: {
     ...mapState({
@@ -138,11 +128,11 @@ export default {
       modelName: state => state.dataModel.modelName,
       privileges: state => state.common.privileges,
       menuSelectId: state => state.common.menuSelectId,
-      datasourceId: state => state.dataModel.datasourceId
+      datasourceId: state => state.dataModel.datasourceId,
     }),
     hasEditPermission() {
-      return hasPermission(this.privileges, this.$PERMISSION_CODE.OPERATOR.edit)
-    }
+      return hasPermission(this.privileges, this.$PERMISSION_CODE.OPERATOR.edit);
+    },
   },
   methods: {
     /**
@@ -150,35 +140,30 @@ export default {
      */
     async handleGetData(id) {
       if (!id) {
-        return
+        return;
       }
-      this.spinning = true
-      this.renderTables = []
-      let modelId = ''
+      this.spinning = true;
+      this.renderTables = [];
+      let modelId = '';
       if (typeof id === 'string') {
-        modelId = id
+        modelId = id;
       } else {
-        modelId = this.modelId
+        modelId = this.modelId;
       }
-      const result = await this.$server.dataModel
-        .getDataModelDetailInfo(modelId)
-        .finally(() => {
-          this.spinning = false
-        })
+      const result = await this.$server.dataModel.getDataModelDetailInfo(modelId).finally(() => {
+        this.spinning = false;
+      });
 
       if (result.code === 200) {
-        this.$message.success('获取数据成功')
-        this.detailInfo = result.data
-        this.$store.commit('dataModel/SET_MODELNAME', result.data.name)
-        this.$store.commit(
-          'common/SET_PRIVILEGES',
-          result.data.privileges || []
-        )
-        this.handleDetailWithRoot()
-        this.handleDimensions()
-        this.handleMeasures()
+        this.$message.success('获取数据成功');
+        this.detailInfo = result.data;
+        this.$store.commit('dataModel/SET_MODELNAME', result.data.name);
+        this.$store.commit('common/SET_PRIVILEGES', result.data.privileges || []);
+        this.handleDetailWithRoot();
+        this.handleDimensions();
+        this.handleMeasures();
       } else {
-        this.$message.error(result.msg)
+        this.$message.error(result.msg);
       }
     },
     /**
@@ -186,15 +171,10 @@ export default {
      */
     async handleGetDataSource() {
       // 第一个数据库id
-      const datsource = await this.$server.dataModel.getDataSourceList(
-        this.modelId
-      )
-      console.log('根据modelId获取数据源', datsource)
-      this.$store.dispatch(
-        'dataModel/setDatasourceId',
-        datsource.data[0].datasourceId
-      )
-      return datsource.data[0].datasourceId
+      const datsource = await this.$server.dataModel.getDataSourceList(this.modelId);
+      console.log('根据modelId获取数据源', datsource);
+      this.$store.dispatch('dataModel/setDatasourceId', datsource.data[0].datasourceId);
+      return datsource.data[0].datasourceId;
     },
     /**
      * 跳转编辑状态
@@ -207,51 +187,48 @@ export default {
           query: {
             type: 'edit',
             datasourceId: id,
-            modelId: this.modelId
-          }
-        })
-      })
+            modelId: this.modelId,
+          },
+        });
+      });
     },
     /**
      * 处理树形组件
      */
     handleDetailWithRoot() {
       if (this.detailInfo.config.tables.length === 0) {
-        this.tablesEmpty = true
-        return
+        this.tablesEmpty = true;
+        return;
       }
-      this.tablesEmpty = false
-      const first = this.detailInfo.config.tables[0]
-      const root = new Node(first)
-      const node = this.handleConversionTree(root)
-      this.renderTables.push(node)
+      this.tablesEmpty = false;
+      const first = this.detailInfo.config.tables[0];
+      const root = new Node(first);
+      const node = this.handleConversionTree(root);
+      this.renderTables.push(node);
     },
     /**
      * 转换数据
      */
     handleConversionTree(node) {
-      conversionTree(node, this.detailInfo.config.tables.slice(1), 'tableNo')
-      return node
+      conversionTree(node, this.detailInfo.config.tables.slice(1), 'tableNo');
+      return node;
     },
     /**
      * 维度数据处理
      */
     handleDimensions() {
-      this.dimensions = groupBy(
-        this.detailInfo.pivotSchema.dimensions,
-        'tableNo'
-      )
-      this.dimensionsActiveKey = [].concat(keys(this.dimensions))
+      this.dimensions = groupBy(this.detailInfo.pivotSchema.dimensions, 'tableNo');
+      this.dimensionsActiveKey = [].concat(keys(this.dimensions));
     },
     /**
      * 度量数据处理
      */
     handleMeasures() {
-      this.measures = groupBy(this.detailInfo.pivotSchema.measures, 'tableNo')
-      this.measuresActiveKey = [].concat(keys(this.measures))
-    }
-  }
-}
+      this.measures = groupBy(this.detailInfo.pivotSchema.measures, 'tableNo');
+      this.measuresActiveKey = [].concat(keys(this.measures));
+    },
+  },
+};
 </script>
 
 <style lang="styl" scoped>

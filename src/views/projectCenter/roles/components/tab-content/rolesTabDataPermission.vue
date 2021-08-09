@@ -24,38 +24,38 @@ const treeData = [
         key: '0-0-0',
         children: [
           { title: 'leaf1', key: '0-0-0-0' },
-          { title: 'leaf2', key: '0-0-0-1' }
-        ]
+          { title: 'leaf2', key: '0-0-0-1' },
+        ],
       },
       {
         title: 'parent 1-1',
         key: '0-0-1',
-        children: [{ key: '0-0-1-0', title: 'zcvc' }]
-      }
-    ]
-  }
-]
+        children: [{ key: '0-0-1-0', title: 'zcvc' }],
+      },
+    ],
+  },
+];
 export default {
-    name: 'rolesTabDataPermission',
-    props: {
-        status: {
-            type: String,
-            requried: true,
-            default: 'show'
-        }
+  name: 'rolesTabDataPermission',
+  props: {
+    status: {
+      type: String,
+      requried: true,
+      default: 'show',
     },
-    data() {
-        return {
-            treeData
-        }
+  },
+  data() {
+    return {
+      treeData,
+    };
+  },
+  methods: {
+    onSelect(selectedKeys, info) {
+      console.log('selected', selectedKeys, info);
     },
-    methods: {
-        onSelect(selectedKeys, info) {
-            console.log('selected', selectedKeys, info)
-        },
-        onCheck(checkedKeys, info) {
-            console.log('onCheck', checkedKeys, info)
-        }
-    }
-}
+    onCheck(checkedKeys, info) {
+      console.log('onCheck', checkedKeys, info);
+    },
+  },
+};
 </script>

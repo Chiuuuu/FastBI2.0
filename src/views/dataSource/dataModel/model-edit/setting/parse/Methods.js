@@ -4,7 +4,7 @@
  * @returns
  */
 function isInteger(item) {
-  return item.dataType === 'BIGINT'
+  return item.dataType === 'BIGINT';
 }
 
 /**
@@ -13,7 +13,7 @@ function isInteger(item) {
  * @returns
  */
 function isFloat(item) {
-  return item.dataType === 'DOUBLE'
+  return item.dataType === 'DOUBLE';
 }
 
 /**
@@ -22,7 +22,7 @@ function isFloat(item) {
  * @returns
  */
 function isString(item) {
-  return item.dataType === 'VARCHAR'
+  return item.dataType === 'VARCHAR';
 }
 
 /**
@@ -30,143 +30,143 @@ function isString(item) {
  * @param {Object} item
  * @returns
  */
-function isDecimal(item) {
-  return item.dataType === 'DECIMAL'
-}
+// function isDecimal(item) {
+//   return item.dataType === 'DECIMAL';
+// }
 export class Methods {
   constructor(dmType) {
-    this.dmType = dmType || 'measures'
+    this.dmType = dmType || 'measures';
   }
 
-  common(arg, methodName) {
-    const { type, value } = arg
+  common(arg) {
+    const { type } = arg;
     return {
       type,
-      value: true
-    }
+      value: true,
+    };
   }
 
   // 数值类型通用校验
   numberCommon(arg, methodName) {
     if (this.methods.dmType === 'dimessions') {
-      throw new Error(`该字段不能用于维度`)
+      throw new Error(`该字段不能用于维度`);
     }
-    const { type, value } = arg
+    const { type, value } = arg;
     if (!['integer', 'float', 'alias', 'neg'].includes(type)) {
-      throw new Error(`方法${methodName}参数：只能用数字类型, ${value}是${type}`)
+      throw new Error(`方法${methodName}参数：只能用数字类型, ${value}是${type}`);
     }
 
     if (['integer', 'float', 'neg'].includes(type) && value === true) {
-      return arg
+      return arg;
     }
 
     if (type === 'alias') {
       if (isInteger(value)) {
         return {
           type: 'integer',
-          value: true
-        }
+          value: true,
+        };
       } else if (isFloat(value)) {
         return {
           type: 'float',
-          value: true
-        }
+          value: true,
+        };
       } else {
-        throw new Error(`方法${methodName}参数：只能用数字类型`)
+        throw new Error(`方法${methodName}参数：只能用数字类型`);
       }
     }
 
     return {
       type,
-      value: true
-    }
+      value: true,
+    };
   }
 
   // 字符串通用校验
   stringCommon(arg, methodName) {
-    const { type, value } = arg
+    const { type, value } = arg;
 
     if (type === 'alias') {
       if (isString(value)) {
         return {
           type: 'string',
-          value: true
-        }
+          value: true,
+        };
       } else {
-        throw new Error(`方法${methodName}参数：只能用字符串类型`)
+        throw new Error(`方法${methodName}参数：只能用字符串类型`);
       }
     } else if (type !== 'string') {
-      throw new Error(`方法${methodName}参数：只能用字符串类型, ${value}是${type}`)
+      throw new Error(`方法${methodName}参数：只能用字符串类型, ${value}是${type}`);
     }
 
     return {
       type,
-      value: true
-    }
+      value: true,
+    };
   }
 
   // 逻辑运算通用校验
   logicCommon(arg, methodName) {
-    const { type, value } = arg
+    const { type, value } = arg;
     if (!['integer', 'float', 'alias', 'neg'].includes(type)) {
-      throw new Error(`方法${methodName}参数：只能用数字类型, ${value}是${type}`)
+      throw new Error(`方法${methodName}参数：只能用数字类型, ${value}是${type}`);
     }
 
     if (['integer', 'float', 'neg'].includes(type) && value === true) {
-      return arg
+      return arg;
     }
 
     if (type === 'alias') {
       if (isInteger(value)) {
         return {
           type: 'integer',
-          value: true
-        }
+          value: true,
+        };
       } else if (isFloat(value)) {
         return {
           type: 'float',
-          value: true
-        }
+          value: true,
+        };
       } else {
-        throw new Error(`方法${methodName}参数：只能用数字类型`)
+        throw new Error(`方法${methodName}参数：只能用数字类型`);
       }
     }
 
     return {
       type,
-      value: true
-    }
+      value: true,
+    };
   }
 
   MIN(arg) {
-    return this.methods.numberCommon.call(this, arg, 'MIN')
+    return this.methods.numberCommon.call(this, arg, 'MIN');
   }
   MAX(arg) {
-    return this.methods.numberCommon.call(this, arg, 'MAX')
+    return this.methods.numberCommon.call(this, arg, 'MAX');
   }
   // 求和聚合
   SUM(arg) {
-    return this.methods.numberCommon.call(this, arg, 'SUM')
+    return this.methods.numberCommon.call(this, arg, 'SUM');
   }
   // 平均数
   AVG(arg) {
-    return this.methods.numberCommon.call(this, arg, 'AVG')
+    return this.methods.numberCommon.call(this, arg, 'AVG');
   }
   // 计数
   COUNT(arg) {
-    return this.methods.common.call(this, arg, 'COUNT')
+    return this.methods.common.call(this, arg, 'COUNT');
   }
   // 计数
   COUNTD(arg) {
-    return this.methods.common.call(this, arg, 'COUNTD')
+    return this.methods.common.call(this, arg, 'COUNTD');
   }
   // 取绝对值
   ABS(arg) {
-    return this.methods.numberCommon.call(this, arg, 'ABS')
+    return this.methods.numberCommon.call(this, arg, 'ABS');
   }
   // 四舍五入
   ROUND(arg) {
-    return this.methods.numberCommon.call(this, arg, 'ROUND')
+    return this.methods.numberCommon.call(this, arg, 'ROUND');
   }
   // 向下取整
   // INT(arg) {
@@ -174,21 +174,21 @@ export class Methods {
   // }
   // 字符串长度
   LENGTH(arg) {
-    return this.methods.stringCommon.call(this, arg, 'LENGTH')
+    return this.methods.stringCommon.call(this, arg, 'LENGTH');
   }
   // 当前时间
   CURRENT_TIMESTAMP() {
     return {
       type: 'dateLit',
-      value: true
-    }
+      value: true,
+    };
   }
   // 今天日期
   CURRENT_DATE() {
     return {
       type: 'dateLit',
-      value: true
-    }
+      value: true,
+    };
   }
   // 逻辑与运算(规则不一致, 暂时屏蔽)
   // AND(arg) {

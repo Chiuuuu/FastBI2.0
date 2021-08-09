@@ -51,11 +51,7 @@
       </gui-inline>
     </gui-field>
     <gui-field label="展示指标">
-      <a-switch
-        v-model="selfConfig.series.label.show"
-        size="small"
-        @change="switchChange"
-      ></a-switch>
+      <a-switch v-model="selfConfig.series.label.show" size="small" @change="switchChange"></a-switch>
     </gui-field>
     <gui-field label="指标内容"></gui-field>
     <a-select
@@ -65,12 +61,7 @@
       style="width: 100%"
       @change="setSelfProperty"
     >
-      <a-select-option
-        v-for="i in concatDimAndMea"
-        :key="i.alias"
-        :value="i.alias"
-        >{{ i.alias }}</a-select-option
-      >
+      <a-select-option v-for="i in concatDimAndMea" :key="i.alias" :value="i.alias">{{ i.alias }}</a-select-option>
     </a-select>
     <gui-field label="文本">
       <gui-inline label="字号">
@@ -84,77 +75,48 @@
         ></a-input-number>
       </gui-inline>
       <gui-inline label="颜色">
-        <el-color-picker
-          v-model="selfConfig.series.label.color"
-          @change="setSelfProperty"
-        ></el-color-picker>
+        <el-color-picker v-model="selfConfig.series.label.color" @change="setSelfProperty"></el-color-picker>
       </gui-inline>
     </gui-field>
     <gui-field label="位置">
       <gui-inline>
         <a-radio-group :value="selfConfig.visualMap.left" size="small">
-          <a-radio-button
-            value="left"
-            @click.native.stop="
-              onRadioChange($event, selfConfig.visualMap, 'left')
-            "
-            >左</a-radio-button
-          >
-          <a-radio-button
-            value="center"
-            @click.native.stop="
-              onRadioChange($event, selfConfig.visualMap, 'left')
-            "
-            >中</a-radio-button
-          >
-          <a-radio-button
-            value="right"
-            @click.native.stop="
-              onRadioChange($event, selfConfig.visualMap, 'left')
-            "
-            >右</a-radio-button
-          >
+          <a-radio-button value="left" @click.native.stop="onRadioChange($event, selfConfig.visualMap, 'left')">
+            左
+          </a-radio-button>
+          <a-radio-button value="center" @click.native.stop="onRadioChange($event, selfConfig.visualMap, 'left')">
+            中
+          </a-radio-button>
+          <a-radio-button value="right" @click.native.stop="onRadioChange($event, selfConfig.visualMap, 'left')">
+            右
+          </a-radio-button>
         </a-radio-group>
       </gui-inline>
     </gui-field>
     <gui-field>
       <gui-inline>
         <a-radio-group :value="selfConfig.visualMap.top" size="small">
-          <a-radio-button
-            value="top"
-            @click.native.stop="onRadioChange($event, selfConfig.visualMap, 'top')"
-            >顶部</a-radio-button
-          >
-          <a-radio-button
-            value="middle"
-            @click.native.stop="onRadioChange($event, selfConfig.visualMap, 'top')"
-            >居中</a-radio-button
-          >
-          <a-radio-button
-            value="bottom"
-            @click.native.stop="onRadioChange($event, selfConfig.visualMap, 'top')"
-            >底部</a-radio-button
-          >
+          <a-radio-button value="top" @click.native.stop="onRadioChange($event, selfConfig.visualMap, 'top')">
+            顶部
+          </a-radio-button>
+          <a-radio-button value="middle" @click.native.stop="onRadioChange($event, selfConfig.visualMap, 'top')">
+            居中
+          </a-radio-button>
+          <a-radio-button value="bottom" @click.native.stop="onRadioChange($event, selfConfig.visualMap, 'top')">
+            底部
+          </a-radio-button>
         </a-radio-group>
       </gui-inline>
     </gui-field>
     <gui-field label="排列">
       <gui-inline>
         <a-radio-group :value="selfConfig.visualMap.orient" size="small">
-          <a-radio-button
-            value="horizontal"
-            @click.native.stop="
-              onRadioChange($event, selfConfig.visualMap, 'orient')
-            "
-            >水平</a-radio-button
-          >
-          <a-radio-button
-            value="vertical"
-            @click.native.stop="
-              onRadioChange($event, selfConfig.visualMap, 'orient')
-            "
-            >垂直</a-radio-button
-          >
+          <a-radio-button value="horizontal" @click.native.stop="onRadioChange($event, selfConfig.visualMap, 'orient')">
+            水平
+          </a-radio-button>
+          <a-radio-button value="vertical" @click.native.stop="onRadioChange($event, selfConfig.visualMap, 'orient')">
+            垂直
+          </a-radio-button>
         </a-radio-group>
       </gui-inline>
     </gui-field>
@@ -162,40 +124,36 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from 'vuex'
-import GuiField from '../gui-field'
-import GuiInline from '../gui-inline'
+import { mapGetters } from 'vuex';
+import GuiField from '../gui-field';
+import GuiInline from '../gui-inline';
 export default {
   data() {
-    return {}
+    return {};
   },
   inject: ['switchChange', 'setSelfProperty', 'onRadioChange'],
   props: {
     selfConfig: {
       type: Object,
       default() {
-        return {}
-      }
-    }
+        return {};
+      },
+    },
   },
   computed: {
     ...mapGetters(['currSelected']),
     // 维度度量合并列表
     concatDimAndMea() {
-      const {
-        dimensions = [],
-        measures = []
-      } = this.currSelected.setting.api_data
-      return dimensions.concat(measures)
-    }
+      const { dimensions = [], measures = [] } = this.currSelected.setting.api_data;
+      return dimensions.concat(measures);
+    },
   },
-  methods: {
-  },
+  methods: {},
   components: {
     GuiField,
-    GuiInline
-  }
-}
+    GuiInline,
+  },
+};
 </script>
 
 <style scoped></style>

@@ -14,41 +14,41 @@
   </a-row>
 </template>
 <script>
-import Menu from './components/data-menu'
-import Main from './components/data-main/main'
-import Setting from './setting/dataAccess-setting'
+import Menu from './components/data-menu';
+import Main from './components/data-main/main';
+import Setting from './setting/dataAccess-setting';
 export default {
   components: {
     Menu,
     Main,
-    Setting
+    Setting,
   },
   data() {
     return {
       showWhat: 'Main',
       tabindex: '1',
-      fieldInfo: {}
-    }
+      fieldInfo: {},
+    };
   },
   methods: {
-    handleChangeComponet(componentName, row, tabindex) {
-      this.showWhat = componentName
+    handleChangeComponet(componentName, row) {
+      this.showWhat = componentName;
       if (componentName === 'Main') {
-        this.tabindex = '2'
+        this.tabindex = '2';
       } else if (componentName === 'Setting') {
-        this.fieldInfo = Object.assign(this.fieldInfo, row)
+        this.fieldInfo = Object.assign(this.fieldInfo, row);
       }
     },
     handleMenuChangeComponet(componentName) {
-      this.showWhat = componentName
-      this.tabindex = '1'
-    }
+      this.showWhat = componentName;
+      this.tabindex = '1';
+    },
   },
   beforeDestroy() {
-    this.$store.dispatch('dataAccess/setModelType', '')
-    this.$store.dispatch('dataAccess/setModelId', 0)
-    this.$store.dispatch('dataAccess/setFirstFinished', false)
-    this.$store.commit('common/SET_MENUSELECTID', -1)
-  }
-}
+    this.$store.dispatch('dataAccess/setModelType', '');
+    this.$store.dispatch('dataAccess/setModelId', 0);
+    this.$store.dispatch('dataAccess/setFirstFinished', false);
+    this.$store.commit('common/SET_MENUSELECTID', -1);
+  },
+};
 </script>

@@ -7,12 +7,14 @@
       <!-- 临时方案, 不写class了 -->
       <div
         :title="datasourceName"
-        style="width: calc(100% - 30px);
-        color: #01040f;
-        margin: 0 15px;
-        white-space: nowrap;
-        text-overflow: ellipsis;
-        overflow: hidden;"
+        style="
+          width: calc(100% - 30px);
+          color: #01040f;
+          margin: 0 15px;
+          white-space: nowrap;
+          text-overflow: ellipsis;
+          overflow: hidden;
+        "
       >
         {{ datasourceName }}
       </div>
@@ -27,28 +29,16 @@
       <div class="menu_search">
         <span class="search_span">数据库</span>
       </div>
-      <a-select
-        v-model="databaseName"
-        class="menu_select"
-        @change="handleChangeDatabase"
-      >
-        <a-select-option
-          v-for="database in databaseList"
-          :key="database.id"
-          :value="database.name"
-          >{{ database.name }}</a-select-option
-        >
+      <a-select v-model="databaseName" class="menu_select" @change="handleChangeDatabase">
+        <a-select-option v-for="database in databaseList" :key="database.id" :value="database.name">
+          {{ database.name }}
+        </a-select-option>
       </a-select>
       <a-divider />
       <div class="table_list" :class="{ 'no-sql': !isDatabase }">
         <div class="menu_search">
           <span class="search_span">表</span>
-          <a-input
-            placeholder="请输入关键词搜索"
-            :value="tableSearch"
-            @change="handleSearchTable"
-            class="search_input"
-          >
+          <a-input placeholder="请输入关键词搜索" :value="tableSearch" @change="handleSearchTable" class="search_input">
             <a-icon slot="prefix" type="search" />
           </a-input>
         </div>
@@ -63,11 +53,7 @@
       <div v-if="isDatabase" class="SQL_View table_list">
         <div class="menu_search">
           <span class="search_span">自定义SQL视图</span>
-          <a-icon
-            class="view_icon"
-            type="plus-square"
-            @click="handleAddSQL('new')"
-          />
+          <a-icon class="view_icon" type="plus-square" @click="handleAddSQL('new')" />
         </div>
         <!-- <div class="text-center"> -->
         <edit-left
@@ -104,11 +90,7 @@
         <span class="data_con">{{ detailInfo.name }}</span>
       </div>
       <div class="data_con_add" v-else-if="model === 'add'">
-        <a-form
-          :form="modelForm"
-          :label-col="{ span: 3 }"
-          :wrapper-col="{ span: 12 }"
-        >
+        <a-form :form="modelForm" :label-col="{ span: 3 }" :wrapper-col="{ span: 12 }">
           <a-form-item label="数据模型名称">
             <a-input
               v-decorator="[
@@ -117,67 +99,42 @@
                   rules: [
                     {
                       required: true,
-                      message: '请填写名称'
+                      message: '请填写名称',
                     },
                     {
                       type: 'string',
                       min: 1,
                       max: 20,
-                      message: '请输入1-20个字的名称'
-                    }
-                  ]
-                }
+                      message: '请输入1-20个字的名称',
+                    },
+                  ],
+                },
               ]"
             />
           </a-form-item>
         </a-form>
       </div>
       <div class="description">
-        <span class="d-s" :title="detailInfo.description"
-          >描述： {{ detailInfo.description }}</span
-        >
-        <a-icon
-          type="edit"
-          v-on:click="openModal('describe-setting')"
-          class="d-s-icon"
-        />
+        <span class="d-s" :title="detailInfo.description">描述： {{ detailInfo.description }}</span>
+        <a-icon type="edit" v-on:click="openModal('describe-setting')" class="d-s-icon" />
       </div>
       <p class="tips">
-        <a-icon
-          theme="filled"
-          type="exclamation-circle"
-          style="margin-right: 2px;"
-        />下方表显示红色表示表在数据源已被删除，请您删除此表。表显示黄色表示表中列字段发生了变动，请您重新构建表关联关系。
+        <a-icon theme="filled" type="exclamation-circle" style="margin-right: 2px" />
+        下方表显示红色表示表在数据源已被删除，请您删除此表。表显示黄色表示表中列字段发生了变动，请您重新构建表关联关系。
       </p>
       <div class="draw_board scrollbar">
-        <edit-right-top
-          ref="rightTopRef"
-          :detailInfo="detailInfo"
-        ></edit-right-top>
+        <edit-right-top ref="rightTopRef" :detailInfo="detailInfo"></edit-right-top>
       </div>
       <div class="detail scrollbar">
         <div class="detail_header">
-          <span
-            >数据模型详情<span class="sub">{{
-              createViewName ? `(已导入BI库-表名: ${createViewName})` : ''
-            }}</span></span
-          >
+          <span>
+            数据模型详情
+            <span class="sub">{{ createViewName ? `(已导入BI库-表名: ${createViewName})` : '' }}</span>
+          </span>
           <div class="detail_btn">
-            <a-button
-              v-on:click="openModal('create-view')"
-              :disabled="disableByDetailInfo"
-              >导入BI库</a-button
-            >
-            <a-button
-              v-on:click="openModal('check-table')"
-              :disabled="disableByDetailInfo"
-              >查看宽表</a-button
-            >
-            <a-button
-              v-on:click="openModal('batch-setting')"
-              :disabled="disableByDetailInfo"
-              >批量编辑字段</a-button
-            >
+            <a-button v-on:click="openModal('create-view')" :disabled="disableByDetailInfo">导入BI库</a-button>
+            <a-button v-on:click="openModal('check-table')" :disabled="disableByDetailInfo">查看宽表</a-button>
+            <a-button v-on:click="openModal('batch-setting')" :disabled="disableByDetailInfo">批量编辑字段</a-button>
           </div>
         </div>
         <div class="detail_main">
@@ -185,11 +142,9 @@
             <div class="dim_title">
               <span class="dim_span">维度</span>
               <div class="dim_operation">
-                <a
-                  v-on:click="handleOpenComputeSetting('维度')"
-                  style="color:#627CFF;line-height:38px"
-                  >新建计算维度</a
-                >
+                <a v-on:click="handleOpenComputeSetting('维度')" style="color: #627cff; line-height: 38px">
+                  新建计算维度
+                </a>
                 <a-divider type="vertical" />
                 <!-- <a v-on:click="openModal('geo-setting')" style="color:#627CFF;">设置地理位置</a> -->
               </div>
@@ -221,9 +176,10 @@
               <div class="mea_operation">
                 <a
                   v-on:click="handleOpenComputeSetting('度量')"
-                  style="color:#627CFF;margin-right:20px;line-height:38px"
-                  >新建计算度量</a
+                  style="color: #627cff; margin-right: 20px; line-height: 38px"
                 >
+                  新建计算度量
+                </a>
               </div>
             </div>
             <div class="mea_menu scrollbar">
@@ -269,13 +225,9 @@
       />
       <div class="submit_btn">
         <!-- <a-button :disabled="!detailInfo">保存并新建报告</a-button> -->
-        <a-button
-          v-if="hasBtnPermissionSave"
-          type="primary"
-          @click="handleSave"
-          :disabled="!detailInfo"
-          >保 存</a-button
-        >
+        <a-button v-if="hasBtnPermissionSave" type="primary" @click="handleSave" :disabled="!detailInfo">
+          保 存
+        </a-button>
         <a-button v-on:click="exit">退 出</a-button>
       </div>
     </div>
@@ -283,27 +235,26 @@
 </template>
 
 <script>
-import findIndex from 'lodash/findIndex'
-import { mapState } from 'vuex'
-import EditLeft from './edit-left'
-import EditRightTop from './edit-right-top'
-import SqlSetting from './setting/sql-setting'
-import CheckTable from './setting/check-table'
-import DescribeSetting from './setting/describe-setting'
-import BatchSetting from './setting/batch-setting'
-import GeoSetting from './setting/geo-setting'
-import ComputeSetting from './setting/compute-setting'
-import RenameSetting from './setting/rename-setting'
-import UnionSetting from './setting/union-setting'
-import CreateView from './setting/create-view'
-import PanelItem from './panel-item'
-import { Node, conversionTree } from '../util'
-import { hasPermission } from '@/utils/permission'
-import groupBy from 'lodash/groupBy'
-import keys from 'lodash/keys'
-import DimensionsIcon from '@/assets/images/icon_dimension.png'
-import MeasureIcon from '@/assets/images/icon_measure.png'
-import debounce from 'lodash/debounce'
+import findIndex from 'lodash/findIndex';
+import { mapState } from 'vuex';
+import EditLeft from './edit-left';
+import EditRightTop from './edit-right-top';
+import SqlSetting from './setting/sql-setting';
+import CheckTable from './setting/check-table';
+import DescribeSetting from './setting/describe-setting';
+import BatchSetting from './setting/batch-setting';
+import GeoSetting from './setting/geo-setting';
+import ComputeSetting from './setting/compute-setting';
+import RenameSetting from './setting/rename-setting';
+import UnionSetting from './setting/union-setting';
+import CreateView from './setting/create-view';
+import PanelItem from './panel-item';
+import { hasPermission } from '@/utils/permission';
+import groupBy from 'lodash/groupBy';
+import keys from 'lodash/keys';
+import DimensionsIcon from '@/assets/images/icon_dimension.png';
+import MeasureIcon from '@/assets/images/icon_measure.png';
+import debounce from 'lodash/debounce';
 // const setting = [
 //   {
 //     key: '1',
@@ -324,12 +275,12 @@ export default {
     RenameSetting, // 维度度量重命名
     UnionSetting, // 表上下合并
     PanelItem,
-    CreateView // 创建视图
+    CreateView, // 创建视图
   },
   provide() {
     return {
-      nodeStatus: this.globalStatus
-    }
+      nodeStatus: this.globalStatus,
+    };
   },
   data() {
     return {
@@ -351,7 +302,7 @@ export default {
         dragType: '',
         dragNode: {},
         dropNode: {},
-        event: null
+        event: null,
       },
       unionNode: {}, // 选择合并的树节点
       measures: '',
@@ -367,15 +318,15 @@ export default {
       modalName: '',
       visible: false, // 设置弹窗(描述, 宽表, 批量, 地理, 维度度量)
       labelCol: {
-        span: 4
+        span: 4,
       },
       wrapperCol: {
-        span: 14
+        span: 14,
       },
       computeType: '', // 新建计算字段类型(维度, 度量)
       databaseList: [], // 数据库列表
-      createViewName: ''
-    }
+      createViewName: '',
+    };
   },
   computed: {
     ...mapState({
@@ -384,13 +335,13 @@ export default {
       parentId: state => state.dataModel.parentId, // 选中的文件夹id
       datasource: state => state.dataModel.datasource, // 数据源
       privileges: state => state.common.privileges,
-      datasourceId: state => state.dataModel.datasourceId // 数据源
+      datasourceId: state => state.dataModel.datasourceId, // 数据源
     }),
     model() {
-      return this.$route.query.type
+      return this.$route.query.type;
     },
     tableSearchList() {
-      return this.tableSearch ? this.searchList : this.leftMenuList
+      return this.tableSearch ? this.searchList : this.leftMenuList;
     },
     tableFields() {
       if (this.detailInfo.pivotSchema) {
@@ -398,46 +349,43 @@ export default {
           ...this.detailInfo.pivotSchema.dimensions,
           ...this.detailInfo.pivotSchema.measures,
           ...this.cacheDimensions,
-          ...this.cacheMeasures
-        ]
+          ...this.cacheMeasures,
+        ];
         arry = arry.map(x => ({
           ...x,
-          convertType: x.convertType === null ? x.dataType : x.convertType
-        }))
-        return groupBy(arry, 'tableNo')
+          convertType: x.convertType === null ? x.dataType : x.convertType,
+        }));
+        return groupBy(arry, 'tableNo');
       } else {
-        return []
+        return [];
       }
     },
     disableByDetailInfo() {
       if (this.detailInfo === '') {
-        return true
+        return true;
       }
 
-      return (
-        this.detailInfo.config.tables &&
-        this.detailInfo.config.tables.length === 0
-      )
+      return this.detailInfo.config.tables && this.detailInfo.config.tables.length === 0;
     },
     hasBtnPermissionSave() {
-      return hasPermission(this.privileges, this.$PERMISSION_CODE.OPERATOR.edit)
-    }
+      return hasPermission(this.privileges, this.$PERMISSION_CODE.OPERATOR.edit);
+    },
   },
   mounted() {
-    this.handleGetDatabaseList()
+    this.handleGetDatabaseList();
     if (this.model === 'add') {
-      this.handleGetAddModelDatamodel()
+      this.handleGetAddModelDatamodel();
     } else if (this.model === 'edit') {
-      this.handleGetData(this.$route.query.modelId)
-      this.$store.dispatch('dataModel/setModelId', this.$route.query.modelId)
-      this.$store.commit('common/SET_MENUSELECTID', this.$route.query.modelId)
+      this.handleGetData(this.$route.query.modelId);
+      this.$store.dispatch('dataModel/setModelId', this.$route.query.modelId);
+      this.$store.commit('common/SET_MENUSELECTID', this.$route.query.modelId);
     }
-    this.$EventBus.$on('tableUnion', this.handleTableUnion)
+    this.$EventBus.$on('tableUnion', this.handleTableUnion);
   },
   beforeDestroy() {
-    this.$EventBus.$off('deleteBelongCustom', this.handleDeleteCustomDimMea)
-    this.$EventBus.$off('tableUnion', this.handleTableUnion)
-    this.$store.dispatch('dataModel/setAddModelId', -1)
+    this.$EventBus.$off('deleteBelongCustom', this.handleDeleteCustomDimMea);
+    this.$EventBus.$off('tableUnion', this.handleTableUnion);
+    this.$store.dispatch('dataModel/setAddModelId', -1);
   },
   methods: {
     /** 组合右键菜单 */
@@ -446,23 +394,23 @@ export default {
         {
           name: '重命名',
           onClick: (event, handler, vm) => {
-            this.panelData = vm.itemData
-            this.openModal('rename-setting')
-          }
+            this.panelData = vm.itemData;
+            this.openModal('rename-setting');
+          },
         },
         {
           name: '编辑',
           type: 'custom',
-          onClick: this.handleEditField
+          onClick: this.handleEditField,
         },
         {
           name: '删除',
           type: 'custom',
-          onClick: this.handleDeleField
+          onClick: this.handleDeleField,
         },
         {
           name: '复制字段',
-          onClick: this.handleCopyField
+          onClick: this.handleCopyField,
         },
         {
           name: '转换数据类型',
@@ -470,12 +418,12 @@ export default {
             {
               name: '转换为整数',
               dataType: 'BIGINT',
-              onClick: this.switchFieldType
+              onClick: this.switchFieldType,
             },
             {
               name: '转换为小数',
               dataType: 'DOUBLE',
-              onClick: this.switchFieldType
+              onClick: this.switchFieldType,
             },
             // {
             //   name: '转换为数值',
@@ -485,291 +433,259 @@ export default {
             {
               name: '转换为字符串',
               dataType: 'VARCHAR',
-              onClick: this.switchFieldType
+              onClick: this.switchFieldType,
             },
             {
               name: '转换为日期',
               dataType: 'DATE',
-              onClick: this.switchFieldType
+              onClick: this.switchFieldType,
             },
             {
               name: '转换为日期时间',
               dataType: 'TIMESTAMP',
-              onClick: this.switchFieldType
-            }
-          ]
+              onClick: this.switchFieldType,
+            },
+          ],
         },
         {
           name: type === 'dimensions' ? '转换为度量' : '转换为维度',
           onClick: (event, handler, vm) => {
-            this.handleSwitchRole(type, vm)
-          }
-        }
-      ]
+            this.handleSwitchRole(type, vm);
+          },
+        },
+      ];
 
-      return arry
+      return arry;
     },
     handleOpenComputeSetting(type) {
-      this.panelData = {}
-      this.openModal('compute-setting', type)
+      this.panelData = {};
+      this.openModal('compute-setting', type);
     },
     switchFieldType(e, item, vm) {
-      let dataType = item.dataType
-      vm.itemData.convertType = dataType
+      let dataType = item.dataType;
+      vm.itemData.convertType = dataType;
     },
     handleEditField(event, handler, vm) {
-      const role = vm.itemData.role
-      this.panelData = vm.itemData
-      const isDimension = role === 1
-      const isMeasures = role === 2
+      const role = vm.itemData.role;
+      this.panelData = vm.itemData;
+      const isDimension = role === 1;
+      const isMeasures = role === 2;
       if (isDimension) {
-        this.openModal('compute-setting', '维度')
+        this.openModal('compute-setting', '维度');
       } else if (isMeasures) {
-        this.openModal('compute-setting', '度量')
+        this.openModal('compute-setting', '度量');
       }
     },
     handleDeleField(event, handler, vm) {
-      const role = vm.itemData.role
-      const isDimension = role === 1
-      const isMeasures = role === 2
-      let index = -1
+      const role = vm.itemData.role;
+      const isDimension = role === 1;
+      const isMeasures = role === 2;
+      let index = -1;
       if (isDimension) {
-        index = this.cacheDimensions.findIndex(
-          item => item.id === vm.itemData.id
-        )
+        index = this.cacheDimensions.findIndex(item => item.id === vm.itemData.id);
         if (index > -1) {
-          this.cacheDimensions.splice(index, 1)
-          this.handleDimensions()
+          this.cacheDimensions.splice(index, 1);
+          this.handleDimensions();
         }
       } else if (isMeasures) {
-        index = this.cacheMeasures.findIndex(item => item.id === vm.itemData.id)
+        index = this.cacheMeasures.findIndex(item => item.id === vm.itemData.id);
         if (index > -1) {
-          this.cacheMeasures.splice(index, 1)
-          this.handleMeasures()
+          this.cacheMeasures.splice(index, 1);
+          this.handleMeasures();
         }
       }
     },
     async handleGetDatabaseList() {
-      const result = await this.$server.dataModel.getDatabaseList(
-        this.$route.query.datasourceId
-      )
+      const result = await this.$server.dataModel.getDatabaseList(this.$route.query.datasourceId);
       if (result.code === 200) {
-        const baseBalck = [11, 12] // 黑名单
-        const type = result.data.type
-        this.isDatabase = !baseBalck.some(item => item === type)
-        this.datasourceName = result.data.name
+        const baseBalck = [11, 12]; // 黑名单
+        const type = result.data.type;
+        this.isDatabase = !baseBalck.some(item => item === type);
+        this.datasourceName = result.data.name;
       } else {
-        this.$message.error(result.msg)
+        this.$message.error(result.msg);
       }
     },
     /**
      * 新增时获取空模型
      */
     async handleGetAddModelDatamodel() {
-      const result = await this.$server.dataModel.getAddModelDatamodel()
+      const result = await this.$server.dataModel.getAddModelDatamodel();
       if (result.code === 200) {
-        this.detailInfo = result.data
-        this.$store.dispatch('dataModel/setAddModelId', result.data.id)
-        this.$store.commit('common/SET_PRIVILEGES', [0]) // 新增赋予所有权限
+        this.detailInfo = result.data;
+        this.$store.dispatch('dataModel/setAddModelId', result.data.id);
+        this.$store.commit('common/SET_PRIVILEGES', [0]); // 新增赋予所有权限
         this.$nextTick(() => {
-          this.handleGetDatabase()
-        })
+          this.handleGetDatabase();
+        });
       } else {
-        this.$message.error(result.msg)
+        this.$message.error(result.msg);
       }
     },
     /**
      * 根据数据源获取数据库(暂时只支持显示第一个库)
      */
     async handleGetDatabase() {
-      const len = this.detailInfo.config.tables
-        ? this.detailInfo.config.tables.length
-        : 0
-      let tableId = ''
+      const len = this.detailInfo.config.tables ? this.detailInfo.config.tables.length : 0;
+      let tableId = '';
       if (len > 0) {
-        tableId = this.detailInfo.config.tables[len - 1].tableId
+        tableId = this.detailInfo.config.tables[len - 1].tableId;
       }
-      const result = await this.$server.dataModel.getDataBaseDataInfoList(
-        this.$route.query.datasourceId,
-        tableId
-      )
+      const result = await this.$server.dataModel.getDataBaseDataInfoList(this.$route.query.datasourceId, tableId);
 
       if (result.code === 200) {
-        this.databaseList = result.data
-        this.databaseName =
-          this.databaseList.length && this.databaseList.length > 0
-            ? this.databaseList[0].name
-            : ''
+        this.databaseList = result.data;
+        this.databaseName = this.databaseList.length && this.databaseList.length > 0 ? this.databaseList[0].name : '';
         if (this.databaseList.length && this.databaseList.length > 0) {
-          this.handleGetDatabaseTable(result.data[0].id)
+          this.handleGetDatabaseTable(result.data[0].id);
         }
         // this.handleDimensions()
         // this.handleMeasures()
       } else {
-        this.$message.error(result.msg)
+        this.$message.error(result.msg);
       }
     },
     // 获取当前库下的表
     async handleGetDatabaseTable(id) {
-      const listResult = await this.$server.dataModel.getTableListById(id)
+      const listResult = await this.$server.dataModel.getTableListById(id);
       if (listResult.code === 200) {
         this.leftMenuList = [].concat(
           listResult.data.filter(item => {
-            item.type = +item.type
-            return item.type === 0
-          })
-        )
-        this.rightMenuList = [].concat(
-          listResult.data.filter(item => item.type === 1)
-        )
-        this.$store.dispatch('dataModel/setDatabaseId', id)
+            item.type = +item.type;
+            return item.type === 0;
+          }),
+        );
+        this.rightMenuList = [].concat(listResult.data.filter(item => item.type === 1));
+        this.$store.dispatch('dataModel/setDatabaseId', id);
       } else {
-        this.$message.error(listResult.msg)
+        this.$message.error(listResult.msg);
       }
     },
-    handleSearchTable: debounce(function(event) {
-      const value = event.target.value
-      this.tableSearch = value ? value.trim() : value
-      this.searchList = this.leftMenuList.filter(
-        item => item.name.toLowerCase().indexOf(value.toLowerCase()) > -1
-      )
+    handleSearchTable: debounce(function (event) {
+      const value = event.target.value;
+      this.tableSearch = value ? value.trim() : value;
+      this.searchList = this.leftMenuList.filter(item => item.name.toLowerCase().indexOf(value.toLowerCase()) > -1);
     }, 400),
     /**
      * 切换数据库
      */
     async handleChangeDatabase(value, data) {
-      this.handleGetDatabaseTable(data.key)
-      this.$store.dispatch('dataModel/setDatabaseId', data.key)
+      this.handleGetDatabaseTable(data.key);
+      this.$store.dispatch('dataModel/setDatabaseId', data.key);
     },
     // 表上下合并
     handleTableUnion(node) {
-      this.unionNode = node
-      this.openModal('union-setting')
+      this.unionNode = node;
+      this.openModal('union-setting');
     },
     // 转换维度度量
     handleSwitchRole(type, vm) {
-      let tableName = vm.itemData.tableName
-      const role = vm.itemData.role === 1 ? 2 : 1
+      let tableName = vm.itemData.tableName;
+      const role = vm.itemData.role === 1 ? 2 : 1;
       if (vm.itemData.tableNo === 0) {
-        tableName = role === 1 ? '自定义维度' : '自定义度量'
+        tableName = role === 1 ? '自定义维度' : '自定义度量';
       }
       if (vm.itemData.tableNo === 0) {
-        tableName = role === 1 ? '自定义维度' : '自定义度量'
+        tableName = role === 1 ? '自定义维度' : '自定义度量';
       }
       const data = {
         ...vm.itemData,
         tableName,
-        role
-      }
-      let index
+        role,
+      };
+      let index;
       if (type === 'dimensions') {
         // 维度 转去 度量
         index = this.getTargetIndex(
-          vm.itemData.tableNo === 0
-            ? this.cacheDimensions
-            : this.detailInfo.pivotSchema.dimensions,
-          vm.itemData.alias
-        )
+          vm.itemData.tableNo === 0 ? this.cacheDimensions : this.detailInfo.pivotSchema.dimensions,
+          vm.itemData.alias,
+        );
         if (vm.itemData.tableNo === 0) {
           // 如果是自定义
-          this.cacheMeasures.push(data)
-          this.cacheDimensions.splice(index, 1)
+          this.cacheMeasures.push(data);
+          this.cacheDimensions.splice(index, 1);
         } else {
-          this.detailInfo.pivotSchema.dimensions.splice(index, 1)
-          this.detailInfo.pivotSchema.measures.push(data)
+          this.detailInfo.pivotSchema.dimensions.splice(index, 1);
+          this.detailInfo.pivotSchema.measures.push(data);
         }
       } else {
         // 度量 转去 维度
         index = this.getTargetIndex(
-          vm.itemData.tableNo === 0
-            ? this.cacheMeasures
-            : this.detailInfo.pivotSchema.measures,
-          vm.itemData.alias
-        )
+          vm.itemData.tableNo === 0 ? this.cacheMeasures : this.detailInfo.pivotSchema.measures,
+          vm.itemData.alias,
+        );
         if (vm.itemData.tableNo === 0) {
           // 如果是自定义
-          this.cacheDimensions.push(data)
-          this.cacheMeasures.splice(index, 1)
+          this.cacheDimensions.push(data);
+          this.cacheMeasures.splice(index, 1);
         } else {
-          this.detailInfo.pivotSchema.measures.splice(index, 1)
-          this.detailInfo.pivotSchema.dimensions.push(data)
+          this.detailInfo.pivotSchema.measures.splice(index, 1);
+          this.detailInfo.pivotSchema.dimensions.push(data);
         }
       }
-      this.handleDimensions()
-      this.handleMeasures()
+      this.handleDimensions();
+      this.handleMeasures();
     },
     getTargetIndex(list, target) {
-      return list.findIndex(item => item.alias === target)
+      return list.findIndex(item => item.alias === target);
     },
     // 复制维度度量
     async handleCopyField(event, handler, vm) {
-      const role = vm.itemData.role
-      const isDimension = role === 1
-      const isMeasures = role === 2
+      const role = vm.itemData.role;
+      const isDimension = role === 1;
+      const isMeasures = role === 2;
       let newField = {
         ...vm.itemData,
         datamodelId: this.model === 'add' ? this.addModelId : this.modelId,
-        expr:
-          vm.itemData.produceType === 0
-            ? `$$${vm.itemData.id}`
-            : vm.itemData.expr,
-        raw_expr:
-          vm.itemData.produceType === 0
-            ? `[${vm.itemData.alias}]`
-            : vm.itemData.raw_expr
-      }
-      const result = await this.$server.dataModel.addCustomizModelPivotschema(
-        newField
-      )
+        expr: vm.itemData.produceType === 0 ? `$$${vm.itemData.id}` : vm.itemData.expr,
+        raw_expr: vm.itemData.produceType === 0 ? `[${vm.itemData.alias}]` : vm.itemData.raw_expr,
+      };
+      const result = await this.$server.dataModel.addCustomizModelPivotschema(newField);
       if (result.code === 200) {
         newField = {
           ...newField,
-          ...result.data
-        }
+          ...result.data,
+        };
         const arry = [
           ...this.detailInfo.pivotSchema.dimensions,
           ...this.detailInfo.pivotSchema.measures,
           ...this.cacheDimensions,
-          ...this.cacheMeasures
-        ]
-        newField.alias = this.handleAddCustomField(
-          arry,
-          newField,
-          newField.alias
-        )
+          ...this.cacheMeasures,
+        ];
+        newField.alias = this.handleAddCustomField(arry, newField, newField.alias);
         if (isDimension) {
-          this.cacheDimensions.push(newField)
-          this.handleDimensions()
+          this.cacheDimensions.push(newField);
+          this.handleDimensions();
         } else if (isMeasures) {
-          this.cacheMeasures.push(newField)
-          this.handleMeasures()
+          this.cacheMeasures.push(newField);
+          this.handleMeasures();
         } else {
-          this.$message.error('无法复制字段, 请刷新重试')
+          this.$message.error('无法复制字段, 请刷新重试');
         }
       } else {
-        this.$message.error(result.msg || '请求错误')
+        this.$message.error(result.msg || '请求错误');
       }
     },
     /** 复制字段时候添加 */
     handleAddCustomField(list, field, source, hasNumber = 1) {
       if (list && list.length) {
-        let len = list.length
-        let hasFind = true
+        let len = list.length;
+        let hasFind = true;
         while (len >= 0 && hasFind) {
-          field.alias = `${source}(${hasNumber})`
-          const hasSame = list.some(item => item.alias === field.alias)
-          hasFind = hasSame
+          field.alias = `${source}(${hasNumber})`;
+          const hasSame = list.some(item => item.alias === field.alias);
+          hasFind = hasSame;
           if (hasFind) {
-            hasNumber++
+            hasNumber++;
           }
-          len--
+          len--;
         }
-        return `${source}(${hasNumber})`
+        return `${source}(${hasNumber})`;
       } else {
         if (hasNumber === 1) {
-          return `${source}(${hasNumber})`
+          return `${source}(${hasNumber})`;
         }
-        return field.alias
+        return field.alias;
       }
     },
     /**
@@ -777,82 +693,79 @@ export default {
      */
     handleSameName(list) {
       if (Array.isArray(list) && list.length > 1) {
-        const map = new Map()
+        const map = new Map();
         list.forEach(element => {
           if (element.tableNo !== 0) {
-            this.changeAlias(map, element.alias, element)
+            this.changeAlias(map, element.alias, element);
           }
-        })
+        });
       }
-      return list
+      return list;
     },
     changeAlias(map, alias, element) {
       if (map.has(alias)) {
-        const target = map.get(alias)
-        let value = target.value
+        const target = map.get(alias);
+        let value = target.value;
         if (value === 1 && target.tableName !== element.tableName) {
           // 不同表名同字段
-          alias = `${element.alias}(${element.tableName})`
+          alias = `${element.alias}(${element.tableName})`;
         } else if (value > 1 && target.tableName === element.tableName) {
           // 同表名同字段且已经存在过(value > 1)
-          alias = `${element.alias}(${element.tableName})(${value})`
+          alias = `${element.alias}(${element.tableName})(${value})`;
         } else {
           // 同表名同字段
-          alias = `${element.alias}(${value})`
+          alias = `${element.alias}(${value})`;
         }
         if (map.has(alias)) {
-          value++
+          value++;
           map.set(alias, {
             value,
-            tableName: element.tableName
-          })
-          this.changeAlias(map, alias, element)
+            tableName: element.tableName,
+          });
+          this.changeAlias(map, alias, element);
         } else {
           map.set(alias, {
             value: 1,
-            tableName: element.tableName
-          })
-          element.alias = alias
+            tableName: element.tableName,
+          });
+          element.alias = alias;
         }
       } else {
         map.set(element.alias, {
           value: 1,
-          tableName: element.tableName
-        })
+          tableName: element.tableName,
+        });
       }
     },
     /**
      * 合并维度数据
      */
     handleConcatDimensions() {
-      return [
-        ...this.cacheDimensions,
-        ...this.detailInfo.pivotSchema.dimensions
-      ]
+      return [...this.cacheDimensions, ...this.detailInfo.pivotSchema.dimensions];
     },
     /**
      * 维度数据处理
      */
     handleDimensions() {
-      const arry = this.handleConcatDimensions()
-      this.handleSameName(arry)
-      this.dimensions = groupBy(arry, 'tableNo')
-      this.dimensionsActiveKey = keys(this.dimensions)
+      const arry = this.handleConcatDimensions();
+      this.handleSameName(arry);
+      this.dimensions = groupBy(arry, 'tableNo');
+      this.dimensionsActiveKey = keys(this.dimensions);
     },
     /**
      * 合并度量数据
      */
     handleConcatMeasures() {
-      return [...this.cacheMeasures, ...this.detailInfo.pivotSchema.measures]
+      return [...this.cacheMeasures, ...this.detailInfo.pivotSchema.measures];
     },
     /**
      * 度量数据处理
      */
     handleMeasures() {
-      const arry = this.handleConcatMeasures()
-      this.handleSameName(arry)
-      this.measures = groupBy(arry, 'tableNo')
-      this.measuresActiveKey = keys(this.measures)
+      const arry = this.handleConcatMeasures();
+      this.handleSameName(arry);
+      this.measures = groupBy(arry, 'tableNo');
+      this.measuresActiveKey = keys(this.measures);
     },
     /**
      * 合并维度度量数据
@@ -860,333 +773,304 @@ export default {
     handleConcat() {
       return {
         dimensions: this.handleConcatDimensions(),
-        measures: this.handleConcatMeasures()
-      }
+        measures: this.handleConcatMeasures(),
+      };
     },
     /**
      * 编辑时获取模型数据
      */
     async handleGetData(id) {
-      this.spinning = true
-      const result = await this.$server.dataModel
-        .getDataModelDetailInfo(id)
-        .finally(() => {
-          this.spinning = false
-        })
+      this.spinning = true;
+      const result = await this.$server.dataModel.getDataModelDetailInfo(id).finally(() => {
+        this.spinning = false;
+      });
 
       if (result.code === 200) {
-        this.$message.success('获取数据成功')
-        this.createViewName = result.data.alias
-        this.detailInfo = result.data
+        this.$message.success('获取数据成功');
+        this.createViewName = result.data.alias;
+        this.detailInfo = result.data;
         // 将自定义维度度量剥离处理
         this.detailInfo.pivotSchema.dimensions = this.handlePeelCustom(
           this.detailInfo.pivotSchema.dimensions,
-          this.cacheDimensions
-        )
+          this.cacheDimensions,
+        );
         this.detailInfo.pivotSchema.measures = this.handlePeelCustom(
           this.detailInfo.pivotSchema.measures,
-          this.cacheMeasures
-        )
+          this.cacheMeasures,
+        );
 
         // 校验缺失字段
-        this.doWithMissing(this.cacheDimensions, result.data.pivotSchema)
-        this.doWithMissing(this.cacheMeasures, result.data.pivotSchema)
+        this.doWithMissing(this.cacheDimensions, result.data.pivotSchema);
+        this.doWithMissing(this.cacheMeasures, result.data.pivotSchema);
 
-        this.$store.commit(
-          'common/SET_PRIVILEGES',
-          result.data.privileges || []
-        )
+        this.$store.commit('common/SET_PRIVILEGES', result.data.privileges || []);
 
-        this.handleDimensions()
-        this.handleMeasures()
+        this.handleDimensions();
+        this.handleMeasures();
         this.$nextTick(() => {
-          this.handleGetDatabase()
-        })
+          this.handleGetDatabase();
+        });
       } else {
-        this.$message.error(result.msg)
+        this.$message.error(result.msg);
       }
     },
     // 替换为缺失文案
     doWithMissing(list, pivotSchema) {
       list.forEach(filed => {
-        const matchs = filed.raw_expr.match(/(\[)(.*?)(\])/g)
+        const matchs = filed.raw_expr.match(/(\[)(.*?)(\])/g);
         if (matchs) {
           matchs.forEach(value => {
-            const matchStr = value.match(/(\[)(.+)(\])/)
-            const key = matchStr[2] ? matchStr[2] : ''
-            const pairList = [
-              ...pivotSchema.dimensions,
-              ...pivotSchema.measures
-            ]
-            const missing = pairList.filter(item => item.alias === key).pop()
+            const matchStr = value.match(/(\[)(.+)(\])/);
+            const key = matchStr[2] ? matchStr[2] : '';
+            const pairList = [...pivotSchema.dimensions, ...pivotSchema.measures];
+            const missing = pairList.filter(item => item.alias === key).pop();
             if (!missing) {
-              filed.status = 1
-              filed.raw_expr = filed.raw_expr.replace(value, '<此位置字段丢失>')
+              filed.status = 1;
+              filed.raw_expr = filed.raw_expr.replace(value, '<此位置字段丢失>');
             }
-          })
+          });
         }
-      })
+      });
     },
     handlePeelCustom(list, cache) {
       if (list && list.length) {
         return list.filter(item => {
           if (item.tableNo === 0) {
-            cache.push(item)
+            cache.push(item);
           } else {
-            return item
+            return item;
           }
-        })
+        });
       }
-      return list
+      return list;
     },
     handleLeftDragLeave() {
-      this.$refs.rightTopRef.handleMapRemoveClass()
+      this.$refs.rightTopRef.handleMapRemoveClass();
     },
     openModal(modalName, computeType) {
-      this.visible = true
-      this.modalName = modalName
-      if (computeType) this.computeType = computeType
+      this.visible = true;
+      this.modalName = modalName;
+      if (computeType) this.computeType = computeType;
     },
     handleAddSQL(type, item) {
-      this.modalStatus = type
-      this.visible = true
-      this.modalName = 'sql-setting'
+      this.modalStatus = type;
+      this.visible = true;
+      this.modalName = 'sql-setting';
       if (this.modalStatus === 'edit') {
         this.$nextTick(() => {
-          this.$refs.componentRef.handleGetDetail(item)
-        })
+          this.$refs.componentRef.handleGetDetail(item);
+        });
       }
     },
     handleSQLDelete(item) {
       this.$server.dataModel
         .deleCustomSql({
           name: item.name,
-          tableId: item.id
+          tableId: item.id,
         })
         .then(res => {
           if (res.code === 200) {
-            const tables =
-              (this.detailInfo &&
-                this.detailInfo['config'] &&
-                this.detailInfo.config['tables']) ||
-              []
+            const tables = (this.detailInfo && this.detailInfo['config'] && this.detailInfo.config['tables']) || [];
 
-            if (
-              Array.isArray(tables) &&
-              tables.some(table => table.id === item.id)
-            ) {
-              return this.$message.error('资源有被其他资源依赖，不能被删除。')
+            if (Array.isArray(tables) && tables.some(table => table.id === item.id)) {
+              return this.$message.error('资源有被其他资源依赖，不能被删除。');
             }
 
-            const index = this.rightMenuList.indexOf(item)
-            this.rightMenuList.splice(index, 1)
+            const index = this.rightMenuList.indexOf(item);
+            this.rightMenuList.splice(index, 1);
           } else {
-            this.$message.error(res.msg)
+            this.$message.error(res.msg);
           }
-        })
+        });
     },
-    close(data) {
-      this.visible = false
+    close() {
+      this.visible = false;
     },
     componentSuccess(data) {
       if (this.modalName === 'sql-setting') {
-        this.doWithSqlSetting(data)
+        this.doWithSqlSetting(data);
       }
       if (this.modalName === 'union-setting') {
-        this.doWithUnionSetting(data)
+        this.doWithUnionSetting(data);
       }
 
       if (this.modalName === 'batch-setting') {
-        this.doWithBatchSetting(data)
+        this.doWithBatchSetting(data);
       }
 
       if (this.modalName === 'compute-setting') {
-        this.doWithComputeSetting(data)
+        this.doWithComputeSetting(data);
       }
 
       if (this.modalName === 'create-view') {
-        this.doWithCreateView(data)
+        this.doWithCreateView(data);
       }
 
-      this.close()
+      this.close();
     },
     doWithSqlSetting(data) {
-      data.type = +data.type
+      data.type = +data.type;
       if (this.modalStatus === 'new') {
-        this.handleSQLAdd(data)
+        this.handleSQLAdd(data);
       }
       if (this.modalStatus === 'edit') {
-        this.handleUpdateSQL(data)
+        this.handleUpdateSQL(data);
       }
     },
     doWithUnionSetting(data) {
-      const tables = this.detailInfo.config.tables
-      this.unionNode.setField('name', data.form.name)
-      this.unionNode.setField('type', 2)
-      this.unionNode.setField('union', data.union)
+      const tables = this.detailInfo.config.tables;
+      this.unionNode.setField('name', data.form.name);
+      this.unionNode.setField('type', 2);
+      this.unionNode.setField('union', data.union);
 
-      const node = this.unionNode
+      const node = this.unionNode;
       const index = findIndex(tables, {
-        id: node.props.id
-      })
+        id: node.props.id,
+      });
       this.detailInfo.config.tables.splice(index, 1, {
         ...tables[index],
-        ...node.props
-      })
+        ...node.props,
+      });
 
       // 由于层次过深，需要set
-      this.$set(
-        this.detailInfo.config.tables[index]['union'],
-        'connectType',
-        data.union.connectType
-      )
-      this.$set(this.detailInfo.config.tables[index]['union'], 'tableList', [
-        ...data.union.tableList
-      ])
+      this.$set(this.detailInfo.config.tables[index]['union'], 'connectType', data.union.connectType);
+      this.$set(this.detailInfo.config.tables[index]['union'], 'tableList', [...data.union.tableList]);
 
       // 处理更改名字
       this.detailInfo.pivotSchema.dimensions = this.handleChangeTableName(
         this.detailInfo.pivotSchema.dimensions,
         node.props.tableNo,
-        data.form.name
-      )
+        data.form.name,
+      );
       this.detailInfo.pivotSchema.measures = this.handleChangeTableName(
         this.detailInfo.pivotSchema.measures,
         node.props.tableNo,
-        data.form.name
-      )
+        data.form.name,
+      );
 
-      this.handleDimensions()
-      this.handleMeasures()
+      this.handleDimensions();
+      this.handleMeasures();
     },
     doWithBatchSetting(data) {
       if (data) {
-        const cacheDimensions = []
-        const cacheMeasures = []
+        const cacheDimensions = [];
+        const cacheMeasures = [];
         Object.keys(data).forEach(item => {
-          const list = data[item]
+          const list = data[item];
           list.forEach(field => {
             if (field.role === 1) {
-              cacheDimensions.push(field)
+              cacheDimensions.push(field);
             } else if (field.role === 2) {
-              cacheMeasures.push(field)
+              cacheMeasures.push(field);
             }
-          })
-        })
+          });
+        });
 
-        this.cacheDimensions = []
-        this.cacheMeasures = []
+        this.cacheDimensions = [];
+        this.cacheMeasures = [];
         // 将自定义维度度量剥离处理
-        this.detailInfo.pivotSchema.dimensions = this.handlePeelCustom(
-          cacheDimensions,
-          this.cacheDimensions
-        )
-        this.detailInfo.pivotSchema.measures = this.handlePeelCustom(
-          cacheMeasures,
-          this.cacheMeasures
-        )
-        this.handleDimensions()
-        this.handleMeasures()
+        this.detailInfo.pivotSchema.dimensions = this.handlePeelCustom(cacheDimensions, this.cacheDimensions);
+        this.detailInfo.pivotSchema.measures = this.handlePeelCustom(cacheMeasures, this.cacheMeasures);
+        this.handleDimensions();
+        this.handleMeasures();
       }
     },
     doWithComputeSetting(data) {
-      let list
+      let list;
       if (this.computeType === '维度') {
-        list = this.cacheDimensions
+        list = this.cacheDimensions;
       } else {
-        list = this.cacheMeasures
+        list = this.cacheMeasures;
       }
-      let index = list.findIndex(item => item.id === data.id)
+      let index = list.findIndex(item => item.id === data.id);
       if (index < 0) {
-        list.push(data)
+        list.push(data);
       } else {
-        list.splice(index, 1, data)
+        list.splice(index, 1, data);
       }
-      this.handleDimensions()
-      this.handleMeasures()
+      this.handleDimensions();
+      this.handleMeasures();
     },
     doWithCreateView(data) {
-      this.createViewName = data
-      this.detailInfo.alias = data
+      this.createViewName = data;
+      this.detailInfo.alias = data;
     },
     handleChangeTableName(list, tableNo, name) {
       if (list && list.length) {
         return list.map(item => {
           if (item.tableNo === tableNo || `${item.tableNo}` === tableNo) {
-            item.tableName = name
+            item.tableName = name;
           }
-          return item
-        })
+          return item;
+        });
       }
-      return list
+      return list;
     },
     handleSQLAdd(data) {
-      this.rightMenuList.push(data)
+      this.rightMenuList.push(data);
     },
     handleUpdateSQL(data) {
       const index = findIndex(this.rightMenuList, {
-        id: data.id
-      })
-      this.rightMenuList.splice(index, 1, data)
+        id: data.id,
+      });
+      this.rightMenuList.splice(index, 1, data);
     },
     exit() {
       this.$router.push({
-        name: 'modelShow'
-      })
+        name: 'modelShow',
+      });
     },
     handleSave() {
-      let formAllRight = true
+      let formAllRight = true;
       if (this.model === 'add') {
         this.modelForm.validateFields((err, values) => {
           if (!err) {
-            this.detailInfo.name = values.name
-            formAllRight = true
+            this.detailInfo.name = values.name;
+            formAllRight = true;
           } else {
-            formAllRight = false
+            formAllRight = false;
           }
-        })
+        });
       }
-      if (!formAllRight) return
+      if (!formAllRight) return;
       if (formAllRight && this.detailInfo.config.tables.length === 0) {
-        this.$message.error('请关联左侧表')
-        return
+        this.$message.error('请关联左侧表');
+        return;
       }
 
       if (this.detailInfo.config.tables.length > 1) {
         const hasEmpty = this.detailInfo.config.tables.slice(1).some(table => {
-          return table.join.conditions.length === 0
-        })
+          return table.join.conditions.length === 0;
+        });
         if (hasEmpty) {
-          this.$message.error('还有表未关联')
-          return
+          this.$message.error('还有表未关联');
+          return;
         }
       }
 
       if (this.$refs.rightTopRef.errorTables.length > 0) {
         const hasError = this.detailInfo.config.tables.some(table => {
-          return this.$refs.rightTopRef.errorTables.some(
-            errorNo => errorNo === table.tableNo
-          )
-        })
+          return this.$refs.rightTopRef.errorTables.some(errorNo => errorNo === table.tableNo);
+        });
         if (hasError) {
-          this.$message.error('模型中部分关联表无法关联，请修改字段数据类型')
-          return
+          this.$message.error('模型中部分关联表无法关联，请修改字段数据类型');
+          return;
         }
       }
 
       this.detailInfo.config.tables.map(table => {
-        table.alias = table.name
-      })
+        table.alias = table.name;
+      });
 
       const params = {
         ...this.detailInfo,
         pivotSchema: {
-          ...this.handleConcat() // 处理维度度量
+          ...this.handleConcat(), // 处理维度度量
         },
-        parentId: this.parentId
-      }
+        parentId: this.parentId,
+      };
       if (!this.modelId) {
-        this.actionSaveModel(params, false)
+        this.actionSaveModel(params, false);
       } else {
         this.$confirm({
           title: '确认提示?',
@@ -1194,41 +1078,41 @@ export default {
           okText: '覆盖',
           cancelText: '仅保存',
           onOk: () => {
-            this.actionSaveModel(params, true)
+            this.actionSaveModel(params, true);
           },
           onCancel: () => {
-            this.actionSaveModel(params, false)
-          }
-        })
+            this.actionSaveModel(params, false);
+          },
+        });
       }
     },
     /**
      * 模型保存接口 cover: 是否覆盖大屏
      */
     async actionSaveModel(params, cover) {
-      let result
+      let result;
       if (cover) {
-        result = await this.$server.dataModel.saveModelCover(params)
+        result = await this.$server.dataModel.saveModelCover(params);
       } else {
-        result = await this.$server.dataModel.saveModel(params)
+        result = await this.$server.dataModel.saveModel(params);
       }
       if (result.code === 200) {
         if (this.model === 'add') {
-          await this.handleSaveModelSourceId()
+          await this.handleSaveModelSourceId();
         }
         this.$message
           .success({
             content: this.model === 'add' ? '保存成功' : '编辑成功',
-            duration: 0.5
+            duration: 0.5,
           })
           .then(() => {
-            this.$store.commit('dataModel/SET_MODELID', result.data.id)
-            this.exit()
-          })
+            this.$store.commit('dataModel/SET_MODELID', result.data.id);
+            this.exit();
+          });
       } else {
-        this.$message.error(result.msg)
+        this.$message.error(result.msg);
       }
-      this.$store.dispatch('dataModel/setParentId', '')
+      this.$store.dispatch('dataModel/setParentId', '');
     },
     /**
      * 保存模型后再保存关联的数据源信息
@@ -1236,22 +1120,21 @@ export default {
     async handleSaveModelSourceId() {
       this.$server.dataModel.saveDatasource({
         sourceDatasourceList: new Array(this.datasource),
-        dataModelId: this.model === 'add' ? this.addModelId : this.modelId
-      })
+        dataModelId: this.model === 'add' ? this.addModelId : this.modelId,
+      });
     },
-    handleGetFetchParams(data) {
+    handleGetFetchParams() {
       if (this.modalName === 'sql-setting') {
         this.$refs.componentRef.pushFetchParam({
           sourceId: this.$route.query.datasourceId,
           databaseName: this.databaseName,
-          databaseId:
-            this.databaseList.length > 0 ? this.databaseList[0].id : '',
-          dataModelId: this.model === 'add' ? this.addModelId : this.modelId
-        })
+          databaseId: this.databaseList.length > 0 ? this.databaseList[0].id : '',
+          dataModelId: this.model === 'add' ? this.addModelId : this.modelId,
+        });
       }
-    }
-  }
-}
+    },
+  },
+};
 </script>
 
 <style lang="styl" scope>

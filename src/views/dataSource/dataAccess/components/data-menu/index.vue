@@ -7,12 +7,8 @@
           <a-icon type="plus-square" class="menu_icon" />
         </a>
         <a-menu slot="overlay" class="drow_menu">
-          <a-menu-item v-if="hasPermissionSourceAdd" v-on:click="showModal">
-            添加连接
-          </a-menu-item>
-          <a-menu-item v-if="hasPermissionFolderAdd" key="1" @click="handleAddNewFolder">
-            新建文件夹
-          </a-menu-item>
+          <a-menu-item v-if="hasPermissionSourceAdd" v-on:click="showModal">添加连接</a-menu-item>
+          <a-menu-item v-if="hasPermissionFolderAdd" key="1" @click="handleAddNewFolder">新建文件夹</a-menu-item>
         </a-menu>
       </a-dropdown>
       <a-modal
@@ -21,7 +17,7 @@
         :footer="null"
         :bodyStyle="{
           maxHeight: `calc( 100vh - 160px )`,
-          overflowY: 'auto'
+          overflowY: 'auto',
         }"
       >
         <a-row :gutter="[8, 8]">
@@ -32,12 +28,7 @@
                 :bodyStyle="{ padding: '10px 0', fontSize: '12px' }"
                 @click="handleSelectModelType($event, item)"
               >
-                <img
-                  slot="cover"
-                  :alt="item.name"
-                  class="card-img"
-                  :src="item.imgurl"
-                />
+                <img slot="cover" :alt="item.name" class="card-img" :src="item.imgurl" />
                 <div class="card-title">{{ item.name }}</div>
               </a-card>
             </a-col>
@@ -64,19 +55,14 @@
           :key="folder.id"
         >
           <template v-if="handleIsFolder(folder, 'items')">
-            <menu-folder
-              :folder="folder"
-              :index="index"
-              :contextmenus="folderContenxtMenu"
-              @fileDrop="handleFileDrop"
-            >
+            <menu-folder :folder="folder" :index="index" :contextmenus="folderContenxtMenu" @fileDrop="handleFileDrop">
               <template v-slot:file="slotProps">
                 <menu-file
                   icon="dataSource"
                   :file="slotProps.file"
                   :index="slotProps.index"
                   :parent="folder"
-                  :isSelect='fileSelectId === slotProps.file.id'
+                  :isSelect="fileSelectId === slotProps.file.id"
                   :contextmenus="fileContenxtMenu"
                   @fileSelect="handleFileSelect"
                   @fileDrag="handleFileDrag"
@@ -90,7 +76,7 @@
                 icon="dataSource"
                 :file="folder"
                 :index="index"
-                :isSelect='fileSelectId === folder.id'
+                :isSelect="fileSelectId === folder.id"
                 :contextmenus="fileContenxtMenu"
                 @fileSelect="handleFileSelect"
                 @fileDrag="handleFileDrag"
@@ -119,36 +105,35 @@
 </template>
 
 <script>
-import ResetNameModal from '../data-main/data-menu/resetName'
-import MoveFileModal from '../data-main/data-menu/moveFile'
-import { mapState } from 'vuex'
-import { menuSearchLoop } from '@/utils/menuSearch'
-import { checkActionPermission, hasPermission } from '@/utils/permission'
-import { fetchTableInfo, fetchDeleteMenuById } from '../../../../../api/dataAccess/api'
-import MenuFile from '@/components/dataSource/menu-group/file'
-import MenuFolder from '@/components/dataSource/menu-group/folder'
-import debounce from 'lodash/debounce'
+import ResetNameModal from '../data-main/data-menu/resetName';
+import MoveFileModal from '../data-main/data-menu/moveFile';
+import { mapState } from 'vuex';
+import { menuSearchLoop } from '@/utils/menuSearch';
+import { checkActionPermission } from '@/utils/permission';
+import MenuFile from '@/components/dataSource/menu-group/file';
+import MenuFolder from '@/components/dataSource/menu-group/folder';
+import debounce from 'lodash/debounce';
 
 const modelList = [
   { name: 'mysql', type: '1' },
   { name: 'oracle', type: '2' },
   { name: 'hive', type: '5' },
   { name: 'excel', type: '11' },
-  { name: 'csv', type: '12' }
-]
+  { name: 'csv', type: '12' },
+];
 export default {
   name: 'dataMenu',
   props: {
     menuData: {
       type: String,
-      default: ''
-    }
+      default: '',
+    },
   },
   components: {
     ResetNameModal,
     MoveFileModal,
     MenuFile,
-    MenuFolder
+    MenuFolder,
   },
   data() {
     return {
@@ -159,7 +144,7 @@ export default {
       resetName: {
         item: '',
         type: '',
-        parentId: ''
+        parentId: '',
       }, // 选中文件夹
       selectFile: null, // 选中文件
       dragFile: null, // 选中文件
@@ -167,341 +152,341 @@ export default {
       menuNode: {
         // 存储节点
         targetNode: {}, // 目标节点
-        parentNode: {} // 父级节点
+        parentNode: {}, // 父级节点
       },
       folderContenxtMenu: [
         {
           name: '添加连接',
           permission: {
             OPERATOR: this.$PERMISSION_CODE.OPERATOR.add,
-            OBJECT: this.$PERMISSION_CODE.OBJECT.datasource
+            OBJECT: this.$PERMISSION_CODE.OBJECT.datasource,
           },
-          onClick: this.showModal
+          onClick: this.showModal,
         },
         {
           name: '重命名',
           permission: {
             OPERATOR: this.$PERMISSION_CODE.OPERATOR.edit,
-            OBJECT: this.$PERMISSION_CODE.OBJECT.sourceFolder
+            OBJECT: this.$PERMISSION_CODE.OBJECT.sourceFolder,
           },
-          onClick: this.handleFolderResetName
+          onClick: this.handleFolderResetName,
         },
         {
           name: '删除',
           permission: {
             OPERATOR: this.$PERMISSION_CODE.OPERATOR.remove,
-            OBJECT: this.$PERMISSION_CODE.OBJECT.sourceFolder
+            OBJECT: this.$PERMISSION_CODE.OBJECT.sourceFolder,
           },
-          onClick: this.handleFolderDelete
-        }
+          onClick: this.handleFolderDelete,
+        },
       ],
       fileContenxtMenu: [
         {
           name: '移动到',
           permission: {
-            OPERATOR: this.$PERMISSION_CODE.OPERATOR.edit
+            OPERATOR: this.$PERMISSION_CODE.OPERATOR.edit,
           },
-          onClick: this.handleFilemoveFile
+          onClick: this.handleFilemoveFile,
         },
         {
           name: '重命名',
           permission: {
-            OPERATOR: this.$PERMISSION_CODE.OPERATOR.edit
+            OPERATOR: this.$PERMISSION_CODE.OPERATOR.edit,
           },
-          onClick: this.handleFileResetName
+          onClick: this.handleFileResetName,
         },
         {
           name: '删除',
           permission: {
-            OPERATOR: this.$PERMISSION_CODE.OPERATOR.remove
+            OPERATOR: this.$PERMISSION_CODE.OPERATOR.remove,
           },
-          onClick: this.handleFileDelete
-        }
+          onClick: this.handleFileDelete,
+        },
       ],
       icon: false,
       visible: false,
       labelCol: { span: 4 },
-      wrapperCol: { span: 14 }
-    }
+      wrapperCol: { span: 14 },
+    };
   },
   computed: {
     ...mapState({
       tableList: state => state.dataAccess.menuList,
       sourceType: state => state.user.sourceType,
-      roles: state => state.user.roles
+      roles: state => state.user.roles,
     }),
     modelList() {
-      let isAll = false
-      let whiteList = []
+      let isAll = false;
+      let whiteList = [];
       // 有黑名单的列表长度<总角色长度, 说明有全类别权限的角色, 直接返回所有
       // if (this.sourceType.length !== this.roles.length) {
       //   isAll = true
       // } else { // 否则先将黑名单转成白名单, 再取并集
-        for (const source of this.sourceType) {
-          if (typeof source === 'string') {
-            const white = source.split(',')
-            whiteList = whiteList.concat(modelList.filter(item => white.indexOf(item.type) < 0))
-          } else {
-            isAll = true
-            break
-          }
+      for (const source of this.sourceType) {
+        if (typeof source === 'string') {
+          const white = source.split(',');
+          whiteList = whiteList.concat(modelList.filter(item => white.indexOf(item.type) < 0));
+        } else {
+          isAll = true;
+          break;
         }
+      }
       // }
       // 将并集去重
-      let list = []
+      let list = [];
       if (isAll) {
-        list = modelList
+        list = modelList;
       } else {
-        list = whiteList.filter((item, index, self) => self.indexOf(item) === index)
+        list = whiteList.filter((item, index, self) => self.indexOf(item) === index);
       }
-      return list.map(function(item) {
+      return list.map(function (item) {
         // 弹窗选项列表
         return Object.assign(item, {
-          imgurl: require(`@/assets/images/icon_${item.name}.png`)
-        })
-      })
+          imgurl: require(`@/assets/images/icon_${item.name}.png`),
+        });
+      });
     },
     menuList() {
-      return this.searchValue ? this.searchList : this.tableList
+      return this.searchValue ? this.searchList : this.tableList;
     },
     folderList() {
-      return this.tableList.filter(item => item.fileType === 0)
+      return this.tableList.filter(item => item.fileType === 0);
     },
     fileSelectId: {
-      get () {
-        return this.$store.state.common.menuSelectId
+      get() {
+        return this.$store.state.common.menuSelectId;
       },
-      set (value) {
-        this.$store.commit('dataAccess/SET_MODELID', value)
-        this.$store.commit('common/SET_MENUSELECTID', value)
-      }
+      set(value) {
+        this.$store.commit('dataAccess/SET_MODELID', value);
+        this.$store.commit('common/SET_MENUSELECTID', value);
+      },
     },
     hasPermissionFolderAdd() {
-      return checkActionPermission(this.$PERMISSION_CODE.OBJECT.sourceFolder, this.$PERMISSION_CODE.OPERATOR.add)
+      return checkActionPermission(this.$PERMISSION_CODE.OBJECT.sourceFolder, this.$PERMISSION_CODE.OPERATOR.add);
     },
     hasPermissionSourceAdd() {
-      return checkActionPermission(this.$PERMISSION_CODE.OBJECT.datasource, this.$PERMISSION_CODE.OPERATOR.add)
-    }
+      return checkActionPermission(this.$PERMISSION_CODE.OBJECT.datasource, this.$PERMISSION_CODE.OPERATOR.add);
+    },
   },
   mounted() {
-    this.handleGetMenuList()
-    this.$on('fileSelect', this.handleFileSelect)
+    this.handleGetMenuList();
+    this.$on('fileSelect', this.handleFileSelect);
   },
   methods: {
     /**
-    * 获取左侧菜单数据
-    */
+     * 获取左侧菜单数据
+     */
     handleGetMenuList() {
-      this.$store.dispatch('dataAccess/getMenuList', this)
+      this.$store.dispatch('dataAccess/getMenuList', this);
     },
     /**
      * @description 获取表详情信息
-    */
+     */
     async getTableInfo(url, callback) {
-      const result = await this.$server.common.getDetailByMenuId(url)
+      const result = await this.$server.common.getDetailByMenuId(url);
       if (result.code === 200) {
-        if (callback && (callback instanceof Function)) {
-          callback(result)
+        if (callback && callback instanceof Function) {
+          callback(result);
         }
-        this.$EventBus.$emit('setFormData')
+        this.$EventBus.$emit('setFormData');
       } else {
-        this.$message.error(result.msg)
+        this.$message.error(result.msg);
       }
     },
     /**
      * 搜索目录列表
      */
-    handleSearchMenu: debounce(function(event) {
-      const value = event.target.value
-      this.searchValue = value
+    handleSearchMenu: debounce(function (event) {
+      const value = event.target.value;
+      this.searchValue = value;
       if (value) {
-        this.handleGetSearchList(value)
+        this.handleGetSearchList(value);
       }
     }, 400),
     handleGetSearchList(value) {
-      let result = []
+      let result = [];
       this.tableList.map(item => {
-        const newItem = menuSearchLoop(item, value)
-        if (newItem) result.push(newItem)
-      })
-      this.searchList = result
-      console.log('搜索结果', this.searchList)
+        const newItem = menuSearchLoop(item, value);
+        if (newItem) result.push(newItem);
+      });
+      this.searchList = result;
+      console.log('搜索结果', this.searchList);
     },
     /**
-    * 选择左侧菜单
-    */
+     * 选择左侧菜单
+     */
     handleFileSelect(file) {
-      if (this.fileSelectId === file.id) return
-      this.fileSelectId = file.id
+      if (this.fileSelectId === file.id) return;
+      this.fileSelectId = file.id;
       this.getTableInfo(`/datasource/${file.id}`, result => {
         if (result.code === 200) {
           if (result.data.type === 1) {
-            this.$store.dispatch('dataAccess/setModelType', 'mysql')
+            this.$store.dispatch('dataAccess/setModelType', 'mysql');
           } else if (result.data.type === 2) {
-            this.$store.dispatch('dataAccess/setModelType', 'oracle')
+            this.$store.dispatch('dataAccess/setModelType', 'oracle');
           } else if (result.data.type === 5) {
-            this.$store.dispatch('dataAccess/setModelType', 'hive')
+            this.$store.dispatch('dataAccess/setModelType', 'hive');
           } else if (result.data.type === 11) {
-            this.$store.dispatch('dataAccess/setModelType', 'excel')
+            this.$store.dispatch('dataAccess/setModelType', 'excel');
           } else if (result.data.type === 12) {
-            this.$store.dispatch('dataAccess/setModelType', 'csv')
+            this.$store.dispatch('dataAccess/setModelType', 'csv');
           }
-          this.$store.dispatch('dataAccess/setModelInfo', result.data.properties)
-          this.$store.dispatch('dataAccess/setModelName', result.data.name)
+          this.$store.dispatch('dataAccess/setModelInfo', result.data.properties);
+          this.$store.dispatch('dataAccess/setModelName', result.data.name);
         } else {
-          this.$store.dispatch('dataAccess/setModelInfo', {})
-          this.$store.dispatch('dataAccess/setModelName', '')
+          this.$store.dispatch('dataAccess/setModelInfo', {});
+          this.$store.dispatch('dataAccess/setModelName', '');
         }
-      })
-      this.$store.commit('dataAccess/SET_DATABASENAME', '')
-      this.$store.commit('common/SET_PRIVILEGES', file.privileges || [])
-      this.$store.dispatch('dataAccess/setModelId', file.id)
-      this.$store.dispatch('dataAccess/setParentId', file.parentId)
-      this.$store.dispatch('dataAccess/setFirstFinished', true)
-      this.$emit('on-menuChange-componet', 'Main')
-      this.$EventBus.$emit('set-tab-index', '1')
+      });
+      this.$store.commit('dataAccess/SET_DATABASENAME', '');
+      this.$store.commit('common/SET_PRIVILEGES', file.privileges || []);
+      this.$store.dispatch('dataAccess/setModelId', file.id);
+      this.$store.dispatch('dataAccess/setParentId', file.parentId);
+      this.$store.dispatch('dataAccess/setFirstFinished', true);
+      this.$emit('on-menuChange-componet', 'Main');
+      this.$EventBus.$emit('set-tab-index', '1');
     },
     /**
-    * 删除菜单
-    */
+     * 删除菜单
+     */
     handleFileDelete(event, item, { file }) {
       this.$confirm({
         title: '确认提示',
         content: '确定删除该数据接入?',
         onOk: async () => {
-          const result = await this.$server.common.deleMenuById(`/datasource/catalog/delete/${file.id}`)
+          const result = await this.$server.common.deleMenuById(`/datasource/catalog/delete/${file.id}`);
           if (result.code === 200) {
-            this.handleGetMenuList()
-            this.$message.success('删除成功')
-            const isSame = file.id === this.fileSelectId
+            this.handleGetMenuList();
+            this.$message.success('删除成功');
+            const isSame = file.id === this.fileSelectId;
             if (isSame) {
-              this.$store.dispatch('dataAccess/setModelType', '')
-              this.$store.dispatch('dataAccess/setFirstFinished', false)
+              this.$store.dispatch('dataAccess/setModelType', '');
+              this.$store.dispatch('dataAccess/setFirstFinished', false);
             }
           } else {
-            this.$message.error(result.msg)
+            this.$message.error(result.msg);
           }
-        }
-      })
+        },
+      });
     },
     /**
      * 文件夹删除
      */
     handleFolderDelete(event, index, { folder }) {
       if (folder.children && folder.children.length > 0) {
-        return this.$message.error('文件夹下存在数据接入不可删除')
+        return this.$message.error('文件夹下存在数据接入不可删除');
       }
       this.$confirm({
         title: '确认提示',
         content: '确定删除该文件夹?',
         onOk: async () => {
-          const result = await this.$server.common.deleMenuById(`/datasource/catalog/delete/${folder.id}`)
+          const result = await this.$server.common.deleMenuById(`/datasource/catalog/delete/${folder.id}`);
           if (result.code === 200) {
-            this.handleGetMenuList()
-            this.$message.success('删除成功')
-            const isSame = folder.id === this.fileSelectId
-            if (isSame) this.$store.dispatch('dataAccess/setModelType', '')
+            this.handleGetMenuList();
+            this.$message.success('删除成功');
+            const isSame = folder.id === this.fileSelectId;
+            if (isSame) this.$store.dispatch('dataAccess/setModelType', '');
           } else {
-            this.$message.error(result.msg)
+            this.$message.error(result.msg);
           }
-        }
-      })
+        },
+      });
     },
     /**
      * 打开数据类型弹窗
      */
     showModal(e, calle, vm) {
-      this.visible = true
-      this.$store.dispatch('dataAccess/setModelSelectType', 'new')
-      this.$store.dispatch('dataAccess/setParentId', vm ? vm.folder.id : 0)
+      this.visible = true;
+      this.$store.dispatch('dataAccess/setModelSelectType', 'new');
+      this.$store.dispatch('dataAccess/setParentId', vm ? vm.folder.id : 0);
     },
     /**
-    * 修改文件夹名称
-    */
+     * 修改文件夹名称
+     */
     handleFolderResetName(event, item, { folder }) {
-      this.resetNameVisible = true
-      this.resetName.type = 'reset'
-      this.resetName.item = folder
-      this.resetName.parentId = 0
+      this.resetNameVisible = true;
+      this.resetName.type = 'reset';
+      this.resetName.item = folder;
+      this.resetName.parentId = 0;
     },
     /**
      * 菜单重命名
-    */
+     */
     handleFileResetName(mouseEvent, event, { file, parent }) {
-      this.resetName.type = 'reset'
-      this.resetNameVisible = true
-      this.resetName.item = file
-      this.resetName.parentId = parent ? parent.id : 0
+      this.resetName.type = 'reset';
+      this.resetNameVisible = true;
+      this.resetName.item = file;
+      this.resetName.parentId = parent ? parent.id : 0;
     },
     /**
      * 添加新文件夹
      */
     handleAddNewFolder() {
-      this.resetNameVisible = true
-      this.resetName.type = 'new'
+      this.resetNameVisible = true;
+      this.resetName.type = 'new';
     },
     /**
      * 是否为文件夹
      */
     handleIsFolder(item) {
       // return item.hasOwnProperty('items')
-      return item.fileType === 0
+      return item.fileType === 0;
     },
     /**
      * 拖动左侧菜单
      */
     handleFileDrag(file) {
-      this.dragFile = file
+      this.dragFile = file;
     },
     /**
      * 拖动后投放到目标文件夹
      */
     async handleFileDrop(folder) {
-      if (!this.dragFile || this.dragFile.parentId === folder.id) return
+      if (!this.dragFile || this.dragFile.parentId === folder.id) return;
       const result = await this.$server.common.putMenuFolderName('/datasource/catalog/update', {
         fileType: this.dragFile.fileType,
         id: this.dragFile.id,
         name: this.dragFile.name,
         parentId: folder.id,
-        type: 1
-      })
+        type: 1,
+      });
       if (result.code === 200) {
-        this.handleGetMenuList()
-        this.$message.success('移动成功')
+        this.handleGetMenuList();
+        this.$message.success('移动成功');
       } else {
-        this.$message.error(result.msg)
+        this.$message.error(result.msg);
       }
     },
     handleDragOver(e) {
-      e.preventDefault()
+      e.preventDefault();
     },
     /**
      * 拖动后投放到最外层目录
      */
     async handleWrapDrop(e) {
-      const className = e.toElement.className
+      const className = e.toElement.className;
       if (className.indexOf('menu-wrap') > -1 && this.dragFile.parentId !== 0) {
         const result = await this.$server.common.putMenuFolderName('/datasource/catalog/update', {
           fileType: this.dragFile.fileType,
           id: this.dragFile.id,
           name: this.dragFile.name,
           parentId: 0,
-          type: 1
-        })
+          type: 1,
+        });
         if (result.code === 200) {
-          this.handleGetMenuList()
-          this.$message.success('移动成功')
+          this.handleGetMenuList();
+          this.$message.success('移动成功');
         } else {
-          this.$message.error(result.msg)
+          this.$message.error(result.msg);
         }
       }
     },
     /**
      * 移动文件夹
      */
-    handleFilemoveFile(event, index, { parent, file }) {
-      this.selectFile = file
-      this.moveFileVisible = true
+    handleFilemoveFile(event, index, { file }) {
+      this.selectFile = file;
+      this.moveFileVisible = true;
     },
     /**
      * 选择移动文件夹弹窗确认
@@ -512,56 +497,56 @@ export default {
         id: this.selectFile.id,
         name: this.selectFile.name,
         parentId: parentId,
-        type: 1
-      })
+        type: 1,
+      });
       if (result.code === 200) {
-        this.handleGetMenuList()
-        this.$message.success('移动成功')
+        this.handleGetMenuList();
+        this.$message.success('移动成功');
       } else {
-        this.$message.error(result.msg)
+        this.$message.error(result.msg);
       }
 
-      this.moveFileVisible = false
+      this.moveFileVisible = false;
     },
     /**
      * 选择哪个类型的数据接入
      */
     handleSelectModelType(event, item) {
-      event.stopPropagation()
-      console.log('model-type', item.name)
-      this.visible = false
-      this.$store.dispatch('dataAccess/setModelType', item.name)
-      this.$store.dispatch('dataAccess/setFirstFinished', false)
-      this.$store.dispatch('dataAccess/setModelId', 0)
-      this.$store.dispatch('dataAccess/setModelInfo', {})
-      this.$store.dispatch('dataAccess/setModelName', '')
-      this.$store.commit('dataAccess/SET_DATABASENAME', '')
-      this.$store.commit('common/SET_PRIVILEGES', [0])
-      this.$EventBus.$emit('resetForm')
-      this.$emit('on-menuChange-componet', 'Main')
-      this.$EventBus.$emit('set-tab-index', '1')
-      this.$store.dispatch('dataAccess/setModelSelectType', '')
+      event.stopPropagation();
+      console.log('model-type', item.name);
+      this.visible = false;
+      this.$store.dispatch('dataAccess/setModelType', item.name);
+      this.$store.dispatch('dataAccess/setFirstFinished', false);
+      this.$store.dispatch('dataAccess/setModelId', 0);
+      this.$store.dispatch('dataAccess/setModelInfo', {});
+      this.$store.dispatch('dataAccess/setModelName', '');
+      this.$store.commit('dataAccess/SET_DATABASENAME', '');
+      this.$store.commit('common/SET_PRIVILEGES', [0]);
+      this.$EventBus.$emit('resetForm');
+      this.$emit('on-menuChange-componet', 'Main');
+      this.$EventBus.$emit('set-tab-index', '1');
+      this.$store.dispatch('dataAccess/setModelSelectType', '');
     },
     /**
      * 重命名弹窗显示
      */
-    handleResetNameModalShow(event, options) {
-      this.resetNameVisible = true
+    handleResetNameModalShow() {
+      this.resetNameVisible = true;
     },
     /**
      * 重命名弹窗隐藏
      */
     handleResetNameCancel() {
-      this.resetNameVisible = false
+      this.resetNameVisible = false;
     },
     /**
      * 重命名弹窗确定
      */
     handleResetNameCreate(values) {
       if (this.resetName.type === 'new') {
-        this.handleAddItem(values)
+        this.handleAddItem(values);
       } else if (this.resetName.type === 'reset') {
-        this.handleResetName(values)
+        this.handleResetName(values);
       }
     },
     /**
@@ -580,14 +565,14 @@ export default {
         fileType: 0,
         name: values.name,
         parentId: 0,
-        type: 1
-      })
+        type: 1,
+      });
       if (result.code === 200) {
-        this.handleGetMenuList()
-        this.$message.success('新建成功')
-        this.resetNameVisible = false
+        this.handleGetMenuList();
+        this.$message.success('新建成功');
+        this.resetNameVisible = false;
       } else {
-        this.$message.error(result.msg)
+        this.$message.error(result.msg);
       }
     },
     /**
@@ -610,17 +595,17 @@ export default {
         id: this.resetName.item.id,
         name: values.name,
         parentId: this.resetName.parentId || 0,
-        type: 1
-      })
+        type: 1,
+      });
       if (result.code === 200) {
-        this.handleGetMenuList()
+        this.handleGetMenuList();
         if (this.resetName.item.id === this.fileSelectId) {
-          this.$store.commit('dataAccess/SET_MODELNAME', values.name)
+          this.$store.commit('dataAccess/SET_MODELNAME', values.name);
         }
-        this.$message.success('修改成功')
-        this.resetNameVisible = false
+        this.$message.success('修改成功');
+        this.resetNameVisible = false;
       } else {
-        this.$message.error(result.msg)
+        this.$message.error(result.msg);
       }
     },
     /**
@@ -628,19 +613,19 @@ export default {
      */
     handleHasName(list, values) {
       const isHas = list.filter(item => {
-        return item.name === values.name
-      })
-      console.log(isHas)
-      return !!(isHas && isHas.length > 0)
+        return item.name === values.name;
+      });
+      console.log(isHas);
+      return !!(isHas && isHas.length > 0);
     },
-    mouseenter(icon) {
-      this.icon = true
+    mouseenter() {
+      this.icon = true;
     },
     mouseleave() {
-      this.icon = false
-    }
-  }
-}
+      this.icon = false;
+    },
+  },
+};
 </script>
 
 <style lang="styl" scope>

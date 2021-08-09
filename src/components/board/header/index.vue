@@ -15,7 +15,7 @@
         v-model="screenName"
         @focus="onfocus"
         @blur="onBlur"
-        style="background:rgba(255,255,255,0.2)"
+        style="background: rgba(255, 255, 255, 0.2)"
       />
     </div>
     <div class="control" flex-box="1">
@@ -30,15 +30,15 @@
           <span> 手机端</span>
       </div>-->
       <div class="item" flex="dir:top" @click.stop="refreshData">
-        <a-icon type="sync" style="font-size:18px" />
+        <a-icon type="sync" style="font-size: 18px" />
         <span>刷新</span>
       </div>
       <div class="item" flex="dir:top" @click.stop="openScreen">
-        <a-icon type="block" style="font-size:18px" />
+        <a-icon type="block" style="font-size: 18px" />
         <span>预览</span>
       </div>
       <div class="item" flex="dir:top" @click="goBack">
-        <a-icon type="close" style="font-size:18px" />
+        <a-icon type="close" style="font-size: 18px" />
         <span>保存并关闭</span>
       </div>
     </div>
@@ -46,78 +46,59 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from 'vuex'
-import { on, off } from 'bin-ui/src/utils/dom'
+import { mapGetters, mapActions } from 'vuex';
 export default {
   name: 'BoardHeader',
   props: {
     config: {
       type: Object,
-      required: true
-    }
+      required: true,
+    },
   },
   data() {
     return {
       screenName: '', // 大屏名称
       isFocus: false, // 大屏名称是否聚焦
-      screenData: null
-    }
+      screenData: null,
+    };
   },
   inject: ['resetChartStyle'],
   computed: {
-    ...mapGetters([
-      'isScreen',
-      'pageSettings',
-      'canvasMap',
-      'screenId',
-      'fileName',
-      'parentId'
-    ])
+    ...mapGetters(['isScreen', 'pageSettings', 'canvasMap', 'screenId', 'fileName', 'parentId']),
   },
   watch: {
     $attrs(val) {
-      this.screenData = val
-    }
+      this.screenData = val;
+    },
   },
   mounted() {},
   methods: {
-    ...mapActions([
-      'saveScreenData',
-      'renameScreenData',
-      'updateChartData',
-      'refreshScreen'
-    ]),
+    ...mapActions(['saveScreenData', 'renameScreenData', 'updateChartData', 'refreshScreen']),
     goBack() {
       // 选了背景图片又没有上传图片的，默认选回背景颜色
-      if (
-        !this.pageSettings.backgroundSrc &&
-        this.pageSettings.backgroundType === '2'
-      ) {
-        this.$store.dispatch(
-          'SetPageSettings',
-          Object.assign({}, this.pageSettings, { backgroundType: '1' })
-        )
+      if (!this.pageSettings.backgroundSrc && this.pageSettings.backgroundType === '2') {
+        this.$store.dispatch('SetPageSettings', Object.assign({}, this.pageSettings, { backgroundType: '1' }));
       }
-      this.saveScreenData()
-      this.$message.success('保存成功')
-      this.$router.replace({ name: 'catalog' })
+      this.saveScreenData();
+      this.$message.success('保存成功');
+      this.$router.replace({ name: 'catalog' });
     },
     onfocus() {
-      this.isFocus = true
-      this.screenName = this.fileName
+      this.isFocus = true;
+      this.screenName = this.fileName;
     },
     onBlur() {
       if (this.screenName === '') {
-        this.screenName = this.fileName
-        this.isFocus = false
-        return
+        this.screenName = this.fileName;
+        this.isFocus = false;
+        return;
       }
       if (this.screenName === this.fileName) {
-        this.isFocus = false
-        return
+        this.isFocus = false;
+        return;
       }
-      this.isFocus = false
-      setTimeout(this.renameScreen, 0)
+      this.isFocus = false;
+      setTimeout(this.renameScreen, 0);
     },
     renameScreen() {
       let params = {
@@ -125,56 +106,56 @@ export default {
         id: this.screenId,
         name: this.screenName,
         parentId: this.$route.query.parentId,
-        setting: this.pageSettings
-      }
+        setting: this.pageSettings,
+      };
 
       this.renameScreenData({ ...params }).then(res => {
         if (res) {
-          this.$message.success('重命名成功')
-          this.$store.dispatch('SetFileName', this.screenName)
+          this.$message.success('重命名成功');
+          this.$store.dispatch('SetFileName', this.screenName);
         }
-      })
+      });
     },
     // 打开全屏
     openScreen() {
-      this.$store.dispatch('SetIsScreen', true)
+      this.$store.dispatch('SetIsScreen', true);
       // 清空当前选中
-      this.$store.dispatch('SingleSelected', null)
+      this.$store.dispatch('SingleSelected', null);
       // 位置在screen.vue,对应画板元素
       this.$nextTick(() => {
-        var docElm = document.querySelector('.screen-shot')
+        var docElm = document.querySelector('.screen-shot');
         if (docElm) {
           if (docElm.requestFullscreen) {
             // W3C
-            docElm.requestFullscreen()
+            docElm.requestFullscreen();
           } else if (docElm.mozRequestFullScreen) {
             // FireFox
-            docElm.mozRequestFullScreen()
+            docElm.mozRequestFullScreen();
           } else if (docElm.webkitRequestFullScreen) {
             // Chrome等
-            docElm.webkitRequestFullScreen()
+            docElm.webkitRequestFullScreen();
           } else if (docElm.msRequestFullscreen) {
             // IE11
-            docElm.msRequestFullscreen()
+            docElm.msRequestFullscreen();
           }
         }
-      })
+      });
     },
     // 刷新大屏
     refreshData() {
       if (!this.screenId) {
-        this.$message.error('暂无数据可刷新，请先添加数据')
-        return
+        this.$message.error('暂无数据可刷新，请先添加数据');
+        return;
       }
-      this.resetChartStyle()
+      this.resetChartStyle();
       this.refreshScreen({
         charSeted: false,
-        needLoading: true
-      })
+        needLoading: true,
+      });
     },
     cancelSelect() {
-      this.$store.dispatch('SingleSelected', null)
-    }
-  }
-}
+      this.$store.dispatch('SingleSelected', null);
+    },
+  },
+};
 </script>

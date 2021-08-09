@@ -3,25 +3,25 @@ const getDefaultState = () => {
     status: '',
     dropType: '',
     mouseEvent: '',
-    data: ''
-  }
-}
+    data: '',
+  };
+};
 
-const state = getDefaultState()
+const state = getDefaultState();
 
 const mutations = {
   RESETSTATE(state) {
-    Object.assign(state, getDefaultState())
+    Object.assign(state, getDefaultState());
   },
   SET_DRAG(state, playload) {
-    state = Object.assign(state, playload)
-  }
-}
+    state = Object.assign(state, playload);
+  },
+};
 
-const actions = {}
+const actions = {};
 export default {
   namespaced: true,
   state,
   mutations,
-  actions
-}
+  actions,
+};

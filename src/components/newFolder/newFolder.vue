@@ -7,7 +7,7 @@
     :afterClose="handleAfterClose"
     @cancel="
       () => {
-        $emit('cancel')
+        $emit('cancel');
       }
     "
     @ok="handleOk"
@@ -33,44 +33,44 @@ export default {
   data() {
     return {
       form: {
-        name: ''
+        name: '',
       },
       rules: {
         name: [
           {
             required: true,
-            message: '请填写名称'
+            message: '请填写名称',
           },
           {
             type: 'string',
             min: 1,
             max: 20,
-            message: '请输入1-20个字的文件夹名称'
-          }
-        ]
-      }
-    }
+            message: '请输入1-20个字的文件夹名称',
+          },
+        ],
+      },
+    };
   },
   beforeCreate() {
-    this.form = this.$form.createForm(this, { name: 'form_in_modal' })
+    this.form = this.$form.createForm(this, { name: 'form_in_modal' });
   },
   methods: {
     /**
      * 弹出框完成关闭后
      */
     handleAfterClose() {
-      this.$refs.resetNameForm.resetFields()
+      this.$refs.resetNameForm.resetFields();
     },
     handleOk() {
       this.$refs.resetNameForm
         .validate()
-        .then(res => {
-          this.$emit('create', this.form)
+        .then(() => {
+          this.$emit('create', this.form);
         })
-        .catch(err => err)
-    }
-  }
-}
+        .catch(err => err);
+    },
+  },
+};
 </script>
 <style lang="less" scoped>
 @deep: ~'>>>';

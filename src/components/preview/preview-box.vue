@@ -7,31 +7,31 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters } from 'vuex';
 export default {
   props: {
     item: {
       type: Object,
-      required: true
-    }
+      required: true,
+    },
   },
   created() {
-    this.transformData = { ...this.item.setting.view }
+    this.transformData = { ...this.item.setting.view };
   },
   watch: {
     item: {
       handler(val) {
         if (val) {
-          this.transformData = { ...val.setting.view }
+          this.transformData = { ...val.setting.view };
         }
       },
-      deep: true
-    }
+      deep: true,
+    },
   },
   computed: {
     ...mapGetters(['currentSelected']),
     isLine() {
-      return this.item.setting.chartType === 'line'
+      return this.item.setting.chartType === 'line';
     },
     contentStyles() {
       if (this.isLine) {
@@ -39,26 +39,24 @@ export default {
           width: this.transformData.width + 'px',
           height: this.transformData.height + 'px',
           transformOrigin: 'left center',
-          transform: `translate3d(${this.transformData.x}px,${
-            this.transformData.y
-          }px,0) rotate(${this.transformData.rotate || 0}deg)`
-        }
+          transform: `translate3d(${this.transformData.x}px,${this.transformData.y}px,0) rotate(${
+            this.transformData.rotate || 0
+          }deg)`,
+        };
       } else {
         return {
           width: this.transformData.width + 'px',
           height: this.transformData.height + 'px',
-          transform: `translate3d(${this.transformData.x}px,${
-            this.transformData.y
-          }px,0)`
-        }
+          transform: `translate3d(${this.transformData.x}px,${this.transformData.y}px,0)`,
+        };
       }
     },
     dvWrapperStyles() {
       return {
         width: this.transformData.width + 'px',
-        height: this.transformData.height + 'px'
-      }
-    }
-  }
-}
+        height: this.transformData.height + 'px',
+      };
+    },
+  },
+};
 </script>

@@ -19,16 +19,16 @@ export default class DragDrop {
    * @memberof DragDrop
    */
   constructor(drag = '', drop = '', placeholder = '') {
-    this.drag = drag
-    this.drop = drop
-    this.placeholder = placeholder
+    this.drag = drag;
+    this.drop = drop;
+    this.placeholder = placeholder;
     this.options = {
       createPlaceholder: '',
       ondragstart: '',
       ondragmove: '',
       ondragend: '',
-      ondrop: ''
-    }
+      ondrop: '',
+    };
   }
 
   /**
@@ -42,86 +42,80 @@ export default class DragDrop {
    * @memberof DragDrop
    */
   init(options) {
-    this.options = Object.assign({}, this.options, options)
+    this.options = Object.assign({}, this.options, options);
     this.drag.addEventListener(
       'mousedown',
       event => {
-        const {
-          createPlaceholder,
-          ondragstart,
-          ondragmove,
-          ondragend,
-          ondrop
-        } = this.options
+        const { createPlaceholder, ondragstart, ondragmove, ondragend, ondrop } = this.options;
 
-        const dragRect = this.drag.getBoundingClientRect()
+        const dragRect = this.drag.getBoundingClientRect();
         // 鼠标距离左边框距离 = 鼠标点击位置 - 目标视图窗左边
-        let shiftX = event.clientX - dragRect.left
-        let shiftY = event.clientY - dragRect.top
+        let shiftX = event.clientX - dragRect.left;
+        let shiftY = event.clientY - dragRect.top;
 
         // 移动
         const moveAt = (target, pageX, pageY) => {
-          target.style.left = pageX - shiftX + 'px'
-          target.style.top = pageY - shiftY + 'px'
-        }
+          target.style.left = pageX - shiftX + 'px';
+          target.style.top = pageY - shiftY + 'px';
+        };
 
         const onMouseMove = event => {
           if (!this.placeholder) {
             // 如果没有则创建
-            this.placeholder = createPlaceholder(this, event)
+            this.placeholder = createPlaceholder(this, event);
 
             if (!this.placeholder) {
               // 确保创建成功
-              return console.error(`the placeholder is null, you have create`)
+              return console.error(`the placeholder is null, you have create`);
             }
 
-            document.body.appendChild(this.placeholder)
+            document.body.appendChild(this.placeholder);
 
             // 拖拽刚开始
             if (ondragstart) {
-              ondragstart(this, event)
+              ondragstart(this, event);
             }
           }
 
           // 拖拽移动
           if (ondragmove) {
-            ondragmove(this, event)
+            ondragmove(this, event);
           }
 
-          moveAt(this.placeholder, event.clientX, event.clientY)
+          moveAt(this.placeholder, event.clientX, event.clientY);
 
           // 放开鼠标
           this.placeholder.onmouseup = () => {
-            document.removeEventListener('mousemove', onMouseMove)
-            this.placeholder.onmouseup = null
-            document.body.removeChild(this.placeholder)
+            document.removeEventListener('mousemove', onMouseMove);
+            this.placeholder.onmouseup = null;
+            document.body.removeChild(this.placeholder);
             // 拖放结束
             if (ondragend) {
-              ondragend(this, event)
+              ondragend(this, event);
             }
             if (this.drop) {
               if (ondrop) {
-                ondrop(this, event)
+                ondrop(this, event);
               }
-              this.drop = null
+              this.drop = null;
             }
 
-            this.placeholder = ''
-          }
+            this.placeholder = '';
+          };
 
-          this.placeholder.ondragstart = function() {
-            return false
-          }
-        }
+          this.placeholder.ondragstart = function () {
+            return false;
+          };
+        };
 
-        document.addEventListener('mousemove', onMouseMove)
-        document.onmouseup = function() {
-          document.removeEventListener('mousemove', onMouseMove)
-          document.onmouseup = null
-        }
+        document.addEventListener('mousemove', onMouseMove);
+        document.onmouseup = function () {
+          document.removeEventListener('mousemove', onMouseMove);
+          document.onmouseup = null;
+        };
       },
-      false
-    )
+      false,
+    );
   }
   /**
    * @description 校验鼠标是否在放置区中
@@ -131,15 +125,15 @@ export default class DragDrop {
    */
   checkMouseInTarget(mouseEvent, target) {
     if (target) {
-      const x = mouseEvent.clientX
-      const y = mouseEvent.clientY
-      const left = target.getBoundingClientRect().left
-      const right = target.getBoundingClientRect().right
-      const top = target.getBoundingClientRect().top
-      const bottom = target.getBoundingClientRect().bottom
-      return x >= left && x <= right && y >= top && y <= bottom
+      const x = mouseEvent.clientX;
+      const y = mouseEvent.clientY;
+      const left = target.getBoundingClientRect().left;
+      const right = target.getBoundingClientRect().right;
+      const top = target.getBoundingClientRect().top;
+      const bottom = target.getBoundingClientRect().bottom;
+      return x >= left && x <= right && y >= top && y <= bottom;
     } else {
-      return false
+      return false;
     }
   }
 }

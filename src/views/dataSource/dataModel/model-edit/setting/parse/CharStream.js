@@ -5,10 +5,10 @@ export class ChartStream {
    * @memberof ClassStream
    */
   constructor(str) {
-    this.input = str || ''
-    this.subscript = 0 // 下标
-    this.row = 1 // 行
-    this.col = 0 // 列
+    this.input = str || '';
+    this.subscript = 0; // 下标
+    this.row = 1; // 行
+    this.col = 0; // 列
   }
 
   /**
@@ -17,26 +17,26 @@ export class ChartStream {
    * @memberof ChartStream
    */
   next() {
-    const ch = this.input.charAt(this.subscript++)
+    const ch = this.input.charAt(this.subscript++);
     if (ch === '\n') {
       // 是否换行
-      this.row++
-      this.col = 0
+      this.row++;
+      this.col = 0;
     } else {
-      this.col++
+      this.col++;
     }
-    return ch
+    return ch;
   }
 
   peek(subscript) {
-    return this.input.charAt(subscript || this.subscript)
+    return this.input.charAt(subscript || this.subscript);
   }
 
   eof() {
-    return this.peek() === ''
+    return this.peek() === '';
   }
 
   raiseError(msg) {
-    throw new Error(`第${this.row}行:第${this.col}列——${msg}`)
+    throw new Error(`第${this.row}行:第${this.col}列——${msg}`);
   }
 }

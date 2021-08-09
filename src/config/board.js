@@ -4,12 +4,12 @@ export default {
   header: {
     // 标题配置
     title: {
-      text: '当前工作空间'
+      text: '当前工作空间',
     },
     // 该功能数据源
     data: [],
     // 初始化数据
-    initData: []
+    initData: [],
   },
   // 左侧功能栏
   coverage: {
@@ -18,24 +18,24 @@ export default {
     // 标题配置
     title: {
       enable: true,
-      text: '图层'
+      text: '图层',
     },
     // 样式
     style: {
       width: '50px',
-      flex: '0 0 50px'
-    }
+      flex: '0 0 50px',
+    },
   },
   // 表单元素配置组件
   options: {
     // 标题配置
     title: {
       enable: true,
-      text: '页面配置'
+      text: '页面配置',
     },
     style: {
-      width: '290px'
-    }
+      width: '290px',
+    },
   },
   // 8-14 数据模型侧栏
   model: {
@@ -44,12 +44,12 @@ export default {
     // 标题配置
     title: {
       enable: true,
-      text: '大屏数据'
+      text: '大屏数据',
     },
     // 样式
     style: {
-      width: '220px'
+      width: '220px',
       // flex: '0 0 180px'
-    }
-  }
-}
+    },
+  },
+};

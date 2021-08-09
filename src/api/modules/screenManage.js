@@ -1,4 +1,4 @@
-import $axios from '@/axios'
+import $axios from '@/axios';
 
 const screenManage = {
   /**
@@ -7,7 +7,7 @@ const screenManage = {
    * @returns
    */
   getFolderList(params) {
-    return $axios.get('/screen/catalog/listScreenTree', params)
+    return $axios.get('/screen/catalog/listScreenTree', params);
     // return $axios.get('/screen/folder/list', params)
   },
   /**
@@ -16,7 +16,7 @@ const screenManage = {
    * @returns
    */
   addScreenTab(params) {
-    return $axios.post('/screen/bigscreen/addScreenTab', params)
+    return $axios.post('/screen/bigscreen/addScreenTab', params);
   },
   /**
    * @description 查询大屏tab页签
@@ -24,7 +24,7 @@ const screenManage = {
    * @returns
    */
   getScreenTabs(id) {
-    return $axios.get(`/screen/bigscreen/screenTabList/${id}`)
+    return $axios.get(`/screen/bigscreen/screenTabList/${id}`);
   },
   /**
    * @description 重命名大屏tab页签
@@ -32,7 +32,7 @@ const screenManage = {
    * @returns
    */
   renameScreenTab(params) {
-    return $axios.post('/screen/bigscreen/editScreenTab', params)
+    return $axios.post('/screen/bigscreen/editScreenTab', params);
   },
   /**
    * @description 复制大屏tab页签
@@ -40,7 +40,7 @@ const screenManage = {
    * @returns
    */
   copyScreenTab(params) {
-    return $axios.post('/screen/bigscreen/copyScreenTab', params)
+    return $axios.post('/screen/bigscreen/copyScreenTab', params);
   },
   /**
    * @description 删除大屏tab页签
@@ -48,7 +48,7 @@ const screenManage = {
    * @returns
    */
   deleteScreenTab(id) {
-    return $axios.get(`/screen/bigscreen/removeScreenTab/${id}`)
+    return $axios.get(`/screen/bigscreen/removeScreenTab/${id}`);
   },
   /**
    * @description 调整大屏tab页签顺序
@@ -56,7 +56,7 @@ const screenManage = {
    * @returns
    */
   orderScreenTab(params) {
-    return $axios.post(`/screen/bigscreen/updateScreenTabOrder`, params)
+    return $axios.post(`/screen/bigscreen/updateScreenTabOrder`, params);
   },
   /**
    * @description 获取分享短链接
@@ -64,7 +64,7 @@ const screenManage = {
    * @returns
    */
   getScreenLink(screenId) {
-    return $axios.get(`/screen/bigscreen/getShortUrl/${screenId}`)
+    return $axios.get(`/screen/bigscreen/getShortUrl/${screenId}`);
   },
   /**
    * @description 查看发布信息
@@ -72,7 +72,7 @@ const screenManage = {
    * @returns
    */
   showScreenRelease(screenId) {
-    return $axios.get(`/screen/bigscreen/getScreenShare/${screenId}`)
+    return $axios.get(`/screen/bigscreen/getScreenShare/${screenId}`);
   },
   /**
    * @description 发布大屏
@@ -80,7 +80,7 @@ const screenManage = {
    * @returns
    */
   releaseScreen(params) {
-    return $axios.post('/screen/bigscreen/shareScreen', params)
+    return $axios.post('/screen/bigscreen/shareScreen', params);
   },
   /**
    * @description 重新发布大屏
@@ -88,7 +88,7 @@ const screenManage = {
    * @returns
    */
   reShareScreen(params) {
-    return $axios.post('/screen/bigscreen/reShareScreen', params)
+    return $axios.post('/screen/bigscreen/reShareScreen', params);
   },
   /**
    * @description 撤销发布大屏
@@ -96,7 +96,7 @@ const screenManage = {
    * @returns
    */
   delShareScreen(screenId) {
-    return $axios.get(`/screen/bigscreen/removeScreenShare/${screenId}`)
+    return $axios.get(`/screen/bigscreen/removeScreenShare/${screenId}`);
   },
   /**
    * @description 新建大屏
@@ -104,7 +104,7 @@ const screenManage = {
    * @returns
    */
   addScreen(params) {
-    return $axios.post('/screen/bigscreen/addScreen', params)
+    return $axios.post('/screen/bigscreen/addScreen', params);
   },
   /**
    * @description 复制大屏
@@ -112,7 +112,7 @@ const screenManage = {
    * @returns
    */
   copyScreen(screenId) {
-    return $axios.get(`/screen/bigscreen/copyScreen/${screenId}`)
+    return $axios.get(`/screen/bigscreen/copyScreen/${screenId}`);
   },
   /**
    * @description 重命名大屏
@@ -120,7 +120,7 @@ const screenManage = {
    * @returns
    */
   renameScreen(params) {
-    return $axios.post('/screen/bigscreen/saveScreen', params)
+    return $axios.post('/screen/bigscreen/saveScreen', params);
   },
   /**
    * @description 保存页签设置
@@ -128,7 +128,7 @@ const screenManage = {
    * @returns
    */
   saveScreen(params) {
-    return $axios.post('/screen/bigscreen/updateTab', params)
+    return $axios.post('/screen/bigscreen/updateTab', params);
   },
   /**
    * @description 保存图表
@@ -136,7 +136,7 @@ const screenManage = {
    * @returns
    */
   addChart(params) {
-    return $axios.post('/screen/graph/addScreenGraph', params)
+    return $axios.post('/screen/graph/addScreenGraph', params);
   },
   /**
    * @description 更新图表
@@ -144,7 +144,7 @@ const screenManage = {
    * @returns
    */
   updateChart(params) {
-    return $axios.post('/screen/graph/updateScreenGraph', params)
+    return $axios.post('/screen/graph/updateScreenGraph', params);
   },
   /**
    * @description 删除图表
@@ -152,7 +152,7 @@ const screenManage = {
    * @returns
    */
   deleteChart(params) {
-    return $axios.post('/screen/graph/delScreenGraph', params)
+    return $axios.post('/screen/graph/delScreenGraph', params);
   },
   /**
    * @description 批量更新图表
@@ -160,7 +160,7 @@ const screenManage = {
    * @returns
    */
   saveAllChart(params) {
-    return $axios.post('/screen/graph/updateScreenGraphs', params)
+    return $axios.post('/screen/graph/updateScreenGraphs', params);
   },
   /**
    * @description 大屏详细信息
@@ -169,7 +169,7 @@ const screenManage = {
    * @returns
    */
   getScreenDetailById(id, tabId) {
-    return $axios.get(`/screen/bigscreen/${id}/${tabId}`)
+    return $axios.get(`/screen/bigscreen/${id}/${tabId}`);
     // return $axios.get(`/screen/data/${id}`)
   },
   /**
@@ -178,14 +178,14 @@ const screenManage = {
    * @returns
    */
   actionRefreshScreen(params) {
-    return $axios.get(`/screen/bigscreen/refresh`, params)
+    return $axios.get(`/screen/bigscreen/refresh`, params);
   },
   /**
    * @description 数据模型目录
    * @returns
    */
   getCatalogList() {
-    return $axios.get(`/model/catalog/list/2`)
+    return $axios.get(`/model/catalog/list/2`);
   },
   /**
    * @description 数据模型--维度、度量列表
@@ -194,9 +194,7 @@ const screenManage = {
    */
   getPivoSchemaList(tableId, screenId) {
     // return $axios.get(`/model/pivotschema/selectModelPivotschemaListByRole/${id}`)
-    return $axios.get(
-      `/screen/pivotschema/selectModelPivotschemaListByRole/${tableId}/${screenId}`
-    )
+    return $axios.get(`/screen/pivotschema/selectModelPivotschemaListByRole/${tableId}/${screenId}`);
   },
   /**
    * @description 根据维度度量获取数据
@@ -204,7 +202,7 @@ const screenManage = {
    * @returns
    */
   getData(params) {
-    return $axios.post('/screen/graph/getData', params)
+    return $axios.post('/screen/graph/getData', params);
   },
   /**
    * @description 数据筛选(联动)
@@ -212,7 +210,7 @@ const screenManage = {
    * @returns
    */
   getDataLink(params) {
-    return $axios.post('/screen/graph/dataLink', params)
+    return $axios.post('/screen/graph/dataLink', params);
   },
   /**
    * @description 请求展示用的图表数据(导出/查看数据)
@@ -220,7 +218,7 @@ const screenManage = {
    * @returns
    */
   getGraphInfo(params) {
-    return $axios.post('  /screen/graph/graphInfo', params)
+    return $axios.post('/screen/graph/graphInfo', params);
   },
   /**
    * @description 根据数据筛选数据列表
@@ -228,7 +226,7 @@ const screenManage = {
    * @returns
    */
   getDataPick(params) {
-    return $axios.post('/screen/graph/getLimitData', params)
+    return $axios.post('/screen/graph/getLimitData', params);
   },
   /**
    *
@@ -237,7 +235,7 @@ const screenManage = {
    * @returns
    */
   actionUploadImage(params) {
-    return $axios.post('/screen/bigscreen/avatar', params)
+    return $axios.post('/screen/bigscreen/avatar', params);
   },
   /**
    * @description 保存当前大屏选中的数据模型
@@ -245,51 +243,44 @@ const screenManage = {
    * @returns
    */
   screenModuleSave(params) {
-    return $axios.post('/screen/pivotschema/ScreenModuleSave', params)
+    return $axios.post('/screen/pivotschema/ScreenModuleSave', params);
   },
   /**
    * 数据模型维度度量转换
    */
   screenModuleTransform(params) {
-    return $axios.post('/screen/pivotschema/ScreenModuleTransform', params)
+    return $axios.post('/screen/pivotschema/ScreenModuleTransform', params);
   },
   /**
    * 获取创建地理字段数据
    */
   getGeoData(params) {
-    return $axios.post('/screen/pivotschema/initGeoInfo', params)
+    return $axios.post('/screen/pivotschema/initGeoInfo', params);
   },
   /**
    *保存创建地理字段
    */
   saveGeoData(params) {
-    return $axios.post('/screen/pivotschema/setGeoInfo', params)
+    return $axios.post('/screen/pivotschema/setGeoInfo', params);
   },
   /**
    *获取省市级联数据
    */
   getprovinceListData() {
-    return $axios.get('/system/geo/getGeoTreeList')
+    return $axios.get('/system/geo/getGeoTreeList');
   },
   /**
    *获取素材库分组
    */
   getMaterialGroupList() {
-    return $axios.get('/screen/material/groupList')
+    return $axios.get('/screen/material/groupList');
   },
   /**
    *获取素材库内容
    */
   getMaterials(params) {
-    return $axios.post('/screen/material/picList', params)
+    return $axios.post('/screen/material/picList', params);
   },
+};
 
-  /**
-   * 获取图表数据
-   */
-  getGraphInfo(params) {
-    return $axios.post('/screen/graph/graphInfo', params)
-  }
-}
-
-export default screenManage
+export default screenManage;

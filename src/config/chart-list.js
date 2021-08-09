@@ -1,4 +1,4 @@
-import BoardType from '@/views/screenManage/screen/setting/default-type'
+import BoardType from '@/views/screenManage/screen/setting/default-type';
 const chartList = [
   {
     name: '折线图',
@@ -6,9 +6,9 @@ const chartList = [
     sub: [
       {
         name: '普通折线图',
-        type: BoardType.ChartLine
-      }
-    ]
+        type: BoardType.ChartLine,
+      },
+    ],
   },
   {
     name: '柱状图',
@@ -16,13 +16,13 @@ const chartList = [
     sub: [
       {
         name: '普通柱状图',
-        type: BoardType.ChartBar
+        type: BoardType.ChartBar,
       },
       {
         name: '3D柱状图',
-        type: BoardType.ChartBar
-      }
-    ]
+        type: BoardType.ChartBar,
+      },
+    ],
   },
   {
     name: '饼图',
@@ -30,50 +30,50 @@ const chartList = [
     sub: [
       {
         name: '普通饼图',
-        type: BoardType.ChartPie
+        type: BoardType.ChartPie,
       },
       {
         name: '环形饼图',
-        type: BoardType.ChartRingPie
+        type: BoardType.ChartRingPie,
       },
       {
         name: '嵌套饼图',
-        type: BoardType.ChartNestPie
-      }
-    ]
+        type: BoardType.ChartNestPie,
+      },
+    ],
   },
   {
     name: '雷达图',
-    type: BoardType.ChartRadar
+    type: BoardType.ChartRadar,
   },
   {
     name: '仪表盘',
-    type: BoardType.ChartGauge
+    type: BoardType.ChartGauge,
   },
   {
     name: '散点图',
-    type: BoardType.ChartScatter
+    type: BoardType.ChartScatter,
   },
   {
     name: '旭日图',
-    type: BoardType.ChartSunburst
+    type: BoardType.ChartSunburst,
   },
   {
     name: '矩形树图',
-    type: BoardType.ChartTreemap
+    type: BoardType.ChartTreemap,
   },
   {
     name: '矩形热力图',
-    type: BoardType.ChartHeatmap
+    type: BoardType.ChartHeatmap,
   },
   {
     name: '进度条',
-    type: BoardType.ChartProgress
+    type: BoardType.ChartProgress,
   },
   {
     name: '表格',
-    type: BoardType.ChartTable
-  }
-]
+    type: BoardType.ChartTable,
+  },
+];
 
-export default chartList
+export default chartList;

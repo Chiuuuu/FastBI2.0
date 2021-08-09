@@ -1,5 +1,5 @@
-import { commonRoutes, asyncRoutes } from '@/router/routes'
-import { getRenderRouter } from '@/utils/permission'
+import { commonRoutes, asyncRoutes } from '@/router/routes';
+import { getRenderRouter } from '@/utils/permission';
 
 /**
  * 通过meta.permissions判断是否与当前用户权限匹配
@@ -9,14 +9,14 @@ import { getRenderRouter } from '@/utils/permission'
 function hasPermission(roles, route) {
   // 优先判断是否有全部权限
   if (roles.some(role => role === 0)) {
-    return true
+    return true;
   }
 
   // 再根据实际判断权限
   if (route.meta && route.meta.permissions) {
-    return roles.some(role => route.meta.permissions.includes(role))
+    return roles.some(role => route.meta.permissions.includes(role));
   } else {
-    return true
+    return true;
   }
 }
 
@@ -26,48 +26,48 @@ function hasPermission(roles, route) {
  * @param roles
  */
 export function filterAsyncRoutes(routes, roles) {
-  const res = []
+  const res = [];
 
   routes.forEach(route => {
-    const tmp = { ...route }
+    const tmp = { ...route };
     if (hasPermission(roles, tmp)) {
       if (tmp.children) {
-        tmp.children = filterAsyncRoutes(tmp.children, roles)
+        tmp.children = filterAsyncRoutes(tmp.children, roles);
       }
-      res.push(tmp)
+      res.push(tmp);
     }
-  })
+  });
 
-  return res
+  return res;
 }
 
 const state = {
   routes: [],
-  addRoutes: []
-}
+  addRoutes: [],
+};
 
 const mutations = {
   SET_ROUTES: (state, routes) => {
-    state.addRoutes = routes
-    state.routes = commonRoutes.concat(routes)
-  }
-}
+    state.addRoutes = routes;
+    state.routes = commonRoutes.concat(routes);
+  },
+};
 
 const actions = {
   generateRoutes({ commit }, roles) {
     return new Promise((resolve, reject) => {
-      let accessedRoutes = filterAsyncRoutes(asyncRoutes, roles)
-      const { routes, children } = getRenderRouter(accessedRoutes)
+      let accessedRoutes = filterAsyncRoutes(asyncRoutes, roles);
+      const { routes, children } = getRenderRouter(accessedRoutes);
       if (children && children.length > 0) {
-        setRedirect(routes)
-        commit('SET_ROUTES', accessedRoutes)
-        resolve(accessedRoutes)
+        setRedirect(routes);
+        commit('SET_ROUTES', accessedRoutes);
+        resolve(accessedRoutes);
       } else {
-        reject(new Error('菜单不存在'))
+        reject(new Error('菜单不存在'));
       }
-    })
-  }
-}
+    });
+  },
+};
 
 /**
  * @description 设置重定向
@@ -76,21 +76,21 @@ const actions = {
  * @returns
  */
 function setRedirect(routes, parent) {
-  const { children } = routes
+  const { children } = routes;
   if (children && children.length) {
     if (routes.path === '/') {
-      routes['redirect'] = `${children[0].path}`
+      routes['redirect'] = `${children[0].path}`;
     } else {
-      routes['redirect'] = `${parent}/${children[0].path}`
+      routes['redirect'] = `${parent}/${children[0].path}`;
     }
-    setRedirect(children[0], routes['redirect'])
+    setRedirect(children[0], routes['redirect']);
   }
-  return routes
+  return routes;
 }
 
 export default {
   namespaced: true,
   state,
   mutations,
-  actions
-}
+  actions,
+};

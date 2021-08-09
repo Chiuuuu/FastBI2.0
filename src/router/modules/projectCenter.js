@@ -1,17 +1,17 @@
-import PERMISSION_CODE from '@/config/permission'
+import PERMISSION_CODE from '@/config/permission';
 
-const RouteView = () => import('@/layout/routeView')
-const PageView = () => import('@/layout/pageView')
+const RouteView = () => import('@/layout/routeView');
+const PageView = () => import('@/layout/pageView');
 
-const UsersView = () => import('@/views/projectCenter/users/users')
+const UsersView = () => import('@/views/projectCenter/users/users');
 
-const RolesView = () => import('@/views/projectCenter/roles')
-const RolesEdit = () => import('@/views/projectCenter/roles/components/role-edit')
+const RolesView = () => import('@/views/projectCenter/roles');
+const RolesEdit = () => import('@/views/projectCenter/roles/components/role-edit');
 
-const PermissionsView = () => import('@/views/projectCenter/permissions')
-const PermissionsEdit = () => import('@/views/projectCenter/permissions/components/perm-edit')
+// const PermissionsView = () => import('@/views/projectCenter/permissions');
+// const PermissionsEdit = () => import('@/views/projectCenter/permissions/components/perm-edit');
 
-const SreenMaterialView = () => import('@/views/screenMaterial')
+const SreenMaterialView = () => import('@/views/screenMaterial');
 
 export default {
   path: '/projectCenter',
@@ -20,7 +20,7 @@ export default {
   meta: {
     title: '项目中心',
     icon: 'appstore',
-    permissions: [PERMISSION_CODE.PAGE.user, PERMISSION_CODE.PAGE.role, PERMISSION_CODE.PAGE.dataPermission]
+    permissions: [PERMISSION_CODE.PAGE.user, PERMISSION_CODE.PAGE.role, PERMISSION_CODE.PAGE.dataPermission],
   },
   children: [
     {
@@ -29,8 +29,8 @@ export default {
       component: UsersView,
       meta: {
         title: '用户管理',
-        permissions: [PERMISSION_CODE.PAGE.user]
-      }
+        permissions: [PERMISSION_CODE.PAGE.user],
+      },
     },
     {
       path: 'roles',
@@ -39,7 +39,7 @@ export default {
       component: PageView,
       meta: {
         title: '角色管理',
-        permissions: [PERMISSION_CODE.PAGE.role]
+        permissions: [PERMISSION_CODE.PAGE.role],
       },
       children: [
         {
@@ -48,8 +48,8 @@ export default {
           component: RolesView,
           meta: {
             sideBar: 'roles',
-            permissions: [PERMISSION_CODE.PAGE.role]
-          }
+            permissions: [PERMISSION_CODE.PAGE.role],
+          },
         },
         {
           path: 'edit/id=:id',
@@ -57,19 +57,19 @@ export default {
           component: RolesEdit,
           meta: {
             sideBar: 'roles',
-            permissions: [PERMISSION_CODE.PAGE.role]
-          }
-        }
-      ]
+            permissions: [PERMISSION_CODE.PAGE.role],
+          },
+        },
+      ],
     },
     {
       path: 'screenMaterial',
       name: 'screenMaterial',
       component: SreenMaterialView,
       meta: {
-        title: '素材管理'
-      }
-    }
+        title: '素材管理',
+      },
+    },
     // {
     //   path: 'permissions',
     //   name: 'permissions',
@@ -100,5 +100,5 @@ export default {
     //     }
     //   ]
     // }
-  ]
-}
+  ],
+};

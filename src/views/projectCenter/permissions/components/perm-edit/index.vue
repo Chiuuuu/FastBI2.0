@@ -10,7 +10,14 @@
               <a-button class="main-button" @click="back">退 出</a-button>
             </div>
           </header>
-          <a-form-model class="role-form" ref="form" :model="form" :rules="rules" :label-col="{ span: 6 }" :wrapper-col="{ span: 16 }">
+          <a-form-model
+            class="role-form"
+            ref="form"
+            :model="form"
+            :rules="rules"
+            :label-col="{ span: 6 }"
+            :wrapper-col="{ span: 16 }"
+          >
             <a-form-model-item label="角色名称" prop="name">
               <a-input v-model="form.name"></a-input>
             </a-form-model-item>
@@ -29,13 +36,13 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
-import PermissionTable from '../tab-content/permission-table'
+import { mapState } from 'vuex';
+import PermissionTable from '../tab-content/permission-table';
 
 export default {
   name: 'permEditCol',
   components: {
-    PermissionTable
+    PermissionTable,
   },
   data() {
     return {
@@ -44,75 +51,75 @@ export default {
       detailInfo: {},
       form: {
         name: '',
-        description: ''
+        description: '',
       },
       rules: {
         name: [
           {
             required: true,
-            message: '请输入权限名称'
+            message: '请输入权限名称',
           },
           {
             type: 'string',
             max: 20,
             min: 1,
-            message: '请输入1-20个字的权限名称'
-          }
+            message: '请输入1-20个字的权限名称',
+          },
         ],
         description: [
           {
             type: 'string',
             max: 200,
             min: 1,
-            message: '请输入200字以内的权限描述'
-          }
-        ]
-      }
-    }
+            message: '请输入200字以内的权限描述',
+          },
+        ],
+      },
+    };
   },
   computed: {
     ...mapState({
       permissionId: state => state.projectPermissions.permissionId,
-      formInfo: state => state.projectPermissions.permissionInfo
-    })
+      formInfo: state => state.projectPermissions.permissionInfo,
+    }),
   },
   mounted() {
-    this.handleGetPermissionInfo()
-    this.$store.commit('projectPermissions/SET_PERMISSIONID', this.$route.params.id)
+    this.handleGetPermissionInfo();
+    this.$store.commit('projectPermissions/SET_PERMISSIONID', this.$route.params.id);
   },
   methods: {
     async handleGetPermissionInfo() {
-      this.spinning = true
-      this.spinning = false
+      this.spinning = true;
+      this.spinning = false;
     },
     back() {
       // 切换回查看模式
-      this.$store.commit('projectPermissions/SET_EDITTYPE', this.$route.query.type)
-      this.$router.go(-1)
+      this.$store.commit('projectPermissions/SET_EDITTYPE', this.$route.query.type);
+      this.$router.go(-1);
     },
     handleSave() {
-      this.$refs.form.validate((ok, obj) => {
+      this.$refs.form.validate(ok => {
         if (ok) {
-          this.$message.success('保存成功')
-          this.$store.commit('projectPermissions/SET_PERMISSIONID', 'id')
-          this.back()
+          this.$message.success('保存成功');
+          this.$store.commit('projectPermissions/SET_PERMISSIONID', 'id');
+          this.back();
         }
-      })
-    }
-  }
-}
+      });
+    },
+  },
+};
 </script>
 
 <style lang="less" scoped>
-@import "../../../main";
+@import '../../../main';
 .main .edit.right .content {
   height: calc(100% - 186px);
   @{deep} .ant-form-item-label {
-      width: 100px !important;
-      padding-left: 16px;
-      label {
-          color: rgba(0, 0, 0, 0.65);
-      }
+    width: 100px !important;
+    padding-left: 16px;
+    label {
+      color: rgba(0, 0, 0, 0.65);
+    }
   }
 }
 </style>

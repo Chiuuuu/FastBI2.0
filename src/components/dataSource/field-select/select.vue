@@ -1,59 +1,55 @@
 <template>
-  <div
-    class="field-select"
-    :class="isDimension ? 'is-dimension' : 'is-measure'"
-    @click="handleClick"
-  >
+  <div class="field-select" :class="isDimension ? 'is-dimension' : 'is-measure'" @click="handleClick">
     <span>{{ text }}</span>
     <div class="caret-down"></div>
   </div>
 </template>
 
 <script>
-import ContextMenu from '@/components/dataSource/contextmenu'
+import ContextMenu from '@/components/dataSource/contextmenu';
 
 export default {
   name: 'fieldSelect',
   props: {
     isDimension: {
       type: Boolean,
-      default: false
+      default: false,
     },
     contextmenus: Array,
     text: [String, Number],
-    selectData: Object
+    selectData: Object,
   },
   data() {
     return {
-      contenxtmenu: ''
-    }
+      contenxtmenu: '',
+    };
   },
   methods: {
     handleClick(e) {
-      e.stopPropagation()
-      const that = this
+      e.stopPropagation();
+      const that = this;
       // 原始数据类型
-      let _type = that.selectData.dataType
-      console.log('原始数据', _type)
+      let _type = that.selectData.dataType;
+      console.log('原始数据', _type);
       this.contenxtmenu = new ContextMenu({
         vm: that,
         menus: that.contextmenus.map(item => {
           if (item.dataType === _type) {
-            item.name = `还原为${item.name.split('为')[1]}`
+            item.name = `还原为${item.name.split('为')[1]}`;
           } else {
-            item.name = `转换为${item.name.split('为')[1]}`
+            item.name = `转换为${item.name.split('为')[1]}`;
           }
-          item.$$fun = function() {
-            Array.prototype.push.call(arguments, that)
-            item.onClick.apply(this, arguments)
-          }
-          return item
+          item.$$fun = function () {
+            Array.prototype.push.call(arguments, that);
+            item.onClick.apply(this, arguments);
+          };
+          return item;
         }),
-        target: e
-      })
-    }
-  }
-}
+        target: e,
+      });
+    },
+  },
+};
 </script>
 
 <style lang="less" scoped>

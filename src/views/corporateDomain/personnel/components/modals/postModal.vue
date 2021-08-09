@@ -6,7 +6,8 @@
     :visible="visible"
     :footer="null"
     destroyOnClose
-    @cancel="handleClose">
+    @cancel="handleClose"
+  >
     <template v-if="deptList.length > 0">
       <a-form-model ref="form" :model="form" :label-col="{ span: 3 }" :wrapper-col="{ span: 21 }" labelAlign="left">
         <a-form-model-item label="部门" prop="depart">
@@ -25,7 +26,8 @@
             @edit="handleModalFormEdit"
             @save="handleModalFormSave"
             @cancel="handleModalFormCancel"
-            @delete="handleModalFormDelete"></ModalForm>
+            @delete="handleModalFormDelete"
+          ></ModalForm>
         </div>
       </div>
     </template>
@@ -34,97 +36,97 @@
 </template>
 
 <script>
-import modalMixin from '@/components/modal-list-manager/mixin'
+import modalMixin from '@/components/modal-list-manager/mixin';
 export default {
   name: 'personnelPostModal',
   props: {
-    deptList: Array
+    deptList: Array,
   },
   mixins: [modalMixin],
   data() {
     return {
       spinning: false,
       form: {
-        depart: undefined
+        depart: undefined,
       },
-      list: []
-    }
+      list: [],
+    };
   },
   methods: {
     async handleGetPostList(id) {
-      const list = await this.$server.corporateDomain.getPostList(id)
+      const list = await this.$server.corporateDomain.getPostList(id);
       if (list.code === 200) {
-        this.list = list.data
+        this.list = list.data;
       } else {
-        this.list = []
-        this.$message.error('获取岗位列表失败')
+        this.list = [];
+        this.$message.error('获取岗位列表失败');
       }
-      this.activeIndex = -1
+      this.activeIndex = -1;
     },
     /** 保存 */
     handleModalFormSave(formData, index) {
       if (formData.id) {
-        this.handleModalFormUpdate(formData, index)
+        this.handleModalFormUpdate(formData, index);
       } else {
-        this.handleModalFormAdd(formData, index)
+        this.handleModalFormAdd(formData, index);
       }
     },
     /** 新增 */
-    async handleModalFormAdd(formData, index) {
+    async handleModalFormAdd(formData) {
       const res = await this.$server.corporateDomain.addPost({
         name: formData.name,
-        departmentId: this.form.depart
-      })
+        departmentId: this.form.depart,
+      });
       if (res.code === 200) {
-        this.$message.success('保存成功')
-        this.handleGetPostList(this.form.depart)
-        this.activeIndex = -1
+        this.$message.success('保存成功');
+        this.handleGetPostList(this.form.depart);
+        this.activeIndex = -1;
       } else {
-        this.$message.error(res.msg)
+        this.$message.error(res.msg);
       }
     },
     handleModalFormEdit(index) {
-      this.activeIndex = index
+      this.activeIndex = index;
     },
     /** 编辑 */
-    async handleModalFormUpdate(formData, index) {
+    async handleModalFormUpdate(formData) {
       const res = await this.$server.corporateDomain.updatePost({
         name: formData.name,
         departmentId: this.form.depart,
-        id: formData.id
-      })
+        id: formData.id,
+      });
       if (res.code === 200) {
-        this.$message.success('保存成功')
-        this.handleGetPostList(this.form.depart)
-        this.activeIndex = -1
+        this.$message.success('保存成功');
+        this.handleGetPostList(this.form.depart);
+        this.activeIndex = -1;
       } else {
-        this.$message.error(res.msg)
+        this.$message.error(res.msg);
       }
     },
     /** 删除 */
     async handleModalFormDelete(formData, index) {
-      const res = await this.$server.corporateDomain.delePost(formData.id)
+      const res = await this.$server.corporateDomain.delePost(formData.id);
       if (res.code === 200) {
-        this.$message.success('删除成功')
-        this.list.splice(index, 1)
-        this.activeIndex = -1
+        this.$message.success('删除成功');
+        this.list.splice(index, 1);
+        this.activeIndex = -1;
       } else {
-        this.$message.error(res.msg)
+        this.$message.error(res.msg);
       }
     },
     /** 取消编辑 */
     handleModalFormCancel(data) {
-      this.activeIndex = -1
+      this.activeIndex = -1;
       if (!data.id) {
-        this.list.shift()
+        this.list.shift();
       }
-    }
-  }
-}
+    },
+  },
+};
 </script>
 
 <style lang="less" scoped>
-@import "@/components/modal-list-manager/modal-common.less";
+@import '@/components/modal-list-manager/modal-common.less';
 .form-list {
   height: calc(100% - 120px);
 }

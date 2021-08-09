@@ -2,10 +2,7 @@
   <div>
     <div v-if="config.title === '直线'">
       <GuiField label="线条颜色">
-        <el-color-picker
-          :value="config.style.borderColor"
-          @change="setStyle($event, 'borderColor')"
-        ></el-color-picker>
+        <el-color-picker :value="config.style.borderColor" @change="setStyle($event, 'borderColor')"></el-color-picker>
       </GuiField>
       <GuiField label="线型">
         <a-select
@@ -20,24 +17,13 @@
         </a-select>
       </GuiField>
       <GuiField label="线条宽度">
-        <a-input-number
-          :max="maxBorder"
-          :min="0"
-          :value="view.height"
-          @change="setView($event, 'height')"
-        />
+        <a-input-number :max="maxBorder" :min="0" :value="view.height" @change="setView($event, 'height')" />
       </GuiField>
       <GuiField label="线条阴影">
-        <a-switch
-          :checked="config.style.showShadow"
-          @change="setStyle($event, 'showShadow')"
-        ></a-switch>
+        <a-switch :checked="config.style.showShadow" @change="setStyle($event, 'showShadow')"></a-switch>
       </GuiField>
       <GuiField label="阴影颜色">
-        <el-color-picker
-          :value="config.style.shadowColor"
-          @change="setStyle($event, 'shadowColor')"
-        ></el-color-picker>
+        <el-color-picker :value="config.style.shadowColor" @change="setStyle($event, 'shadowColor')"></el-color-picker>
       </GuiField>
       <!-- <GuiField label="旋转角度">
       <a-input-number :min="0" :max="360" :value="view.rotate" @change="setView($event, 'rotate')" />
@@ -61,10 +47,7 @@
         ></a-input-number>
       </GuiField>
       <GuiField label="边框颜色">
-        <el-color-picker
-          :value="config.style.borderColor"
-          @change="setStyle($event, 'borderColor')"
-        ></el-color-picker>
+        <el-color-picker :value="config.style.borderColor" @change="setStyle($event, 'borderColor')"></el-color-picker>
       </GuiField>
       <GuiField label="边框宽度">
         <a-input-number
@@ -108,10 +91,7 @@
         ></a-input-number>
       </GuiField>
       <GuiField label="边框颜色">
-        <el-color-picker
-          :value="config.style.borderColor"
-          @change="setStyle($event, 'borderColor')"
-        ></el-color-picker>
+        <el-color-picker :value="config.style.borderColor" @change="setStyle($event, 'borderColor')"></el-color-picker>
       </GuiField>
       <GuiField label="圆角大小">
         <a-input-number
@@ -152,70 +132,70 @@
 </template>
 
 <script>
-import settings from '@/config/navigate'
-import { deepClone } from '../../../../utils/deepClone'
-import GuiField from '../gui-field.vue'
+import settings from '@/config/navigate';
+import { deepClone } from '../../../../utils/deepClone';
+import GuiField from '../gui-field.vue';
 
 export default {
   props: {
     config: {
       type: Object,
-      require: true
+      require: true,
     },
     view: {
       type: Object,
-      require: true
-    }
+      require: true,
+    },
   },
   data() {
     return {
-      style: {}
-    }
+      style: {},
+    };
   },
   computed: {
     maxBorder() {
-      const { width, height } = this.$store.getters.currSelected.setting.view
-      let res = Math.min(width, height) / 2
+      const { width, height } = this.$store.getters.currSelected.setting.view;
+      let res = Math.min(width, height) / 2;
       if (this.config.title === '直线') {
-        res = 20
+        res = 20;
       }
-      return res > 20 ? 20 : res
-    }
+      return res > 20 ? 20 : res;
+    },
   },
   components: {
-    GuiField
+    GuiField,
   },
   methods: {
     // 设置样式
     setStyle(value, key) {
-      const config = deepClone(this.config)
-      config.style[key] = value
-      this.$emit('update:config', config)
-      this.$emit('refreshSelf')
+      const config = deepClone(this.config);
+      config.style[key] = value;
+      this.$emit('update:config', config);
+      this.$emit('refreshSelf');
     },
     // 设置图形样式
     setView(value, key) {
-      const view = deepClone(this.view)
-      view[key] = value
-      this.$emit('update:view', view)
-      this.$emit('refreshBase')
+      const view = deepClone(this.view);
+      view[key] = value;
+      this.$emit('update:view', view);
+      this.$emit('refreshBase');
     },
     resetSetting() {
-      const initialType = settings.find(item => item.type === 'Figure')
+      const initialType = settings.find(item => item.type === 'Figure');
       if (initialType) {
-        const settings = initialType.tabs[0].children.find(item => item.title === this.config.title)
+        const settings = initialType.tabs[0].children.find(item => item.title === this.config.title);
         if (settings) {
-          this.$emit('update:config', settings.config)
-          this.$emit('refreshSelf')
+          this.$emit('update:config', settings.config);
+          this.$emit('refreshSelf');
           if (this.config.title === '直线') {
-            this.setView(1, 'height')
-            this.$emit('refreshBase')
+            this.setView(1, 'height');
+            this.$emit('refreshBase');
           }
         }
       }
-    }
-  }
-}
+    },
+  },
+};
 </script>
 
 <style lang="less" scoped>

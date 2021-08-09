@@ -3,7 +3,10 @@
     <div class="tab scrollbar">
       <header>
         <div class="permission-info">
-          <div>权限名称：<span></span></div>
+          <div>
+            权限名称：
+            <span></span>
+          </div>
           <div class="line">权限描述：</div>
         </div>
         <a-button class="main-button" type="primary" @click="edit">编辑数据权限</a-button>
@@ -17,30 +20,30 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
-import PermissionTable from '../tab-content/permission-table'
+import { mapState } from 'vuex';
+import PermissionTable from '../tab-content/permission-table';
 
 export default {
   name: 'permContent',
   data() {
     return {
       spinning: false,
-      detailInfo: {}
-    }
+      detailInfo: {},
+    };
   },
   components: {
-    PermissionTable
+    PermissionTable,
   },
   computed: {
     ...mapState({
       permissionId: state => state.projectPermissions.permissionId,
       editType: state => state.projectPermissions.editType,
-      formInfo: state => state.projectPermissions.permissionInfo
-    })
+      formInfo: state => state.projectPermissions.permissionInfo,
+    }),
   },
   created() {
     if (this.permissionId) {
-      this.handleGetPermissionInfo()
+      this.handleGetPermissionInfo();
     }
   },
   methods: {
@@ -49,15 +52,13 @@ export default {
       this.$router.push({
         path: '/projectCenter/permissions/edit/id=' + this.permissionId,
         query: {
-          type: this.editType
-        }
-      })
+          type: this.editType,
+        },
+      });
     },
-    async handleGetPermissionInfo() {
-
-    }
-  }
-}
+    async handleGetPermissionInfo() {},
+  },
+};
 </script>
 
 <style scoped>
