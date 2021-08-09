@@ -83,14 +83,18 @@
               </ul>
             </div>
           </li>
+          <!-- 图表工具栏 end -->
+          <!-- 文本框 start -->
           <li class="btn-item">
             <div class="tool-btn" @click="handleAddChart(BoardType.Text)">
               <div class="u-icon">
                 <i class="bi-data bi-data-line-chart"></i>
               </div>
-              <span class="text">文本框</span>
+              <span class="text"></span>
             </div>
           </li>
+          <!-- 文本框 end -->
+          <!-- 图片 start -->
           <li class="btn-item">
             <div class="tool-btn" @click="handleAddChart(BoardType.Image)">
               <div class="u-icon">
@@ -99,6 +103,8 @@
               <span class="text">图片</span>
             </div>
           </li>
+          <!-- 图片 end -->
+          <!-- 形状 start -->
           <li class="btn-item">
             <div class="tool-btn">
               <div class="u-icon">
@@ -119,6 +125,7 @@
               </ul>
             </div>
           </li>
+          <!-- 形状 end -->
         </ul>
       </div>
       <!-- 图表工具栏 end -->
