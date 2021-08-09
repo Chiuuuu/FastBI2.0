@@ -2,8 +2,8 @@ import router from '../../router';
 import screenManage from '../../api/modules/screenManage';
 import { message } from 'ant-design-vue';
 import { Loading } from 'element-ui';
-import { handleRefreshData } from '@/utils/handleRefreshData';
-import { deepClone } from '@/utils/deepClone';
+// import { handleRefreshData } from '@/utils/handleRefreshData';
+// import { deepClone } from '@/utils/deepClone';
 import _ from 'lodash';
 
 let orginPageSettings = {
@@ -298,7 +298,7 @@ const app = {
         screenId: state.screenId,
         datamodelId: chart.datamodelId || 0,
         isPublish: 1,
-        setting: deepClone(chart.setting),
+        // setting: deepClone(chart.setting),
       };
       // 图表联动数据selectData不保存后台
       if (params.setting.api_data.selectData) {
@@ -396,7 +396,7 @@ const app = {
                 continue;
               }
               let chart = rootGetters.canvasMap.find(chart => chart.id + '' === id);
-              let newData = dataItem[id].graphData;
+              //   let newData = dataItem[id].graphData;
 
               // 找到chart的表示当前页
               if (chart) {
@@ -446,7 +446,7 @@ const app = {
                 }
                 chart.setting.isEmpty = false;
                 // 更新界面
-                handleRefreshData({ chart, newData, needLoading });
+                // handleRefreshData({ chart, newData, needLoading });
               }
             }
             screenManage.saveAllChart(rootGetters.canvasMap);
