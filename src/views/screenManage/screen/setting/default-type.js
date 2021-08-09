@@ -16,6 +16,7 @@ const BoardType = {
   ChartProgress: 'ChartProgress',
   ChartTable: 'ChartTable',
   Text: 'BoardText',
+  Image: 'BoardImage',
   ShapeLine: 'ShapeLine',
   ShapeRound: 'ShapeRound',
   ShapeRectangular: 'ShapeRectangular',

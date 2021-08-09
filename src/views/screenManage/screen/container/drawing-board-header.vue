@@ -92,6 +92,14 @@
             </div>
           </li>
           <li class="btn-item">
+            <div class="tool-btn" @click="handleAddChart(BoardType.Image)">
+              <div class="u-icon">
+                <i class="bi-data bi-data-line-chart"></i>
+              </div>
+              <span class="text">图片</span>
+            </div>
+          </li>
+          <li class="btn-item">
             <div class="tool-btn">
               <div class="u-icon">
                 <i class="bi-data bi-data-line-chart"></i>
