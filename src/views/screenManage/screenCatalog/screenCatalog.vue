@@ -102,8 +102,7 @@
           <a-button type="primary" class="btn_pr" v-if="hasEditPermission" @click="editScreen">编辑大屏</a-button>
         </div>
         <div class="contain" ref="contain">
-          <screen v-if="fileSelectId > 0" ref="screen" :key="componentKey" @getShareData="getShareData"></screen>
-          <div class="empty" v-else>
+          <div class="empty">
             <img src="@/assets/images/icon_empty_state.png" class="empty_img" />
             <p class="empty_word">暂无内容 ， 请先添加大屏目录数据或者选择一个大屏目录 ~</p>
           </div>
@@ -238,7 +237,6 @@
         </div>
       </a-drawer>
     </div>
-    <screen isShootDom v-if="canvasMap && canvasMap.length"></screen>
   </div>
 </template>
 
@@ -248,7 +246,6 @@ import MenuFile from '@/components/dataSource/menu-group/file';
 import MenuFolder from '@/components/dataSource/menu-group/folder';
 
 import { mapGetters, mapActions } from 'vuex'; // 导入vuex
-import Screen from '@/views/screen'; // 预览
 import { checkActionPermission, hasPermission } from '@/utils/permission';
 import debounce from 'lodash/debounce';
 import { menuSearchLoop } from '@/utils/menuSearch';
@@ -260,7 +257,6 @@ export default {
     NewFolder,
     MenuFile,
     MenuFolder,
-    Screen,
     vueQr,
   },
   data() {
