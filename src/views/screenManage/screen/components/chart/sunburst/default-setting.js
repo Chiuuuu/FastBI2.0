@@ -1,14 +1,14 @@
-import BoardType from '@/views/screenManage/screen/setting/default-type'
-import BASE from '@/views/screenManage/screen/setting/default-base'
-import merge from 'lodash/merge'
-import cloneDeep from 'lodash/cloneDeep'
+import BoardType from '@/views/screenManage/screen/setting/default-type';
+import BASE from '@/views/screenManage/screen/setting/default-base';
+import merge from 'lodash/merge';
+import cloneDeep from 'lodash/cloneDeep';
 
 export default merge(cloneDeep(BASE), {
   type: BoardType.ChartSunburst,
   setting: {
     data: {
       dimensions: [], // 维度
-      measures: [] // 度量
+      measures: [], // 度量
     },
     style: {
       echart: {
@@ -22,13 +22,13 @@ export default merge(cloneDeep(BASE), {
           bottom: 50,
           containLabel: true,
           backgroundColor: 'transparent',
-          borderColor: 'transparent'
+          borderColor: 'transparent',
         },
         tooltip: {
-          show: true
+          show: true,
         },
         visualMap: {
-          show: true
+          show: true,
         },
         customFormatterWay: 'nv',
         customLabel: {
@@ -38,18 +38,18 @@ export default merge(cloneDeep(BASE), {
           fontSize: 16,
           position: 'inside',
           formatter: '{a}\n({c})',
-          rotate: 'radial' // 'radial' 表示径向旋转、'tangential' 表示切向旋转
+          rotate: 'radial', // 'radial' 表示径向旋转、'tangential' 表示切向旋转
         },
         customLabelLayout: {
           // 标签是否允许重叠
-          hideOverlap: true
+          hideOverlap: true,
         },
         customMax: 100, // 最大值
         customMin: 0, // 最小值
         customInRadius: 0, // 内半径
         customOutRadius: 100, // 外半径
-        customCenter: [50, 50] // 坐标中心点
-      }
-    }
-  }
-})
+        customCenter: [50, 50], // 坐标中心点
+      },
+    },
+  },
+});

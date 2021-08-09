@@ -8,11 +8,7 @@
           <Tabs v-model="tabAcitve">
             <TabPanel tab="data" label="数据">
               <Collapse v-model="dataCollapseActive">
-                <CollapsePanel
-                  class="content-item"
-                  panel="dimension"
-                  header="维度"
-                >
+                <CollapsePanel class="content-item" panel="dimension" header="维度">
                   <!-- 维度 start -->
                   <UnitField
                     class="setting-unit-content"
@@ -25,11 +21,7 @@
                   ></UnitField>
                   <!-- 维度 end -->
                 </CollapsePanel>
-                <CollapsePanel
-                  class="content-item"
-                  panel="measure"
-                  header="度量"
-                >
+                <CollapsePanel class="content-item" panel="measure" header="度量">
                   <!-- 度量 start -->
                   <UnitField
                     class="setting-unit-content"
@@ -42,11 +34,7 @@
                   ></UnitField>
                   <!-- 度量 end -->
                 </CollapsePanel>
-                <CollapsePanel
-                  class="content-item"
-                  panel="dataFilter"
-                  header="数据筛选"
-                >
+                <CollapsePanel class="content-item" panel="dataFilter" header="数据筛选">
                   <!-- 数据筛选 start -->
                   <UnitDataFilter class="setting-unit-content">
                     <template #tip>
@@ -59,11 +47,7 @@
             </TabPanel>
             <TabPanel tab="style" label="样式">
               <Collapse v-model="styleCollapseActive">
-                <CollapsePanel
-                  class="content-item"
-                  panel="position"
-                  :isTogger="false"
-                >
+                <CollapsePanel class="content-item" panel="position" :isTogger="false">
                   <!-- 位置 start -->
                   <UnitPosition
                     class="setting-unit-content"
@@ -72,11 +56,7 @@
                   ></UnitPosition>
                   <!-- 位置 end -->
                 </CollapsePanel>
-                <CollapsePanel
-                  class="content-item"
-                  panel="size"
-                  :isTogger="false"
-                >
+                <CollapsePanel class="content-item" panel="size" :isTogger="false">
                   <!-- 尺寸 start -->
                   <UnitSize
                     class="setting-unit-content"
@@ -94,11 +74,7 @@
                   ></UnitTitle>
                   <!-- 标题 end -->
                 </CollapsePanel>
-                <CollapsePanel
-                  class="content-item"
-                  panel="bgAndBorder"
-                  header="背景和边框"
-                >
+                <CollapsePanel class="content-item" panel="bgAndBorder" header="背景和边框">
                   <div class="setting-unit-content">
                     <!-- 背景颜色 start -->
                     <UnitBackgroundColor
@@ -115,11 +91,7 @@
                     <!-- 边框设置 end -->
                   </div>
                 </CollapsePanel>
-                <CollapsePanel
-                  class="content-item"
-                  panel="legend"
-                  header="样式设置"
-                >
+                <CollapsePanel class="content-item" panel="legend" header="样式设置">
                   <div class="setting-unit-content">
                     <a-row class="unit-show-block mb-8">
                       <a-col :span="7">
@@ -132,9 +104,7 @@
                         <a-input-number
                           :min="0"
                           :max="100"
-                          :value="
-                            currentCom.setting.style.echart.customCenter[0]
-                          "
+                          :value="currentCom.setting.style.echart.customCenter[0]"
                           @change="value => handleCenter(value, 0)"
                         ></a-input-number>
                       </a-col>
@@ -145,9 +115,7 @@
                         <a-input-number
                           :min="0"
                           :max="100"
-                          :value="
-                            currentCom.setting.style.echart.customCenter[1]
-                          "
+                          :value="currentCom.setting.style.echart.customCenter[1]"
                           @change="value => handleCenter(value, 1)"
                         ></a-input-number>
                       </a-col>
@@ -161,25 +129,17 @@
                         <a-input-number
                           :min="0"
                           :value="currentCom.setting.style.echart.customLimit"
-                          @change="
-                            customLimit =>
-                              handleChange('echart', { customLimit })
-                          "
+                          @change="customLimit => handleChange('echart', { customLimit })"
                         ></a-input-number>
                       </a-col>
                     </a-row>
                     <UnitCheckbox
                       class="show-btn strict"
                       label="玫瑰图设置"
-                      :value="
-                        currentCom.setting.style.echart.customRoseType.show
-                      "
+                      :value="currentCom.setting.style.echart.customRoseType.show"
                       @change="value => handleRose('show', value)"
                     ></UnitCheckbox>
-                    <a-row
-                      class="unit-show-block mb-8"
-                      v-if="currentCom.setting.style.echart.customRoseType.show"
-                    >
+                    <a-row class="unit-show-block mb-8" v-if="currentCom.setting.style.echart.customRoseType.show">
                       <a-col :span="6" class="unit-show-block position">
                         <div class="unit-block-title">展示</div>
                       </a-col>
@@ -188,30 +148,18 @@
                       <a-col :span="18">
                         <a-radio-group
                           name="radioGroup"
-                          :value="
-                            currentCom.setting.style.echart.customRoseType.type
-                          "
-                          @change="
-                            event => handleRose('type', event.target.value)
-                          "
+                          :value="currentCom.setting.style.echart.customRoseType.type"
+                          @change="event => handleRose('type', event.target.value)"
                         >
-                          <a-radio value="radius">
-                            半径
-                          </a-radio>
-                          <a-radio value="area">
-                            面积
-                          </a-radio>
+                          <a-radio value="radius">半径</a-radio>
+                          <a-radio value="area">面积</a-radio>
                         </a-radio-group>
                       </a-col>
                       <!-- 形状 方式 end -->
                     </a-row>
                   </div>
                 </CollapsePanel>
-                <CollapsePanel
-                  class="content-item"
-                  panel="radius"
-                  header="半径"
-                >
+                <CollapsePanel class="content-item" panel="radius" header="半径">
                   <div class="setting-unit-content">
                     <a-row class="unit-show-block mb-8">
                       <a-col :span="8">
@@ -223,13 +171,8 @@
                         <a-input-number
                           :min="0"
                           :max="100"
-                          :value="
-                            currentCom.setting.style.echart.customInRadius
-                          "
-                          @change="
-                            customInRadius =>
-                              handleRadius('customInRadius', customInRadius)
-                          "
+                          :value="currentCom.setting.style.echart.customInRadius"
+                          @change="customInRadius => handleRadius('customInRadius', customInRadius)"
                         ></a-input-number>
                       </a-col>
                       <!-- 内半径 end -->
@@ -244,13 +187,8 @@
                         <a-input-number
                           :min="0"
                           :max="100"
-                          :value="
-                            currentCom.setting.style.echart.customOutRadius
-                          "
-                          @change="
-                            customOutRadius =>
-                              handleRadius('customOutRadius', customOutRadius)
-                          "
+                          :value="currentCom.setting.style.echart.customOutRadius"
+                          @change="customOutRadius => handleRadius('customOutRadius', customOutRadius)"
                         ></a-input-number>
                       </a-col>
                       <!-- 外半径 end -->
@@ -276,24 +214,16 @@
                       <!-- 内容显示 start -->
                       <a-col :span="16">
                         <a-select
-                          :value="
-                            currentCom.setting.style.echart.customFormatterWay
-                          "
-                          style="width:100%"
+                          :value="currentCom.setting.style.echart.customFormatterWay"
+                          style="width: 100%"
                           @change="handleFormatterWay"
                         >
                           <a-select-option value="name">维度</a-select-option>
                           <a-select-option value="value">值</a-select-option>
-                          <a-select-option value="percent"
-                            >百分比</a-select-option
-                          >
+                          <a-select-option value="percent">百分比</a-select-option>
                           <a-select-option value="nv">维度+值</a-select-option>
-                          <a-select-option value="np"
-                            >维度+百分比</a-select-option
-                          >
-                          <a-select-option value="vp"
-                            >值+百分比</a-select-option
-                          >
+                          <a-select-option value="np">维度+百分比</a-select-option>
+                          <a-select-option value="vp">值+百分比</a-select-option>
                           <a-select-option value="all">全部</a-select-option>
                         </a-select>
                       </a-col>
@@ -309,9 +239,7 @@
                       <a-col :span="4">
                         <div class="font-color">
                           <ColorPicker
-                            :value="
-                              currentCom.setting.style.echart.customLabel.color
-                            "
+                            :value="currentCom.setting.style.echart.customLabel.color"
                             @change="color => handleLabel('color', color)"
                           ></ColorPicker>
                         </div>
@@ -321,13 +249,9 @@
                       <!-- 标签 字体 大小 start -->
                       <a-col :span="16">
                         <a-input-number
-                          :value="
-                            currentCom.setting.style.echart.customLabel.fontSize
-                          "
+                          :value="currentCom.setting.style.echart.customLabel.fontSize"
                           :min="0"
-                          @change="
-                            fontSize => handleLabel('fontSize', fontSize)
-                          "
+                          @change="fontSize => handleLabel('fontSize', fontSize)"
                         />
                       </a-col>
                       <!-- 标签 字体 大小 end -->
@@ -340,57 +264,29 @@
                       <!-- 标签 位置 start -->
                       <a-radio-group
                         name="radioGroup"
-                        :value="
-                          currentCom.setting.style.echart.customLabel.position
-                        "
-                        @change="
-                          event => handleLabel('position', event.target.value)
-                        "
+                        :value="currentCom.setting.style.echart.customLabel.position"
+                        @change="event => handleLabel('position', event.target.value)"
                       >
-                        <a-radio value="inside">
-                          内部
-                        </a-radio>
-                        <a-radio value="outside">
-                          外部
-                        </a-radio>
+                        <a-radio value="inside">内部</a-radio>
+                        <a-radio value="outside">外部</a-radio>
                       </a-radio-group>
                       <!-- 标签 位置 end -->
                     </a-row>
                   </div>
                 </CollapsePanel>
-                <CollapsePanel
-                  class="content-item"
-                  panel="legend"
-                  header="图例"
-                >
+                <CollapsePanel class="content-item" panel="legend" header="图例">
                   <UnitLegend
                     :legend="currentCom.setting.style.echart.legend"
                     @change="
                       (key, value, isReset, beforeExecute, afterExecute) =>
-                        handleChange(
-                          key,
-                          value,
-                          isReset,
-                          beforeExecute,
-                          afterExecute
-                        )
+                        handleChange(key, value, isReset, beforeExecute, afterExecute)
                     "
                   ></UnitLegend>
                 </CollapsePanel>
-                <CollapsePanel
-                  class="content-item"
-                  panel="reset"
-                  :isTogger="false"
-                >
+                <CollapsePanel class="content-item" panel="reset" :isTogger="false">
                   <!-- 恢复默认配置 start -->
                   <div class="setting-unit-content">
-                    <a-button
-                      class="btn-ghost reset"
-                      type="link"
-                      icon="redo"
-                      block
-                      @click="handleClickReset"
-                    >
+                    <a-button class="btn-ghost reset" type="link" icon="redo" block @click="handleClickReset">
                       恢复默认配置
                     </a-button>
                   </div>
@@ -406,23 +302,23 @@
   </div>
 </template>
 <script>
-import BoardType from '@/views/screenManage/screen/setting/default-type'
-import StyleMethodMixin from '@/views/screenManage/screen/setting/style-method-mixin'
+import BoardType from '@/views/screenManage/screen/setting/default-type';
+import StyleMethodMixin from '@/views/screenManage/screen/setting/style-method-mixin';
 export default {
   name: `${BoardType.ChartPie}Setting`,
   mixins: [StyleMethodMixin],
   props: {
     currentCom: {
       type: Object,
-      required: true
-    }
+      required: true,
+    },
   },
   data() {
     return {
       tabAcitve: 'style', // tab选项栏活动目标
       dataCollapseActive: ['dimension', 'measure', 'reset'], // 折叠打开选项
-      styleCollapseActive: []
-    }
+      styleCollapseActive: [],
+    };
   },
   methods: {
     /**
@@ -431,9 +327,9 @@ export default {
     handleLabel(key, value) {
       this.handleChange('echart', {
         customLabel: {
-          [key]: value
-        }
-      })
+          [key]: value,
+        },
+      });
     },
     /**
      * @description 内容显示方式
@@ -446,43 +342,41 @@ export default {
         nv: '{b}\n{c}',
         np: '{b}\n{d}%',
         vp: '{c}\n{d}%',
-        all: '{b}\n{c} ({d})%'
-      }
-      const formatter = ways[value] || '{b}\n'
+        all: '{b}\n{c} ({d})%',
+      };
+      const formatter = ways[value] || '{b}\n';
       this.handleChange('echart', {
         customFormatterWay: value,
         customLabel: {
-          formatter
-        }
-      })
+          formatter,
+        },
+      });
     },
     /**
      * @description 处理半径
      */
     handleRadius(key, value) {
       this.handleChange('echart', {
-        [key]: value
-      })
+        [key]: value,
+      });
     },
     /**
      * @description 处理中心点
      */
     handleCenter(value, index) {
-      const center = [].concat(
-        this.currentCom.setting.style.echart.customCenter
-      )
-      center.splice(index, 1, value)
+      const center = [].concat(this.currentCom.setting.style.echart.customCenter);
+      center.splice(index, 1, value);
       this.handleChange('echart', {
-        customCenter: center
-      })
+        customCenter: center,
+      });
     },
     handleRose(key, value) {
       this.handleChange('echart', {
         customRoseType: {
-          [key]: value
-        }
-      })
-    }
-  }
-}
+          [key]: value,
+        },
+      });
+    },
+  },
+};
 </script>

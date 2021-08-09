@@ -1,14 +1,14 @@
-import BoardType from '@/views/screenManage/screen/setting/default-type'
-import BASE from '@/views/screenManage/screen/setting/default-base'
-import merge from 'lodash/merge'
-import cloneDeep from 'lodash/cloneDeep'
+import BoardType from '@/views/screenManage/screen/setting/default-type';
+import BASE from '@/views/screenManage/screen/setting/default-base';
+import merge from 'lodash/merge';
+import cloneDeep from 'lodash/cloneDeep';
 
 export default merge(cloneDeep(BASE), {
   type: BoardType.ChartRadar,
   setting: {
     data: {
       dimensions: [], // 维度
-      measures: [] // 度量
+      measures: [], // 度量
     },
     style: {
       echart: {
@@ -22,7 +22,7 @@ export default merge(cloneDeep(BASE), {
           bottom: 50,
           containLabel: true,
           backgroundColor: 'transparent',
-          borderColor: 'transparent'
+          borderColor: 'transparent',
         },
         legend: {
           // 图例
@@ -30,13 +30,13 @@ export default merge(cloneDeep(BASE), {
           orient: 'horizontal',
           textStyle: {
             color: '#ffffff',
-            fontSize: 16
+            fontSize: 16,
           },
           itemGap: 12,
           icon: 'circle',
           position: 'left-top',
           left: 'left',
-          top: 'top'
+          top: 'top',
         },
         customInRadius: 0, // 内半径
         customOutRadius: 75, // 外半径
@@ -47,7 +47,7 @@ export default merge(cloneDeep(BASE), {
           axisName: {
             // 外圈字体设置
             color: '#fff',
-            fontSize: 16
+            fontSize: 16,
           },
           indicator: [], // 指标
           splitNumber: 4, // 分割段数
@@ -57,15 +57,15 @@ export default merge(cloneDeep(BASE), {
               color: '#ccc',
               width: 1,
               type: 'solid',
-              opacity: 1
-            }
+              opacity: 1,
+            },
           },
           splitArea: {
             show: true,
             areaStyle: {
               color: ['rgba(250,250,250,0.3)', 'rgba(200,200,200,0.3)'],
-              opacity: 1
-            }
+              opacity: 1,
+            },
           },
           axisLine: {
             // 每条分割中心线
@@ -74,18 +74,18 @@ export default merge(cloneDeep(BASE), {
               color: '#ccc',
               width: 1,
               type: 'solid',
-              opacity: 1
-            }
-          }
+              opacity: 1,
+            },
+          },
         },
         customLabel: {
           show: false,
           color: '#fff',
           fontSize: 16,
-          position: 'inside' // 可选inside
+          position: 'inside', // 可选inside
         },
-        customOpacity: 0 // 透明度
-      }
-    }
-  }
-})
+        customOpacity: 0, // 透明度
+      },
+    },
+  },
+});

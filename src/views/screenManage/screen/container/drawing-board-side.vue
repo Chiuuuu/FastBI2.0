@@ -5,10 +5,7 @@
       <div class="header">
         <span class="title">页面图层</span>
         <span class="u-icon" @click="handleToggleSide">
-          <i
-            class="bi-data"
-            :class="toggleOpen ? 'bi-data-panel-open' : 'bi-data-panel-close'"
-          ></i>
+          <i class="bi-data" :class="toggleOpen ? 'bi-data-panel-open' : 'bi-data-panel-close'"></i>
         </span>
       </div>
       <!-- 图层列表 -->
@@ -26,9 +23,7 @@
             <span class="u-icon">
               <i class="bi-data" :class="getChartTypeIcon(com.type)"></i>
             </span>
-            <span class="item-title" :title="com.setting.style.title.text">{{
-              com.setting.style.title.text
-            }}</span>
+            <span class="item-title" :title="com.setting.style.title.text">{{ com.setting.style.title.text }}</span>
           </li>
         </ul>
       </div>
@@ -36,9 +31,9 @@
   </div>
 </template>
 <script>
-import { mapState } from 'vuex'
-import { mutationTypes as boardMutaion } from '@/store/modules/board'
-import BoardType from '@/views/screenManage/screen/setting/default-type'
+import { mapState } from 'vuex';
+import { mutationTypes as boardMutaion } from '@/store/modules/board';
+import BoardType from '@/views/screenManage/screen/setting/default-type';
 
 /**
  * @description 编辑大屏左侧图表层级菜单
@@ -47,19 +42,19 @@ export default {
   name: 'DrawingBoardSide',
   data() {
     return {
-      toggleOpen: false // 控制展开
-    }
+      toggleOpen: false, // 控制展开
+    };
   },
   computed: {
     ...mapState({
       // 当前组件
-      currentCom: state => state.board.currentCom
+      currentCom: state => state.board.currentCom,
     }),
     components() {
       // 组件列表
-      const components = [...this.$store.state.board.components]
-      return components.reverse()
-    }
+      const components = [...this.$store.state.board.components];
+      return components.reverse();
+    },
   },
   methods: {
     /**
@@ -84,27 +79,27 @@ export default {
         [BoardType.ShapeLine]: 'bi-data-gauge-chart',
         [BoardType.ShapeRound]: 'bi-data-gauge-chart',
         [BoardType.ShapeRectangular]: 'bi-data-gauge-chart',
-        [BoardType.Text]: 'bi-data-bar-chart'
-      }
-      return icon[type]
+        [BoardType.Text]: 'bi-data-bar-chart',
+      };
+      return icon[type];
     },
     /**
      * @description 展开/关闭 侧边栏
      */
     handleToggleSide() {
-      this.toggleOpen = !this.toggleOpen
+      this.toggleOpen = !this.toggleOpen;
     },
     /**
      * @description 图表选中(切换图表)
      */
     handleSideItemSelect(com) {
-      if (com === this.currentCom) return
+      if (com === this.currentCom) return;
       this.$store.commit(boardMutaion.SET_CURCOM, {
-        component: com
-      })
-    }
-  }
-}
+        component: com,
+      });
+    },
+  },
+};
 </script>
 <style lang="less" scoped>
 @import url('../../../../assets/less/common/variables.less');

@@ -19,18 +19,11 @@
       </a-col>
       <a-col :span="4">
         <div class="font-color">
-          <ColorPicker
-            :value="title.font.color"
-            @change="color => handleTitleFontChange('color', color)"
-          ></ColorPicker>
+          <ColorPicker :value="title.font.color" @change="color => handleTitleFontChange('color', color)"></ColorPicker>
         </div>
       </a-col>
       <a-col :span="16">
-        <a-input-number
-          :value="title.font.size"
-          :min="0"
-          @change="size => handleTitleFontChange('size', size)"
-        />
+        <a-input-number :value="title.font.size" :min="0" @change="size => handleTitleFontChange('size', size)" />
       </a-col>
     </a-row>
     <a-row class="unit-show-block mb-8">
@@ -73,13 +66,13 @@ export default {
     title: {
       // 标题配置
       type: Object,
-      default: () => {}
-    }
+      default: () => {},
+    },
   },
   data() {
     return {
-      align: ['left', 'center', 'right'] // 对齐方式
-    }
+      align: ['left', 'center', 'right'], // 对齐方式
+    };
   },
   methods: {
     /**
@@ -87,8 +80,8 @@ export default {
      */
     handleTitleChange(key, value) {
       this.handleChange('title', {
-        [key]: value
-      })
+        [key]: value,
+      });
     },
     /**
      * @description 设置标题字体
@@ -96,13 +89,13 @@ export default {
     handleTitleFontChange(key, value) {
       this.handleChange('title', {
         font: {
-          [key]: value
-        }
-      })
+          [key]: value,
+        },
+      });
     },
     handleChange(key, value) {
-      this.$emit('change', key, value)
-    }
-  }
-}
+      this.$emit('change', key, value);
+    },
+  },
+};
 </script>

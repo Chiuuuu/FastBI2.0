@@ -38,9 +38,7 @@
 
     <!-- 轴名称相关设置 start -->
     <div class="axis-name-box mb-8">
-      <p>
-        轴名称
-      </p>
+      <p>轴名称</p>
 
       <!-- 轴名称是否显示 start -->
       <UnitCheckbox
@@ -52,11 +50,7 @@
       <!-- 轴名称是否显示 end -->
 
       <!-- 轴名称输入框 start -->
-      <a-input
-        class="mb-8"
-        :value="axis.cache.name"
-        @blur="handleInputBlur"
-      ></a-input>
+      <a-input class="mb-8" :value="axis.cache.name" @blur="handleInputBlur"></a-input>
       <!-- 轴名称输入框 end -->
 
       <a-row class="unit-show-block mb-8">
@@ -84,14 +78,8 @@
         </a-col>
         <!-- 轴名称 字体 大小 start -->
       </a-row>
-      <p>
-        轴名称的内边距
-      </p>
-      <a-row
-        class="unit-show-block mb-2"
-        v-for="(row, index) in axisPosition"
-        :key="index"
-      >
+      <p>轴名称的内边距</p>
+      <a-row class="unit-show-block mb-2" v-for="(row, index) in axisPosition" :key="index">
         <template v-for="col in row">
           <div class="unit-show-block-row" :key="col.name">
             <a-col :span="3">
@@ -112,9 +100,7 @@
 
     <!-- 轴文字相关设置 start -->
     <div class="axis-name-box mb-8">
-      <p>
-        轴文字
-      </p>
+      <p>轴文字</p>
       <!-- 轴文字是否显示 start -->
       <UnitCheckbox
         class="show-btn"
@@ -130,10 +116,7 @@
         <!-- 轴文字 字体 颜色 start -->
         <a-col :span="4">
           <div class="font-color">
-            <ColorPicker
-              :value="axis.axisLabel.color"
-              @change="color => handleAxisLabel('color', color)"
-            ></ColorPicker>
+            <ColorPicker :value="axis.axisLabel.color" @change="color => handleAxisLabel('color', color)"></ColorPicker>
           </div>
         </a-col>
         <!-- 轴文字 字体 颜色 end -->
@@ -176,22 +159,28 @@ export default {
     axis: {
       // 坐标轴配置
       type: Object,
-      required: true
+      required: true,
     },
     type: {
       // 坐标轴类型
       type: String,
-      required: true
-    }
+      required: true,
+    },
   },
   data() {
     return {
       axisPosition: [
         // 内边距布局
-        [{ name: '上', index: 0 }, { name: '下', index: 2 }],
-        [{ name: '左', index: 3 }, { name: '右', index: 1 }]
-      ]
-    }
+        [
+          { name: '上', index: 0 },
+          { name: '下', index: 2 },
+        ],
+        [
+          { name: '左', index: 3 },
+          { name: '右', index: 1 },
+        ],
+      ],
+    };
   },
   methods: {
     /**
@@ -201,10 +190,10 @@ export default {
       this.handleChange('echart', {
         [this.type]: {
           axisLine: {
-            [key]: value
-          }
-        }
-      })
+            [key]: value,
+          },
+        },
+      });
     },
     /**
      * @description 坐标轴刻度标签的相关设置
@@ -213,10 +202,10 @@ export default {
       this.handleChange('echart', {
         [this.type]: {
           axisLabel: {
-            [key]: value
-          }
-        }
-      })
+            [key]: value,
+          },
+        },
+      });
     },
     /**
      * @description 坐标轴名称的文字样式
@@ -225,10 +214,10 @@ export default {
       this.handleChange('echart', {
         [this.type]: {
           nameTextStyle: {
-            [key]: value
-          }
-        }
-      })
+            [key]: value,
+          },
+        },
+      });
     },
     /**
      * @description 坐标轴名称内边距设置
@@ -236,9 +225,9 @@ export default {
      * @param {number} index 下标
      */
     handleAixsNamePadding(value, index) {
-      const padding = [].concat(this.axis.nameTextStyle.padding)
-      padding.splice(index, 1, value)
-      this.handleNameTextStyle('padding', padding)
+      const padding = [].concat(this.axis.nameTextStyle.padding);
+      padding.splice(index, 1, value);
+      this.handleNameTextStyle('padding', padding);
     },
     /**
      * @description 坐标轴名称是否显示
@@ -248,9 +237,9 @@ export default {
       this.handleChange('echart', {
         [this.type]: {
           nameShow: value,
-          name: value ? this.axis.cache.name : ''
-        }
-      })
+          name: value ? this.axis.cache.name : '',
+        },
+      });
     },
     /**
      * @description 坐标轴名称更改
@@ -261,19 +250,19 @@ export default {
         [this.type]: {
           name: event.target.value,
           cache: {
-            name: event.target.value
-          }
-        }
-      })
+            name: event.target.value,
+          },
+        },
+      });
     },
     /**
      * @description 暴露修改方法
      */
     handleChange(key, value) {
-      this.$emit('change', key, value)
-    }
-  }
-}
+      this.$emit('change', key, value);
+    },
+  },
+};
 </script>
 <style lang="less" scoped>
 .unit-show-block-row {

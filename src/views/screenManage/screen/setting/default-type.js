@@ -18,6 +18,6 @@ const BoardType = {
   Text: 'BoardText',
   ShapeLine: 'ShapeLine',
   ShapeRound: 'ShapeRound',
-  ShapeRectangular: 'ShapeRectangular'
-}
-export default BoardType
+  ShapeRectangular: 'ShapeRectangular',
+};
+export default BoardType;

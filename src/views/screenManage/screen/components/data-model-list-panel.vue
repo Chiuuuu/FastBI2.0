@@ -9,10 +9,7 @@
             <a-input-search placeholder="搜索数据接入" @change="handleSearch" />
           </div>
           <div class="list-content reset-scrollbar">
-            <a-empty
-              description="没有符合数据"
-              v-if="searchValue && searchList.length === 0"
-            ></a-empty>
+            <a-empty description="没有符合数据" v-if="searchValue && searchList.length === 0"></a-empty>
             <template v-else>
               <!-- 数据模型列表 start -->
               <template v-for="item in modelList">
@@ -26,15 +23,8 @@
                       <span class="title-span">{{ item.name }}</span>
                     </div>
                   </div>
-                  <ul
-                    class="items"
-                    v-if="item.children && item.children.length"
-                  >
-                    <li
-                      class="item added"
-                      v-for="child in item.children"
-                      :key="child.id"
-                    >
+                  <ul class="items" v-if="item.children && item.children.length">
+                    <li class="item added" v-for="child in item.children" :key="child.id">
                       <div class="title">
                         <div class="u-icon-file">
                           <a-icon type="file" />
@@ -68,8 +58,8 @@
   </div>
 </template>
 <script>
-import { menuSearchLoop } from '@/utils'
-import debounce from 'lodash/debounce'
+import { menuSearchLoop } from '@/utils';
+import debounce from 'lodash/debounce';
 
 /**
  * @description 数据模型
@@ -80,8 +70,8 @@ export default {
     show: {
       // 是否显示
       type: Boolean,
-      default: false
-    }
+      default: false,
+    },
   },
   data() {
     return {
@@ -103,7 +93,7 @@ export default {
           fileType: 1,
           icon: null,
           extension: null,
-          children: []
+          children: [],
         },
         {
           id: '544389440391335936',
@@ -120,7 +110,7 @@ export default {
           fileType: 1,
           icon: null,
           extension: null,
-          children: []
+          children: [],
         },
         {
           id: '544699568667086874',
@@ -153,7 +143,7 @@ export default {
               fileType: 1,
               icon: null,
               extension: null,
-              children: []
+              children: [],
             },
             {
               id: '567172090981371904',
@@ -170,7 +160,7 @@ export default {
               fileType: 1,
               icon: null,
               extension: null,
-              children: []
+              children: [],
             },
             {
               id: '567249544286687232',
@@ -187,7 +177,7 @@ export default {
               fileType: 1,
               icon: null,
               extension: null,
-              children: []
+              children: [],
             },
             {
               id: '567251235920793600',
@@ -204,7 +194,7 @@ export default {
               fileType: 1,
               icon: null,
               extension: null,
-              children: []
+              children: [],
             },
             {
               id: '567874321096101888',
@@ -221,9 +211,9 @@ export default {
               fileType: 1,
               icon: null,
               extension: null,
-              children: []
-            }
-          ]
+              children: [],
+            },
+          ],
         },
         {
           id: '567208462706397185',
@@ -240,7 +230,7 @@ export default {
           fileType: 1,
           icon: null,
           extension: null,
-          children: []
+          children: [],
         },
         {
           id: '567213591518105600',
@@ -257,7 +247,7 @@ export default {
           fileType: 1,
           icon: null,
           extension: null,
-          children: []
+          children: [],
         },
         {
           id: '567257532695171072',
@@ -274,7 +264,7 @@ export default {
           fileType: 1,
           icon: null,
           extension: null,
-          children: []
+          children: [],
         },
         {
           id: '567896616913063936',
@@ -307,18 +297,18 @@ export default {
               fileType: 1,
               icon: null,
               extension: null,
-              children: []
-            }
-          ]
-        }
-      ]
-    }
+              children: [],
+            },
+          ],
+        },
+      ],
+    };
   },
   computed: {
     modelList() {
       // 数据模型展示列表
-      return this.searchValue ? this.searchList : this.list
-    }
+      return this.searchValue ? this.searchList : this.list;
+    },
   },
   mounted() {
     // 获取数据模型列表
@@ -328,24 +318,24 @@ export default {
      * @description 关闭创建数据模型
      */
     handleClose() {
-      this.$emit('close', false)
+      this.$emit('close', false);
     },
     /**
      * @description 数据模型搜索
      */
-    handleSearch: debounce(function(event) {
-      this.searchList = []
-      this.searchValue = event.target.value
-      if (!this.searchValue) return
+    handleSearch: debounce(function (event) {
+      this.searchList = [];
+      this.searchValue = event.target.value;
+      if (!this.searchValue) return;
       this.list.forEach(item => {
-        const newItem = menuSearchLoop(item, this.searchValue)
+        const newItem = menuSearchLoop(item, this.searchValue);
         if (newItem) {
-          this.searchList.push(newItem)
+          this.searchList.push(newItem);
         }
-      })
-    }, 400)
-  }
-}
+      });
+    }, 400),
+  },
+};
 </script>
 <style lang="less" scoped>
 .data-model-list-panel {
@@ -472,8 +462,7 @@ export default {
         text-align: center;
         cursor: pointer;
         border: 0;
-        box-shadow: 0 0 0 1px rgba(63, 63, 68, 0.07),
-          0 1px 3px 0 rgba(63, 63, 68, 0.12);
+        box-shadow: 0 0 0 1px rgba(63, 63, 68, 0.07), 0 1px 3px 0 rgba(63, 63, 68, 0.12);
       }
     }
   }

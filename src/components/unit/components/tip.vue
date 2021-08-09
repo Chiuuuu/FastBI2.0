@@ -11,10 +11,10 @@ export default {
     content: {
       // 提示内容
       type: String,
-      default: ''
-    }
-  }
-}
+      default: '',
+    },
+  },
+};
 </script>
 <style lang="less">
 .unit-tip {

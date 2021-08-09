@@ -19,26 +19,26 @@
   </div>
 </template>
 <script>
-import BoardPageSetting from '../components/page/setting'
-import BoardTextSetting from '../components/text/setting'
-import ShapeLineSetting from '../components/shape/line/setting'
-import ShapeRoundSetting from '../components/shape/round/setting'
-import ShapeRectangularSetting from '../components/shape/rectangular/setting'
-import ChartLineSetting from '../components/chart/line/setting'
-import ChartBarSetting from '../components/chart/bar/setting'
-import ChartPieSetting from '../components/chart/pie/setting'
-import ChartRingPieSetting from '../components/chart/ring-pie/setting'
-import ChartNestPieSetting from '../components/chart/nest-pie/setting'
-import ChartRadarSetting from '../components/chart/radar/setting'
-import ChartGaugeSetting from '../components/chart/gauge/setting'
-import ChartScatterSetting from '../components/chart/scatter/setting'
-import ChartSunburstSetting from '../components/chart/sunburst/setting'
-import ChartTreemapSetting from '../components/chart/treemap/setting'
-import ChartHeatmapSetting from '../components/chart/heatmap/setting'
-import ChartProgressSetting from '../components/progress/setting'
-import ChartTableSetting from '../components/table/setting'
-import BoardSettingRight from '../components/board-setting-right'
-import { mapState } from 'vuex'
+import BoardPageSetting from '../components/page/setting';
+import BoardTextSetting from '../components/text/setting';
+import ShapeLineSetting from '../components/shape/line/setting';
+import ShapeRoundSetting from '../components/shape/round/setting';
+import ShapeRectangularSetting from '../components/shape/rectangular/setting';
+import ChartLineSetting from '../components/chart/line/setting';
+import ChartBarSetting from '../components/chart/bar/setting';
+import ChartPieSetting from '../components/chart/pie/setting';
+import ChartRingPieSetting from '../components/chart/ring-pie/setting';
+import ChartNestPieSetting from '../components/chart/nest-pie/setting';
+import ChartRadarSetting from '../components/chart/radar/setting';
+import ChartGaugeSetting from '../components/chart/gauge/setting';
+import ChartScatterSetting from '../components/chart/scatter/setting';
+import ChartSunburstSetting from '../components/chart/sunburst/setting';
+import ChartTreemapSetting from '../components/chart/treemap/setting';
+import ChartHeatmapSetting from '../components/chart/heatmap/setting';
+import ChartProgressSetting from '../components/progress/setting';
+import ChartTableSetting from '../components/table/setting';
+import BoardSettingRight from '../components/board-setting-right';
+import { mapState } from 'vuex';
 
 /**
  * @description 拖拽放置区的类型
@@ -57,8 +57,8 @@ export const DROG_TYPE = {
   MIN: 'min', // 最小值
   MAX: 'max', // 最大值
   XAXIS: 'xaxis', // x轴
-  YAXIS: 'yaxis' // y轴
-}
+  YAXIS: 'yaxis', // y轴
+};
 
 /**
  * @description 编辑大屏配置栏
@@ -67,13 +67,13 @@ export default {
   name: 'DrawingBoardSetting',
   provide() {
     return {
-      boardSettingWrapper: this
-    }
+      boardSettingWrapper: this,
+    };
   },
   data() {
     return {
-      DROG_TYPE
-    }
+      DROG_TYPE,
+    };
   },
   components: {
     ShapeLineSetting,
@@ -94,15 +94,15 @@ export default {
     ChartHeatmapSetting,
     ChartProgressSetting,
     ChartTableSetting,
-    BoardTextSetting
+    BoardTextSetting,
   },
   computed: {
     ...mapState({
       // 当前组件
-      currentCom: state => state.board.currentCom
-    })
-  }
-}
+      currentCom: state => state.board.currentCom,
+    }),
+  },
+};
 </script>
 <style lang="less">
 @import url('../../../../assets/less/common/variables.less');

@@ -1,14 +1,14 @@
-import BoardType from '@/views/screenManage/screen/setting/default-type'
-import BASE from '@/views/screenManage/screen/setting/default-base'
-import merge from 'lodash/merge'
-import cloneDeep from 'lodash/cloneDeep'
+import BoardType from '@/views/screenManage/screen/setting/default-type';
+import BASE from '@/views/screenManage/screen/setting/default-base';
+import merge from 'lodash/merge';
+import cloneDeep from 'lodash/cloneDeep';
 
 export default merge(cloneDeep(BASE), {
   type: BoardType.ChartBar,
   setting: {
     data: {
       dimensions: [], // 维度
-      measures: [] // 度量
+      measures: [], // 度量
     },
     style: {
       echart: {
@@ -22,10 +22,10 @@ export default merge(cloneDeep(BASE), {
           bottom: 50,
           containLabel: true,
           backgroundColor: 'transparent',
-          borderColor: 'transparent'
+          borderColor: 'transparent',
         },
         tooltip: {
-          trigger: 'axis'
+          trigger: 'axis',
         },
         legend: {
           // 图例
@@ -33,13 +33,13 @@ export default merge(cloneDeep(BASE), {
           orient: 'horizontal',
           textStyle: {
             color: '#ffffff',
-            fontSize: 16
+            fontSize: 16,
           },
           itemGap: 12,
           icon: 'circle',
           position: 'left-top',
           left: 'left',
-          top: 'top'
+          top: 'top',
         },
         xAxis: {
           // X轴设置
@@ -50,29 +50,29 @@ export default merge(cloneDeep(BASE), {
           name: 'x名称',
           cache: {
             // 控制缓存数据
-            name: 'x名称'
+            name: 'x名称',
           },
           nameShow: true,
           nameTextStyle: {
             color: 'yellow',
             fontSize: '12',
             align: 'right',
-            padding: [30, 0, 0, 0]
+            padding: [30, 0, 0, 0],
           },
           axisLabel: {
             // X轴 标签
             show: true,
             color: '#fff',
             fontSize: 12,
-            rotate: 0
+            rotate: 0,
           },
           axisLine: {
             // X轴 线
             show: true,
             lineStyle: {
               width: 1,
-              color: '#fff'
-            }
+              color: '#fff',
+            },
           },
           splitLine: {
             // 垂直网格线
@@ -80,12 +80,12 @@ export default merge(cloneDeep(BASE), {
             lineStyle: {
               width: 1,
               type: 'solid',
-              color: '#fff'
-            }
+              color: '#fff',
+            },
           },
           axisTick: {
-            show: false
-          }
+            show: false,
+          },
         },
         yAxis: {
           // Y轴设置
@@ -96,28 +96,28 @@ export default merge(cloneDeep(BASE), {
           name: 'y名称',
           cache: {
             // 控制缓存数据
-            name: 'y名称'
+            name: 'y名称',
           },
           nameShow: true,
           nameTextStyle: {
             color: '#fff',
             fontSize: 12,
-            padding: [0, 0, 40, 0]
+            padding: [0, 0, 40, 0],
           },
           axisLabel: {
             // Y轴 标签
             show: true,
             color: '#fff',
             fontSize: 12,
-            rotate: 0
+            rotate: 0,
           },
           axisLine: {
             // Y轴 线
             show: true,
             lineStyle: {
               width: 1,
-              color: '#fff'
-            }
+              color: '#fff',
+            },
           },
           splitLine: {
             // 水平网格线
@@ -125,19 +125,19 @@ export default merge(cloneDeep(BASE), {
             lineStyle: {
               width: 1,
               type: 'solid',
-              color: '#fff'
-            }
+              color: '#fff',
+            },
           },
           axisTick: {
-            show: false
-          }
+            show: false,
+          },
         },
         customLabel: {
           // 标签
           show: true,
           color: '#fff',
           fontSize: 16,
-          position: 'outside'
+          position: 'outside',
         },
         customShape: 'vertical', // vertical(垂直) || horizontal(水平)
         customBarWidth: 60,
@@ -151,9 +151,9 @@ export default merge(cloneDeep(BASE), {
           '#3ba272',
           '#fc8452',
           '#9a60b4',
-          '#ea7ccc'
-        ] // 柱状条颜色
-      }
-    }
-  }
-})
+          '#ea7ccc',
+        ], // 柱状条颜色
+      },
+    },
+  },
+});

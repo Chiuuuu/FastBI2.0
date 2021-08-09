@@ -41,12 +41,12 @@
   </div>
 </template>
 <script>
-import ContextMenu from '@/components/contextmenu'
-import BoardType from '@/views/screenManage/screen/setting/default-type'
-import { getStyle } from '@/utils'
-import { parameter, mutationTypes as boardMutaion } from '@/store/modules/board'
-import { mutationTypes as historyMutation } from '@/store/modules/history'
-import { mapState } from 'vuex'
+import ContextMenu from '@/components/contextmenu';
+import BoardType from '@/views/screenManage/screen/setting/default-type';
+import { getStyle } from '@/utils';
+import { parameter, mutationTypes as boardMutaion } from '@/store/modules/board';
+import { mutationTypes as historyMutation } from '@/store/modules/history';
+import { mapState } from 'vuex';
 
 /**
  * @description 图表外框区
@@ -57,98 +57,89 @@ export default {
     return {
       parameter,
       isShowShapMover: true, // 控制是否能拖动
-      pointList: [
-        'leftTop',
-        'top',
-        'rightTop',
-        'right',
-        'rightBottom',
-        'bottom',
-        'leftBottom',
-        'left'
-      ], // 八个方向
+      pointList: ['leftTop', 'top', 'rightTop', 'right', 'rightBottom', 'bottom', 'leftBottom', 'left'], // 八个方向
       dragging: false, // 是否正则拖拽
       contenxtMenu: [
         // 右键菜单
         {
           name: '复制',
-          onClick: this.handleCopy
+          onClick: this.handleCopy,
         },
         {
           name: '删除',
-          onClick: this.handleDele
+          onClick: this.handleDele,
         },
         {
           name: '排列',
           children: [
             {
               name: '置于顶层',
-              onClick: this.handleSetZIndex.bind(this, 'top')
+              onClick: this.handleSetZIndex.bind(this, 'top'),
             },
             {
               name: '置于底层',
-              onClick: this.handleSetZIndex.bind(this, 'bottom')
+              onClick: this.handleSetZIndex.bind(this, 'bottom'),
             },
             {
               name: '上移一层',
-              onClick: this.handleSetZIndex.bind(this, 'up')
+              onClick: this.handleSetZIndex.bind(this, 'up'),
             },
             {
               name: '下移一层',
-              onClick: this.handleSetZIndex.bind(this, 'down')
-            }
-          ]
-        }
-      ]
-    }
+              onClick: this.handleSetZIndex.bind(this, 'down'),
+            },
+          ],
+        },
+      ],
+    };
   },
   provide() {
     return {
-      shapeUnit: this
-    }
+      shapeUnit: this,
+    };
   },
   props: {
     config: {
       // 配置项信息
       type: Object,
-      required: true
+      required: true,
     },
     index: {
       // 组件下标
       type: Number,
-      required: true
+      required: true,
     },
     component: {
       // 组件信息
       type: Object,
-      required: true
-    }
+      required: true,
+    },
   },
   computed: {
     ...mapState({
       boardScale: state => state.board.scale,
-      model: state => state.board.model
+      model: state => state.board.model,
     }),
     isActive() {
       // 是否处于活动状态
-      return this.component === this.$store.state.board.currentCom
+      return this.component === this.$store.state.board.currentCom;
     },
     isShapeLine() {
-      return this.component.type === BoardType.ShapeLine
-    }
+      return this.component.type === BoardType.ShapeLine;
+    },
   },
   watch: {
     isActive(val) {
       if (!val) {
-        this.isShowShapMover = true
+        this.isShowShapMover = true;
       }
-    }
+    },
   },
   mounted() {
-    this.initContextMenu()
+    this.initContextMenu();
   },
   beforeDestroy() {
-    this.destoryContextMenu()
+    this.destoryContextMenu();
   },
   methods: {
     /**
@@ -161,8 +152,8 @@ export default {
     handleDele() {
       this.$store.commit(boardMutaion.DELE_COM, {
         component: this.component,
-        index: this.index
-      })
+        index: this.index,
+      });
     },
     /**
      * @description 设置图表层级
@@ -171,43 +162,41 @@ export default {
     handleSetZIndex(pos) {
       this.$store.commit(boardMutaion.SET_POSITION, {
         method: pos,
-        index: this.index
-      })
+        index: this.index,
+      });
     },
     /**
      * @description 初始化右键菜单
      */
     initContextMenu() {
-      const contextmenuDom = this.$refs['js-board-shape-unit']
-      contextmenuDom &&
-        contextmenuDom.addEventListener('contextmenu', this.handleConextMenu)
+      const contextmenuDom = this.$refs['js-board-shape-unit'];
+      contextmenuDom && contextmenuDom.addEventListener('contextmenu', this.handleConextMenu);
     },
     /**
      * @description 销毁右键菜单
      */
     destoryContextMenu() {
-      const contextmenuDom = this.$refs['js-board-shape-unit']
-      contextmenuDom &&
-        contextmenuDom.removeEventListener('contextmenu', this.handleConextMenu)
+      const contextmenuDom = this.$refs['js-board-shape-unit'];
+      contextmenuDom && contextmenuDom.removeEventListener('contextmenu', this.handleConextMenu);
     },
     /**
      * @description 初始化右键菜单
      */
     handleConextMenu(e) {
-      e.preventDefault()
-      this.handleCreateMenu(e)
+      e.preventDefault();
+      this.handleCreateMenu(e);
     },
     /**
      * @description 创建右键菜单
      */
     handleCreateMenu(e) {
-      e.stopPropagation()
-      const that = this
+      e.stopPropagation();
+      const that = this;
       function addEvent(target) {
-        target.$$fun = function() {
-          Array.prototype.push.call(arguments, that)
-          target.onClick.apply(this, arguments)
-        }
+        target.$$fun = function () {
+          Array.prototype.push.call(arguments, that);
+          target.onClick.apply(this, arguments);
+        };
       }
       // eslint-disable-next-line no-new
       new ContextMenu({
@@ -215,29 +204,28 @@ export default {
         menus: that.contenxtMenu.map(item => {
           if (item['children'] && item.children.length) {
             item.children.forEach(subitem => {
-              addEvent(subitem)
-            })
+              addEvent(subitem);
+            });
           } else {
-            addEvent(item)
+            addEvent(item);
           }
-          return item
+          return item;
         }),
         target: e,
-        handleMarkCancel: function() {}
-      })
+        handleMarkCancel: function () {},
+      });
     },
     /**
      * @description 获取旋转div的样式
      */
     getRotateStyle(type = 'left') {
-      const space =
-        this.config.style.size.height > 10 ? this.config.style.size.height : 10
+      const space = this.config.style.size.height > 10 ? this.config.style.size.height : 10;
       return {
         width: `${space}px`,
         height: `${space}px`,
         marginTop: `-${space / 2}px`,
-        [type === 'left' ? 'left' : 'right']: `-${space}px`
-      }
+        [type === 'left' ? 'left' : 'right']: `-${space}px`,
+      };
     },
     /**
      * @description 获取样式
@@ -249,81 +237,76 @@ export default {
           size,
           background,
           border,
-          echart: { rotate }
-        }
-      } = this.config
+          echart: { rotate },
+        },
+      } = this.config;
 
       let style = {
-        zIndex: this.index + 1
-      }
+        zIndex: this.index + 1,
+      };
 
       if (typeof rotate !== 'undefined') {
         // 当有旋转配置项的时候
-        style['transform'] = `rotate(${rotate}deg)`
+        style['transform'] = `rotate(${rotate}deg)`;
       }
 
       const checkProps = {
         position,
         size,
         background,
-        border
-      }
-      style = getStyle(
-        style,
-        checkProps,
-        ['width', 'height', 'left', 'top', 'radius'],
-        ['background', 'border']
-      )
+        border,
+      };
+      style = getStyle(style, checkProps, ['width', 'height', 'left', 'top', 'radius'], ['background', 'border']);
 
-      return style
+      return style;
     },
     /**
      * @description 鼠标按下一系列事件
      */
     handleMouseDown(event, type) {
       // 如果不能拖拽或者不是编辑模式则直接返回不操作
-      if (!this.isShowShapMover || this.model !== this.parameter.EDIT) return
+      if (!this.isShowShapMover || this.model !== this.parameter.EDIT) return;
 
-      this.dragging = false
+      this.dragging = false;
       this.$store.commit(boardMutaion.SET_CURCOM, {
-        component: this.component
-      })
+        component: this.component,
+      });
 
       // 设置画板的比例
-      const BOARD_SCALE = this.boardScale
+      const BOARD_SCALE = this.boardScale;
 
-      const SHAPE = 'shape'
+      const SHAPE = 'shape';
 
       // 记录开始拖拽的元素信息
       const startDragInfo = {
         size: Object.assign({}, this.config.style.size),
         position: Object.assign({}, this.config.style.position),
         echart: {
-          rotate: this.config.style.echart.rotate
-        }
-      }
+          rotate: this.config.style.echart.rotate,
+        },
+      };
 
       // 记录结束拖拽的元素信息
-      let endStyle = {}
+      let endStyle = {};
 
       // 记录开始拖拽的鼠标位置
       let startEvent = {
         x: event.clientX,
-        y: event.clientY
-      }
+        y: event.clientY,
+      };
 
       // 记录开始的距离
       const diff = {
         x: startEvent.x - startDragInfo.position.left * BOARD_SCALE,
-        y: startEvent.y - startDragInfo.position.top * BOARD_SCALE
-      }
+        y: startEvent.y - startDragInfo.position.top * BOARD_SCALE,
+      };
 
       if (typeof startDragInfo.echart.rotate !== 'undefined') {
         // 如果有旋转配置
         // 设置组件中心点
-        const rect = this.$el.getBoundingClientRect()
-        startEvent['centerX'] = Math.round(rect.left + rect.width / 2)
-        startEvent['centerY'] = Math.round(rect.top + rect.height / 2)
+        const rect = this.$el.getBoundingClientRect();
+        startEvent['centerX'] = Math.round(rect.left + rect.width / 2);
+        startEvent['centerY'] = Math.round(rect.top + rect.height / 2);
       }
 
       // 执行方法
@@ -337,41 +320,32 @@ export default {
         bottom: this.handleBottomMove,
         leftBottom: this.handleLeftBottomMove,
         left: this.handleLeftMove,
-        rotate: this.handleRotate
-      }
+        rotate: this.handleRotate,
+      };
 
       document.onmousemove = mouseEvent => {
-        this.dragging = true
+        this.dragging = true;
         // 设置当前组件的状态,防止拖动的情况更新组件
-        if (
-          this.dragging &&
-          this.$store.state.board.currentComState === 'stop'
-        ) {
+        if (this.dragging && this.$store.state.board.currentComState === 'stop') {
           this.$store.commit(boardMutaion.SET_CURCOM_STATE, {
             // 如果是shape就是移动状态，
             // 如果不是则为缩放状态
-            comState: type === SHAPE ? 'move' : 'zoom'
-          })
+            comState: type === SHAPE ? 'move' : 'zoom',
+          });
         }
 
-        const result = perform[type](
-          mouseEvent,
-          startDragInfo,
-          startEvent,
-          BOARD_SCALE,
-          diff
-        )
+        const result = perform[type](mouseEvent, startDragInfo, startEvent, BOARD_SCALE, diff);
 
         endStyle = {
-          ...result
-        }
+          ...result,
+        };
 
         this.$store.commit(boardMutaion.SET_SHAPE_STYLE, {
           style: {
-            ...endStyle
-          }
-        })
-      }
+            ...endStyle,
+          },
+        });
+      };
 
       // 鼠标放开的时候移除并重置相关事件
       document.onmouseup = () => {
@@ -386,258 +360,175 @@ export default {
             endStyle,
             afterExecute: () => {
               this.$store.commit(boardMutaion.SET_CURCOM_STATE, {
-                comState: 'stop'
-              })
-            }
-          })
-          this.dragging = false
+                comState: 'stop',
+              });
+            },
+          });
+          this.dragging = false;
         }
         // 鼠标弹起来的时候不再移动
-        document.onmousemove = null
+        document.onmousemove = null;
         // 预防鼠标弹起来后还会循环（即预防鼠标放上去的时候还会移动）
-        document.onmouseup = null
-      }
+        document.onmouseup = null;
+      };
     },
     /**
      * @description 图表单元框移动
      */
     handleShapMove(mouseEvent, startDragInfo, startEvent, BOARD_SCALE, diff) {
       // 用鼠标的位置减去鼠标相对元素的位置，得到元素的位置
-      const left = mouseEvent.clientX - diff.x
-      const top = mouseEvent.clientY - diff.y
+      const left = mouseEvent.clientX - diff.x;
+      const top = mouseEvent.clientY - diff.y;
       return {
         position: {
           left: Math.round(left / BOARD_SCALE),
-          top: Math.round(top / BOARD_SCALE)
-        }
-      }
+          top: Math.round(top / BOARD_SCALE),
+        },
+      };
     },
     /**
      * @description 图表单元框向左拉伸
      */
     handleLeftMove(mouseEvent, startDragInfo, startEvent, BOARD_SCALE, diff) {
-      let left = mouseEvent.clientX - diff.x
-      let width =
-        (startEvent.x -
-          mouseEvent.clientX +
-          startDragInfo.size.width * BOARD_SCALE) /
-        BOARD_SCALE
+      let left = mouseEvent.clientX - diff.x;
+      let width = (startEvent.x - mouseEvent.clientX + startDragInfo.size.width * BOARD_SCALE) / BOARD_SCALE;
 
-      width = Math.round(Math.max(1, width))
+      width = Math.round(Math.max(1, width));
       left =
-        width === 1
-          ? startDragInfo.size.width - width + startDragInfo.position.left
-          : Math.round(left / BOARD_SCALE)
+        width === 1 ? startDragInfo.size.width - width + startDragInfo.position.left : Math.round(left / BOARD_SCALE);
       return {
         size: {
-          width
+          width,
         },
         position: {
-          left
-        }
-      }
+          left,
+        },
+      };
     },
     /**
      * @description 图表单元框左上角拉伸
      */
-    handleLeftTopMove(
-      mouseEvent,
-      startDragInfo,
-      startEvent,
-      BOARD_SCALE,
-      diff
-    ) {
+    handleLeftTopMove(mouseEvent, startDragInfo, startEvent, BOARD_SCALE, diff) {
       const {
         size: { width },
-        position: { left }
-      } = this.handleLeftMove(
-        mouseEvent,
-        startDragInfo,
-        startEvent,
-        BOARD_SCALE,
-        diff
-      )
+        position: { left },
+      } = this.handleLeftMove(mouseEvent, startDragInfo, startEvent, BOARD_SCALE, diff);
       const {
         size: { height },
-        position: { top }
-      } = this.handleTopMove(
-        mouseEvent,
-        startDragInfo,
-        startEvent,
-        BOARD_SCALE,
-        diff
-      )
+        position: { top },
+      } = this.handleTopMove(mouseEvent, startDragInfo, startEvent, BOARD_SCALE, diff);
       return {
         size: {
           width,
-          height
+          height,
         },
         position: {
           left,
-          top
-        }
-      }
+          top,
+        },
+      };
     },
     /**
      * @description 图表单元框向上拉伸
      */
     handleTopMove(mouseEvent, startDragInfo, startEvent, BOARD_SCALE, diff) {
-      let top = mouseEvent.clientY - diff.y
-      let height =
-        (startEvent.y -
-          mouseEvent.clientY +
-          startDragInfo.size.height * BOARD_SCALE) /
-        BOARD_SCALE
-      height = Math.round(Math.max(1, height))
+      let top = mouseEvent.clientY - diff.y;
+      let height = (startEvent.y - mouseEvent.clientY + startDragInfo.size.height * BOARD_SCALE) / BOARD_SCALE;
+      height = Math.round(Math.max(1, height));
       top =
-        height === 1
-          ? startDragInfo.size.height - height + startDragInfo.position.top
-          : Math.round(top / BOARD_SCALE)
+        height === 1 ? startDragInfo.size.height - height + startDragInfo.position.top : Math.round(top / BOARD_SCALE);
       return {
         size: {
-          height
+          height,
         },
         position: {
-          top
-        }
-      }
+          top,
+        },
+      };
     },
     /**
      * @description 图表单元框右上角拉伸
      */
-    handleRightTopMove(
-      mouseEvent,
-      startDragInfo,
-      startEvent,
-      BOARD_SCALE,
-      diff
-    ) {
+    handleRightTopMove(mouseEvent, startDragInfo, startEvent, BOARD_SCALE, diff) {
       const {
-        size: { width }
-      } = this.handleRightMove(
-        mouseEvent,
-        startDragInfo,
-        startEvent,
-        BOARD_SCALE,
-        diff
-      )
+        size: { width },
+      } = this.handleRightMove(mouseEvent, startDragInfo, startEvent, BOARD_SCALE, diff);
       const {
         size: { height },
-        position: { top }
-      } = this.handleTopMove(
-        mouseEvent,
-        startDragInfo,
-        startEvent,
-        BOARD_SCALE,
-        diff
-      )
+        position: { top },
+      } = this.handleTopMove(mouseEvent, startDragInfo, startEvent, BOARD_SCALE, diff);
       return {
         size: {
           width,
-          height
+          height,
         },
         position: {
-          top
-        }
-      }
+          top,
+        },
+      };
     },
     /**
      * @description 图表单元框向右拉伸
      */
     handleRightMove(mouseEvent, startDragInfo, startEvent, BOARD_SCALE) {
-      let width =
-        (mouseEvent.clientX -
-          startEvent.x +
-          startDragInfo.size.width * BOARD_SCALE) /
-        BOARD_SCALE
-      width = Math.round(Math.max(1, width))
+      let width = (mouseEvent.clientX - startEvent.x + startDragInfo.size.width * BOARD_SCALE) / BOARD_SCALE;
+      width = Math.round(Math.max(1, width));
       return {
         size: {
-          width
-        }
-      }
+          width,
+        },
+      };
     },
     /**
      * @description 图表单元框右下角拉伸
      */
     handleRightBottomMove(mouseEvent, startDragInfo, startEvent, BOARD_SCALE) {
       const {
-        size: { width }
-      } = this.handleRightMove(
-        mouseEvent,
-        startDragInfo,
-        startEvent,
-        BOARD_SCALE
-      )
+        size: { width },
+      } = this.handleRightMove(mouseEvent, startDragInfo, startEvent, BOARD_SCALE);
       const {
-        size: { height }
-      } = this.handleBottomMove(
-        mouseEvent,
-        startDragInfo,
-        startEvent,
-        BOARD_SCALE
-      )
+        size: { height },
+      } = this.handleBottomMove(mouseEvent, startDragInfo, startEvent, BOARD_SCALE);
       return {
         size: {
           width,
-          height
-        }
-      }
+          height,
+        },
+      };
     },
     /**
      * @description 图表单元框向下拉伸
      */
     handleBottomMove(mouseEvent, startDragInfo, startEvent, BOARD_SCALE) {
-      let height =
-        (mouseEvent.clientY -
-          startEvent.y +
-          startDragInfo.size.height * BOARD_SCALE) /
-        BOARD_SCALE
-      height = Math.round(Math.max(1, height))
+      let height = (mouseEvent.clientY - startEvent.y + startDragInfo.size.height * BOARD_SCALE) / BOARD_SCALE;
+      height = Math.round(Math.max(1, height));
       return {
         size: {
-          height
-        }
-      }
+          height,
+        },
+      };
     },
     /**
      * @description 图表单元框左下角拉伸
      */
-    handleLeftBottomMove(
-      mouseEvent,
-      startDragInfo,
-      startEvent,
-      BOARD_SCALE,
-      diff
-    ) {
+    handleLeftBottomMove(mouseEvent, startDragInfo, startEvent, BOARD_SCALE, diff) {
       const {
         size: { width },
-        position: { left }
-      } = this.handleLeftMove(
-        mouseEvent,
-        startDragInfo,
-        startEvent,
-        BOARD_SCALE,
-        diff
-      )
+        position: { left },
+      } = this.handleLeftMove(mouseEvent, startDragInfo, startEvent, BOARD_SCALE, diff);
       const {
-        size: { height }
-      } = this.handleBottomMove(
-        mouseEvent,
-        startDragInfo,
-        startEvent,
-        BOARD_SCALE
-      )
+        size: { height },
+      } = this.handleBottomMove(mouseEvent, startDragInfo, startEvent, BOARD_SCALE);
 
       return {
         size: {
           width,
-          height
+          height,
         },
         position: {
-          left
-        }
-      }
+          left,
+        },
+      };
     },
     /**
      * @description 图表旋转
@@ -645,43 +536,29 @@ export default {
     handleRotate(mouseEvent, startDragInfo, startEvent) {
       // 旋转前的角度
       const rotateDegreeBefore =
-        Math.atan2(
-          startEvent.y - startEvent.centerY,
-          startEvent.x - startEvent.centerX
-        ) /
-        (Math.PI / 180)
+        Math.atan2(startEvent.y - startEvent.centerY, startEvent.x - startEvent.centerX) / (Math.PI / 180);
 
       // 旋转后的角度
       const rotateDegreeAfter =
-        Math.atan2(
-          mouseEvent.clientY - startEvent.centerY,
-          mouseEvent.clientX - startEvent.centerX
-        ) /
-        (Math.PI / 180)
+        Math.atan2(mouseEvent.clientY - startEvent.centerY, mouseEvent.clientX - startEvent.centerX) / (Math.PI / 180);
 
       // 获取旋转的角度值， startEvent.rotate 为初始角度值
-      const rotate = Math.round(
-        (startDragInfo.echart.rotate +
-          rotateDegreeAfter -
-          rotateDegreeBefore +
-          360) %
-          360
-      )
+      const rotate = Math.round((startDragInfo.echart.rotate + rotateDegreeAfter - rotateDegreeBefore + 360) % 360);
 
       return {
         echart: {
-          rotate
-        }
-      }
+          rotate,
+        },
+      };
     },
     /**
      * @description 图表单元框双击后不能拖动
      */
     handleDbClick() {
-      this.isShowShapMover = false
-    }
-  }
-}
+      this.isShowShapMover = false;
+    },
+  },
+};
 </script>
 <style lang="less" scoped>
 .board-shape-unit {

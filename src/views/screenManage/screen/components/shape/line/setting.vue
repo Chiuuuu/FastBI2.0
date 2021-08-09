@@ -8,11 +8,7 @@
           <Tabs v-model="tabAcitve">
             <TabPanel tab="style" label="样式">
               <Collapse v-model="styleCollapseActive">
-                <CollapsePanel
-                  class="content-item"
-                  panel="position"
-                  :isTogger="false"
-                >
+                <CollapsePanel class="content-item" panel="position" :isTogger="false">
                   <!-- 位置 start -->
                   <UnitPosition
                     class="setting-unit-content"
@@ -21,11 +17,7 @@
                   ></UnitPosition>
                   <!-- 位置 end -->
                 </CollapsePanel>
-                <CollapsePanel
-                  class="content-item"
-                  panel="size"
-                  :isTogger="false"
-                >
+                <CollapsePanel class="content-item" panel="size" :isTogger="false">
                   <!-- 尺寸 start -->
                   <UnitSize
                     class="setting-unit-content"
@@ -34,11 +26,7 @@
                   ></UnitSize>
                   <!-- 尺寸 end -->
                 </CollapsePanel>
-                <CollapsePanel
-                  class="content-item"
-                  panel="board"
-                  header="样式设置"
-                >
+                <CollapsePanel class="content-item" panel="board" header="样式设置">
                   <div class="setting-unit-content">
                     <a-row class="unit-show-block mb-8">
                       <a-col :span="6">
@@ -51,9 +39,7 @@
                           :min="0"
                           :step="0.1"
                           :max="1"
-                          @change="
-                            opacity => handleChange('echart', { opacity })
-                          "
+                          @change="opacity => handleChange('echart', { opacity })"
                         />
                       </a-col>
                       <!-- 透明度 end -->
@@ -64,9 +50,7 @@
                         class="mb-8"
                         label="背景颜色"
                         :color="currentCom.setting.style.echart.border.color"
-                        @change="
-                          color => handleChange('echart', { border: { color } })
-                        "
+                        @change="color => handleChange('echart', { border: { color } })"
                       ></UnitBackgroundColor>
                       <a-row class="unit-show-block mb-8">
                         <a-col :span="6">
@@ -76,23 +60,12 @@
                         <a-col :span="16" :offset="2">
                           <a-select
                             style="width: 100%"
-                            :value="
-                              currentCom.setting.style.echart.border.style
-                            "
-                            @change="
-                              style =>
-                                handleChange('echart', { border: { style } })
-                            "
+                            :value="currentCom.setting.style.echart.border.style"
+                            @change="style => handleChange('echart', { border: { style } })"
                           >
-                            <a-select-option value="solid">
-                              实线
-                            </a-select-option>
-                            <a-select-option value="dashed">
-                              虚线
-                            </a-select-option>
-                            <a-select-option value="dotted">
-                              点线
-                            </a-select-option>
+                            <a-select-option value="solid">实线</a-select-option>
+                            <a-select-option value="dashed">虚线</a-select-option>
+                            <a-select-option value="dotted">点线</a-select-option>
                           </a-select>
                         </a-col>
                         <!-- 边框 类型 end -->
@@ -100,11 +73,7 @@
                     </div>
                   </div>
                 </CollapsePanel>
-                <CollapsePanel
-                  class="content-item"
-                  panel="rotate"
-                  header="角度设置"
-                >
+                <CollapsePanel class="content-item" panel="rotate" header="角度设置">
                   <div class="setting-unit-content">
                     <a-input-number
                       :value="currentCom.setting.style.echart.rotate"
@@ -114,11 +83,7 @@
                     />
                   </div>
                 </CollapsePanel>
-                <CollapsePanel
-                  class="content-item"
-                  panel="bgAndBorder"
-                  header="背景和边框"
-                >
+                <CollapsePanel class="content-item" panel="bgAndBorder" header="背景和边框">
                   <div class="setting-unit-content">
                     <!-- 背景颜色 start -->
                     <UnitBackgroundColor
@@ -135,20 +100,10 @@
                     <!-- 边框设置 end -->
                   </div>
                 </CollapsePanel>
-                <CollapsePanel
-                  class="content-item"
-                  panel="reset"
-                  :isTogger="false"
-                >
+                <CollapsePanel class="content-item" panel="reset" :isTogger="false">
                   <!-- 恢复默认配置 start -->
                   <div class="setting-unit-content">
-                    <a-button
-                      class="btn-ghost reset"
-                      type="link"
-                      icon="redo"
-                      block
-                      @click="handleClickReset"
-                    >
+                    <a-button class="btn-ghost reset" type="link" icon="redo" block @click="handleClickReset">
                       恢复默认配置
                     </a-button>
                   </div>
@@ -164,55 +119,52 @@
   </div>
 </template>
 <script>
-import BoardType from '@/views/screenManage/screen/setting/default-type'
-import StyleMethodMixin from '@/views/screenManage/screen/setting/style-method-mixin'
+import BoardType from '@/views/screenManage/screen/setting/default-type';
+import StyleMethodMixin from '@/views/screenManage/screen/setting/style-method-mixin';
 export default {
   name: `${BoardType.ShapeLine}Setting`,
   mixins: [StyleMethodMixin],
   props: {
     currentCom: {
       type: Object,
-      required: true
-    }
+      required: true,
+    },
   },
   data() {
     return {
       tabAcitve: 'style', // tab选项栏活动目标
-      styleCollapseActive: []
-    }
+      styleCollapseActive: [],
+    };
   },
   computed: {
     newOption() {
       const startDragInfo = {
         ...this.currentCom.setting.style.size,
-        ...this.currentCom.setting.style.position
-      }
-      return this.getOpition(
-        startDragInfo,
-        this.currentCom.setting.style.echart.rotate
-      )
-    }
+        ...this.currentCom.setting.style.position,
+      };
+      return this.getOpition(startDragInfo, this.currentCom.setting.style.echart.rotate);
+    },
   },
   methods: {
     getOpition(startDragInfo, rotate) {
       // 将角度化为弧度
-      const angle = (Math.PI / 180) * rotate
+      const angle = (Math.PI / 180) * rotate;
 
-      const r = startDragInfo.width / 2
+      const r = startDragInfo.width / 2;
       // 斜边乘cos值等于即可求出x坐标
-      const x = Math.round(Math.cos(angle) * r)
+      const x = Math.round(Math.cos(angle) * r);
       // 斜边乘sin值等于即可求出y坐标
-      const y = Math.round(Math.sin(angle) * r)
+      const y = Math.round(Math.sin(angle) * r);
 
       return {
         left: startDragInfo.left + startDragInfo.width / 2 - x,
-        top: startDragInfo.top - y
-      }
+        top: startDragInfo.top - y,
+      };
     },
     handleRotate(rotate) {
       this.handleChange('echart', {
-        rotate
-      })
+        rotate,
+      });
     },
     /**
      * 求新坐标
@@ -221,21 +173,21 @@ export default {
      * @param {*} rotate 图标旋转后的角度
      */
     getTransform(rotate) {
-      const { style } = this.currentCom.setting
+      const { style } = this.currentCom.setting;
 
-      const { size, position } = style
-      const { width, height } = size
-      const { left, top } = position
+      const { size, position } = style;
+      const { width, height } = size;
+      const { left, top } = position;
 
       // 获取组件中心点位置
-      const centerX = +(left + width / 2)
-      const centerY = +(top + height / 2)
+      const centerX = +(left + width / 2);
+      const centerY = +(top + height / 2);
       return {
         centerX,
         centerY,
-        rotate
-      }
-    }
-  }
-}
+        rotate,
+      };
+    },
+  },
+};
 </script>

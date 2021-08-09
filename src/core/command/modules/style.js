@@ -1,7 +1,7 @@
-import cloneDeep from 'lodash/cloneDeep'
-import isFunction from 'lodash/isFunction'
-import merge from 'lodash/merge'
-import BaseCommand from './base'
+import cloneDeep from 'lodash/cloneDeep';
+import isFunction from 'lodash/isFunction';
+import merge from 'lodash/merge';
+import BaseCommand from './base';
 export default class StyleCommand extends BaseCommand {
   /**
    * Creates an instance of StyleCommand.
@@ -13,49 +13,43 @@ export default class StyleCommand extends BaseCommand {
    * @memberof StyleCommand
    */
   constructor(receiver, { isPage, style, store, beforeExecute, afterExecute }) {
-    super(receiver, { store, beforeExecute, afterExecute })
-    this.isPage = isPage || false
-    this.oldStyle = this.isPage
-      ? cloneDeep(this.receiver)
-      : cloneDeep(this.receiver.setting.style)
-    this.newStyle = style
+    super(receiver, { store, beforeExecute, afterExecute });
+    this.isPage = isPage || false;
+    this.oldStyle = this.isPage ? cloneDeep(this.receiver) : cloneDeep(this.receiver.setting.style);
+    this.newStyle = style;
   }
   executeFun() {
     // 由于 JavaScript 的限制，Vue 不能检测数组和对象的变化，因此使用深拷贝
-    this.receiver.setting.style = cloneDeep(
-      merge(this.receiver.setting.style, this.newStyle)
-    )
-    this.setCurCom()
+    this.receiver.setting.style = cloneDeep(merge(this.receiver.setting.style, this.newStyle));
+    this.setCurCom();
   }
   undoFun() {
-    this.receiver.setting.style = cloneDeep(
-      merge(this.receiver.setting.style, this.oldStyle)
-    )
-    this.setCurCom()
+    this.receiver.setting.style = cloneDeep(merge(this.receiver.setting.style, this.oldStyle));
+    this.setCurCom();
   }
   execute() {
     if (this.isPage) {
-      this.receiver = merge(this.receiver, this.newStyle)
+      this.receiver = merge(this.receiver, this.newStyle);
     } else {
       if (this.beforeExecute && isFunction(this.beforeExecute)) {
-        this.beforeExecute()
+        this.beforeExecute();
       }
-      this.executeFun()
+      this.executeFun();
       if (this.afterExecute && isFunction(this.afterExecute)) {
-        this.afterExecute()
+        this.afterExecute();
       }
     }
   }
   undo() {
     if (this.isPage) {
-      this.receiver = merge(this.receiver, this.oldStyle)
+      this.receiver = merge(this.receiver, this.oldStyle);
     } else {
       if (this.beforeExecute && isFunction(this.beforeExecute)) {
-        this.beforeExecute()
+        this.beforeExecute();
       }
-      this.undoFun()
+      this.undoFun();
       if (this.afterExecute && isFunction(this.afterExecute)) {
-        this.afterExecute()
+        this.afterExecute();
       }
     }
   }

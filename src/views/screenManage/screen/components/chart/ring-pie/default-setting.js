@@ -1,15 +1,15 @@
-import BoardType from '@/views/screenManage/screen/setting/default-type'
-import BASE from '@/views/screenManage/screen/setting/default-base'
-import merge from 'lodash/merge'
-import cloneDeep from 'lodash/cloneDeep'
+import BoardType from '@/views/screenManage/screen/setting/default-type';
+import BASE from '@/views/screenManage/screen/setting/default-base';
+import merge from 'lodash/merge';
+import cloneDeep from 'lodash/cloneDeep';
 
-const fontSize = 24
+const fontSize = 24;
 export default merge(cloneDeep(BASE), {
   type: BoardType.ChartRingPie,
   setting: {
     data: {
       progress: [], // 进度
-      targe: [] // 目标
+      targe: [], // 目标
     },
     style: {
       echart: {
@@ -23,7 +23,7 @@ export default merge(cloneDeep(BASE), {
           bottom: 50,
           containLabel: true,
           backgroundColor: 'transparent',
-          borderColor: 'transparent'
+          borderColor: 'transparent',
         },
         customTarge: true, // 是否启用目标值配置
         customFormatterWay: 'np',
@@ -34,15 +34,15 @@ export default merge(cloneDeep(BASE), {
           fontSize,
           rich: {
             sub: {
-              fontSize: 0.8 * fontSize
-            }
+              fontSize: 0.8 * fontSize,
+            },
           },
-          formatter: ''
+          formatter: '',
         },
         customInRadius: 60, // 内半径
         customOutRadius: 70, // 外半径
-        customColors: ['#5470c6', '#91cc75'] // 颜色
-      }
-    }
-  }
-})
+        customColors: ['#5470c6', '#91cc75'], // 颜色
+      },
+    },
+  },
+});

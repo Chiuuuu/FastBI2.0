@@ -8,12 +8,7 @@
     <!-- 大屏名称 start -->
     <div class="drawing-board-title">
       <span class="board-name-box" title="未命名大屏">
-        <input
-          type="text"
-          placeholder="请输入大屏标题"
-          :value="screenName"
-          @blur="handleChangeScreenName"
-        />
+        <input type="text" placeholder="请输入大屏标题" :value="screenName" @blur="handleChangeScreenName" />
         <!-- <span>未命名大屏</span> -->
       </span>
     </div>
@@ -146,16 +141,16 @@
   <!-- 工具栏 end -->
 </template>
 <script>
-import cloneDeep from 'lodash/cloneDeep'
-import merge from 'lodash/merge'
-import generateID from '@/utils/generateID'
-import chartList from '@/config/chart-list'
-import shapeList from '@/config/shape-list'
-import BoardType from '@/views/screenManage/screen/setting/default-type'
-import boardSetting from '@/views/screenManage/screen/setting'
-import { mutationTypes as historyMutation } from '@/store/modules/history'
-import { parameter, mutationTypes as boardMutaion } from '@/store/modules/board'
-import { mapState } from 'vuex'
+import cloneDeep from 'lodash/cloneDeep';
+import merge from 'lodash/merge';
+import generateID from '@/utils/generateID';
+import chartList from '@/config/chart-list';
+import shapeList from '@/config/shape-list';
+import BoardType from '@/views/screenManage/screen/setting/default-type';
+import boardSetting from '@/views/screenManage/screen/setting';
+import { mutationTypes as historyMutation } from '@/store/modules/history';
+import { parameter, mutationTypes as boardMutaion } from '@/store/modules/board';
+import { mapState } from 'vuex';
 
 /**
  * @description 编辑大屏菜单工具栏
@@ -168,24 +163,21 @@ export default {
       chartList, // 图表列表
       shapeList, // 形状列表
       BoardType, // 图表类型
-      screenName: '未命名大屏'
-    }
+      screenName: '未命名大屏',
+    };
   },
   computed: {
     ...mapState({
-      model: state => state.board.model
+      model: state => state.board.model,
     }),
     undoDisable() {
       // 是否可用撤销
-      return !(this.$store.state.history.historyRecordIndex > -1)
+      return !(this.$store.state.history.historyRecordIndex > -1);
     },
     redoDisable() {
       // 是否可用重做
-      return !(
-        this.$store.state.history.historyRecordIndex <
-        this.$store.state.history.historyRecordList.length - 1
-      )
-    }
+      return !(this.$store.state.history.historyRecordIndex < this.$store.state.history.historyRecordList.length - 1);
+    },
   },
   methods: {
     /**
@@ -196,60 +188,60 @@ export default {
      * @description 添加图表
      */
     handleAddChart(type) {
-      const id = generateID()
+      const id = generateID();
       const component = merge(cloneDeep(boardSetting[type]), {
         id,
         setting: {
           style: {
             title: {
-              text: `未命名图表${id}`
-            }
-          }
-        }
-      })
+              text: `未命名图表${id}`,
+            },
+          },
+        },
+      });
 
       this.$store.commit(boardMutaion.ADD_COM, {
-        component
-      })
+        component,
+      });
     },
     /**
      * @description 撤销功能
      */
     handleUndo() {
-      this.$store.commit(historyMutation.UNDO)
+      this.$store.commit(historyMutation.UNDO);
     },
     /**
      * @description 还原功能
      */
     handleRedo() {
-      this.$store.commit(historyMutation.REDO)
+      this.$store.commit(historyMutation.REDO);
     },
     /**
      * @description 大屏命名
      */
     handleChangeScreenName(event) {
-      const value = event.target.value
-      if (!value) return (event.target.value = this.screenName)
-      this.screenName = value
+      const value = event.target.value;
+      if (!value) return (event.target.value = this.screenName);
+      this.screenName = value;
     },
     /**
      * @description 大屏预览
      */
     handlePreview() {
       this.$store.commit(boardMutaion.SET_BOARD_MODEL, {
-        model: this.parameter.FULLSCREEN
-      })
+        model: this.parameter.FULLSCREEN,
+      });
     },
     /**
      * @description 大屏退出
      */
     handleOutEdit() {
       this.$router.push({
-        path: '/screen'
-      })
-    }
-  }
-}
+        path: '/screen',
+      });
+    },
+  },
+};
 </script>
 <style lang="less" scoped>
 @import url('../../../../assets/less/common/variables.less');

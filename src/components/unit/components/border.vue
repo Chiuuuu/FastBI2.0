@@ -7,21 +7,14 @@
       <!-- 边框 颜色 start -->
       <a-col :span="4">
         <div class="font-color">
-          <ColorPicker
-            :value="border.color"
-            @change="color => handleChange('border', { color })"
-          ></ColorPicker>
+          <ColorPicker :value="border.color" @change="color => handleChange('border', { color })"></ColorPicker>
         </div>
       </a-col>
       <!-- 边框 颜色 end -->
 
       <!-- 边框 大小 start -->
       <a-col :span="16">
-        <a-input-number
-          :value="border.width"
-          :min="0"
-          @change="width => handleChange('border', { width })"
-        />
+        <a-input-number :value="border.width" :min="0" @change="width => handleChange('border', { width })" />
       </a-col>
       <!-- 边框 大小 end -->
     </a-row>
@@ -31,20 +24,10 @@
       </a-col>
       <!-- 边框 类型 start -->
       <a-col :span="16" :offset="2">
-        <a-select
-          style="width: 100%"
-          :value="border.style"
-          @change="handleSelect"
-        >
-          <a-select-option value="solid">
-            实线
-          </a-select-option>
-          <a-select-option value="dashed">
-            虚线
-          </a-select-option>
-          <a-select-option value="dotted">
-            点线
-          </a-select-option>
+        <a-select style="width: 100%" :value="border.style" @change="handleSelect">
+          <a-select-option value="solid">实线</a-select-option>
+          <a-select-option value="dashed">虚线</a-select-option>
+          <a-select-option value="dotted">点线</a-select-option>
         </a-select>
       </a-col>
       <!-- 边框 类型 end -->
@@ -54,11 +37,7 @@
         <div class="unit-block-title">边框圆角</div>
       </a-col>
       <a-col :span="16">
-        <a-input-number
-          :value="border.radius"
-          :min="0"
-          @change="radius => handleChange('border', { radius })"
-        />
+        <a-input-number :value="border.radius" :min="0" @change="radius => handleChange('border', { radius })" />
       </a-col>
     </a-row>
   </div>
@@ -73,8 +52,8 @@ export default {
     border: {
       // 边框配置
       type: Object,
-      default: () => {}
-    }
+      default: () => {},
+    },
   },
   methods: {
     /**
@@ -82,12 +61,12 @@ export default {
      */
     handleSelect(value) {
       this.handleChange('border', {
-        style: value
-      })
+        style: value,
+      });
     },
     handleChange(key, value) {
-      this.$emit('change', key, value)
-    }
-  }
-}
+      this.$emit('change', key, value);
+    },
+  },
+};
 </script>

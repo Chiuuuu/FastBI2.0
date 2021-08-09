@@ -22,22 +22,22 @@ export default {
   props: {
     value: {
       type: [String, Number],
-      default: ''
-    }
+      default: '',
+    },
   },
   model: {
     prop: 'value',
-    event: 'change'
+    event: 'change',
   },
   data() {
     return {
-      headerList: []
-    }
+      headerList: [],
+    };
   },
   provide() {
     return {
-      tabs: this
-    }
+      tabs: this,
+    };
   },
   methods: {
     /*
@@ -47,21 +47,21 @@ export default {
       this.$slots.default.forEach(com => {
         this.headerList.push({
           name: com.componentInstance.label,
-          key: com.componentInstance.tab
-        })
-      })
+          key: com.componentInstance.tab,
+        });
+      });
     },
     /*
      * 切换tab选项
      */
     handleChange(item) {
-      this.$emit('change', item.key)
-    }
+      this.$emit('change', item.key);
+    },
   },
   mounted() {
-    this.getHeaderData()
-  }
-}
+    this.getHeaderData();
+  },
+};
 </script>
 <style lang="less">
 .tabs-wrapper {

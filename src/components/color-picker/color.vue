@@ -16,18 +16,9 @@
           <ColorPouList :visible="!isMore"></ColorPouList>
           <!-- 切换模式按钮 start -->
           <div class="color-block">
-            <button
-              class="event-btn submit"
-              @click="$event => handleSubmit($event)"
-            >
-              确定
-            </button>
+            <button class="event-btn submit" @click="$event => handleSubmit($event)">确定</button>
             <button class="event-btn cancel" @click="handleCancel">取消</button>
-            <button
-              type="button"
-              class="btn btn-menu-right"
-              @click="handleChangeModel"
-            >
+            <button type="button" class="btn btn-menu-right" @click="handleChangeModel">
               {{ isMore ? '简单模式' : '更多颜色' }}
             </button>
           </div>
@@ -41,32 +32,32 @@
   </div>
 </template>
 <script>
-import ColorPickerHeader from './components/header'
-import ColorCorrenction from './components/correnction'
-import ColorValueModel from './components/model'
-import ColorPouList from './components/list'
-import { parseColor } from './converColor'
+import ColorPickerHeader from './components/header';
+import ColorCorrenction from './components/correnction';
+import ColorValueModel from './components/model';
+import ColorPouList from './components/list';
+import { parseColor } from './converColor';
 export default {
   name: 'ColorPicker',
   props: {
     zIndex: {
       type: Number,
-      default: 1001
+      default: 1001,
     },
     parent: {
       type: Object,
-      default: () => {}
+      default: () => {},
     },
     target: {
       type: [MouseEvent, Object],
-      default: () => {}
+      default: () => {},
     },
     remove: {
-      type: Function
+      type: Function,
     },
     customStyle: {
-      type: Function
-    }
+      type: Function,
+    },
   },
   data() {
     return {
@@ -76,75 +67,70 @@ export default {
         type: 'RGBA',
         value: '',
         origin: '',
-        cacheH: ''
-      }
-    }
+        cacheH: '',
+      },
+    };
   },
   provide() {
     return {
-      colorPicker: this
-    }
+      colorPicker: this,
+    };
   },
   components: {
     ColorPickerHeader,
     ColorCorrenction,
     ColorValueModel,
-    ColorPouList
+    ColorPouList,
   },
   mounted() {
     this.model = {
       ...this.model,
-      ...parseColor(this.parent.value)
-    }
-    this.doWithPosition()
+      ...parseColor(this.parent.value),
+    };
+    this.doWithPosition();
   },
   methods: {
     doWithPosition() {
       // TODO:目前写死高度
-      const MAX = 315
-      const MIN = 231
+      const MAX = 315;
+      const MIN = 231;
       this.$nextTick(() => {
-        const Dom = this.parent.$refs['js-color-wrap'].getBoundingClientRect()
+        const Dom = this.parent.$refs['js-color-wrap'].getBoundingClientRect();
         // 浏览器可视区域的高度(兼容处理)
-        const clientHeight =
-          window.innerHeight ||
-          document.documentElement.clientHeight ||
-          document.body.clientHeight
+        const clientHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
         // 获取列表高度
-        const ctxMenuDomHeight = MAX
+        const ctxMenuDomHeight = MAX;
         // 点击目标的位置
-        const targetY = this.target.clientY
+        const targetY = this.target.clientY;
         // 是否超过底部
-        const isMoreThanBottom = targetY + ctxMenuDomHeight - clientHeight > 0
+        const isMoreThanBottom = targetY + ctxMenuDomHeight - clientHeight > 0;
         this.wrapStyle = {
           left: Dom.left - 3 + 'px',
-          top: isMoreThanBottom
-            ? Dom.top - MIN - 5 + 'px'
-            : Dom.bottom + 5 + 'px',
-          zIndex: this.zIndex + 1
-        }
-      })
+          top: isMoreThanBottom ? Dom.top - MIN - 5 + 'px' : Dom.bottom + 5 + 'px',
+          zIndex: this.zIndex + 1,
+        };
+      });
     },
     handleChangeModel() {
-      this.isMore = !this.isMore
+      this.isMore = !this.isMore;
     },
     update(color) {
       this.model = {
         ...this.model,
-        ...parseColor(color)
-      }
+        ...parseColor(color),
+      };
     },
     handleSubmit(event, color) {
-      this.parent.changeColor(color || this.model.value)
+      this.parent.changeColor(color || this.model.value);
     },
     handleCancel() {
-      this.parent.close()
+      this.parent.close();
     },
     setTransparent() {
-      this.parent.changeColor('transparent')
-    }
-  }
-}
+      this.parent.changeColor('transparent');
+    },
+  },
+};
 </script>
 <style lang="less">
 @import url('./index.less');

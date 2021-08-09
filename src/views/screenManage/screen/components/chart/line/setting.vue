@@ -8,11 +8,7 @@
           <Tabs v-model="tabAcitve">
             <TabPanel tab="data" label="数据">
               <Collapse v-model="dataCollapseActive">
-                <CollapsePanel
-                  class="content-item"
-                  panel="dimension"
-                  header="维度"
-                >
+                <CollapsePanel class="content-item" panel="dimension" header="维度">
                   <!-- 维度 start -->
                   <UnitField
                     class="setting-unit-content"
@@ -25,11 +21,7 @@
                   ></UnitField>
                   <!-- 维度 end -->
                 </CollapsePanel>
-                <CollapsePanel
-                  class="content-item"
-                  panel="measure"
-                  header="度量"
-                >
+                <CollapsePanel class="content-item" panel="measure" header="度量">
                   <!-- 度量 start -->
                   <UnitField
                     class="setting-unit-content"
@@ -42,11 +34,7 @@
                   ></UnitField>
                   <!-- 度量 end -->
                 </CollapsePanel>
-                <CollapsePanel
-                  class="content-item"
-                  panel="dataFilter"
-                  header="数据筛选"
-                >
+                <CollapsePanel class="content-item" panel="dataFilter" header="数据筛选">
                   <!-- 数据筛选 start -->
                   <UnitDataFilter class="setting-unit-content">
                     <template #tip>
@@ -59,11 +47,7 @@
             </TabPanel>
             <TabPanel tab="style" label="样式">
               <Collapse v-model="styleCollapseActive">
-                <CollapsePanel
-                  class="content-item"
-                  panel="position"
-                  :isTogger="false"
-                >
+                <CollapsePanel class="content-item" panel="position" :isTogger="false">
                   <!-- 位置 start -->
                   <UnitPosition
                     class="setting-unit-content"
@@ -72,11 +56,7 @@
                   ></UnitPosition>
                   <!-- 位置 end -->
                 </CollapsePanel>
-                <CollapsePanel
-                  class="content-item"
-                  panel="size"
-                  :isTogger="false"
-                >
+                <CollapsePanel class="content-item" panel="size" :isTogger="false">
                   <!-- 尺寸 start -->
                   <UnitSize
                     class="setting-unit-content"
@@ -94,11 +74,7 @@
                   ></UnitTitle>
                   <!-- 标题 end -->
                 </CollapsePanel>
-                <CollapsePanel
-                  class="content-item"
-                  panel="bgAndBorder"
-                  header="背景和边框"
-                >
+                <CollapsePanel class="content-item" panel="bgAndBorder" header="背景和边框">
                   <div class="setting-unit-content">
                     <!-- 背景颜色 start -->
                     <UnitBackgroundColor
@@ -115,11 +91,7 @@
                     <!-- 边框设置 end -->
                   </div>
                 </CollapsePanel>
-                <CollapsePanel
-                  class="content-item"
-                  panel="chartStyle"
-                  header="图表样式"
-                >
+                <CollapsePanel class="content-item" panel="chartStyle" header="图表样式">
                   <!-- 图表样式 start -->
                   <div class="setting-unit-content">
                     <a-row>
@@ -132,15 +104,9 @@
                           size="small"
                           @change="event => doWithSmooth(event.target.value)"
                         >
-                          <a-radio-button value="line">
-                            直线
-                          </a-radio-button>
-                          <a-radio-button value="curve">
-                            曲线
-                          </a-radio-button>
-                          <a-radio-button value="trapezoidal">
-                            梯形
-                          </a-radio-button>
+                          <a-radio-button value="line">直线</a-radio-button>
+                          <a-radio-button value="curve">曲线</a-radio-button>
+                          <a-radio-button value="trapezoidal">梯形</a-radio-button>
                         </a-radio-group>
                       </a-col>
                     </a-row>
@@ -153,11 +119,7 @@
                   </div>
                   <!-- 图表样式 end -->
                 </CollapsePanel>
-                <CollapsePanel
-                  class="content-item"
-                  panel="drawing"
-                  header="绘图区"
-                >
+                <CollapsePanel class="content-item" panel="drawing" header="绘图区">
                   <UnitDrawing
                     :grid="currentCom.setting.style.echart.grid"
                     :xAxis="currentCom.setting.style.echart.xAxis"
@@ -183,66 +145,38 @@
                   ></UnitYaxis>
                   <!-- Y轴 end -->
                 </CollapsePanel>
-                <CollapsePanel
-                  class="content-item"
-                  panel="legend"
-                  header="图例"
-                >
+                <CollapsePanel class="content-item" panel="legend" header="图例">
                   <UnitLegend
                     :legend="currentCom.setting.style.echart.legend"
                     @change="
                       (key, value, isReset, beforeExecute, afterExecute) =>
-                        handleChange(
-                          key,
-                          value,
-                          isReset,
-                          beforeExecute,
-                          afterExecute
-                        )
+                        handleChange(key, value, isReset, beforeExecute, afterExecute)
                     "
                   ></UnitLegend>
                 </CollapsePanel>
-                <CollapsePanel
-                  class="content-item"
-                  panel="legend"
-                  header="标签"
-                >
+                <CollapsePanel class="content-item" panel="legend" header="标签">
                   <div class="setting-unit-content">
                     <UnitLabel
                       :label="currentCom.setting.style.echart.customLabel"
                       @change="(key, value) => doWithLabel(key, value)"
-                    >
-                    </UnitLabel>
+                    ></UnitLabel>
                     <UnitCheckbox
                       class="show-btn strict"
                       label="是否允许标签重叠"
-                      :value="
-                        !currentCom.setting.style.echart.customLabelLayout
-                          .hideOverlap
-                      "
+                      :value="!currentCom.setting.style.echart.customLabelLayout.hideOverlap"
                       @change="
                         hideOverlap =>
                           doWithLabel('customLabelLayout', {
-                            hideOverlap: !hideOverlap
+                            hideOverlap: !hideOverlap,
                           })
                       "
                     ></UnitCheckbox>
                   </div>
                 </CollapsePanel>
-                <CollapsePanel
-                  class="content-item"
-                  panel="reset"
-                  :isTogger="false"
-                >
+                <CollapsePanel class="content-item" panel="reset" :isTogger="false">
                   <!-- 恢复默认配置 start -->
                   <div class="setting-unit-content">
-                    <a-button
-                      class="btn-ghost reset"
-                      type="link"
-                      icon="redo"
-                      block
-                      @click="handleClickReset"
-                    >
+                    <a-button class="btn-ghost reset" type="link" icon="redo" block @click="handleClickReset">
                       恢复默认配置
                     </a-button>
                   </div>
@@ -252,11 +186,7 @@
             </TabPanel>
             <TabPanel tab="interaction" label="交互">
               <Collapse>
-                <CollapsePanel
-                  class="content-item"
-                  panel="connect"
-                  header="图表联动"
-                >
+                <CollapsePanel class="content-item" panel="connect" header="图表联动">
                   <!-- 图表联动 start -->
                   <UnitConnect class="setting-unit-content"></UnitConnect>
                   <!-- 图表联动 end -->
@@ -271,23 +201,23 @@
   </div>
 </template>
 <script>
-import BoardType from '@/views/screenManage/screen/setting/default-type'
-import StyleMethodMixin from '@/views/screenManage/screen/setting/style-method-mixin'
+import BoardType from '@/views/screenManage/screen/setting/default-type';
+import StyleMethodMixin from '@/views/screenManage/screen/setting/style-method-mixin';
 export default {
   name: `${BoardType.ChartLine}Setting`,
   mixins: [StyleMethodMixin],
   props: {
     currentCom: {
       type: Object,
-      required: true
-    }
+      required: true,
+    },
   },
   data() {
     return {
       tabAcitve: 'style', // tab选项栏活动目标
       dataCollapseActive: ['dimension', 'measure', 'reset'], // 折叠打开选项
-      styleCollapseActive: []
-    }
+      styleCollapseActive: [],
+    };
   },
   methods: {
     /**
@@ -295,22 +225,22 @@ export default {
      */
     doWithSmooth(customLinear) {
       this.handleChange('echart', {
-        customLinear
-      })
+        customLinear,
+      });
     },
     /**
      * @description 处理 图表样式 是否显示标记点
      */
     doWithShowSymbol(customShowSymbol) {
       this.handleChange('echart', {
-        customShowSymbol
-      })
+        customShowSymbol,
+      });
     },
     doWithLabel(key, value) {
       this.handleChange('echart', {
-        [key]: value
-      })
-    }
-  }
-}
+        [key]: value,
+      });
+    },
+  },
+};
 </script>

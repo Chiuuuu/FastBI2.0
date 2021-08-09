@@ -13,10 +13,7 @@
                 :key="item.id"
               >
                 <p class="text">{{ item.name }}</p>
-                <div
-                  class="suffix-btn"
-                  @click="handleFiledOps($event, item)"
-                ></div>
+                <div class="suffix-btn" @click="handleFiledOps($event, item)"></div>
               </div>
             </div>
             <!-- 当有字段拖入的时候 start -->
@@ -30,12 +27,12 @@
   </div>
 </template>
 <script>
-import { mapState } from 'vuex'
-import { addClass, removeClass } from '@/utils/dom'
-import ContextMenu from '@/components/contextmenu'
-import { arrayAddData, arrayDeleData } from '@/utils'
-import { mutationTypes as historyMutation } from '@/store/modules/history'
-import { DROG_TYPE } from '@/views/screenManage/screen/container/drawing-board-setting.vue'
+import { mapState } from 'vuex';
+import { addClass, removeClass } from '@/utils/dom';
+import ContextMenu from '@/components/contextmenu';
+import { arrayAddData, arrayDeleData } from '@/utils';
+import { mutationTypes as historyMutation } from '@/store/modules/history';
+import { DROG_TYPE } from '@/views/screenManage/screen/container/drawing-board-setting.vue';
 
 /**
  * @description 字段设置
@@ -47,48 +44,48 @@ export default {
     type: {
       // 类型
       type: String,
-      default: ''
+      default: '',
     },
     receive: {
       // 接收放置的类型
       type: [String, Array],
-      required: true
+      required: true,
     },
     label: {
       // 标题
       type: String,
-      required: true
+      required: true,
     },
     list: {
       // 需要渲染的列表
       type: Array,
-      default: () => []
+      default: () => [],
     },
     limit: {
       // 是否开启限制
       type: Boolean,
-      default: false
+      default: false,
     },
     limitNum: {
       // 限制的个数
       type: Number,
-      default: 1
+      default: 1,
     },
     openAggre: {
       // 是否开启聚合函数
       type: Boolean,
-      default: false
+      default: false,
     },
     backgroundColor: {
       // 背景颜色
       type: String,
-      default: ''
-    }
+      default: '',
+    },
   },
   computed: {
     ...mapState({
       currentCom: state => state.board.currentCom,
-      dragdropState: state => state.dragdrop
+      dragdropState: state => state.dragdrop,
     }),
     isShowEmpty() {
       // 控制是否显示空的情况
@@ -98,41 +95,41 @@ export default {
       return (
         this.list.length === 0 ||
         (this.list.length !== 0 && !this.limit) ||
-        (this.list.length !== 0 &&
-          this.limit &&
-          this.list.length !== this.limitNum)
-      )
-    }
+        (this.list.length !== 0 && this.limit && this.list.length !== this.limitNum)
+      );
+    },
   },
   watch: {
     dragdropState: {
       deep: true,
       handler(dragdrop) {
         // 如果状态不存在
-        if (!dragdrop.status) return
+        if (!dragdrop.status) return;
 
         // 数组
         if (Array.isArray(this.receive)) {
-          if (!this.receive.includes(dragdrop.dropType)) return
+          if (!this.receive.includes(dragdrop.dropType)) return;
         } else if (dragdrop.dropType !== this.receive) {
           // 字符串
-          return
+          return;
         }
 
         // 根据状态执行方法
         const status = {
           dragmove: this.handleDragmove,
-          dragend: this.handleDragend
+          dragend: this.handleDragend,
+        };
+
+        const fn = status[dragdrop.status];
+
+        if (!fn) {
+          return console.error(`There is no status: [${dragdrop.status}]`);
         }
 
-        const fn = status[dragdrop.status]
-
-        if (!fn) { return console.error(`There is no status: [${dragdrop.status}]`) }
-
-        const dropDom = this.$refs['js-dropable']
-        fn(dropDom, dragdrop)
-      }
-    }
+        const dropDom = this.$refs['js-dropable'];
+        fn(dropDom, dragdrop);
+      },
+    },
   },
   methods: {
     /**
@@ -142,15 +139,15 @@ export default {
      */
     checkMouseInTarget(mouseEvent, target) {
       if (target) {
-        const x = mouseEvent.clientX
-        const y = mouseEvent.clientY
-        const left = target.getBoundingClientRect().left
-        const right = target.getBoundingClientRect().right
-        const top = target.getBoundingClientRect().top
-        const bottom = target.getBoundingClientRect().bottom
-        return x >= left && x <= right && y >= top && y <= bottom
+        const x = mouseEvent.clientX;
+        const y = mouseEvent.clientY;
+        const left = target.getBoundingClientRect().left;
+        const right = target.getBoundingClientRect().right;
+        const top = target.getBoundingClientRect().top;
+        const bottom = target.getBoundingClientRect().bottom;
+        return x >= left && x <= right && y >= top && y <= bottom;
       } else {
-        return false
+        return false;
       }
     },
     /**
@@ -158,14 +155,11 @@ export default {
      */
     handleIsDragInDrop(target, dragdrop) {
       if (target) {
-        const isMouseOnTarget = this.checkMouseInTarget(
-          dragdrop.mouseEvent,
-          target
-        )
+        const isMouseOnTarget = this.checkMouseInTarget(dragdrop.mouseEvent, target);
         if (isMouseOnTarget) {
-          this.handleSetDragoverDropStyle(target)
+          this.handleSetDragoverDropStyle(target);
         } else {
-          this.handleSetDragleaveDropStyle(target)
+          this.handleSetDragleaveDropStyle(target);
         }
       }
     },
@@ -173,48 +167,45 @@ export default {
      * @description 设置拖拽进入放置区样式
      */
     handleSetDragoverDropStyle(drop) {
-      drop && addClass(drop, 'drop-over')
+      drop && addClass(drop, 'drop-over');
     },
     /**
      * @description 设置拖拽离开放置区样式
      */
     handleSetDragleaveDropStyle(drop) {
-      drop && removeClass(drop, 'drop-over')
+      drop && removeClass(drop, 'drop-over');
     },
     /**
      * @description 设置拖拽移动过程
      */
     handleDragmove(dropDom, dragdrop) {
       // 拖拽过程中的样式
-      addClass(dropDom, 'drop-start')
+      addClass(dropDom, 'drop-start');
 
       // 判断是否拖拽是否在放置区
-      this.handleIsDragInDrop(dropDom, dragdrop)
+      this.handleIsDragInDrop(dropDom, dragdrop);
     },
     /**
      * @description 设置拖拽结束
      */
     handleDragend(dropDom, dragdrop) {
       // 依次样式
-      removeClass(dropDom, 'drop-start')
+      removeClass(dropDom, 'drop-start');
 
       // 判断结束的时候，拖拽是否在放置区
-      const isMouseOnTarget = this.checkMouseInTarget(
-        dragdrop.mouseEvent,
-        dropDom
-      )
+      const isMouseOnTarget = this.checkMouseInTarget(dragdrop.mouseEvent, dropDom);
       if (isMouseOnTarget) {
         // 如果在，则放入
-        this.handleDrop(dropDom, dragdrop)
+        this.handleDrop(dropDom, dragdrop);
       }
     },
     handleDrop(dropDom, dragdrop) {
       // 移除放入的样式
-      this.handleSetDragleaveDropStyle(dropDom)
+      this.handleSetDragleaveDropStyle(dropDom);
       this.handleDropField({
         dropType: this.type,
-        data: dragdrop.data
-      })
+        data: dragdrop.data,
+      });
     },
     /**
      * @description 字段放置之后执行
@@ -234,21 +225,23 @@ export default {
         [DROG_TYPE.INNERING]: this.handleInnerIng,
         [DROG_TYPE.XAXIS]: this.handleXaxis,
         [DROG_TYPE.YAXIS]: this.handleYaxis,
-        [DROG_TYPE.FIELD]: this.handleField
+        [DROG_TYPE.FIELD]: this.handleField,
+      };
+
+      const fun = funs[dropType];
+      if (!fun) {
+        return console.error(`There is no drag-in method: [${dropType}]`);
       }
 
-      const fun = funs[dropType]
-      if (!fun) { return console.error(`There is no drag-in method: [${dropType}]`) }
-
-      const result = fun(data, method)
+      const result = fun(data, method);
       if (result && typeof result.justSkip === 'undefined') {
         this.$store.commit(historyMutation.COMMAND, {
           commandType: 'Data',
           target: this.currentCom,
           store: this.$store,
           eventBus: this.$EventBus,
-          data: result
-        })
+          data: result,
+        });
       }
     },
     /**
@@ -260,120 +253,120 @@ export default {
     handleList(list, data, method = 'add') {
       if (method === 'add') {
         // 如果数据有重复则直接返回
-        if (list.includes(data)) return list
+        if (list.includes(data)) return list;
 
         // 1. 是否开启限制
         if (this.limit) {
           // 2. 列表长度是否为空
           if (list.length) {
             if (this.limitNum === 1) {
-              list.push(data)
-              list.shift()
+              list.push(data);
+              list.shift();
             } else if (list.length < this.limitNum) {
-              list.push(data)
+              list.push(data);
             } else if (list.length === this.limitNum) {
-              list.splice(this.limitNum - 1, 1, data)
+              list.splice(this.limitNum - 1, 1, data);
             }
           } else {
             // 3. 如果为空直接加入
-            arrayAddData(list, data)
+            arrayAddData(list, data);
           }
         } else {
           // 4. 不开启直接添加
-          arrayAddData(list, data)
+          arrayAddData(list, data);
         }
       } else if (method === 'dele') {
-        arrayDeleData(list, data)
+        arrayDeleData(list, data);
       }
-      return list
+      return list;
     },
     /**
      * @description 当放置到维度
      */
     handleSetDimension(data, method = 'add') {
       return {
-        dimensions: this.conversionArry('dimensions', data, method)
-      }
+        dimensions: this.conversionArry('dimensions', data, method),
+      };
     },
     /**
      * @description 当放置到度量
      */
     handleSetMeasure(data, method = 'add') {
       return {
-        measures: this.conversionArry('measures', data, method)
-      }
+        measures: this.conversionArry('measures', data, method),
+      };
     },
     /**
      * @description 当放置到经度
      */
     handleSetLong(data, method = 'add') {
       return {
-        long: this.conversionArry('long', data, method)
-      }
+        long: this.conversionArry('long', data, method),
+      };
     },
     /**
      * @description 当放置到进度
      */
     handleProgress(data, method = 'add') {
       return {
-        progress: this.conversionArry('progress', data, method)
-      }
+        progress: this.conversionArry('progress', data, method),
+      };
     },
     /**
      * @description 当放置到目标
      */
     handleTarge(data, method = 'add') {
       return {
-        targe: this.conversionArry('targe', data, method)
-      }
+        targe: this.conversionArry('targe', data, method),
+      };
     },
     /**
      * @description 当放置到外圈
      */
     handleOuterIng(data, method = 'add') {
       return {
-        outerIng: this.conversionArry('outerIng', data, method)
-      }
+        outerIng: this.conversionArry('outerIng', data, method),
+      };
     },
     /**
      * @description 当放置到内圈
      */
     handleInnerIng(data, method = 'add') {
       return {
-        innerIng: this.conversionArry('innerIng', data, method)
-      }
+        innerIng: this.conversionArry('innerIng', data, method),
+      };
     },
     /**
      * @description 当放置到X轴
      */
     handleXaxis(data, method = 'add') {
       return {
-        xaxis: this.conversionArry('xaxis', data, method)
-      }
+        xaxis: this.conversionArry('xaxis', data, method),
+      };
     },
     /**
      * @description 当放置到Y轴
      */
     handleYaxis(data, method = 'add') {
       return {
-        yaxis: this.conversionArry('yaxis', data, method)
-      }
+        yaxis: this.conversionArry('yaxis', data, method),
+      };
     },
     /**
      * @description 当放置到字段(维度度量都可以)
      */
     handleField(data, method = 'add') {
       return {
-        fields: this.conversionArry('fields', data, method)
-      }
+        fields: this.conversionArry('fields', data, method),
+      };
     },
     /**
      * @description 公共转换成数组
      */
     conversionArry(key, data, method) {
-      let arry = [].concat(this.currentCom.setting.data[key])
-      arry = this.handleList(arry, data, method)
-      return arry
+      let arry = [].concat(this.currentCom.setting.data[key]);
+      arry = this.handleList(arry, data, method);
+      return arry;
     },
     /**
      * @description 字段删除
@@ -382,8 +375,8 @@ export default {
       this.handleDropField({
         dropType: this.type,
         data: item,
-        method: 'dele'
-      })
+        method: 'dele',
+      });
     },
     /**
      * @description 获取右键菜单
@@ -392,32 +385,32 @@ export default {
       const normal = [
         {
           name: '删除',
-          onClick: this.handleFiledDelete
-        }
-      ]
+          onClick: this.handleFiledDelete,
+        },
+      ];
       const aggrengation = [
         {
           name: '聚合方式',
           children: [
             {
               name: '平均',
-              onClick: this.handleFiledDelete
-            }
-          ]
-        }
-      ]
-      return this.openAggre ? [...normal, ...aggrengation] : normal
+              onClick: this.handleFiledDelete,
+            },
+          ],
+        },
+      ];
+      return this.openAggre ? [...normal, ...aggrengation] : normal;
     },
     /**
      * @description 点击开启右键菜单
      */
     handleFiledOps(event, item) {
-      const that = this
+      const that = this;
       function addEvent(target) {
-        target.$$fun = function() {
-          Array.prototype.push.call(arguments, that, item)
-          target.onClick.apply(this, arguments)
-        }
+        target.$$fun = function () {
+          Array.prototype.push.call(arguments, that, item);
+          target.onClick.apply(this, arguments);
+        };
       }
       // eslint-disable-next-line no-new
       new ContextMenu({
@@ -425,17 +418,17 @@ export default {
         menus: that.getOpsMenu().map(item => {
           if (item['children'] && item.children.length) {
             item.children.forEach(subitem => {
-              addEvent(subitem)
-            })
+              addEvent(subitem);
+            });
           } else {
-            addEvent(item)
+            addEvent(item);
           }
-          return item
+          return item;
         }),
         target: event,
-        handleMarkCancel: function() {}
-      })
-    }
-  }
-}
+        handleMarkCancel: function () {},
+      });
+    },
+  },
+};
 </script>

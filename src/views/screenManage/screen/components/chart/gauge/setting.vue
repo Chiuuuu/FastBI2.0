@@ -8,11 +8,7 @@
           <Tabs v-model="tabAcitve">
             <TabPanel tab="data" label="数据">
               <Collapse v-model="dataCollapseActive">
-                <CollapsePanel
-                  class="content-item"
-                  panel="progress"
-                  header="进度值"
-                >
+                <CollapsePanel class="content-item" panel="progress" header="进度值">
                   <div class="setting-unit-content">
                     <!-- 度量 end -->
                     <UnitField
@@ -53,11 +49,7 @@
                     <!-- 最大值 end -->
                   </div>
                 </CollapsePanel>
-                <CollapsePanel
-                  class="content-item"
-                  panel="targe"
-                  header="目标值"
-                >
+                <CollapsePanel class="content-item" panel="targe" header="目标值">
                   <div class="setting-unit-content">
                     <!-- 度量 end -->
                     <UnitInputField
@@ -70,11 +62,7 @@
                     ></UnitInputField>
                   </div>
                 </CollapsePanel>
-                <CollapsePanel
-                  class="content-item"
-                  panel="dataFilter"
-                  header="数据筛选"
-                >
+                <CollapsePanel class="content-item" panel="dataFilter" header="数据筛选">
                   <!-- 数据筛选 start -->
                   <UnitDataFilter class="setting-unit-content">
                     <template #tip>
@@ -87,11 +75,7 @@
             </TabPanel>
             <TabPanel tab="style" label="样式">
               <Collapse v-model="styleCollapseActive">
-                <CollapsePanel
-                  class="content-item"
-                  panel="position"
-                  :isTogger="false"
-                >
+                <CollapsePanel class="content-item" panel="position" :isTogger="false">
                   <!-- 位置 start -->
                   <UnitPosition
                     class="setting-unit-content"
@@ -100,11 +84,7 @@
                   ></UnitPosition>
                   <!-- 位置 end -->
                 </CollapsePanel>
-                <CollapsePanel
-                  class="content-item"
-                  panel="size"
-                  :isTogger="false"
-                >
+                <CollapsePanel class="content-item" panel="size" :isTogger="false">
                   <!-- 尺寸 start -->
                   <UnitSize
                     class="setting-unit-content"
@@ -124,11 +104,7 @@
                   <!-- 标题 end -->
                 </CollapsePanel>
 
-                <CollapsePanel
-                  class="content-item"
-                  panel="bgAndBorder"
-                  header="背景和边框"
-                >
+                <CollapsePanel class="content-item" panel="bgAndBorder" header="背景和边框">
                   <div class="setting-unit-content">
                     <!-- 背景颜色 start -->
                     <UnitBackgroundColor
@@ -171,9 +147,7 @@
                             <a-input-number
                               :value="gague.title.fontSize"
                               :min="0"
-                              @change="
-                                fontSize => handleTarget('title', { fontSize })
-                              "
+                              @change="fontSize => handleTarget('title', { fontSize })"
                             />
                           </a-col>
                           <!-- 字体 大小 end -->
@@ -200,18 +174,8 @@
                         <a-input-number
                           :min="0"
                           :max="100"
-                          :value="
-                            handleSplitPercent(gague.title.offsetCenter[0])
-                          "
-                          @change="
-                            value =>
-                              handleCenter(
-                                'title',
-                                value,
-                                gague.title.offsetCenter,
-                                0
-                              )
-                          "
+                          :value="handleSplitPercent(gague.title.offsetCenter[0])"
+                          @change="value => handleCenter('title', value, gague.title.offsetCenter, 0)"
                         ></a-input-number>
                       </a-col>
                       <!-- 中心点 X坐标 end -->
@@ -221,29 +185,15 @@
                         <a-input-number
                           :min="0"
                           :max="100"
-                          :value="
-                            handleSplitPercent(gague.title.offsetCenter[1])
-                          "
-                          @change="
-                            value =>
-                              handleCenter(
-                                'title',
-                                value,
-                                gague.title.offsetCenter,
-                                1
-                              )
-                          "
+                          :value="handleSplitPercent(gague.title.offsetCenter[1])"
+                          @change="value => handleCenter('title', value, gague.title.offsetCenter, 1)"
                         ></a-input-number>
                       </a-col>
                       <!-- 中心点 Y坐标 end -->
                     </a-row>
                   </div>
                 </CollapsePanel>
-                <CollapsePanel
-                  class="content-item"
-                  panel="current"
-                  header="进度值设置"
-                >
+                <CollapsePanel class="content-item" panel="current" header="进度值设置">
                   <div class="setting-unit-content">
                     <UnitCheckbox
                       class="show-btn"
@@ -258,10 +208,7 @@
                         class="mb-8"
                         label="进度颜色"
                         :color="gague.progress.itemStyle.color"
-                        @change="
-                          color =>
-                            handleTarget('progress', { itemStyle: { color } })
-                        "
+                        @change="color => handleTarget('progress', { itemStyle: { color } })"
                       ></UnitBackgroundColor>
                       <!-- 进度值 颜色 end -->
                     </a-row>
@@ -289,9 +236,7 @@
                             <a-input-number
                               :value="gague.detail.fontSize"
                               :min="0"
-                              @change="
-                                fontSize => handleTarget('detail', { fontSize })
-                              "
+                              @change="fontSize => handleTarget('detail', { fontSize })"
                             />
                           </a-col>
                           <!-- 字体 大小 end -->
@@ -318,18 +263,8 @@
                         <a-input-number
                           :min="0"
                           :max="100"
-                          :value="
-                            handleSplitPercent(gague.detail.offsetCenter[0])
-                          "
-                          @change="
-                            value =>
-                              handleCenter(
-                                'detail',
-                                value,
-                                gague.detail.offsetCenter,
-                                0
-                              )
-                          "
+                          :value="handleSplitPercent(gague.detail.offsetCenter[0])"
+                          @change="value => handleCenter('detail', value, gague.detail.offsetCenter, 0)"
                         ></a-input-number>
                       </a-col>
                       <!-- 中心点 X坐标 end -->
@@ -339,18 +274,8 @@
                         <a-input-number
                           :min="0"
                           :max="100"
-                          :value="
-                            handleSplitPercent(gague.detail.offsetCenter[1])
-                          "
-                          @change="
-                            value =>
-                              handleCenter(
-                                'detail',
-                                value,
-                                gague.detail.offsetCenter,
-                                1
-                              )
-                          "
+                          :value="handleSplitPercent(gague.detail.offsetCenter[1])"
+                          @change="value => handleCenter('detail', value, gague.detail.offsetCenter, 1)"
                         ></a-input-number>
                       </a-col>
                       <!-- 中心点 Y坐标 end -->
@@ -358,19 +283,13 @@
                   </div>
                 </CollapsePanel>
 
-                <CollapsePanel
-                  class="content-item"
-                  panel="target"
-                  header="目标值设置"
-                >
+                <CollapsePanel class="content-item" panel="target" header="目标值设置">
                   <div class="setting-unit-content">
                     <!-- 进度颜色 start -->
                     <UnitBackgroundColor
                       class="mb-8"
                       label="进度颜色"
-                      :color="
-                        currentCom.setting.style.echart.customTarget.color
-                      "
+                      :color="currentCom.setting.style.echart.customTarget.color"
                       @change="color => handleTargetColor('color', color)"
                     ></UnitBackgroundColor>
                     <!-- 进度颜色 end -->
@@ -379,22 +298,13 @@
                     <UnitBackgroundColor
                       class="mb-8"
                       label="背景颜色"
-                      :color="
-                        currentCom.setting.style.echart.customTarget
-                          .backgroundColor
-                      "
-                      @change="
-                        color => handleTargetColor('backgroundColor', color)
-                      "
+                      :color="currentCom.setting.style.echart.customTarget.backgroundColor"
+                      @change="color => handleTargetColor('backgroundColor', color)"
                     ></UnitBackgroundColor>
                     <!-- 背景颜色 end -->
                   </div>
                 </CollapsePanel>
-                <CollapsePanel
-                  class="content-item"
-                  panel="pointer"
-                  header="指针设置"
-                >
+                <CollapsePanel class="content-item" panel="pointer" header="指针设置">
                   <div class="setting-unit-content">
                     <UnitCheckbox
                       class="show-btn block-checkbox"
@@ -411,7 +321,7 @@
                         @change="
                           color =>
                             handleTarget('pointer', {
-                              itemStyle: { color }
+                              itemStyle: { color },
                             })
                         "
                       ></UnitBackgroundColor>
@@ -444,10 +354,7 @@
                           :min="0"
                           :max="100"
                           :value="handleSplitPercent(gague.pointer.length)"
-                          @change="
-                            value =>
-                              handleTarget('pointer', { length: `${value}%` })
-                          "
+                          @change="value => handleTarget('pointer', { length: `${value}%` })"
                         ></a-input-number>
                       </a-col>
                       <!-- 指针高度 end -->
@@ -464,18 +371,8 @@
                         <a-input-number
                           :min="-100"
                           :max="100"
-                          :value="
-                            handleSplitPercent(gague.pointer.offsetCenter[0])
-                          "
-                          @change="
-                            value =>
-                              handleCenter(
-                                'pointer',
-                                value,
-                                gague.pointer.offsetCenter,
-                                0
-                              )
-                          "
+                          :value="handleSplitPercent(gague.pointer.offsetCenter[0])"
+                          @change="value => handleCenter('pointer', value, gague.pointer.offsetCenter, 0)"
                         ></a-input-number>
                       </a-col>
                       <!-- 中心点 X坐标 end -->
@@ -485,29 +382,15 @@
                         <a-input-number
                           :min="-100"
                           :max="100"
-                          :value="
-                            handleSplitPercent(gague.pointer.offsetCenter[1])
-                          "
-                          @change="
-                            value =>
-                              handleCenter(
-                                'pointer',
-                                value,
-                                gague.pointer.offsetCenter,
-                                1
-                              )
-                          "
+                          :value="handleSplitPercent(gague.pointer.offsetCenter[1])"
+                          @change="value => handleCenter('pointer', value, gague.pointer.offsetCenter, 1)"
                         ></a-input-number>
                       </a-col>
                       <!-- 中心点 Y坐标 end -->
                     </a-row>
                   </div>
                 </CollapsePanel>
-                <CollapsePanel
-                  class="content-item"
-                  panel="style"
-                  header="样式设置"
-                >
+                <CollapsePanel class="content-item" panel="style" header="样式设置">
                   <div class="setting-unit-content">
                     <!-- 背景颜色 start -->
                     <UnitBackgroundColor
@@ -528,10 +411,7 @@
                           :value="currentCom.setting.style.echart.customRadius"
                           :min="0"
                           :max="100"
-                          @change="
-                            customRadius =>
-                              handleChange('echart', { customRadius })
-                          "
+                          @change="customRadius => handleChange('echart', { customRadius })"
                         />
                       </a-col>
                     </a-row>
@@ -566,20 +446,10 @@
                     </a-row>
                   </div>
                 </CollapsePanel>
-                <CollapsePanel
-                  class="content-item"
-                  panel="reset"
-                  :isTogger="false"
-                >
+                <CollapsePanel class="content-item" panel="reset" :isTogger="false">
                   <!-- 恢复默认配置 start -->
                   <div class="setting-unit-content">
-                    <a-button
-                      class="btn-ghost reset"
-                      type="link"
-                      icon="redo"
-                      block
-                      @click="handleClickReset"
-                    >
+                    <a-button class="btn-ghost reset" type="link" icon="redo" block @click="handleClickReset">
                       恢复默认配置
                     </a-button>
                   </div>
@@ -595,84 +465,84 @@
   </div>
 </template>
 <script>
-import BoardType from '@/views/screenManage/screen/setting/default-type'
-import StyleMethodMixin from '@/views/screenManage/screen/setting/style-method-mixin'
+import BoardType from '@/views/screenManage/screen/setting/default-type';
+import StyleMethodMixin from '@/views/screenManage/screen/setting/style-method-mixin';
 export default {
   name: `${BoardType.ChartGauge}Setting`,
   mixins: [StyleMethodMixin],
   props: {
     currentCom: {
       type: Object,
-      required: true
-    }
+      required: true,
+    },
   },
   computed: {
     gague() {
-      return this.currentCom.setting.style.echart.customOptions
-    }
+      return this.currentCom.setting.style.echart.customOptions;
+    },
   },
   data() {
     return {
       tabAcitve: 'style', // tab选项栏活动目标
       dataCollapseActive: ['progress', 'range', 'targe'], // 折叠打开选项
-      styleCollapseActive: []
-    }
+      styleCollapseActive: [],
+    };
   },
   methods: {
     handleTargetColor(key, value) {
       this.handleChange('echart', {
         customTarget: {
-          [key]: value
-        }
-      })
+          [key]: value,
+        },
+      });
     },
     handleBG(value) {
-      const ary = [].concat(this.gague.axisLine.lineStyle.color[0])
-      ary.splice(1, 1, value)
+      const ary = [].concat(this.gague.axisLine.lineStyle.color[0]);
+      ary.splice(1, 1, value);
       this.handleChange('echart', {
         customOptions: {
           axisLine: {
             lineStyle: {
-              color: [ary]
-            }
-          }
-        }
-      })
+              color: [ary],
+            },
+          },
+        },
+      });
     },
     handleSplitPercent(value) {
-      return value.split('%').shift()
+      return value.split('%').shift();
     },
     handleCenter(key, value, ary, index) {
-      ary = [].concat(ary)
-      ary.splice(index, 1, `${value}%`)
+      ary = [].concat(ary);
+      ary.splice(index, 1, `${value}%`);
       this.handleTarget(key, {
-        offsetCenter: ary
-      })
+        offsetCenter: ary,
+      });
     },
     handleStoreCenter(value, index) {
-      const ary = [].concat(this.gague.center)
-      ary.splice(index, 1, `${value}%`)
-      this.handleTarget('center', ary)
+      const ary = [].concat(this.gague.center);
+      ary.splice(index, 1, `${value}%`);
+      this.handleTarget('center', ary);
     },
     handleTargetShow(value) {
       this.handleChange('echart', {
         customOptions: {
           progress: {
-            show: value
+            show: value,
           },
           detail: {
-            show: value
-          }
-        }
-      })
+            show: value,
+          },
+        },
+      });
     },
     handleTarget(key, value) {
       this.handleChange('echart', {
         customOptions: {
-          [key]: value
-        }
-      })
-    }
-  }
-}
+          [key]: value,
+        },
+      });
+    },
+  },
+};
 </script>

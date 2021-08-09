@@ -6,21 +6,14 @@
     <!-- 颜色 start -->
     <a-col :span="4">
       <div class="font-color">
-        <ColorPicker
-          :value="font.color"
-          @change="color => handleChange('color', color)"
-        ></ColorPicker>
+        <ColorPicker :value="font.color" @change="color => handleChange('color', color)"></ColorPicker>
       </div>
     </a-col>
     <!-- 颜色 end -->
 
     <!-- 大小 start -->
     <a-col :span="16">
-      <a-input-number
-        :value="font.width"
-        :min="0"
-        @change="width => handleChange('width', width)"
-      />
+      <a-input-number :value="font.width" :min="0" @change="width => handleChange('width', width)" />
     </a-col>
     <!-- 大小 end -->
   </a-row>
@@ -31,17 +24,17 @@ export default {
   props: {
     label: {
       type: String,
-      default: '字体'
+      default: '字体',
     },
     font: {
       type: Object,
-      required: true
-    }
+      required: true,
+    },
   },
   methods: {
     handleChange(key, value) {
-      this.$emit('change', key, value)
-    }
-  }
-}
+      this.$emit('change', key, value);
+    },
+  },
+};
 </script>

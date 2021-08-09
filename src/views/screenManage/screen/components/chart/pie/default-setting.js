@@ -1,15 +1,15 @@
-import BoardType from '@/views/screenManage/screen/setting/default-type'
-import BASE from '@/views/screenManage/screen/setting/default-base'
-import merge from 'lodash/merge'
-import cloneDeep from 'lodash/cloneDeep'
+import BoardType from '@/views/screenManage/screen/setting/default-type';
+import BASE from '@/views/screenManage/screen/setting/default-base';
+import merge from 'lodash/merge';
+import cloneDeep from 'lodash/cloneDeep';
 
-const fontSize = 14
+const fontSize = 14;
 export default merge(cloneDeep(BASE), {
   type: BoardType.ChartPie,
   setting: {
     data: {
       dimensions: [], // 维度
-      measures: [] // 度量
+      measures: [], // 度量
     },
     style: {
       echart: {
@@ -23,10 +23,10 @@ export default merge(cloneDeep(BASE), {
           bottom: 50,
           containLabel: true,
           backgroundColor: 'transparent',
-          borderColor: 'transparent'
+          borderColor: 'transparent',
         },
         tooltip: {
-          trigger: 'item'
+          trigger: 'item',
         },
         legend: {
           // 图例
@@ -34,13 +34,13 @@ export default merge(cloneDeep(BASE), {
           orient: 'horizontal',
           textStyle: {
             color: '#ffffff',
-            fontSize: 16
+            fontSize: 16,
           },
           itemGap: 12,
           icon: 'circle',
           position: 'left-top',
           left: 'left',
-          top: 'top'
+          top: 'top',
         },
         customLimit: 5,
         customFormatterWay: 'nv',
@@ -53,16 +53,16 @@ export default merge(cloneDeep(BASE), {
           fontSize,
           minMargin: fontSize,
           edgeDistance: 1.5 * fontSize,
-          lineHeight: 1.5 * fontSize
+          lineHeight: 1.5 * fontSize,
         },
         customRoseType: {
           show: false,
-          type: 'radius' // radius || area
+          type: 'radius', // radius || area
         },
         customInRadius: 0, // 内半径
         customOutRadius: 65, // 外半径
-        customCenter: [50, 50] // 坐标中心点
-      }
-    }
-  }
-})
+        customCenter: [50, 50], // 坐标中心点
+      },
+    },
+  },
+});

@@ -14,10 +14,7 @@
       <!-- 图例 字体 颜色 start -->
       <a-col :span="4">
         <div class="font-color">
-          <ColorPicker
-            :value="legend.textStyle.color"
-            @change="color => handleTextStyle('color', color)"
-          ></ColorPicker>
+          <ColorPicker :value="legend.textStyle.color" @change="color => handleTextStyle('color', color)"></ColorPicker>
         </div>
       </a-col>
       <!-- 图例 字体 颜色 end -->
@@ -44,12 +41,8 @@
           :value="legend.orient"
           @change="event => handleLegend('orient', event.target.value)"
         >
-          <a-radio value="horizontal">
-            水平
-          </a-radio>
-          <a-radio value="vertical">
-            垂直
-          </a-radio>
+          <a-radio value="horizontal">水平</a-radio>
+          <a-radio value="vertical">垂直</a-radio>
         </a-radio-group>
       </a-col>
       <!-- 图例 排列方式 end -->
@@ -66,15 +59,9 @@
           size="small"
           @change="handleSwitchHorizontalPosition"
         >
-          <a-radio-button value="left">
-            左边
-          </a-radio-button>
-          <a-radio-button value="center">
-            中间
-          </a-radio-button>
-          <a-radio-button value="right">
-            右边
-          </a-radio-button>
+          <a-radio-button value="left">左边</a-radio-button>
+          <a-radio-button value="center">中间</a-radio-button>
+          <a-radio-button value="right">右边</a-radio-button>
         </a-radio-group>
       </a-col>
     </a-row>
@@ -85,15 +72,9 @@
           size="small"
           @change="handleSwitchVerticalPosition"
         >
-          <a-radio-button value="top">
-            顶部
-          </a-radio-button>
-          <a-radio-button value="middle">
-            中部
-          </a-radio-button>
-          <a-radio-button value="bottom">
-            底部
-          </a-radio-button>
+          <a-radio-button value="top">顶部</a-radio-button>
+          <a-radio-button value="middle">中部</a-radio-button>
+          <a-radio-button value="bottom">底部</a-radio-button>
         </a-radio-group>
       </a-col>
     </a-row>
@@ -110,49 +91,49 @@ export default {
     legend: {
       // 图例配置
       type: Object,
-      required: true
-    }
+      required: true,
+    },
   },
   methods: {
     /**
      * @description 分割位置
      */
     handleCutting(position) {
-      const ary = position.split('-')
-      if (ary.length !== 2) return console.error(`The format should be xx-xx`)
+      const ary = position.split('-');
+      if (ary.length !== 2) return console.error(`The format should be xx-xx`);
       return {
         prefix: ary[0],
-        suffix: ary[1]
-      }
+        suffix: ary[1],
+      };
     },
     /**
      * @description 处理水平
      */
     handleSwitchHorizontalPosition(event) {
-      const prefix = event.target.value
-      const suffix = this.handleCutting(this.legend.position).suffix
-      this.handlePosition(prefix, suffix)
+      const prefix = event.target.value;
+      const suffix = this.handleCutting(this.legend.position).suffix;
+      this.handlePosition(prefix, suffix);
     },
     /**
      * @description 处理垂直
      */
     handleSwitchVerticalPosition(event) {
-      const suffix = event.target.value
-      const prefix = this.handleCutting(this.legend.position).prefix
-      this.handlePosition(prefix, suffix)
+      const suffix = event.target.value;
+      const prefix = this.handleCutting(this.legend.position).prefix;
+      this.handlePosition(prefix, suffix);
     },
     /**
      * @description 处理位置
      */
     handlePosition(prefix, suffix) {
-      const position = [prefix, suffix].join('-')
+      const position = [prefix, suffix].join('-');
       this.handleChange('echart', {
         legend: {
           position,
           left: prefix,
-          top: suffix
-        }
-      })
+          top: suffix,
+        },
+      });
     },
     /**
      * @description 处理图例的字体样式
@@ -161,10 +142,10 @@ export default {
       this.handleChange('echart', {
         legend: {
           textStyle: {
-            [key]: value
-          }
-        }
-      })
+            [key]: value,
+          },
+        },
+      });
     },
     /**
      * @description 处理图例样式
@@ -172,13 +153,13 @@ export default {
     handleLegend(key, value) {
       this.handleChange('echart', {
         legend: {
-          [key]: value
-        }
-      })
+          [key]: value,
+        },
+      });
     },
     handleChange(key, value, isReset = false, beforeExecute, afterExecute) {
-      this.$emit('change', key, value, isReset, beforeExecute, afterExecute)
-    }
-  }
-}
+      this.$emit('change', key, value, isReset, beforeExecute, afterExecute);
+    },
+  },
+};
 </script>

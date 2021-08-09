@@ -13,10 +13,7 @@
                 :key="item.id"
               >
                 <p class="text">{{ item.name }}</p>
-                <div
-                  class="suffix-btn"
-                  @click="handleFiledOps($event, item)"
-                ></div>
+                <div class="suffix-btn" @click="handleFiledOps($event, item)"></div>
               </div>
             </div>
             <!-- 当有字段拖入的时候 end -->
@@ -35,10 +32,10 @@
   </div>
 </template>
 <script>
-import UnitField from './field.vue'
-import { arrayAddData, arrayDeleData } from '@/utils'
-import { mutationTypes as historyMutation } from '@/store/modules/history'
-import { DROG_TYPE } from '@/views/screenManage/screen/container/drawing-board-setting.vue'
+import UnitField from './field.vue';
+import { arrayAddData, arrayDeleData } from '@/utils';
+import { mutationTypes as historyMutation } from '@/store/modules/history';
+import { DROG_TYPE } from '@/views/screenManage/screen/container/drawing-board-setting.vue';
 /**
  * @description 字段填写或拖入设置
  */
@@ -47,25 +44,25 @@ export default {
   extends: UnitField,
   data() {
     return {
-      isInput: true // 是否为输入框
-    }
+      isInput: true, // 是否为输入框
+    };
   },
   props: {
     list: {
       // 需要渲染的列表
       type: [Array, String, Number, Object],
-      default: () => []
+      default: () => [],
     },
     limit: {
       // 是否开启限制
       type: Boolean,
-      default: true
-    }
+      default: true,
+    },
   },
   computed: {
     showInput() {
-      return !Array.isArray(this.list)
-    }
+      return !Array.isArray(this.list);
+    },
   },
   methods: {
     /**
@@ -77,36 +74,36 @@ export default {
     handleList(list, data, method = 'add') {
       if (method === 'add') {
         // 如果数据有重复则直接返回
-        if (data !== '' && list.includes(data)) return list
+        if (data !== '' && list.includes(data)) return list;
 
         // 1. 是否开启限制
         if (this.limit) {
           if (this.isInput) {
             // 如果放入了数组，删除的时候需要置空
-            list = data
+            list = data;
           } else {
             // 2. 列表长度是否为空
             if (list.length) {
-              list.push(data)
-              list.shift()
+              list.push(data);
+              list.shift();
             } else {
               // 3. 如果为空直接加入
-              arrayAddData(list, data)
+              arrayAddData(list, data);
             }
           }
         } else {
           // 4. 不开启直接添加
-          arrayAddData(list, data)
+          arrayAddData(list, data);
         }
       } else if (method === 'dele') {
-        arrayDeleData(list, data)
+        arrayDeleData(list, data);
         if (!this.isInput) {
           // 如果放入了数组，删除的时候需要置空
-          list = ''
-          this.isInput = true
+          list = '';
+          this.isInput = true;
         }
       }
-      return list
+      return list;
     },
     /**
      * @description 字段放置之后执行
@@ -119,25 +116,27 @@ export default {
       const funs = {
         [DROG_TYPE.MIN]: this.handleSetMIN,
         [DROG_TYPE.MAX]: this.handleSetMAX,
-        [DROG_TYPE.TARGE]: this.handleTarge
-      }
+        [DROG_TYPE.TARGE]: this.handleTarge,
+      };
 
       if (!isInput) {
-        this.isInput = false
+        this.isInput = false;
       }
 
-      const fun = funs[dropType]
-      if (!fun) { return console.error(`There is no drag-in method: [${dropType}]`) }
+      const fun = funs[dropType];
+      if (!fun) {
+        return console.error(`There is no drag-in method: [${dropType}]`);
+      }
 
-      const result = fun(data, method)
+      const result = fun(data, method);
       if (result && typeof result.justSkip === 'undefined') {
         this.$store.commit(historyMutation.COMMAND, {
           commandType: 'Data',
           target: this.currentCom,
           store: this.$store,
           eventBus: this.$EventBus,
-          data: result
-        })
+          data: result,
+        });
       }
     },
     /**
@@ -146,14 +145,14 @@ export default {
     handleSetMIN(data, method = 'add') {
       const {
         setting: {
-          data: { min }
-        }
-      } = this.currentCom
-      let arry = [].concat(min)
-      arry = this.handleList(arry, data, method)
+          data: { min },
+        },
+      } = this.currentCom;
+      let arry = [].concat(min);
+      arry = this.handleList(arry, data, method);
       return {
-        min: arry
-      }
+        min: arry,
+      };
     },
     /**
      * @description 当放置到最小值
@@ -161,23 +160,23 @@ export default {
     handleSetMAX(data, method = 'add') {
       const {
         setting: {
-          data: { max }
-        }
-      } = this.currentCom
-      let arry = [].concat(max)
-      arry = this.handleList(arry, data, method)
+          data: { max },
+        },
+      } = this.currentCom;
+      let arry = [].concat(max);
+      arry = this.handleList(arry, data, method);
       return {
-        max: arry
-      }
+        max: arry,
+      };
     },
     handleChange(value) {
-      this.isInput = true
+      this.isInput = true;
       this.handleDropField({
         dropType: this.type,
         data: typeof value === 'number' ? +value : '',
-        isInput: true
-      })
-    }
-  }
-}
+        isInput: true,
+      });
+    },
+  },
+};
 </script>

@@ -1,6 +1,6 @@
-import cloneDeep from 'lodash/cloneDeep'
-import assignIn from 'lodash/assignIn'
-import BaseCommand from './base'
+import cloneDeep from 'lodash/cloneDeep';
+import assignIn from 'lodash/assignIn';
+import BaseCommand from './base';
 export default class DataCommand extends BaseCommand {
   /**
    * Creates an instance of StyleCommand.
@@ -11,22 +11,16 @@ export default class DataCommand extends BaseCommand {
    * @memberof StyleCommand
    */
   constructor(receiver, { data, store, beforeExecute, afterExecute }) {
-    super(receiver, { store, beforeExecute, afterExecute })
-    this.oldData = cloneDeep(this.receiver.setting.data)
-    this.newData = data
+    super(receiver, { store, beforeExecute, afterExecute });
+    this.oldData = cloneDeep(this.receiver.setting.data);
+    this.newData = data;
   }
   executeFun() {
-    this.receiver.setting.data = assignIn(
-      this.receiver.setting.data,
-      this.newData
-    )
-    this.setCurCom()
+    this.receiver.setting.data = assignIn(this.receiver.setting.data, this.newData);
+    this.setCurCom();
   }
   undoFun() {
-    this.receiver.setting.data = assignIn(
-      this.receiver.setting.data,
-      this.oldData
-    )
-    this.setCurCom()
+    this.receiver.setting.data = assignIn(this.receiver.setting.data, this.oldData);
+    this.setCurCom();
   }
 }

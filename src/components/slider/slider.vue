@@ -11,65 +11,65 @@ export default {
   props: {
     value: {
       type: [Number, String],
-      required: true
-    }
+      required: true,
+    },
   },
   watch: {
     value(val) {
-      this.setThumb(val)
-      this.$emit('change', val)
-    }
+      this.setThumb(val);
+      this.$emit('change', val);
+    },
   },
   mounted() {
     this.$nextTick(() => {
-      this.initDrag()
-    })
+      this.initDrag();
+    });
   },
   methods: {
     setThumb(value) {
-      const thumb = this.$refs['js-slider-handle']
-      thumb.style.left = Number(value) + '%'
+      const thumb = this.$refs['js-slider-handle'];
+      thumb.style.left = Number(value) + '%';
     },
     initDrag() {
-      const self = this
-      const thumb = this.$refs['js-slider-handle']
-      const slider = this.$refs['js-slider-wraper']
-      self.setThumb(self.value)
-      let cache = 0
-      thumb.onmousedown = function(event) {
-        event.preventDefault() // prevent selection start (browser action)
-        document.addEventListener('mousemove', onMouseMove)
-        document.addEventListener('mouseup', onMouseUp)
+      const self = this;
+      const thumb = this.$refs['js-slider-handle'];
+      const slider = this.$refs['js-slider-wraper'];
+      self.setThumb(self.value);
+      let cache = 0;
+      thumb.onmousedown = function (event) {
+        event.preventDefault(); // prevent selection start (browser action)
+        document.addEventListener('mousemove', onMouseMove);
+        document.addEventListener('mouseup', onMouseUp);
         function onMouseMove(event) {
-          let newLeft = event.clientX - slider.getBoundingClientRect().left
+          let newLeft = event.clientX - slider.getBoundingClientRect().left;
           // the pointer is out of slider => lock the thumb within the bounaries
           if (newLeft < 0) {
-            newLeft = 0
+            newLeft = 0;
           }
 
           if (newLeft > slider.offsetWidth) {
-            newLeft = slider.offsetWidth
+            newLeft = slider.offsetWidth;
           }
 
-          const t = Math.round(((newLeft / slider.offsetWidth) * 10000) / 100.0)
-          self.setThumb(t)
-          cache = t
-          self.$emit('change', t)
+          const t = Math.round(((newLeft / slider.offsetWidth) * 10000) / 100.0);
+          self.setThumb(t);
+          cache = t;
+          self.$emit('change', t);
         }
 
         function onMouseUp() {
-          self.$emit('afterChange', Number((cache / 100).toFixed(2)))
-          document.removeEventListener('mouseup', onMouseUp)
-          document.removeEventListener('mousemove', onMouseMove)
+          self.$emit('afterChange', Number((cache / 100).toFixed(2)));
+          document.removeEventListener('mouseup', onMouseUp);
+          document.removeEventListener('mousemove', onMouseMove);
         }
-      }
+      };
 
-      thumb.ondragstart = function() {
-        return false
-      }
-    }
-  }
-}
+      thumb.ondragstart = function () {
+        return false;
+      };
+    },
+  },
+};
 </script>
 <style lang="less" scoped>
 .slider-wraper {

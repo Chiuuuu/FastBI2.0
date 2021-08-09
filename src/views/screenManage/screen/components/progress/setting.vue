@@ -8,11 +8,7 @@
           <Tabs v-model="tabAcitve">
             <TabPanel tab="data" label="数据">
               <Collapse v-model="dataCollapseActive">
-                <CollapsePanel
-                  class="content-item"
-                  panel="targe"
-                  header="进度值"
-                >
+                <CollapsePanel class="content-item" panel="targe" header="进度值">
                   <div class="setting-unit-content">
                     <!-- 度量 end -->
                     <UnitInputField
@@ -52,11 +48,7 @@
                     <!-- 最大值 end -->
                   </div>
                 </CollapsePanel>
-                <CollapsePanel
-                  class="content-item"
-                  panel="dataFilter"
-                  header="数据筛选"
-                >
+                <CollapsePanel class="content-item" panel="dataFilter" header="数据筛选">
                   <!-- 数据筛选 start -->
                   <UnitDataFilter class="setting-unit-content">
                     <template #tip>
@@ -69,11 +61,7 @@
             </TabPanel>
             <TabPanel tab="style" label="样式">
               <Collapse v-model="styleCollapseActive">
-                <CollapsePanel
-                  class="content-item"
-                  panel="position"
-                  :isTogger="false"
-                >
+                <CollapsePanel class="content-item" panel="position" :isTogger="false">
                   <!-- 位置 start -->
                   <UnitPosition
                     class="setting-unit-content"
@@ -82,11 +70,7 @@
                   ></UnitPosition>
                   <!-- 位置 end -->
                 </CollapsePanel>
-                <CollapsePanel
-                  class="content-item"
-                  panel="size"
-                  :isTogger="false"
-                >
+                <CollapsePanel class="content-item" panel="size" :isTogger="false">
                   <!-- 尺寸 start -->
                   <UnitSize
                     class="setting-unit-content"
@@ -104,11 +88,7 @@
                   ></UnitTitle>
                   <!-- 标题 end -->
                 </CollapsePanel>
-                <CollapsePanel
-                  class="content-item"
-                  panel="style"
-                  header="样式设置"
-                >
+                <CollapsePanel class="content-item" panel="style" header="样式设置">
                   <!-- 样式设置 start -->
                   <div class="setting-unit-content">
                     <a-row class="unit-show-block mb-8">
@@ -125,8 +105,8 @@
                             width =>
                               handleChange('echart', {
                                 size: {
-                                  width
-                                }
+                                  width,
+                                },
                               })
                           "
                         ></a-input-number>
@@ -146,8 +126,8 @@
                             height =>
                               handleChange('echart', {
                                 size: {
-                                  height
-                                }
+                                  height,
+                                },
                               })
                           "
                         ></a-input-number>
@@ -162,9 +142,7 @@
                       <a-col :span="4">
                         <div class="font-color">
                           <ColorPicker
-                            :value="
-                              currentCom.setting.style.echart.border.color
-                            "
+                            :value="currentCom.setting.style.echart.border.color"
                             @change="color => handleBorder('color', color)"
                           ></ColorPicker>
                         </div>
@@ -176,29 +154,19 @@
                           <a-col :span="13">
                             <a-select
                               style="width: 100%"
-                              :value="
-                                currentCom.setting.style.echart.border.style
-                              "
+                              :value="currentCom.setting.style.echart.border.style"
                               @change="style => handleBorder('style', style)"
                             >
-                              <a-select-option value="solid">
-                                实线
-                              </a-select-option>
-                              <a-select-option value="dashed">
-                                虚线
-                              </a-select-option>
-                              <a-select-option value="dotted">
-                                点线
-                              </a-select-option>
+                              <a-select-option value="solid">实线</a-select-option>
+                              <a-select-option value="dashed">虚线</a-select-option>
+                              <a-select-option value="dotted">点线</a-select-option>
                             </a-select>
                           </a-col>
                           <!-- 边框 end -->
                           <a-col :span="10" :offset="1">
                             <a-input-number
                               :min="0"
-                              :value="
-                                currentCom.setting.style.echart.border.width
-                              "
+                              :value="currentCom.setting.style.echart.border.width"
                               @change="width => handleBorder('width', width)"
                             ></a-input-number>
                           </a-col>
@@ -210,13 +178,8 @@
                       <UnitBackgroundColor
                         class="mb-8"
                         label="进度颜色"
-                        :color="
-                          currentCom.setting.style.echart.progress.background
-                            .color
-                        "
-                        @change="
-                          color => handleProgress('background', { color })
-                        "
+                        :color="currentCom.setting.style.echart.progress.background.color"
+                        @change="color => handleProgress('background', { color })"
                       ></UnitBackgroundColor>
                       <!-- 进度值 颜色 end -->
                     </a-row>
@@ -225,30 +188,17 @@
                       <UnitBackgroundColor
                         class="mb-8"
                         label="底部颜色"
-                        :color="
-                          currentCom.setting.style.echart.background.color
-                        "
-                        @change="
-                          color =>
-                            handleChange('echart', { background: { color } })
-                        "
+                        :color="currentCom.setting.style.echart.background.color"
+                        @change="color => handleChange('echart', { background: { color } })"
                       ></UnitBackgroundColor>
                       <!-- 底部 颜色 end -->
                     </a-row>
                   </div>
                   <!-- 样式设置 end -->
                 </CollapsePanel>
-                <CollapsePanel
-                  class="content-item"
-                  panel="radius"
-                  header="圆角设置"
-                >
+                <CollapsePanel class="content-item" panel="radius" header="圆角设置">
                   <div class="setting-unit-content">
-                    <a-row
-                      v-for="item in radius"
-                      :key="item.prop"
-                      class="unit-show-block mb-4"
-                    >
+                    <a-row v-for="item in radius" :key="item.prop" class="unit-show-block mb-4">
                       <a-col :span="8" class="unit-show-block">
                         <div class="unit-block-title">{{ item.name }}</div>
                       </a-col>
@@ -256,9 +206,7 @@
                       <a-col :span="16">
                         <a-input-number
                           :min="0"
-                          :value="
-                            currentCom.setting.style.echart.radius[item.prop]
-                          "
+                          :value="currentCom.setting.style.echart.radius[item.prop]"
                           @change="value => handleRadius(item.prop, value)"
                         ></a-input-number>
                       </a-col>
@@ -266,17 +214,9 @@
                     </a-row>
                   </div>
                 </CollapsePanel>
-                <CollapsePanel
-                  class="content-item"
-                  panel="padding"
-                  header="内边距设置"
-                >
+                <CollapsePanel class="content-item" panel="padding" header="内边距设置">
                   <div class="setting-unit-content">
-                    <a-row
-                      v-for="item in padding"
-                      :key="item.prop"
-                      class="unit-show-block mb-4"
-                    >
+                    <a-row v-for="item in padding" :key="item.prop" class="unit-show-block mb-4">
                       <a-col :span="8" class="unit-show-block">
                         <div class="unit-block-title">{{ item.name }}边距</div>
                       </a-col>
@@ -284,9 +224,7 @@
                       <a-col :span="16">
                         <a-input-number
                           :min="0"
-                          :value="
-                            currentCom.setting.style.echart.padding[item.prop]
-                          "
+                          :value="currentCom.setting.style.echart.padding[item.prop]"
                           @change="value => handlePadding(item.prop, value)"
                         ></a-input-number>
                       </a-col>
@@ -312,15 +250,11 @@
                       <a-col :span="16">
                         <a-select
                           :value="currentCom.setting.style.echart.showWay"
-                          style="width:100%"
-                          @change="
-                            showWay => handleChange('echart', { showWay })
-                          "
+                          style="width: 100%"
+                          @change="showWay => handleChange('echart', { showWay })"
                         >
                           <a-select-option value="value">值</a-select-option>
-                          <a-select-option value="percent"
-                            >百分比</a-select-option
-                          >
+                          <a-select-option value="percent">百分比</a-select-option>
                           <a-select-option value="all">全部</a-select-option>
                         </a-select>
                       </a-col>
@@ -347,13 +281,9 @@
                       <!-- 字体 大小 start -->
                       <a-col :span="12" :offset="1">
                         <a-input-number
-                          :value="
-                            currentCom.setting.style.echart.label.fontSize
-                          "
+                          :value="currentCom.setting.style.echart.label.fontSize"
                           :min="0"
-                          @change="
-                            fontSize => handleLabel('fontSize', fontSize)
-                          "
+                          @change="fontSize => handleLabel('fontSize', fontSize)"
                         />
                       </a-col>
                       <!-- 字体 大小 end -->
@@ -362,38 +292,27 @@
 
                     <!-- 位置设置 start -->
                     <div class="axis-name-box mb-8">
-                      <p class="mb-4">
-                        调整位置
-                      </p>
+                      <p class="mb-4">调整位置</p>
                       <a-row class="unit-show-block mb-8">
                         <a-col :span="8" class="unit-show-block">
-                          <div class="unit-block-title">
-                            距左侧
-                          </div>
+                          <div class="unit-block-title">距左侧</div>
                         </a-col>
                         <!-- 内边距 start -->
                         <a-col :span="16">
                           <a-input-number
-                            :value="
-                              currentCom.setting.style.echart.label.position
-                                .left
-                            "
+                            :value="currentCom.setting.style.echart.label.position.left"
                             @change="left => handleLabel('position', { left })"
                           ></a-input-number>
                         </a-col>
                       </a-row>
                       <a-row class="unit-show-block mb-8">
                         <a-col :span="8" class="unit-show-block">
-                          <div class="unit-block-title">
-                            距顶部
-                          </div>
+                          <div class="unit-block-title">距顶部</div>
                         </a-col>
                         <!-- 内边距 start -->
                         <a-col :span="16">
                           <a-input-number
-                            :value="
-                              currentCom.setting.style.echart.label.position.top
-                            "
+                            :value="currentCom.setting.style.echart.label.position.top"
                             @change="top => handleLabel('position', { top })"
                           ></a-input-number>
                         </a-col>
@@ -402,11 +321,7 @@
                     <!-- 位置设置 end -->
                   </div>
                 </CollapsePanel>
-                <CollapsePanel
-                  class="content-item"
-                  panel="bgAndBorder"
-                  header="背景和边框"
-                >
+                <CollapsePanel class="content-item" panel="bgAndBorder" header="背景和边框">
                   <div class="setting-unit-content">
                     <!-- 背景颜色 start -->
                     <UnitBackgroundColor
@@ -423,20 +338,10 @@
                     <!-- 边框设置 end -->
                   </div>
                 </CollapsePanel>
-                <CollapsePanel
-                  class="content-item"
-                  panel="reset"
-                  :isTogger="false"
-                >
+                <CollapsePanel class="content-item" panel="reset" :isTogger="false">
                   <!-- 恢复默认配置 start -->
                   <div class="setting-unit-content">
-                    <a-button
-                      class="btn-ghost reset"
-                      type="link"
-                      icon="redo"
-                      block
-                      @click="handleClickReset"
-                    >
+                    <a-button class="btn-ghost reset" type="link" icon="redo" block @click="handleClickReset">
                       恢复默认配置
                     </a-button>
                   </div>
@@ -452,96 +357,96 @@
   </div>
 </template>
 <script>
-import BoardType from '@/views/screenManage/screen/setting/default-type'
-import StyleMethodMixin from '@/views/screenManage/screen/setting/style-method-mixin'
+import BoardType from '@/views/screenManage/screen/setting/default-type';
+import StyleMethodMixin from '@/views/screenManage/screen/setting/style-method-mixin';
 export default {
   name: `${BoardType.ChartProgress}Setting`,
   mixins: [StyleMethodMixin],
   props: {
     currentCom: {
       type: Object,
-      required: true
-    }
+      required: true,
+    },
   },
   data() {
     return {
       padding: [
         {
           prop: 'top',
-          name: '上'
+          name: '上',
         },
         {
           prop: 'right',
-          name: '右'
+          name: '右',
         },
         {
           prop: 'bottom',
-          name: '下'
+          name: '下',
         },
         {
           prop: 'left',
-          name: '左'
-        }
+          name: '左',
+        },
       ],
       radius: [
         {
           prop: 'topLeft',
-          name: '左上'
+          name: '左上',
         },
         {
           prop: 'topRight',
-          name: '右上'
+          name: '右上',
         },
         {
           prop: 'bottomLeft',
-          name: '左下'
+          name: '左下',
         },
         {
           prop: 'bottomRight',
-          name: '右下'
-        }
+          name: '右下',
+        },
       ],
       tabAcitve: 'style', // tab选项栏活动目标
       dataCollapseActive: ['targe', 'range'],
-      styleCollapseActive: []
-    }
+      styleCollapseActive: [],
+    };
   },
   methods: {
     handleBorder(key, value) {
       this.handleChange('echart', {
         border: {
-          [key]: value
-        }
-      })
+          [key]: value,
+        },
+      });
     },
     handleRadius(key, value) {
       this.handleChange('echart', {
         radius: {
-          [key]: value
-        }
-      })
+          [key]: value,
+        },
+      });
     },
     handlePadding(key, value) {
       this.handleChange('echart', {
         padding: {
-          [key]: value
-        }
-      })
+          [key]: value,
+        },
+      });
     },
     handleProgress(key, value) {
       this.handleChange('echart', {
         progress: {
-          [key]: value
-        }
-      })
+          [key]: value,
+        },
+      });
     },
     handleLabel(key, value) {
       this.handleChange('echart', {
         label: {
-          [key]: value
-        }
-      })
-    }
-  }
-}
+          [key]: value,
+        },
+      });
+    },
+  },
+};
 </script>

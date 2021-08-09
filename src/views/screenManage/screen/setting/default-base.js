@@ -13,7 +13,7 @@ export default {
       // 数据
       expands: [],
       dataModelId: '11', // 数据模型id
-      filter: {} // 数据筛选
+      filter: {}, // 数据筛选
     },
     style: {
       // 样式
@@ -21,24 +21,24 @@ export default {
       position: {
         // 位置
         left: 780,
-        top: 405
+        top: 405,
       },
       size: {
         // 尺寸
         width: 530,
-        height: 400
+        height: 400,
       },
       border: {
         // 边框
         color: 'transparent',
         width: 1,
         style: 'solid',
-        radius: 0
+        radius: 0,
       },
       background: {
         // 背景
         color: 'black',
-        image: ''
+        image: '',
       },
       title: {
         // 标题
@@ -49,14 +49,14 @@ export default {
           size: 16,
           align: 'center',
           family: 'sans-serif',
-          color: 'rgb(217, 217, 217)'
-        }
+          color: 'rgb(217, 217, 217)',
+        },
       },
-      echart: {} // 图表插件的配置
+      echart: {}, // 图表插件的配置
     },
     interaction: {
       // 交互
-      expands: []
-    }
-  }
-}
+      expands: [],
+    },
+  },
+};

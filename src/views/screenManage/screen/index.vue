@@ -11,10 +11,7 @@
       <!-- 侧边栏 end -->
 
       <!-- 内容编辑区 start -->
-      <DrawingBoardContent
-        :components="components"
-        :type="parameter.EDIT"
-      ></DrawingBoardContent>
+      <DrawingBoardContent :components="components" :type="parameter.EDIT"></DrawingBoardContent>
       <!-- 内容编辑区 end -->
 
       <!-- 内容编辑区工具栏 start -->
@@ -28,13 +25,13 @@
   </div>
 </template>
 <script>
-import { mapState } from 'vuex'
-import { parameter, mutationTypes as boardMutaion } from '@/store/modules/board'
-import DrawingBoardHeader from './container/drawing-board-header'
-import DrawingBoardSide from './container/drawing-board-side'
-import DrawingBoardContent from './container/drawing-board-content'
-import DrawingBoardPageTools from './container/drawing-board-page-tools'
-import DrawingBoardSetting from './container/drawing-board-setting'
+import { mapState } from 'vuex';
+import { parameter, mutationTypes as boardMutaion } from '@/store/modules/board';
+import DrawingBoardHeader from './container/drawing-board-header';
+import DrawingBoardSide from './container/drawing-board-side';
+import DrawingBoardContent from './container/drawing-board-content';
+import DrawingBoardPageTools from './container/drawing-board-page-tools';
+import DrawingBoardSetting from './container/drawing-board-setting';
 
 /**
  * @description 编辑大屏
@@ -46,42 +43,42 @@ export default {
     DrawingBoardSide,
     DrawingBoardContent,
     DrawingBoardPageTools,
-    DrawingBoardSetting
+    DrawingBoardSetting,
   },
   watch: {
     $route() {
-      console.log(this.$route.params.id)
-      console.log(this.$route.query.tid)
-    }
+      console.log(this.$route.params.id);
+      console.log(this.$route.query.tid);
+    },
   },
   computed: {
     ...mapState({
       // 组件列表
-      components: state => state.board.components
+      components: state => state.board.components,
     }),
     drawingBoardClass() {
       if (this.$store.state.board.model === this.parameter.EDIT) {
-        return 'drawing-board-editor'
+        return 'drawing-board-editor';
       } else {
-        return 'drawing-board-preview'
+        return 'drawing-board-preview';
       }
-    }
+    },
   },
   data() {
     return {
-      parameter
-    }
+      parameter,
+    };
   },
   mounted() {
     // 1. 根据大屏id去获取tab的id
     // 2. 初始化为编辑模式
-    this.$store.commit(boardMutaion.RESETSTATE)
+    this.$store.commit(boardMutaion.RESETSTATE);
     // // 初始化为编辑模式
     // this.$store.commit(boardMutaion.SET_BOARD_MODEL, {
     //   model: this.parameter.EDIT,
     // });
-  }
-}
+  },
+};
 </script>
 <style lang="less">
 @import url('../../../assets/styles/screen.less');
@@ -96,7 +93,9 @@ export default {
   font-family: sans-serif;
   overflow: hidden;
 
-  ol, ul, dl {
+  ol,
+  ul,
+  dl {
     padding: 0;
     margin: 0;
   }
