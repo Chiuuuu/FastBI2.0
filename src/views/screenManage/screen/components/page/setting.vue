@@ -25,6 +25,32 @@
               </div>
               <!-- 背景 end -->
             </CollapsePanel>
+            <CollapsePanel class="content-item" panel="background" header="定时刷新">
+              <!-- 定时刷新 start -->
+              <div class="setting-unit-content">
+                <!-- 定时刷新是否启用 start -->
+                <UnitCheckbox
+                  class="show-btn"
+                  label="启用"
+                  :value="boardPage.refresh.isRefresh"
+                  @change="isRefresh => handleChange('refresh', { isRefresh })"
+                ></UnitCheckbox>
+                <!-- 标签是否显示 end -->
+                <a-row class="unit-show-block mb-8">
+                  <a-col :span="11">
+                    <a-input-number v-model="boardPage.refresh.frequency" :min="1" />
+                  </a-col>
+                  <a-col :span="11" :offset="2">
+                    <a-select v-model="boardPage.refresh.unit" placeholder="请选择" class="select-input">
+                      <a-select-option v-for="(item, index) in refreshList" :key="index" :value="item.value">
+                        {{ item.name }}
+                      </a-select-option>
+                    </a-select>
+                  </a-col>
+                </a-row>
+              </div>
+              <!-- 定时刷新 end -->
+            </CollapsePanel>
             <CollapsePanel class="content-item" panel="reset" :isTogger="false">
               <!-- 恢复默认配置 start -->
               <div class="setting-unit-content">
@@ -51,6 +77,14 @@ export default {
     ...mapState({
       boardPage: state => state.board.page,
     }),
+  },
+  data() {
+    return {
+      refreshList: [
+        { name: '分', value: 'min' },
+        { name: '小时', value: 'hour' },
+      ],
+    };
   },
   methods: {
     /**
@@ -82,3 +116,8 @@ export default {
   },
 };
 </script>
+<style lang="less" scoped>
+.select-input {
+  width: 100%;
+}
+</style>

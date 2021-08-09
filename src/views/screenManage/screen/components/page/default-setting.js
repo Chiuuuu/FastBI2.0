@@ -7,4 +7,9 @@ export default {
     color: '#0d2a42',
     image: '',
   },
+  refresh: {
+    isRefresh: false, // 是否启用定时刷新
+    frequency: 1, // 刷新频率
+    unit: undefined, // 刷新单位 分 小时 天
+  },
 };
