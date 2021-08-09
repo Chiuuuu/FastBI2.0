@@ -14,11 +14,7 @@
               ></UnitSize>
               <!-- 尺寸 end -->
             </CollapsePanel>
-            <CollapsePanel
-              class="content-item"
-              panel="background"
-              header="背景"
-            >
+            <CollapsePanel class="content-item" panel="background" header="背景">
               <!-- 背景 start -->
               <div class="setting-unit-content">
                 <UnitBackgroundColor
@@ -32,13 +28,7 @@
             <CollapsePanel class="content-item" panel="reset" :isTogger="false">
               <!-- 恢复默认配置 start -->
               <div class="setting-unit-content">
-                <a-button
-                  class="btn-ghost reset"
-                  type="link"
-                  icon="redo"
-                  block
-                  @click="handleClickReset"
-                >
+                <a-button class="btn-ghost reset" type="link" icon="redo" block @click="handleClickReset">
                   恢复默认配置
                 </a-button>
               </div>
@@ -51,24 +41,24 @@
   </div>
 </template>
 <script>
-import { mapState } from 'vuex'
-import boardSetting from '@/views/screenManage/screen/setting'
-import { mutationTypes as historyMutation } from '@/store/modules/history'
-import cloneDeep from 'lodash/cloneDeep'
+import { mapState } from 'vuex';
+import boardSetting from '@/views/screenManage/screen/setting';
+import { mutationTypes as historyMutation } from '@/store/modules/history';
+import cloneDeep from 'lodash/cloneDeep';
 export default {
   name: 'BoardPageSetting',
   computed: {
     ...mapState({
-      boardPage: state => state.board.page
-    })
+      boardPage: state => state.board.page,
+    }),
   },
   methods: {
     /**
      * @description 复制一份当前类型新的配置
      */
     handleClickReset() {
-      const style = cloneDeep(boardSetting['Page'])
-      this.handleChange(null, style, true)
+      const style = cloneDeep(boardSetting['Page']);
+      this.handleChange(null, style, true);
     },
     /**
      * @description 改变样式并记录历史
@@ -85,10 +75,10 @@ export default {
         style: isReset
           ? val
           : {
-              [type]: val
-            }
-      })
-    }
-  }
-}
+              [type]: val,
+            },
+      });
+    },
+  },
+};
 </script>

@@ -2,9 +2,9 @@
   <div class="shape-rectangular" :style="rectangularStyle"></div>
 </template>
 <script>
-import BoardType from '@/views/screenManage/screen/setting/default-type'
-import { getStyle } from '@/utils'
-import { mapState } from 'vuex'
+import BoardType from '@/views/screenManage/screen/setting/default-type';
+import { getStyle } from '@/utils';
+import { mapState } from 'vuex';
 /**
  * @description 形状-直线图
  */
@@ -14,19 +14,19 @@ export default {
     options: {
       // 配置项信息
       type: [Object, String],
-      default: ''
-    }
+      default: '',
+    },
   },
   data() {
     return {
-      rectangularStyle: {}
-    }
+      rectangularStyle: {},
+    };
   },
   computed: {
     ...mapState({
       // 当前组件状态
-      currentComState: state => state.board.currentComState
-    })
+      currentComState: state => state.board.currentComState,
+    }),
   },
   watch: {
     'options.style': {
@@ -37,53 +37,48 @@ export default {
         // 2. 配置项发生改变
         if (opt && this.currentComState && this.currentComState === 'stop') {
           this.$nextTick(() => {
-            this.updateChartStyle()
-          })
+            this.updateChartStyle();
+          });
         }
-      }
-    }
+      },
+    },
   },
   mounted() {
-    this.initChart()
+    this.initChart();
   },
   methods: {
     /**
      * @description 初始化
      */
     initChart() {
-      const style = this.doWithOptions()
-      this.rectangularStyle = Object.assign({}, style)
+      const style = this.doWithOptions();
+      this.rectangularStyle = Object.assign({}, style);
     },
     doWithOptions() {
       const {
         style: {
-          echart: { background, border, opacity }
-        }
-      } = this.options
+          echart: { background, border, opacity },
+        },
+      } = this.options;
 
       const checkProps = {
         background,
-        border
-      }
+        border,
+      };
 
       let style = {
-        opacity
-      }
+        opacity,
+      };
 
-      style = getStyle(
-        style,
-        checkProps,
-        ['width', 'radius'],
-        ['background', 'border']
-      )
+      style = getStyle(style, checkProps, ['width', 'radius'], ['background', 'border']);
 
-      return style
+      return style;
     },
     updateChartStyle() {
-      this.initChart()
-    }
-  }
-}
+      this.initChart();
+    },
+  },
+};
 </script>
 <style lang="less" scoped>
 .shape-rectangular {

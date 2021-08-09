@@ -11,72 +11,48 @@
           class="list-item"
           :key="transform.id"
           v-for="transform in coverageMaps"
-          :class="[
-            { hovered: hoverItem === transform.id },
-            { selected: currentSelected === transform.id }
-          ]"
+          :class="[{ hovered: hoverItem === transform.id }, { selected: currentSelected === transform.id }]"
           :selected="currentSelected === transform.id"
           @click.stop.prevent="handleSelected(transform)"
           @mouseenter="handleHover(transform)"
           @mouseleave="handleNoHover(transform)"
         >
           <div class="item" v-if="coverageExpand">
-            <img
-              style="width:18px;heigth:18px;"
-              :src="require(`@/assets/images/chart/${transform.setting.icon}`)"
-            />
+            <img style="width: 18px; heigth: 18px" :src="require(`@/assets/images/chart/${transform.setting.icon}`)" />
             <!-- 环形图title -->
             <template v-if="transform.setting.chartType === 'v-ring'">
               <template v-if="transform.setting.config.topTitle.content">
-                <a-tooltip
-                  v-if="transform.setting.config.topTitle.content.length > 7"
-                >
-                  <template slot="title">{{
-                    transform.setting.config.topTitle.content
-                  }}</template>
-                  {{
-                    transform.setting.config.topTitle.content.substring(0, 7) + '...'
-                  }}
+                <a-tooltip v-if="transform.setting.config.topTitle.content.length > 7">
+                  <template slot="title">{{ transform.setting.config.topTitle.content }}</template>
+                  {{ transform.setting.config.topTitle.content.substring(0, 7) + '...' }}
                 </a-tooltip>
-                <span v-else> {{ transform.setting.config.topTitle.content }}</span>
+                <span v-else>{{ transform.setting.config.topTitle.content }}</span>
               </template>
-              <span v-else> {{ transform.setting.title }}</span>
+              <span v-else>{{ transform.setting.title }}</span>
             </template>
             <template v-else-if="transform.setting.config && transform.setting.config.title">
               <!-- 某些图表是用content.title -->
               <template v-if="transform.setting.config.title.content">
-                <a-tooltip
-                  v-if="transform.setting.config.title.content.length > 7"
-                >
-                  <template slot="title">{{
-                    transform.setting.config.title.content
-                  }}</template>
-                  {{
-                    transform.setting.config.title.content.substring(0, 7) + '...'
-                  }}
+                <a-tooltip v-if="transform.setting.config.title.content.length > 7">
+                  <template slot="title">{{ transform.setting.config.title.content }}</template>
+                  {{ transform.setting.config.title.content.substring(0, 7) + '...' }}
                 </a-tooltip>
                 <span v-else>{{ transform.setting.config.title.content }}</span>
               </template>
               <!-- 某些图表是用content.text -->
               <template v-else-if="transform.setting.config.title.text">
-                <a-tooltip
-                  v-if="transform.setting.config.title.text.length > 7"
-                >
-                  <template slot="title">{{
-                    transform.setting.config.title.text
-                  }}</template>
-                  {{
-                    transform.setting.config.title.text.substring(0, 7) + '...'
-                  }}
+                <a-tooltip v-if="transform.setting.config.title.text.length > 7">
+                  <template slot="title">{{ transform.setting.config.title.text }}</template>
+                  {{ transform.setting.config.title.text.substring(0, 7) + '...' }}
                 </a-tooltip>
                 <span v-else>{{ transform.setting.config.title.text }}</span>
               </template>
-              <span v-else> {{ transform.setting.title }}</span>
+              <span v-else>{{ transform.setting.title }}</span>
             </template>
             <!-- 都没有就显示默认title -->
-            <span v-else> {{ transform.setting.title }}</span>
+            <span v-else>{{ transform.setting.title }}</span>
           </div>
-          <div v-else flex="main:center" style="padding:5px 0">
+          <div v-else flex="main:center" style="padding: 5px 0">
             <!-- <a-icon
               v-if="transform.setting.icon"
               :type="transform.setting.icon"
@@ -85,10 +61,7 @@
               v-if="transform.setting.iconFont"
               :type="transform.setting.iconFont"
             /> -->
-            <img
-              style="width:18px;heigth:18px;"
-              :src="require(`@/assets/images/chart/${transform.setting.icon}`)"
-            />
+            <img style="width: 18px; heigth: 18px" :src="require(`@/assets/images/chart/${transform.setting.icon}`)" />
           </div>
         </div>
       </template>
@@ -102,9 +75,7 @@
             :com-hover="hoverItem === transform.id"
             :selected="currentSelected === transform.id"
             @click.native.stop.prevent="handleSelected(transform)"
-            @contextmenu.native.stop.prevent="
-              handleRightClickOnCanvas(transform, $event)
-            "
+            @contextmenu.native.stop.prevent="handleRightClickOnCanvas(transform, $event)"
             @mouseenter.native="handleHover(transform)"
             @mouseleave.native="handleNoHover(transform)"
           >
@@ -115,10 +86,7 @@
               :config="transform.setting.config"
             ></chart-nodata>
             <!-- 图形 -->
-            <ChartFigure
-              v-else-if="transform.setting.name === 'figure'"
-              :setting="transform.setting"
-            />
+            <ChartFigure v-else-if="transform.setting.name === 'figure'" :setting="transform.setting" />
             <!--素材库-->
             <ChartMaterial
               v-else-if="transform.setting.name === 'material'"
@@ -176,10 +144,7 @@
             ></high-charts>
             <!-- 矩形热力图 -->
             <chart-heart
-              v-else-if="
-                transform.setting.name === 've-heatmap' ||
-                  transform.setting.name === 've-sun'
-              "
+              v-else-if="transform.setting.name === 've-heatmap' || transform.setting.name === 've-sun'"
               :chart-id="transform.id"
               :key="transform.id"
               :chart-type="transform.setting.chartType"
@@ -224,33 +189,24 @@
 </template>
 
 <script>
-import Board from '@/components/board/index' // 右键下拉菜单
-import navigateList from '@/config/navigate' // 导航条菜单
-import DragList from '@/components/drag/DragList' // 导航条拖动模块
-import DragItem from '@/components/drag/DragItem' // 板块设置（长宽高比例悬停）
-import { mapGetters, mapActions } from 'vuex' // 导入vuex
-import { on, off } from 'bin-ui/src/utils/dom' //
-import { getCanvasMaps } from '@/api/canvasMaps/canvas-maps-request' // 图层的方法
-import { getPageSettings, resetPageSettings } from '@/api/app/app-request' // axious请求，拦截器
-import ChartsFactory from '@/components/charts/charts-factory'
-import ChartText from '@/components/tools/Text' // 文本模块
-import ChartImage from '@/components/tools/Image' // 图片模块
-import ChartTables from '@/components/tools/Tables' // 表格模块
-import ChartNodata from '@/components/tools/Nodata' // 数据丢失
-import ChartMaterial from '@/components/tools/Material' // 素材库
-import ChartFigure from '@/components/tools/Figure' // 素材库
-import ChartHeart from '@/components/charts/chart-heat.vue' // 旭日图/矩形热力图
-import HighCharts from '@/components/charts/highcharts.vue' // 3d图表
-import SteepBar from '@/components/tools/SteepBar' // 进度条
+import Board from '@/components/board/index'; // 右键下拉菜单
+import navigateList from '@/config/navigate'; // 导航条菜单
+import DragList from '@/components/drag/DragList'; // 导航条拖动模块
+import DragItem from '@/components/drag/DragItem'; // 板块设置（长宽高比例悬停）
+import { mapGetters, mapActions } from 'vuex'; // 导入vuex
+import { on, off } from 'bin-ui/src/utils/dom'; //
+import ChartsFactory from '@/components/charts/charts-factory';
+import ChartText from '@/components/tools/Text'; // 文本模块
+import ChartImage from '@/components/tools/Image'; // 图片模块
+import ChartTables from '@/components/tools/Tables'; // 表格模块
+import ChartNodata from '@/components/tools/Nodata'; // 数据丢失
+import ChartMaterial from '@/components/tools/Material'; // 素材库
+import ChartFigure from '@/components/tools/Figure'; // 素材库
+import ChartHeart from '@/components/charts/chart-heat.vue'; // 旭日图/矩形热力图
+import HighCharts from '@/components/charts/highcharts.vue'; // 3d图表
+import SteepBar from '@/components/tools/SteepBar'; // 进度条
 // import AMap from '@/components/tools/aMap' // 进度条
-import Screen from '@/views/screen' // 全屏
-
-import { Icon } from 'ant-design-vue'
-import { deepClone } from '@/utils/deepClone'
-
-const IconFont = Icon.createFromIconfontCN({
-  scriptUrl: '//at.alicdn.com/t/font_2276651_71nv5th6v94.js'
-}) // 引入iconfont
+import Screen from '@/views/screen'; // 全屏
 
 export default {
   name: 'Admin',
@@ -262,12 +218,12 @@ export default {
 
       text_content: '文本内容',
       canEdit: true,
-      screenData: null
-    }
+      screenData: null,
+    };
   },
   provide() {
     // 刷新的时候重置图表联动的选中样式
-    return { resetChartStyle: this.resetChartStyle }
+    return { resetChartStyle: this.resetChartStyle };
   },
   computed: {
     ...mapGetters([
@@ -278,21 +234,21 @@ export default {
       'coverageExpand',
       'pageSettings',
       'orginPageSettings',
-      'pageList'
+      'pageList',
     ]),
     coverageMaps() {
       if (this.canvasMap.length > 0) {
-        let maps = [...this.canvasMap]
-        return maps.reverse()
+        let maps = [...this.canvasMap];
+        return maps.reverse();
       } else {
-        return []
+        return [];
       }
-    }
+    },
   },
   beforeRouteUpdate(to, from, next) {
     // 切换页签重新跳转的时候请求tab页的数据
-    next()
-    this.getScreenData()
+    next();
+    this.getScreenData();
   },
   created() {
     // 拉取页面配置信息
@@ -301,126 +257,122 @@ export default {
     // })
     // 拉取页面canvasMaps
     // 先清空数据
-    this.$store.dispatch('InitCanvasMaps', [])
+    this.$store.dispatch('InitCanvasMaps', []);
     if (this.$route.query.id) {
-      this.$store.dispatch('SetScreenId', this.$route.query.id)
-      this.$store.commit('common/SET_MENUSELECTID', this.$route.query.id)
-      this.getScreenTabs().then(res => {
-        this.getScreenData()
-      })
+      this.$store.dispatch('SetScreenId', this.$route.query.id);
+      this.$store.commit('common/SET_MENUSELECTID', this.$route.query.id);
+      this.getScreenTabs().then(() => {
+        this.getScreenData();
+      });
     }
     // 获取素材库
-    this.getMaterial()
+    this.getMaterial();
   },
   mounted() {
-    on(document, 'keyup', this.handleKeyup)
-    this.$EventBus.$on('context/menu/delete', this.deleteDialogShow)
+    on(document, 'keyup', this.handleKeyup);
+    this.$EventBus.$on('context/menu/delete', this.deleteDialogShow);
 
     window.onresize = () => {
       // 全屏下监控是否按键了ESC
       if (!this.checkFull()) {
         // 全屏下按键esc后要执行的动作
-        this.$store.dispatch('SetIsScreen', false)
-        this.$store.dispatch('ToggleContextMenu')
+        this.$store.dispatch('SetIsScreen', false);
+        this.$store.dispatch('ToggleContextMenu');
       }
-    }
+    };
   },
   methods: {
     ...mapActions(['deleteChartData', 'getScreenDetail']),
     // 获取素材库
     async getMaterial() {
-      let res = await this.$server.screenManage.getMaterialGroupList()
-      const base = this.navigate.find(item => item.type === 'Base')
-      base.tabs = res.data
+      let res = await this.$server.screenManage.getMaterialGroupList();
+      const base = this.navigate.find(item => item.type === 'Base');
+      base.tabs = res.data;
     },
     // 重置图表样式(图表联动)
     resetChartStyle() {
       if (this.$refs.vChart) {
         this.$refs.vChart.forEach(vchart => {
-          vchart.resetChartStyle()
-        })
+          vchart.resetChartStyle();
+        });
       }
     },
     // 获取大屏页签
     async getScreenTabs() {
-      this.$server.screenManage
-        .getScreenTabs(this.$route.query.id)
-        .then(res => {
-          if (res.code === 200) {
-            let pages = res.rows.map(item =>
-              Object.assign(item, { showDropDown: false, isFocus: false })
-            )
-            this.$store.dispatch('SetPageList', pages)
-            this.$store.dispatch('SetPageId', this.$route.query.tabId || pages[0].id)
-            // 默认显示大屏第一个页签的数据
-            // 新建的大屏取第一个默认页的tabId
-            if (!this.$route.query.tabId) {
-              this.$router.replace({
-                name: 'screenEdit',
-                query: {
-                  id: this.$route.query.id,
-                  tabId: this.pageList[0].id
-                }
-              })
-              return
-            }
-            return true
-          } else {
-            res.msg && this.$message.error(res.msg)
+      this.$server.screenManage.getScreenTabs(this.$route.query.id).then(res => {
+        if (res.code === 200) {
+          let pages = res.rows.map(item => Object.assign(item, { showDropDown: false, isFocus: false }));
+          this.$store.dispatch('SetPageList', pages);
+          this.$store.dispatch('SetPageId', this.$route.query.tabId || pages[0].id);
+          // 默认显示大屏第一个页签的数据
+          // 新建的大屏取第一个默认页的tabId
+          if (!this.$route.query.tabId) {
+            this.$router.replace({
+              name: 'screenEdit',
+              query: {
+                id: this.$route.query.id,
+                tabId: this.pageList[0].id,
+              },
+            });
+            return;
           }
-        })
+          return true;
+        } else {
+          res.msg && this.$message.error(res.msg);
+        }
+      });
     },
     // 获取大屏数据
     getScreenData() {
       if (this.$route.query.tabId) {
         this.getScreenDetail({
           id: this.$route.query.id,
-          tabId: this.$route.query.tabId
-        })
+          tabId: this.$route.query.tabId,
+        });
       }
     },
     // 悬停事件
     handleHover(item) {
-      this.hoverItem = item.id
+      this.hoverItem = item.id;
     },
-    handleNoHover(item) {
-      this.hoverItem = null
+    handleNoHover() {
+      this.hoverItem = null;
     },
     // transform点击事件
     handleSelected(item) {
-      this.$store.dispatch('SingleSelected', item.id)
-      this.$store.dispatch('ToggleContextMenu')
+      this.$store.dispatch('SingleSelected', item.id);
+      this.$store.dispatch('ToggleContextMenu');
     },
     // transform点击事件右键点击
     handleRightClickOnCanvas(item, event) {
-      this.$store.dispatch('SingleSelected', item.id)
+      this.$store.dispatch('SingleSelected', item.id);
       let info = {
         x: event.pageX + 10,
         y: event.pageY + 10,
-        listType: 'chartMenuList'
-      }
-      this.$store.dispatch('ToggleContextMenu', info)
+        listType: 'chartMenuList',
+      };
+      this.$store.dispatch('ToggleContextMenu', info);
     },
     // 外层区域关闭右键菜单
     hideContextMenu() {
-      this.$store.dispatch('ToggleContextMenu')
+      this.$store.dispatch('ToggleContextMenu');
     },
     // del键删除选择的控件
     handleKeyup(event) {
-      let e = event || window.event
-      let k = e.keyCode || e.which
+      let e = event || window.event;
+      let k = e.keyCode || e.which;
       if (k === 46) {
         if (this.currentSelected) {
-          this.deleteOne()
+          this.deleteOne();
           // this.deleteDialogShow()
         }
       }
     },
     deleteDialogShow() {
-      this.deleteDialog = true
+      this.deleteDialog = true;
     },
     deleteOne() {
-      this.deleteChartData()
+      this.deleteChartData();
     },
     /**
      * 是否全屏并按键ESC键的方法
@@ -428,15 +380,12 @@ export default {
     checkFull() {
       // document.fullscreenEnabled 谷歌浏览器一直返回true
       // let isFull = document.fullscreenEnabled || window.fullScreen || document.webkitIsFullScreen || document.msFullscreenEnabled
-      let isFull =
-        window.fullScreen ||
-        document.webkitIsFullScreen ||
-        document.msFullscreenEnabled
+      let isFull = window.fullScreen || document.webkitIsFullScreen || document.msFullscreenEnabled;
       if (isFull === undefined) {
-        isFull = false
+        isFull = false;
       }
-      return isFull
-    }
+      return isFull;
+    },
   },
   components: {
     ChartsFactory,
@@ -452,20 +401,20 @@ export default {
     SteepBar,
     Screen,
     HighCharts,
-    ChartHeart
+    ChartHeart,
     // AMap
   },
   beforeDestroy() {
-    off(document, 'keyup', this.handleKeyup)
-    this.$EventBus.$off('context/menu/delete', this.deleteDialogShow)
+    off(document, 'keyup', this.handleKeyup);
+    this.$EventBus.$off('context/menu/delete', this.deleteDialogShow);
   },
   // 跳转编辑的时候如果token失效回到登录页，再次进来就重定向回目录页
   beforeRouteEnter(to, from, next) {
     if (from.name === 'login' && to.name === 'screenEdit') {
-      next('/screenManage/catalog')
+      next('/screenManage/catalog');
     } else {
-      next()
+      next();
     }
-  }
-}
+  },
+};
 </script>

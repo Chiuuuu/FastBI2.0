@@ -16,7 +16,8 @@
     :visible="options.visible"
     :footer="null"
     destroyOnClose
-    @cancel="handleClose">
+    @cancel="handleClose"
+  >
     <a-spin :spinning="spinning">
       <a-button class="add-button" type="primary" @click="handleAddItem">添加{{ options.title }}</a-button>
       <div ref="scroll" class="form-list scrollbar">
@@ -29,7 +30,8 @@
             @edit="handleModalFormEdit"
             @save="handleModalFormSave"
             @cancel="handleModalFormCancel"
-            @delete="handleModalFormDelete"></ModalForm>
+            @delete="handleModalFormDelete"
+          ></ModalForm>
         </div>
       </div>
     </a-spin>
@@ -37,7 +39,7 @@
 </template>
 
 <script>
-import modalMixin from './mixin'
+import modalMixin from './mixin';
 
 export default {
   name: 'ModalListManager',
@@ -51,104 +53,107 @@ export default {
           visible: false,
           list: [],
           max: 20,
-          update: function() {},
-          delete: function() {},
-          add: function() {}
-        }
-      }
-    }
+          update: function () {},
+          delete: function () {},
+          add: function () {},
+        };
+      },
+    },
   },
   data() {
     return {
       spinning: false,
-      list: []
-    }
+      list: [],
+    };
   },
   watch: {
-    'options.list'(newValue, oldValue) {
-      this.list = [].concat(newValue)
-    }
+    'options.list'(newValue) {
+      this.list = [].concat(newValue);
+    },
   },
   methods: {
     /** 保存 */
     handleModalFormSave(formData, index) {
       if (formData.id) {
-        this.handleModalFormUpdate(formData, index)
+        this.handleModalFormUpdate(formData, index);
       } else {
-        this.handleModalFormAdd(formData, index)
+        this.handleModalFormAdd(formData, index);
       }
     },
     handleModalFormEdit(index) {
-      this.activeIndex = index
+      this.activeIndex = index;
     },
     /** 新增 */
-    async handleModalFormAdd(formData, index) {
-      this.spinning = true
-      this.options.add({
-        name: formData.name
-      })
+    async handleModalFormAdd(formData) {
+      this.spinning = true;
+      this.options
+        .add({
+          name: formData.name,
+        })
         .then(res => {
           if (res.code === 200) {
-            this.$message.success('保存成功')
-            this.activeIndex = -1
-            this.$emit('refresh')
+            this.$message.success('保存成功');
+            this.activeIndex = -1;
+            this.$emit('refresh');
           } else {
-            this.$message.error(res.msg || res || '新增失败')
+            this.$message.error(res.msg || res || '新增失败');
           }
         })
         .finally(() => {
-          this.spinning = false
-        })
+          this.spinning = false;
+        });
     },
     /** 编辑 */
-    handleModalFormUpdate(formData, index) {
-      this.spinning = true
-      this.options.update({
-        name: formData.name,
-        id: formData.id
-      })
+    handleModalFormUpdate(formData) {
+      this.spinning = true;
+      this.options
+        .update({
+          name: formData.name,
+          id: formData.id,
+        })
         .then(res => {
           if (res.code === 200) {
-            this.$message.success('保存成功')
-            this.activeIndex = -1
-            this.$emit('refresh')
+            this.$message.success('保存成功');
+            this.activeIndex = -1;
+            this.$emit('refresh');
           } else {
-            this.$message.error(res.msg || res || '保存失败')
+            this.$message.error(res.msg || res || '保存失败');
           }
         })
         .finally(() => {
-          this.spinning = false
-        })
+          this.spinning = false;
+        });
     },
     /** 删除 */
     handleModalFormDelete(formData, index) {
-      this.spinning = true
-      this.options.delete(formData)
+      this.spinning = true;
+      this.options
+        .delete(formData)
         .then(res => {
           if (res.code === 200) {
-            this.$message.success('删除成功')
-            this.list.splice(index, 1)
-            this.activeIndex = -1
-            this.$emit('refresh')
+            this.$message.success('删除成功');
+            this.list.splice(index, 1);
+            this.activeIndex = -1;
+            this.$emit('refresh');
           } else {
-            this.$message.error(res.msg || res || '删除失败')
+            this.$message.error(res.msg || res || '删除失败');
           }
         })
         .finally(() => {
-          this.spinning = false
-        })
+          this.spinning = false;
+        });
     },
     /** 取消编辑 */
     handleModalFormCancel(data) {
-      this.activeIndex = -1
+      this.activeIndex = -1;
       if (!data.id) {
-        this.list.shift()
+        this.list.shift();
       }
-    }
-  }
-}
+    },
+  },
+};
 </script>
 
 <style scoped>
-@import "./modal-common.less";
+@import './modal-common.less';
 </style>

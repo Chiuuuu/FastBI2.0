@@ -1,8 +1,7 @@
-import PERMISSION_CODE from '@/config/permission'
+import PERMISSION_CODE from '@/config/permission';
 
-const RouteView = () => import('@/layout/routeView')
-const catalogView = () =>
-  import('@/views/screenManage/screenCatalog/screenCatalog')
+const RouteView = () => import('@/layout/routeView');
+const catalogView = () => import('@/views/screenManage/screenCatalog/screenCatalog');
 
 export default {
   path: '/screenManage',
@@ -11,7 +10,7 @@ export default {
   meta: {
     title: '可视化管理',
     icon: 'desktop',
-    permissions: [PERMISSION_CODE.PAGE.screen]
+    permissions: [PERMISSION_CODE.PAGE.screen],
   },
   children: [
     {
@@ -20,8 +19,8 @@ export default {
       component: catalogView,
       meta: {
         title: '数据大屏',
-        permissions: [PERMISSION_CODE.PAGE.screen]
-      }
-    }
-  ]
-}
+        permissions: [PERMISSION_CODE.PAGE.screen],
+      },
+    },
+  ],
+};

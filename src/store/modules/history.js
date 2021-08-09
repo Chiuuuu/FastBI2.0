@@ -5,14 +5,14 @@ import {
   DragMoveCommand,
   DataCommand,
   DataPanelCommand,
-  PositionCommand
-} from '../../core/command'
+  PositionCommand,
+} from '../../core/command';
 
 export const mutationTypes = {
   COMMAND: 'history/COMMAND',
   UNDO: 'history/UNDO',
-  REDO: 'history/REDO'
-}
+  REDO: 'history/REDO',
+};
 
 const Commands = {
   Add: AddCommand,
@@ -21,55 +21,52 @@ const Commands = {
   DragMove: DragMoveCommand,
   Data: DataCommand,
   DatePanel: DataPanelCommand,
-  Position: PositionCommand
-}
+  Position: PositionCommand,
+};
 
 const state = {
   historyRecordList: [],
-  historyRecordIndex: -1
-}
+  historyRecordIndex: -1,
+};
 
 const mutations = {
   COMMAND(state, payload) {
     if (state.historyRecordIndex < state.historyRecordList.length) {
-      state.historyRecordList = state.historyRecordList.slice(
-        0,
-        state.historyRecordIndex + 1
-      )
+      state.historyRecordList = state.historyRecordList.slice(0, state.historyRecordIndex + 1);
     }
-    const { commandType, target, ...rest } = payload
+    const { commandType, target, ...rest } = payload;
     if (typeof commandType === 'undefined') {
-      return console.error(`command type is must,but got undefined`)
+      return console.error(`command type is must,but got undefined`);
     }
     if (typeof target === 'undefined') {
-      return console.error(`target is must,but got undefined`)
+      return console.error(`target is must,but got undefined`);
     }
-    const command = new Commands[commandType](target, rest)
+    const command = new Commands[commandType](target, rest);
     if (command) {
-      state.historyRecordList.push(command)
-      state.historyRecordIndex++
-      command.execute()
+      state.historyRecordList.push(command);
+      state.historyRecordIndex++;
+      command.execute();
     }
   },
   UNDO(state) {
     if (state.historyRecordIndex > -1) {
-      state.historyRecordList[state.historyRecordIndex].undo()
-      state.historyRecordIndex--
+      state.historyRecordList[state.historyRecordIndex].undo();
+      state.historyRecordIndex--;
     }
   },
   REDO(state) {
     if (state.historyRecordIndex < state.historyRecordList.length - 1) {
-      state.historyRecordIndex++
-      state.historyRecordList[state.historyRecordIndex].execute()
+      state.historyRecordIndex++;
+      state.historyRecordList[state.historyRecordIndex].execute();
     }
-  }
-}
+  },
+};
 
-const actions = {}
+const actions = {};
 
 export default {
   namespaced: true,
   state,
   mutations,
-  actions
-}
+  actions,
+};

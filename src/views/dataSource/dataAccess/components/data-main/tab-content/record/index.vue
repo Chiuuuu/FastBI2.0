@@ -1,12 +1,8 @@
 <template>
   <div class="tab-panel">
-    <a-form-model ref="form" :model="form" layout="inline" class="search_bar" style="margin-left:15px">
+    <a-form-model ref="form" :model="form" layout="inline" class="search_bar" style="margin-left: 15px">
       <a-form-model-item prop="keyword">
-        <a-input
-          placeholder="请输入操作者或账号"
-          :value="form.keyword"
-          @change="handleGetKeyword"
-        >
+        <a-input placeholder="请输入操作者或账号" :value="form.keyword" @change="handleGetKeyword">
           <a-icon slot="prefix" type="search" />
         </a-input>
       </a-form-model-item>
@@ -24,7 +20,7 @@
         :pagination="pagination"
         :scroll="{ y: 'calc(100vh - 400px)' }"
         @change="handleChangeTable"
-        >
+      >
         <template #time="text">
           <span>{{ text | formatTime }}</span>
         </template>
@@ -33,29 +29,29 @@
   </div>
 </template>
 <script>
-import { mapState } from 'vuex'
-import moment from 'moment'
-import debounce from 'lodash/debounce'
+import { mapState } from 'vuex';
+import moment from 'moment';
+import debounce from 'lodash/debounce';
 
 const column = [
   {
     title: '操作时间',
     dataIndex: 'gmtOperate',
-    scopedSlots: { customRender: 'time' }
+    scopedSlots: { customRender: 'time' },
   },
   {
     title: '操作者',
-    dataIndex: 'name'
+    dataIndex: 'name',
   },
   {
     title: '账号',
-    dataIndex: 'username'
+    dataIndex: 'username',
   },
   {
     title: '操作类型',
-    dataIndex: 'type'
-  }
-]
+    dataIndex: 'type',
+  },
+];
 
 export default {
   name: 'tabContentRecord',
@@ -64,58 +60,58 @@ export default {
       column,
       datas: [],
       form: {
-        keyword: ''
+        keyword: '',
       },
       pagination: {
         current: 1,
         pageSize: 10,
-        total: 0
+        total: 0,
       },
-      loading: false
-    }
+      loading: false,
+    };
   },
   computed: {
     ...mapState({
-      modelId: state => state.dataAccess.modelId
-    })
+      modelId: state => state.dataAccess.modelId,
+    }),
   },
   filters: {
     formatTime(time) {
-      return moment(time).format('YYYY-MM-DD HH:mm:ss')
-    }
+      return moment(time).format('YYYY-MM-DD HH:mm:ss');
+    },
   },
   methods: {
     async handleGetData(pagination) {
-      this.loading = true
+      this.loading = true;
       const params = {
         sourceId: this.modelId,
         keyword: this.form.keyword,
         pageSize: this.pagination.pageSize,
-        current: pagination ? pagination.current : this.$options.data().pagination.current
-      }
-      const res = await this.$server.dataAccess.getModelRecord(params)
+        current: pagination ? pagination.current : this.$options.data().pagination.current,
+      };
+      const res = await this.$server.dataAccess.getModelRecord(params);
       if (res.code === 200) {
-        this.datas = res.rows
-        this.pagination.total = res.total
-        this.pagination.current = params.current
+        this.datas = res.rows;
+        this.pagination.total = res.total;
+        this.pagination.current = params.current;
       } else {
-        this.$message.error(res.msg)
+        this.$message.error(res.msg);
       }
-      this.loading = false
+      this.loading = false;
     },
-    handleGetKeyword: debounce(function(e) {
-      this.form.keyword = e.target.value.trim()
-      this.handleGetData()
+    handleGetKeyword: debounce(function (e) {
+      this.form.keyword = e.target.value.trim();
+      this.handleGetData();
     }, 400),
     handleResetForm() {
-      this.$refs.form.resetFields()
+      this.$refs.form.resetFields();
       this.$nextTick(() => {
-        this.handleGetData()
-      })
+        this.handleGetData();
+      });
     },
     handleChangeTable(pagination) {
-      this.handleGetData(pagination)
-    }
-  }
-}
+      this.handleGetData(pagination);
+    },
+  },
+};
 </script>

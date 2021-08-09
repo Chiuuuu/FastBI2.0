@@ -13,111 +13,107 @@
         :title="item.name"
       >
         <span>{{ item.name }}</span>
-        <template v-if="type==='sql'">
-          <div class="u-icon eye"><a-icon type="eye" @click="handleOpenTableInfo(item)"/></div>
-          <div class="u-icon edit"><a-icon type="edit" @click="handleSQLEdit(item)"/></div>
-          <div class="u-icon delete"><a-icon type="delete" @click="handleSQLDelete(item)"/></div>
+        <template v-if="type === 'sql'">
+          <div class="u-icon eye"><a-icon type="eye" @click="handleOpenTableInfo(item)" /></div>
+          <div class="u-icon edit"><a-icon type="edit" @click="handleSQLEdit(item)" /></div>
+          <div class="u-icon delete"><a-icon type="delete" @click="handleSQLDelete(item)" /></div>
         </template>
         <template v-else>
-          <div class="u-icon delete"><a-icon type="eye" @click="handleOpenTableInfo(item)"/></div>
+          <div class="u-icon delete"><a-icon type="eye" @click="handleOpenTableInfo(item)" /></div>
         </template>
       </div>
     </div>
     <template v-else-if="keywords.length > 0">
-      <a-empty style="margin-top:50px;color:#000" v-if="type !=='sql'" :description="description"></a-empty>
+      <a-empty style="margin-top: 50px; color: #000" v-if="type !== 'sql'" :description="description"></a-empty>
     </template>
-    <render-table-info
-      :isShow="isRenderTable"
-      @close="handleCloseModal"
-      :item="modalData"
-    ></render-table-info>
+    <render-table-info :isShow="isRenderTable" @close="handleCloseModal" :item="modalData"></render-table-info>
   </a-spin>
 </template>
 <script>
-import assign from 'lodash/assign'
-import RenderTableInfo from './setting/renderTableInfo.vue'
+import assign from 'lodash/assign';
+import RenderTableInfo from './setting/renderTableInfo.vue';
 export default {
   name: 'model-edit-left',
   inject: ['nodeStatus'],
   components: {
-    RenderTableInfo
+    RenderTableInfo,
   },
   props: {
     detailInfo: {
       type: Object,
-      default: () => {}
+      default: () => {},
     },
     type: {
       type: String,
-      default: ''
+      default: '',
     },
     keywords: {
       type: String,
-      default: ''
+      default: '',
     },
     list: {
       type: Array,
-      default: () => []
-    }
+      default: () => [],
+    },
   },
   data() {
     return {
       isDrag: false,
       loading: true,
       modalData: {},
-      isRenderTable: false
-    }
+      isRenderTable: false,
+    };
   },
   computed: {
     description() {
       if (this.keywords.length === 0) {
-        return '数据源未进行数据抽取，请先抽取数据'
+        return '数据源未进行数据抽取，请先抽取数据';
       } else {
-        return '暂无数据'
+        return '暂无数据';
       }
-    }
+    },
   },
   watch: {
     list: {
       immediate: true,
-      handler(newValue) {
-        this.loading = false
-      }
-    }
+      handler() {
+        this.loading = false;
+      },
+    },
   },
   methods: {
     handleCloseModal() {
-      this.isRenderTable = false
+      this.isRenderTable = false;
     },
     handleOpenTableInfo(item) {
-      this.isRenderTable = true
-      this.modalData = assign({}, item)
+      this.isRenderTable = true;
+      this.modalData = assign({}, item);
     },
     handleSQLEdit(item) {
-      this.$emit('edit', item)
+      this.$emit('edit', item);
     },
     handleSQLDelete(item) {
-      this.$emit('delete', item)
+      this.$emit('delete', item);
     },
     handleMouseDown() {
-      this.isDrag = true
+      this.isDrag = true;
     },
     handleMouseLeave() {
-      this.isDrag = false
+      this.isDrag = false;
     },
     handleLeftDragStart(event, data) {
       this.nodeStatus = Object.assign(this.nodeStatus, {
         dragType: 'menu',
         dragNode: {
           ...data,
-          tableId: data.id
+          tableId: data.id,
         },
-        event
-      })
+        event,
+      });
     },
     handleLeftDragEnd() {
-      this.$emit('on-left-drag-leave')
-    }
-  }
-}
+      this.$emit('on-left-drag-leave');
+    },
+  },
+};
 </script>

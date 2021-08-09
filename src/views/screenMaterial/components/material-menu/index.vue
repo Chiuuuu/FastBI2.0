@@ -4,16 +4,13 @@
       <span class="m-t-s">素材库</span>
       <!-- 管理按钮 -->
       <span class="menu-manager" @click="showModal">
-        <a-icon type="setting" /><span> 管理分组</span>
+        <a-icon type="setting" />
+        <span>管理分组</span>
       </span>
     </div>
 
     <!-- 分组管理弹窗 -->
-    <MenuManager
-      :options="modalOptions"
-      @refresh="handleGetMenuList"
-      @close="modalOptions.visible = false"
-    />
+    <MenuManager :options="modalOptions" @refresh="handleGetMenuList" @close="modalOptions.visible = false" />
 
     <!-- 搜索栏 -->
     <div class="menu_search">
@@ -46,28 +43,28 @@
 </template>
 
 <script>
-import { menuSearchLoop } from '@/utils/menuSearch'
-import MenuFile from '@/components/dataSource/menu-group/file'
-import debounce from 'lodash/debounce'
-import MenuManager from '@/components/modal-list-manager'
+import { menuSearchLoop } from '@/utils/menuSearch';
+import MenuFile from '@/components/dataSource/menu-group/file';
+import debounce from 'lodash/debounce';
+import MenuManager from '@/components/modal-list-manager';
 
 export default {
   name: 'material-menu',
   props: {
     categoryId: {
       type: String,
-      default: ''
+      default: '',
     },
     categoryList: {
       type: Array,
       default() {
-        return []
-      }
-    }
+        return [];
+      },
+    },
   },
   components: {
     MenuFile,
-    MenuManager
+    MenuManager,
   },
   data() {
     return {
@@ -80,56 +77,56 @@ export default {
         list: this.categoryList.slice(1),
         add: this.handleCategoryAdd,
         delete: this.handleCategoryDelete,
-        update: this.handleCategoryUpdate
-      }
-    }
+        update: this.handleCategoryUpdate,
+      },
+    };
   },
   computed: {
     menuList() {
-      return this.searchValue ? this.searchList : this.categoryList
-    }
+      return this.searchValue ? this.searchList : this.categoryList;
+    },
   },
   mounted() {
-    this.handleGetMenuList()
+    this.handleGetMenuList();
   },
   methods: {
     /**
      * 获取左侧菜单数据
      */
     async handleGetMenuList() {
-      const result = await this.$server.screenMaterial.getMaterialCategoryList()
+      const result = await this.$server.screenMaterial.getMaterialCategoryList();
       if (result.code === 200) {
-        this.$emit('update:categoryList', result.data)
-        this.$emit('update:categoryId', result.data[0].id)
-        this.modalOptions.list = result.data.slice(1)
+        this.$emit('update:categoryList', result.data);
+        this.$emit('update:categoryId', result.data[0].id);
+        this.modalOptions.list = result.data.slice(1);
       } else {
-        this.$message.error(result.msg || '查询分组失败')
+        this.$message.error(result.msg || '查询分组失败');
       }
     },
     /**
      * 搜索目录列表
      */
     handleSearchMenu: debounce(function (event) {
-      const value = event.target.value
-      this.searchValue = value
+      const value = event.target.value;
+      this.searchValue = value;
       if (value) {
-        this.handleGetSearchList(value)
+        this.handleGetSearchList(value);
       }
     }, 400),
     handleGetSearchList(value) {
-      let result = []
-      this.categoryList.map((item) => {
-        const newItem = menuSearchLoop(item, value)
-        if (newItem) result.push(newItem)
-      })
-      this.searchList = result
+      let result = [];
+      this.categoryList.map(item => {
+        const newItem = menuSearchLoop(item, value);
+        if (newItem) result.push(newItem);
+      });
+      this.searchList = result;
     },
     /**
      * 选择左侧菜单
      */
     handleFileSelect(file) {
-      if (this.categoryId === file.id) return
-      this.$emit('update:categoryId', file.id)
+      if (this.categoryId === file.id) return;
+      this.$emit('update:categoryId', file.id);
     },
     /**
      * 打开数据类型弹窗
@@ -137,37 +134,37 @@ export default {
     showModal() {
       this.modalOptions = Object.assign({}, this.modalOptions, {
         visible: true,
-        list: this.categoryList.slice(1)
-      })
+        list: this.categoryList.slice(1),
+      });
     },
     /**
      * 是否为文件夹
      */
     handleIsFolder(item) {
-      return item.fileType === 0
+      return item.fileType === 0;
     },
     // 添加分组
     handleCategoryAdd(params) {
       if (params.name === '默认分组') {
-        return Promise.resolve('组名重复,请重新输入')
+        return Promise.resolve('组名重复,请重新输入');
       } else if (this.categoryList.length >= 20) {
-        return Promise.resolve('最多只能创建20个分组')
+        return Promise.resolve('最多只能创建20个分组');
       }
-      return this.$server.screenMaterial.addCategory(params)
+      return this.$server.screenMaterial.addCategory(params);
     },
     // 更新分组
     handleCategoryUpdate(params) {
       if (params.name === '默认分组') {
-        return Promise.resolve('组名重复,请重新输入')
+        return Promise.resolve('组名重复,请重新输入');
       }
-      return this.$server.screenMaterial.updateCategory(params)
+      return this.$server.screenMaterial.updateCategory(params);
     },
     // 删除分组
     handleCategoryDelete(params) {
-      return this.$server.screenMaterial.deleCategory(params.id)
-    }
-  }
-}
+      return this.$server.screenMaterial.deleCategory(params.id);
+    },
+  },
+};
 </script>
 
 <style lang="styl" scoped>

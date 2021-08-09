@@ -7,30 +7,18 @@
     @cancel="$emit('cancel')"
     :getContainer="getContainer"
   >
-    <div class="scrollbar" style="width:100%;height:400px;overflow-y:scroll;">
-      <div
-        style="margin: 0 0 10px;"
-        v-for="(item, index) in chartData.columns"
-        :key="index"
-      >
-        <h3 style="margin: 0 0 2px;" v-if="chartData.tableName[index]">
+    <div class="scrollbar" style="width: 100%; height: 400px; overflow-y: scroll">
+      <div style="margin: 0 0 10px" v-for="(item, index) in chartData.columns" :key="index">
+        <h3 style="margin: 0 0 2px" v-if="chartData.tableName[index]">
           {{ chartData.tableName[index] }}
         </h3>
         <table class="chartdata-table">
           <tr class="table-tr">
-            <th
-              class="table-td"
-              v-for="(subItem, subIndex) in item"
-              :key="subIndex"
-            >
+            <th class="table-td" v-for="(subItem, subIndex) in item" :key="subIndex">
               {{ subItem.colName }}
             </th>
           </tr>
-          <tr
-            class="table-tr"
-            v-for="(subItem2, subIndex2) in chartData.rows[index]"
-            :key="subIndex2"
-          >
+          <tr class="table-tr" v-for="(subItem2, subIndex2) in chartData.rows[index]" :key="subIndex2">
             <td class="table-td" v-for="(value, key) in item" :key="key">
               {{ subItem2[value.colName || value] || '' }}
             </td>
@@ -66,38 +54,36 @@ export default {
     chartData: {
       type: Object,
       required: false,
-      default: () => {}
+      default: () => {},
     },
     show: {
       type: Boolean,
-      required: true
-    }
+      required: true,
+    },
   },
   watch: {
     show(val) {
       if (val) {
-        console.log(111111, this.chartData)
+        console.log(111111, this.chartData);
       }
-    }
+    },
   },
   methods: {
     close() {
-      this.$destroy()
-      this.$el.remove()
+      this.$destroy();
+      this.$el.remove();
     },
     // 全屏下，内容挂在dvScreen元素下（screen.vue）可显示，默认挂在body下
     getContainer() {
-      return this.dvScreenDom
-        ? this.dvScreenDom()
-        : document.querySelector('.canvas-panel')
-    }
+      return this.dvScreenDom ? this.dvScreenDom() : document.querySelector('.canvas-panel');
+    },
   },
   inject: {
     dvScreenDom: {
-      default: ''
-    }
-  }
-}
+      default: '',
+    },
+  },
+};
 </script>
 <style lang="less" scoped>
 .chartdata-table {

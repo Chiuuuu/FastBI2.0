@@ -1,7 +1,7 @@
-const LoginView = () => import('@/views/login/login')
+const LoginView = () => import('@/views/login/login');
 
 export default {
   path: '/login',
   name: 'login',
-  component: LoginView
-}
+  component: LoginView,
+};

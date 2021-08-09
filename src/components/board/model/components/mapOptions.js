@@ -7,10 +7,10 @@ let option = {
         normal: {
           areaColor: 'rgba(46, 163, 236, 0.3)',
           borderColor: '#2EA3EC',
-          borderWidth: 1
-        }
-      }
-    }
-  ]
-}
-export default option
+          borderWidth: 1,
+        },
+      },
+    },
+  ],
+};
+export default option;

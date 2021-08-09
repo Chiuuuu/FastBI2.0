@@ -8,7 +8,7 @@
         <div class="role-layout">
           <a-tabs v-model="activeTab" class="tabs" @change="handleChangeModule">
             <a-tab-pane key="permission" tab="权限设置">
-              <role-permission ref='permissionManage'></role-permission>
+              <role-permission ref="permissionManage"></role-permission>
             </a-tab-pane>
             <a-tab-pane key="user" tab="角色用户">
               <role-user ref="userManage"></role-user>
@@ -21,39 +21,39 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
-import RolePermission from './rolePermission'
-import RoleUser from './roleUser'
+import { mapState } from 'vuex';
+import RolePermission from './rolePermission';
+import RoleUser from './roleUser';
 
 export default {
   name: 'roleMain',
   components: {
     RolePermission,
-    RoleUser
+    RoleUser,
   },
   data() {
     return {
-      activeTab: 'permission'
-    }
+      activeTab: 'permission',
+    };
   },
   computed: {
     ...mapState({
       roleId: state => state.projectRoles.roleId,
       formInfo: state => state.projectRoles.roleInfo,
-      menuSelectId: state => state.common.menuSelectId
-    })
+      menuSelectId: state => state.common.menuSelectId,
+    }),
   },
   methods: {
     handleChangeModule(key) {
-      const tab = this.$refs[`${key}Manage`]
+      const tab = this.$refs[`${key}Manage`];
       if (tab) {
-        tab.handleGetData && tab.handleGetData()
+        tab.handleGetData && tab.handleGetData();
       }
-    }
-  }
-}
+    },
+  },
+};
 </script>
 
 <style lang="less" scoped>
-@import "../../../main.less";
+@import '../../../main.less';
 </style>

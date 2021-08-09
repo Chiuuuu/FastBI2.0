@@ -7,12 +7,8 @@
           <a-icon type="plus-square" class="menu_icon" />
         </a>
         <a-menu slot="overlay" class="drow_menu">
-          <a-menu-item @click="showModal">
-            新建角色
-          </a-menu-item>
-          <a-menu-item key="1" @click="handleAddNewFolder">
-            新建文件夹
-          </a-menu-item>
+          <a-menu-item @click="showModal">新建角色</a-menu-item>
+          <a-menu-item key="1" @click="handleAddNewFolder">新建文件夹</a-menu-item>
         </a-menu>
       </a-dropdown>
       <a-modal
@@ -21,16 +17,10 @@
         :footer="null"
         :bodyStyle="{
           maxHeight: `calc( 100vh - 160px )`,
-          overflowY: 'auto'
+          overflowY: 'auto',
         }"
       >
-        <a-form-model
-          :model="form"
-          :rules="rules"
-          width="500px"
-          :label-col="{ span: 6 }"
-          :wrapper-col="{ span: 12 }"
-        >
+        <a-form-model :model="form" :rules="rules" width="500px" :label-col="{ span: 6 }" :wrapper-col="{ span: 12 }">
           <a-form-model-item label="角色名称" prop="name">
             <a-input placeholder="请输入角色名称"></a-input>
           </a-form-model-item>
@@ -39,9 +29,7 @@
           </a-form-model-item>
           <a-form-model-item label="存储位置" prop="parantId">
             <a-select v-model="form.parentId">
-              <a-select-option v-for="item in folderList" :key="item.id">{{
-                item.name
-              }}</a-select-option>
+              <a-select-option v-for="item in folderList" :key="item.id">{{ item.name }}</a-select-option>
             </a-select>
           </a-form-model-item>
         </a-form-model>
@@ -57,11 +45,7 @@
     </a-empty>
     <template v-else>
       <!-- <p class="menu_tips">右键文件夹或选项有添加，重命名等操作</p> -->
-      <div
-        class="menu-wrap scrollbar"
-        @dragover.stop="handleDragOver"
-        @drop="handleWrapDrop"
-      >
+      <div class="menu-wrap scrollbar" @dragover.stop="handleDragOver" @drop="handleWrapDrop">
         <div
           class="group"
           :class="handleIsFolder(folder, 'items') ? 'is-folder' : ''"
@@ -69,12 +53,7 @@
           :key="folder.id"
         >
           <template v-if="handleIsFolder(folder, 'items')">
-            <menu-folder
-              :folder="folder"
-              :index="index"
-              :contextmenus="folderContenxtMenu"
-              @fileDrop="handleFileDrop"
-            >
+            <menu-folder :folder="folder" :index="index" :contextmenus="folderContenxtMenu" @fileDrop="handleFileDrop">
               <template v-slot:file="slotProps">
                 <menu-file
                   :file="slotProps.file"
@@ -123,26 +102,26 @@
 </template>
 
 <script>
-import ResetNameModal from '@/views/projectCenter/components/menu/resetName'
-import MoveFileModal from '@/views/projectCenter/components/menu/moveFile'
-import { mapState } from 'vuex'
-import { menuSearchLoop } from '@/utils/menuSearch'
-import MenuFile from '@/components/dataSource/menu-group/file'
-import MenuFolder from '@/components/dataSource/menu-group/folder'
-import debounce from 'lodash/debounce'
+import ResetNameModal from '@/views/projectCenter/components/menu/resetName';
+import MoveFileModal from '@/views/projectCenter/components/menu/moveFile';
+import { mapState } from 'vuex';
+import { menuSearchLoop } from '@/utils/menuSearch';
+import MenuFile from '@/components/dataSource/menu-group/file';
+import MenuFolder from '@/components/dataSource/menu-group/folder';
+import debounce from 'lodash/debounce';
 export default {
   name: 'permMenu',
   props: {
     menuData: {
       type: String,
-      default: ''
-    }
+      default: '',
+    },
   },
   components: {
     ResetNameModal,
     MoveFileModal,
     MenuFile,
-    MenuFolder
+    MenuFolder,
   },
   data() {
     return {
@@ -153,44 +132,44 @@ export default {
       resetName: {
         item: '',
         type: '',
-        parentId: ''
+        parentId: '',
       }, // 选中文件夹
       form: {
         name: '',
         description: '',
-        parentId: ''
+        parentId: '',
       },
       rules: {
         name: [
           {
             required: true,
-            message: '请输入权限名称'
+            message: '请输入权限名称',
           },
           {
             type: 'string',
             max: 20,
             min: 1,
-            message: '请输入1-20个字的权限名称'
-          }
+            message: '请输入1-20个字的权限名称',
+          },
         ],
         description: [
           {
             required: true,
-            message: '请输入权限描述'
+            message: '请输入权限描述',
           },
           {
             type: 'string',
             max: 200,
             min: 1,
-            message: '请输入200字以内的权限描述'
-          }
+            message: '请输入200字以内的权限描述',
+          },
         ],
         parentId: [
           {
             required: true,
-            message: '请选择存储位置'
-          }
-        ]
+            message: '请选择存储位置',
+          },
+        ],
       },
       visible: false,
       selectFile: null, // 选中文件
@@ -199,118 +178,118 @@ export default {
       folderContenxtMenu: [
         {
           name: '添加角色',
-          onClick: this.showModal
+          onClick: this.showModal,
         },
         {
           name: '重命名',
-          onClick: this.handleFolderResetName
+          onClick: this.handleFolderResetName,
         },
         {
           name: '删除',
-          onClick: this.handleFolderDelete
-        }
+          onClick: this.handleFolderDelete,
+        },
       ],
       fileContenxtMenu: [
         {
           name: '移动到',
-          onClick: this.handleFilemoveFile
+          onClick: this.handleFilemoveFile,
         },
         {
           name: '重命名',
-          onClick: this.handleFileResetName
+          onClick: this.handleFileResetName,
         },
         {
           name: '删除',
-          onClick: this.handleFileDelete
-        }
-      ]
-    }
+          onClick: this.handleFileDelete,
+        },
+      ],
+    };
   },
   computed: {
     ...mapState({
-      tableList: state => state.projectPermissions.menuList
+      tableList: state => state.projectPermissions.menuList,
     }),
     menuList() {
-      return this.searchValue ? this.searchList : this.tableList
+      return this.searchValue ? this.searchList : this.tableList;
     },
     folderList() {
-      return this.tableList.filter(item => item.fileType === 0)
+      return this.tableList.filter(item => item.fileType === 0);
     },
     fileSelectId: {
       get() {
-        return this.$store.state.projectPermissions.permissionId
+        return this.$store.state.projectPermissions.permissionId;
       },
       set(value) {
-        this.$store.commit('projectPermissions/SET_PERMISSIONID', value)
-      }
-    }
+        this.$store.commit('projectPermissions/SET_PERMISSIONID', value);
+      },
+    },
   },
   mounted() {
-    this.handleGetMenuList()
-    this.$on('fileSelect', this.handleFileSelect)
+    this.handleGetMenuList();
+    this.$on('fileSelect', this.handleFileSelect);
   },
   methods: {
     /**
      * 获取左侧菜单数据
      */
     handleGetMenuList() {
-      this.$store.dispatch('projectPermissions/getMenuList', this)
+      this.$store.dispatch('projectPermissions/getMenuList', this);
     },
     /**
      * @description 获取表详情信息
      */
     async getTableInfo(url, callback) {
-      const result = await this.$server.common.getDetailByMenuId(url)
+      const result = await this.$server.common.getDetailByMenuId(url);
       if (result.code === 200) {
         if (callback && callback instanceof Function) {
-          callback(result)
+          callback(result);
         }
-        this.$EventBus.$emit('setFormData')
+        this.$EventBus.$emit('setFormData');
       } else {
-        this.$message.error(result.msg)
+        this.$message.error(result.msg);
       }
     },
     /**
      * 打开弹窗
      */
     showModal() {
-      this.visible = true
+      this.visible = true;
     },
     /**
      * 搜索目录列表
      */
-    handleSearchMenu: debounce(function(event) {
-      const value = event.target.value
-      this.searchValue = value
+    handleSearchMenu: debounce(function (event) {
+      const value = event.target.value;
+      this.searchValue = value;
       if (value) {
-        this.handleGetSearchList(value)
+        this.handleGetSearchList(value);
       }
     }, 400),
     handleGetSearchList(value) {
-      let result = []
+      let result = [];
       this.tableList.map(item => {
-        const newItem = menuSearchLoop(item, value)
-        if (newItem) result.push(newItem)
-      })
-      this.searchList = result
-      console.log('搜索结果', this.searchList)
+        const newItem = menuSearchLoop(item, value);
+        if (newItem) result.push(newItem);
+      });
+      this.searchList = result;
+      console.log('搜索结果', this.searchList);
     },
     /**
      * 选择左侧菜单
      */
     handleFileSelect(file) {
-      if (this.fileSelectId === file.id) return
-      this.fileSelectId = file.id
+      if (this.fileSelectId === file.id) return;
+      this.fileSelectId = file.id;
       // this.getTableInfo(`/datasource/${file.id}`, result => {
       //   this.$store.commit('projectPermissions/SET_PERMISSION_INFO', result.data)
       // })
-      this.$store.commit('projectPermissions/SET_PERMISSIONID', file.id)
-      this.$store.commit('projectPermissions/SET_PARENTID', file.parentId)
+      this.$store.commit('projectPermissions/SET_PERMISSIONID', file.id);
+      this.$store.commit('projectPermissions/SET_PARENTID', file.parentId);
     },
     /**
      * 删除菜单
      */
-    handleFileDelete(event, item, { file }) {
+    handleFileDelete() {
       this.$confirm({
         title: '确认提示',
         content: '确定删除该数据接入?',
@@ -326,15 +305,15 @@ export default {
           // } else {
           //   this.$message.error(result.msg)
           // }
-        }
-      })
+        },
+      });
     },
     /**
      * 文件夹删除
      */
     handleFolderDelete(event, index, { folder }) {
       if (folder.children && folder.children.length > 0) {
-        return this.$message.error('文件夹下存在数据接入不可删除')
+        return this.$message.error('文件夹下存在数据接入不可删除');
       }
       this.$confirm({
         title: '确认提示',
@@ -348,52 +327,52 @@ export default {
           // } else {
           //   this.$message.error(result.msg)
           // }
-        }
-      })
+        },
+      });
     },
     /**
      * 修改文件夹名称
      */
     handleFolderResetName(event, item, { folder }) {
-      this.resetNameVisible = true
-      this.resetName.type = 'reset'
-      this.resetName.item = folder
-      this.resetName.parentId = 0
+      this.resetNameVisible = true;
+      this.resetName.type = 'reset';
+      this.resetName.item = folder;
+      this.resetName.parentId = 0;
     },
     /**
      * 菜单重命名
      */
     handleFileResetName(mouseEvent, event, { file, parent }) {
-      this.resetName.type = 'reset'
-      this.resetNameVisible = true
-      this.resetName.item = file
-      this.resetName.parentId = parent ? parent.id : 0
+      this.resetName.type = 'reset';
+      this.resetNameVisible = true;
+      this.resetName.item = file;
+      this.resetName.parentId = parent ? parent.id : 0;
     },
     /**
      * 添加新文件夹
      */
     handleAddNewFolder() {
-      this.resetNameVisible = true
-      this.resetName.type = 'new'
+      this.resetNameVisible = true;
+      this.resetName.type = 'new';
     },
     /**
      * 是否为文件夹
      */
     handleIsFolder(item) {
-      return item.fileType === 0
+      return item.fileType === 0;
     },
     /**
      * 拖动左侧菜单
      */
     handleFileDrag(file) {
-      this.dragFile = file
+      this.dragFile = file;
     },
     /**
      * 拖动后投放到目标文件夹
      */
     async handleFileDrop(folder) {
       // eslint-disable-next-line no-useless-return
-      if (!this.dragFile || this.dragFile.parentId === folder.id) return
+      if (!this.dragFile || this.dragFile.parentId === folder.id) return;
       // const result = await this.$server.common.putMenuFolderName('/datasource/catalog/update', {
       //   fileType: this.dragFile.fileType,
       //   id: this.dragFile.id,
@@ -409,13 +388,13 @@ export default {
       // }
     },
     handleDragOver(e) {
-      e.preventDefault()
+      e.preventDefault();
     },
     /**
      * 拖动后投放到最外层目录
      */
     async handleWrapDrop(e) {
-      const className = e.toElement.className
+      const className = e.toElement.className;
       if (className.indexOf('menu-wrap') > -1 && this.dragFile.parentId !== 0) {
         // const result = await this.$server.common.putMenuFolderName('/datasource/catalog/update', {
         //   fileType: this.dragFile.fileType,
@@ -435,14 +414,14 @@ export default {
     /**
      * 移动文件夹
      */
-    handleFilemoveFile(event, index, { parent, file }) {
-      this.selectFile = file
-      this.moveFileVisible = true
+    handleFilemoveFile(event, index, { file }) {
+      this.selectFile = file;
+      this.moveFileVisible = true;
     },
     /**
      * 选择移动文件夹弹窗确认
      */
-    async handleFileMoveCreate(parentId) {
+    async handleFileMoveCreate() {
       // const result = await this.$server.common.putMenuFolderName('/datasource/catalog/update', {
       //   fileType: this.selectFile.fileType,
       //   id: this.selectFile.id,
@@ -457,35 +436,35 @@ export default {
       //   this.$message.error(result.msg)
       // }
 
-      this.moveFileVisible = false
+      this.moveFileVisible = false;
     },
     /**
      * 重命名弹窗显示
      */
-    handleResetNameModalShow(event, options) {
-      this.resetNameVisible = true
+    handleResetNameModalShow() {
+      this.resetNameVisible = true;
     },
     /**
      * 重命名弹窗隐藏
      */
     handleResetNameCancel() {
-      this.resetNameVisible = false
+      this.resetNameVisible = false;
     },
     /**
      * 重命名弹窗确定
      */
     handleResetNameCreate(values) {
       if (this.resetName.type === 'new') {
-        this.handleAddItem(values)
+        this.handleAddItem(values);
       } else if (this.resetName.type === 'reset') {
-        this.handleResetName(values)
+        this.handleResetName(values);
       }
-      this.resetNameVisible = false
+      this.resetNameVisible = false;
     },
     /**
      * 新增文件夹
      */
-    async handleAddItem(values) {
+    async handleAddItem() {
       // const result = await this.$server.common.addMenuFolder('/datasource/catalog', {
       //   fileType: 0,
       //   name: values.name,
@@ -499,12 +478,12 @@ export default {
       //   this.$message.error(result.msg)
       // }
 
-      this.resetNameVisible = false
+      this.resetNameVisible = false;
     },
     /**
      * 修改文件夹及菜单名称
      */
-    async handleResetName(values) {
+    async handleResetName() {
       // const result = await this.$server.common.putMenuFolderName('/datasource/catalog/update', {
       //   fileType: this.resetName.item.fileType,
       //   id: this.resetName.item.id,
@@ -519,20 +498,20 @@ export default {
       //   this.$message.error(result.msg)
       // }
 
-      this.resetNameVisible = false
+      this.resetNameVisible = false;
     },
     /**
      * 判断是否有相同名称
      */
     handleHasName(list, values) {
       const isHas = list.filter(item => {
-        return item.name === values.name
-      })
-      console.log(isHas)
-      return !!(isHas && isHas.length > 0)
-    }
-  }
-}
+        return item.name === values.name;
+      });
+      console.log(isHas);
+      return !!(isHas && isHas.length > 0);
+    },
+  },
+};
 </script>
 
 <style lang="styl" scoped>

@@ -14,8 +14,8 @@ export default {
   inject: ['colorPicker'],
   methods: {
     handleSetTransparent() {
-      this.colorPicker.setTransparent()
-    }
-  }
-}
+      this.colorPicker.setTransparent();
+    },
+  },
+};
 </script>

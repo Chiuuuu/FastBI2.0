@@ -11,7 +11,14 @@
                 <a-button class="main-button" @click="back">退 出</a-button>
               </div>
             </header>
-            <a-form-model class="role-form" ref="form" :model="form" :rules="rules" :label-col="{ span: 6 }" :wrapper-col="{ span: 16 }">
+            <a-form-model
+              class="role-form"
+              ref="form"
+              :model="form"
+              :rules="rules"
+              :label-col="{ span: 6 }"
+              :wrapper-col="{ span: 16 }"
+            >
               <a-form-model-item label="角色名称" prop="name">
                 <a-input v-model="form.name" placeholder="请输入角色名称"></a-input>
               </a-form-model-item>
@@ -25,7 +32,7 @@
               @getTablePermi="getTablePermi"
               @setBasePrivilege="getBasePrivilege"
               @setSourceType="setSourceType"
-              ></RoleTabeRole>
+            ></RoleTabeRole>
             <!-- <RolesTabDataPermission status="edit"></RolesTabDataPermission> -->
           </div>
         </div>
@@ -35,16 +42,16 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
-import { trimFormData } from '@/utils/form-utils'
+import { mapState } from 'vuex';
+import { trimFormData } from '@/utils/form-utils';
 // import RolesTabDataPermission from '../tab-content/rolesTabDataPermission'
-import RoleTabeRole from '../tab-content/rolesTabRole'
+import RoleTabeRole from '../tab-content/rolesTabRole';
 
 export default {
   name: 'roleEdit',
   components: {
     // RolesTabDataPermission,
-    RoleTabeRole
+    RoleTabeRole,
   },
   data() {
     return {
@@ -52,89 +59,90 @@ export default {
       loading: false,
       form: {
         name: '',
-        description: ''
+        description: '',
       },
       rules: {
         name: [
           {
             required: true,
-            message: '请输入角色名称'
+            message: '请输入角色名称',
           },
           {
             type: 'string',
             max: 20,
             min: 1,
-            message: '请输入1-20个字的角色名称'
-          }
+            message: '请输入1-20个字的角色名称',
+          },
         ],
         description: [
           {
             required: true,
-            message: '请输入角色描述'
+            message: '请输入角色描述',
           },
           {
             type: 'string',
             max: 200,
             min: 1,
-            message: '请输入200字以内的用户描述'
-          }
-        ]
+            message: '请输入200字以内的用户描述',
+          },
+        ],
       },
       sourceType: '',
       basePrivilege: [],
       screen: [],
       dataModel: [],
-      dataSource: []
-    }
+      dataSource: [],
+    };
   },
   computed: {
     ...mapState({
       roleId: state => state.projectRoles.roleId,
-      formInfo: state => state.projectRoles.roleInfo
-    })
+      formInfo: state => state.projectRoles.roleInfo,
+    }),
   },
   mounted() {
-    this.handleGetRoleInfo()
-    this.$store.commit('projectRoles/SET_ROLEID', this.$route.params.id)
-    this.$store.commit('common/SET_MENUSELECTID', this.$route.params.id)
+    this.handleGetRoleInfo();
+    this.$store.commit('projectRoles/SET_ROLEID', this.$route.params.id);
+    this.$store.commit('common/SET_MENUSELECTID', this.$route.params.id);
   },
   methods: {
     async handleGetRoleInfo() {
-      const roleInfo = await this.$server.projectCenter.getRoleInfo(this.$route.params.id)
+      const roleInfo = await this.$server.projectCenter.getRoleInfo(this.$route.params.id);
       if (roleInfo.code === 200) {
-        this.$store.commit('projectRoles/SET_ROLEINFO', roleInfo.data)
-        this.form.name = roleInfo.data.name
-        this.form.description = roleInfo.data.description
+        this.$store.commit('projectRoles/SET_ROLEINFO', roleInfo.data);
+        this.form.name = roleInfo.data.name;
+        this.form.description = roleInfo.data.description;
       } else {
-        this.$message.error(roleInfo.msg)
+        this.$message.error(roleInfo.msg);
       }
     },
     back() {
       // 切换回查看模式
       this.$router.push({
-        path: '/projectCenter/roles/list'
-      })
+        path: '/projectCenter/roles/list',
+      });
     },
     getChangeItem(role, item) {
       switch (role) {
         case 1:
-          role = 'screen'
-          break
+          role = 'screen';
+          break;
         case 2:
-          role = 'dataModel'
-          break
+          role = 'dataModel';
+          break;
         case 3:
-          role = 'dataSource'
-          break
+          role = 'dataSource';
+          break;
       }
       // 初始化时, 把有勾选的对象都插入进去(后台约定)
       if (Array.isArray(item)) {
-        this[role] = this[role].concat(item)
-      } else { // 改变单个对象时, 把对象修改或者插入
-        const list = this[role]
-        const target = list.find(t => t.id === item.id)
+        this[role] = this[role].concat(item);
+      } else {
+        // 改变单个对象时, 把对象修改或者插入
+        const list = this[role];
+        const target = list.find(t => t.id === item.id);
         if (target) {
-          target.permissions = item.permissions
+          target.permissions = item.permissions;
         } else {
           // const params = {
           //   id: item.id,
@@ -146,7 +154,7 @@ export default {
           //   params.dataBasePri = []
           // }
           // list.push(params)
-          list.push(item)
+          list.push(item);
         }
       }
     },
@@ -154,79 +162,82 @@ export default {
     getTablePermi(role, item) {
       switch (role) {
         case 1:
-          role = 'screen'
-          break
+          role = 'screen';
+          break;
         case 2:
-          role = 'dataModel'
-          break
+          role = 'dataModel';
+          break;
         case 3:
-          role = 'dataSource'
-          break
+          role = 'dataSource';
+          break;
       }
-      const list = this[role]
-      const target = list.find(t => t.id === item.id)
+      const list = this[role];
+      const target = list.find(t => t.id === item.id);
       if (target) {
-        target.dataBasePri = item.dataBasePri
+        target.dataBasePri = item.dataBasePri;
       } else {
-        list.push(item)
+        list.push(item);
       }
     },
     // 设置业务权限
     getBasePrivilege(permissions, type) {
-      const target = this.basePrivilege.find(item => item.type === type)
+      const target = this.basePrivilege.find(item => item.type === type);
       if (target) {
-        target.permissions = permissions
+        target.permissions = permissions;
       } else {
         this.basePrivilege.push({
           type,
-          permissions
-        })
+          permissions,
+        });
       }
     },
     // 设置数据源类型
     setSourceType(data) {
-      this.sourceType = data
+      this.sourceType = data;
     },
     async handleSave() {
-      this.loading = true
-      const params = Object.assign({
-        id: this.roleId,
-        basePermissions: this.basePrivilege,
-        screen: this.screen,
-        dataModel: this.dataModel,
-        dataSource: this.dataSource
-      }, this.form)
+      this.loading = true;
+      const params = Object.assign(
+        {
+          id: this.roleId,
+          basePermissions: this.basePrivilege,
+          screen: this.screen,
+          dataModel: this.dataModel,
+          dataSource: this.dataSource,
+        },
+        this.form,
+      );
 
       const promiseall = [
         this.$server.projectCenter.updateRole(trimFormData(params)),
         this.$server.projectCenter.updateRoleSourceType({
           roleId: this.roleId,
-          forbiddenType: this.sourceType
-        })
-      ]
+          forbiddenType: this.sourceType,
+        }),
+      ];
       Promise.all(promiseall.map(promise => promise.catch(err => err)))
         .then(res => {
-          let isBack = true
+          let isBack = true;
           if (!res[0] || res[0].code !== 200) {
-            isBack = false
-            this.$message.error(res[0].msg || '保存角色权限失败')
+            isBack = false;
+            this.$message.error(res[0].msg || '保存角色权限失败');
           } else if (!res[1] || res[1].code !== 200) {
-            isBack = false
-            this.$message.error(res[1].msg || '保存数据源类型失败')
+            isBack = false;
+            this.$message.error(res[1].msg || '保存数据源类型失败');
           }
           if (isBack) {
-            this.$message.success('保存成功')
-            this.back()
+            this.$message.success('保存成功');
+            this.back();
           }
         })
         .finally(() => {
-          this.loading = false
-        })
-    }
-  }
-}
+          this.loading = false;
+        });
+    },
+  },
+};
 </script>
 
 <style lang="less" scoped>
-@import "../../../main";
+@import '../../../main';
 </style>

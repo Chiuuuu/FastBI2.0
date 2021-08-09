@@ -6,14 +6,14 @@
   </a-row>
 </template>
 <script>
-import Main from './components/proj-main'
+import Main from './components/proj-main';
 export default {
   name: 'corporateProject',
   components: {
-    Main
+    Main,
   },
   data() {
-    return {}
-  }
-}
+    return {};
+  },
+};
 </script>

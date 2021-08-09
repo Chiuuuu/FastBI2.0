@@ -1,15 +1,12 @@
 <template>
   <div class="box">
     <div class="item table-item">
-      <h6
-        class="dragable"
-        style="border-color: rgb(8, 140, 237);"
-      >
+      <h6 class="dragable" style="border-color: rgb(8, 140, 237)">
         {{ nodeData.props[`${title}`] }}
       </h6>
       <div v-if="nodeData.props.type === 2" class="union"></div>
       <span class="opt">
-        <b class="num">{{joinLength}}</b>
+        <b class="num">{{ joinLength }}</b>
       </span>
     </div>
     <div class="wrap">
@@ -28,21 +25,21 @@ export default {
   props: {
     nodeData: {
       type: Object,
-      default: function() {
-        return {}
-      }
+      default: function () {
+        return {};
+      },
     },
     title: {
       type: String,
-      default: 'title'
-    }
+      default: 'title',
+    },
   },
   computed: {
     joinLength() {
-      return this.nodeData.props.join && this.nodeData.props.join.conditions.length
-    }
-  }
-}
+      return this.nodeData.props.join && this.nodeData.props.join.conditions.length;
+    },
+  },
+};
 </script>
 <style lang="stylus" scoped>
 .m-map {

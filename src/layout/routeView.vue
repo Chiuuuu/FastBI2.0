@@ -6,7 +6,7 @@ export default {
       <div class="screen-manage">
         <router-view />
       </div>
-    )
-  }
-}
+    );
+  },
+};
 </script>

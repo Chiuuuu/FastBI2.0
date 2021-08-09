@@ -8,11 +8,7 @@
           <Tabs v-model="tabAcitve">
             <TabPanel tab="data" label="数据">
               <Collapse v-model="dataCollapseActive">
-                <CollapsePanel
-                  class="content-item"
-                  panel="dimension"
-                  header="维度"
-                >
+                <CollapsePanel class="content-item" panel="dimension" header="维度">
                   <!-- 维度 start -->
                   <UnitField
                     class="setting-unit-content"
@@ -25,11 +21,7 @@
                   ></UnitField>
                   <!-- 维度 end -->
                 </CollapsePanel>
-                <CollapsePanel
-                  class="content-item"
-                  panel="measure"
-                  header="度量"
-                >
+                <CollapsePanel class="content-item" panel="measure" header="度量">
                   <!-- 度量 start -->
                   <UnitField
                     class="setting-unit-content"
@@ -42,11 +34,7 @@
                   ></UnitField>
                   <!-- 度量 end -->
                 </CollapsePanel>
-                <CollapsePanel
-                  class="content-item"
-                  panel="dataFilter"
-                  header="数据筛选"
-                >
+                <CollapsePanel class="content-item" panel="dataFilter" header="数据筛选">
                   <!-- 数据筛选 start -->
                   <UnitDataFilter class="setting-unit-content">
                     <template #tip>
@@ -59,11 +47,7 @@
             </TabPanel>
             <TabPanel tab="style" label="样式">
               <Collapse v-model="styleCollapseActive">
-                <CollapsePanel
-                  class="content-item"
-                  panel="position"
-                  :isTogger="false"
-                >
+                <CollapsePanel class="content-item" panel="position" :isTogger="false">
                   <!-- 位置 start -->
                   <UnitPosition
                     class="setting-unit-content"
@@ -72,11 +56,7 @@
                   ></UnitPosition>
                   <!-- 位置 end -->
                 </CollapsePanel>
-                <CollapsePanel
-                  class="content-item"
-                  panel="size"
-                  :isTogger="false"
-                >
+                <CollapsePanel class="content-item" panel="size" :isTogger="false">
                   <!-- 尺寸 start -->
                   <UnitSize
                     class="setting-unit-content"
@@ -94,11 +74,7 @@
                   ></UnitTitle>
                   <!-- 标题 end -->
                 </CollapsePanel>
-                <CollapsePanel
-                  class="content-item"
-                  panel="bgAndBorder"
-                  header="背景和边框"
-                >
+                <CollapsePanel class="content-item" panel="bgAndBorder" header="背景和边框">
                   <div class="setting-unit-content">
                     <!-- 背景颜色 start -->
                     <UnitBackgroundColor
@@ -115,11 +91,7 @@
                     <!-- 边框设置 end -->
                   </div>
                 </CollapsePanel>
-                <CollapsePanel
-                  class="content-item"
-                  panel="chartStyle"
-                  header="图表样式"
-                >
+                <CollapsePanel class="content-item" panel="chartStyle" header="图表样式">
                   <!-- 图表样式 start -->
                   <div class="setting-unit-content">
                     <a-row class="unit-show-block mb-8">
@@ -132,17 +104,10 @@
                         <a-radio-group
                           name="radioGroup"
                           :value="currentCom.setting.style.echart.customStack"
-                          @change="
-                            event =>
-                              handleShape('customStack', event.target.value)
-                          "
+                          @change="event => handleShape('customStack', event.target.value)"
                         >
-                          <a-radio :value="false">
-                            分布
-                          </a-radio>
-                          <a-radio :value="true">
-                            堆叠
-                          </a-radio>
+                          <a-radio :value="false">分布</a-radio>
+                          <a-radio :value="true">堆叠</a-radio>
                         </a-radio-group>
                       </a-col>
                       <!-- 形状 方式 end -->
@@ -157,35 +122,22 @@
                         <a-radio-group
                           name="radioGroup"
                           :value="currentCom.setting.style.echart.customShape"
-                          @change="
-                            event =>
-                              handleShape('customShape', event.target.value)
-                          "
+                          @change="event => handleShape('customShape', event.target.value)"
                         >
-                          <a-radio value="horizontal">
-                            水平
-                          </a-radio>
-                          <a-radio value="vertical">
-                            垂直
-                          </a-radio>
+                          <a-radio value="horizontal">水平</a-radio>
+                          <a-radio value="vertical">垂直</a-radio>
                         </a-radio-group>
                       </a-col>
                       <!-- 形状 方式 end -->
                     </a-row>
                   </div>
                 </CollapsePanel>
-                <CollapsePanel
-                  class="content-item"
-                  panel="setStyle"
-                  header="样式设置"
-                >
+                <CollapsePanel class="content-item" panel="setStyle" header="样式设置">
                   <div class="setting-unit-content">
                     <UnitBackgroundColor
                       class="mb-8"
                       v-if="currentCom.setting.data.measures.length <= 1"
-                      :color="
-                        currentCom.setting.style.echart.customBarColors[0]
-                      "
+                      :color="currentCom.setting.style.echart.customBarColors[0]"
                       label="颜色"
                       @change="color => handleBarColor(color)"
                     ></UnitBackgroundColor>
@@ -195,12 +147,7 @@
                       </a-col>
                       <!-- 柱状条 颜色 start -->
                       <a-col :span="16">
-                        <div
-                          class="color-select-box"
-                          @click="handleOpenColorModal"
-                        >
-                          颜色选择
-                        </div>
+                        <div class="color-select-box" @click="handleOpenColorModal">颜色选择</div>
                       </a-col>
                       <!-- 柱状条 颜色 end -->
                     </a-row>
@@ -213,20 +160,14 @@
                         <a-input-number
                           :min="0"
                           :max="100"
-                          :value="
-                            currentCom.setting.style.echart.customBarWidth
-                          "
+                          :value="currentCom.setting.style.echart.customBarWidth"
                           @change="val => handleBarWidthChange(val)"
                         ></a-input-number>
                       </a-col>
                     </a-row>
                   </div>
                 </CollapsePanel>
-                <CollapsePanel
-                  class="content-item"
-                  panel="drawing"
-                  header="绘图区"
-                >
+                <CollapsePanel class="content-item" panel="drawing" header="绘图区">
                   <UnitDrawing
                     :grid="currentCom.setting.style.echart.grid"
                     :xAxis="currentCom.setting.style.echart.xAxis"
@@ -252,11 +193,7 @@
                   ></UnitYaxis>
                   <!-- Y轴 end -->
                 </CollapsePanel>
-                <CollapsePanel
-                  class="content-item"
-                  panel="legend"
-                  header="标签"
-                >
+                <CollapsePanel class="content-item" panel="legend" header="标签">
                   <div class="setting-unit-content">
                     <!-- 标签是否显示 start -->
                     <UnitCheckbox
@@ -276,9 +213,7 @@
                       <a-col :span="4">
                         <div class="font-color">
                           <ColorPicker
-                            :value="
-                              currentCom.setting.style.echart.customLabel.color
-                            "
+                            :value="currentCom.setting.style.echart.customLabel.color"
                             @change="color => handleLabel('color', color)"
                           ></ColorPicker>
                         </div>
@@ -288,13 +223,9 @@
                       <!-- 标签 字体 大小 start -->
                       <a-col :span="16">
                         <a-input-number
-                          :value="
-                            currentCom.setting.style.echart.customLabel.fontSize
-                          "
+                          :value="currentCom.setting.style.echart.customLabel.fontSize"
                           :min="0"
-                          @change="
-                            fontSize => handleLabel('fontSize', fontSize)
-                          "
+                          @change="fontSize => handleLabel('fontSize', fontSize)"
                         />
                       </a-col>
                       <!-- 标签 字体 大小 end -->
@@ -307,57 +238,29 @@
                       <!-- 标签 位置 start -->
                       <a-radio-group
                         name="radioGroup"
-                        :value="
-                          currentCom.setting.style.echart.customLabel.position
-                        "
-                        @change="
-                          event => handleLabel('position', event.target.value)
-                        "
+                        :value="currentCom.setting.style.echart.customLabel.position"
+                        @change="event => handleLabel('position', event.target.value)"
                       >
-                        <a-radio value="inside">
-                          内部
-                        </a-radio>
-                        <a-radio value="outside">
-                          外部
-                        </a-radio>
+                        <a-radio value="inside">内部</a-radio>
+                        <a-radio value="outside">外部</a-radio>
                       </a-radio-group>
                       <!-- 标签 位置 end -->
                     </a-row>
                   </div>
                 </CollapsePanel>
-                <CollapsePanel
-                  class="content-item"
-                  panel="legend"
-                  header="图例"
-                >
+                <CollapsePanel class="content-item" panel="legend" header="图例">
                   <UnitLegend
                     :legend="currentCom.setting.style.echart.legend"
                     @change="
                       (key, value, isReset, beforeExecute, afterExecute) =>
-                        handleChange(
-                          key,
-                          value,
-                          isReset,
-                          beforeExecute,
-                          afterExecute
-                        )
+                        handleChange(key, value, isReset, beforeExecute, afterExecute)
                     "
                   ></UnitLegend>
                 </CollapsePanel>
-                <CollapsePanel
-                  class="content-item"
-                  panel="reset"
-                  :isTogger="false"
-                >
+                <CollapsePanel class="content-item" panel="reset" :isTogger="false">
                   <!-- 恢复默认配置 start -->
                   <div class="setting-unit-content">
-                    <a-button
-                      class="btn-ghost reset"
-                      type="link"
-                      icon="redo"
-                      block
-                      @click="handleClickReset"
-                    >
+                    <a-button class="btn-ghost reset" type="link" icon="redo" block @click="handleClickReset">
                       恢复默认配置
                     </a-button>
                   </div>
@@ -367,11 +270,7 @@
             </TabPanel>
             <TabPanel tab="interaction" label="交互">
               <Collapse>
-                <CollapsePanel
-                  class="content-item"
-                  panel="connect"
-                  header="图表联动"
-                >
+                <CollapsePanel class="content-item" panel="connect" header="图表联动">
                   <!-- 图表联动 start -->
                   <UnitConnect class="setting-unit-content"></UnitConnect>
                   <!-- 图表联动 end -->
@@ -407,16 +306,16 @@
   </div>
 </template>
 <script>
-import BoardType from '@/views/screenManage/screen/setting/default-type'
-import StyleMethodMixin from '@/views/screenManage/screen/setting/style-method-mixin'
+import BoardType from '@/views/screenManage/screen/setting/default-type';
+import StyleMethodMixin from '@/views/screenManage/screen/setting/style-method-mixin';
 export default {
   name: `${BoardType.ChartBar}Setting`,
   mixins: [StyleMethodMixin],
   props: {
     currentCom: {
       type: Object,
-      required: true
-    }
+      required: true,
+    },
   },
   data() {
     return {
@@ -424,10 +323,8 @@ export default {
       dataCollapseActive: ['dimension', 'measure', 'reset'], // 折叠打开选项
       styleCollapseActive: [],
       colorModal: false,
-      cacheBarColors: [].concat(
-        this.currentCom.setting.style.echart.customBarColors
-      )
-    }
+      cacheBarColors: [].concat(this.currentCom.setting.style.echart.customBarColors),
+    };
   },
   methods: {
     /**
@@ -435,57 +332,55 @@ export default {
      */
     handleShape(key, value) {
       this.handleChange('echart', {
-        [key]: value
-      })
+        [key]: value,
+      });
     },
     /**
      * @description 只有一条数据的时候，直接更改
      */
     handleBarColor(value) {
-      this.cacheBarColors.splice(0, 1, value)
+      this.cacheBarColors.splice(0, 1, value);
       this.handleChange('echart', {
-        customBarColors: this.cacheBarColors
-      })
+        customBarColors: this.cacheBarColors,
+      });
     },
     /**
      * @description 打开颜色弹窗
      */
     handleOpenColorModal() {
-      this.cacheBarColors = JSON.parse(
-        JSON.stringify(this.currentCom.setting.style.echart.customBarColors)
-      )
+      this.cacheBarColors = JSON.parse(JSON.stringify(this.currentCom.setting.style.echart.customBarColors));
       this.$nextTick(() => {
-        this.colorModal = true
-      })
+        this.colorModal = true;
+      });
     },
     /**
      * @description 模态窗更改颜色
      */
     handleModalBarColor(value, index) {
-      this.cacheBarColors.splice(index, 1, value)
+      this.cacheBarColors.splice(index, 1, value);
     },
     /**
      * @description 模态窗确定
      */
     handleColorModalSubmit() {
       this.handleChange('echart', {
-        customBarColors: this.cacheBarColors
-      })
-      this.handleCloseColorModal()
+        customBarColors: this.cacheBarColors,
+      });
+      this.handleCloseColorModal();
     },
     /**
      * @description 关闭模态窗
      */
     handleCloseColorModal() {
-      this.colorModal = false
+      this.colorModal = false;
     },
     /**
      * @description 更改柱状条宽度
      */
     handleBarWidthChange(val) {
       this.handleChange('echart', {
-        customBarWidth: val
-      })
+        customBarWidth: val,
+      });
     },
     /**
      * @description 标签设置
@@ -493,12 +388,12 @@ export default {
     handleLabel(key, value) {
       this.handleChange('echart', {
         customLabel: {
-          [key]: value
-        }
-      })
-    }
-  }
-}
+          [key]: value,
+        },
+      });
+    },
+  },
+};
 </script>
 <style lang="less">
 @deep: ~'>>>';

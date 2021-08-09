@@ -1,7 +1,7 @@
-import { DEFAULT_COLORS } from './defaultColors'
+import { DEFAULT_COLORS } from './defaultColors';
 
 function chartClick(e) {
-  console.log(e)
+  console.log(e);
 }
 
 const database = {
@@ -11,7 +11,7 @@ const database = {
     backgroundColor: '#0d2a42', // 背景颜色
     gridStep: 8, // 栅格间距
     backgroundType: 1,
-    backgroundSrc: ''
+    backgroundSrc: '',
   },
   canvasMaps: [
     {
@@ -36,15 +36,15 @@ const database = {
             { x: '1/3', y: 112, s: '系列2' },
             { x: '1/4', y: 56, s: '系列2' },
             { x: '1/5', y: 122, s: '系列2' },
-            { x: '1/6', y: 323, s: '系列2' }
-          ]
+            { x: '1/6', y: 323, s: '系列2' },
+          ],
         },
         apis: {
           labelMap: {
             x: '类目',
             y: '值',
-            s: '系列1'
-          }
+            s: '系列1',
+          },
         },
         background: {
           backgroundType: '1',
@@ -52,7 +52,7 @@ const database = {
           borderColor: '',
           borderWidth: 0,
           borderStyle: '',
-          borderRadius: 0
+          borderRadius: 0,
         },
         config: {
           title: {
@@ -61,75 +61,75 @@ const database = {
             textAlign: 'left',
             textStyle: {
               color: '#ffffff',
-              fontSize: 20
-            }
+              fontSize: 20,
+            },
           },
           grid: { left: 20, top: 60, right: 20, bottom: 30 },
           legend: {
             show: true,
             textStyle: {
               color: '#ffffff',
-              fontSize: 12
+              fontSize: 12,
             },
             itemGap: 12,
             icon: '',
             left: 'center',
             top: 'auto',
             right: 'auto',
-            bottom: 'auto'
+            bottom: 'auto',
           },
           xAxis: {
             show: true,
             axisLabel: {
               color: '#ffffff',
               fontSize: 12,
-              rotate: 0
+              rotate: 0,
             },
             axisLine: {
               show: false,
               lineStyle: {
-                color: '#fff'
-              }
+                color: '#fff',
+              },
             },
             splitLine: {
               show: false,
               lineStyle: {
-                color: '#fff'
-              }
-            }
+                color: '#fff',
+              },
+            },
           },
           yAxis: {
             show: true,
             axisLabel: {
               color: '#ffffff',
-              fontSize: 12
+              fontSize: 12,
             },
             axisLine: {
               show: false,
               lineStyle: {
-                color: '#fff'
-              }
+                color: '#fff',
+              },
             },
             splitLine: {
               show: true,
               lineStyle: {
-                color: '#fff'
-              }
-            }
+                color: '#fff',
+              },
+            },
           },
           series: {
             label: {
               show: false,
               color: '#fff',
               fontSize: 12,
-              position: 'top'
+              position: 'top',
             },
-            barWidth: 'auto' // 可选
+            barWidth: 'auto', // 可选
           },
-          color: DEFAULT_COLORS
+          color: DEFAULT_COLORS,
         },
-        view: { width: 500, height: 400, x: 80, y: 580, rotate: 0 }
-      }
+        view: { width: 500, height: 400, x: 80, y: 580, rotate: 0 },
+      },
     },
     {
       id: 'v-line',
@@ -147,11 +147,11 @@ const database = {
             { x: '1/3', y: 25 },
             { x: '1/4', y: 190 },
             { x: '1/5', y: 90 },
-            { x: '1/6', y: 277 }
-          ]
+            { x: '1/6', y: 277 },
+          ],
         },
         apis: {
-          labelMap: { x: '类目', y: '值', s: '系列1' }
+          labelMap: { x: '类目', y: '值', s: '系列1' },
         },
         background: {
           backgroundType: 1,
@@ -159,7 +159,7 @@ const database = {
           borderColor: '',
           borderWidth: '',
           borderStyle: '',
-          borderRadius: 0
+          borderRadius: 0,
         },
         config: {
           title: {
@@ -168,22 +168,22 @@ const database = {
             textAlign: 'left',
             textStyle: {
               color: '#ffffff',
-              fontSize: 20
-            }
+              fontSize: 20,
+            },
           },
           grid: { left: 20, top: 60, right: 20, bottom: 30 },
           legend: {
             show: true,
             textStyle: {
               color: '#ffffff',
-              fontSize: 12
+              fontSize: 12,
             },
             itemGap: 12,
             icon: '',
             left: 'center',
             top: 'auto',
             right: 'auto',
-            bottom: 'auto'
+            bottom: 'auto',
           },
           xAxis: {
             show: true,
@@ -191,39 +191,39 @@ const database = {
             axisLabel: {
               color: '#ffffff',
               fontSize: 12,
-              rotate: 0
+              rotate: 0,
             },
             axisLine: {
               show: false,
               lineStyle: {
-                color: '#fff'
-              }
+                color: '#fff',
+              },
             },
             splitLine: {
               show: false,
               lineStyle: {
-                color: '#fff'
-              }
-            }
+                color: '#fff',
+              },
+            },
           },
           yAxis: {
             show: true,
             axisLabel: {
               color: '#ffffff',
-              fontSize: 12
+              fontSize: 12,
             },
             axisLine: {
               show: false,
               lineStyle: {
-                color: '#fff'
-              }
+                color: '#fff',
+              },
             },
             splitLine: {
               show: true,
               lineStyle: {
-                color: '#fff'
-              }
-            }
+                color: '#fff',
+              },
+            },
           },
           series: {
             smooth: false, // 可选的
@@ -231,23 +231,23 @@ const database = {
             step: false,
             symbol: 'circle', // 标记点
             lineStyle: {
-              width: 1
+              width: 1,
             },
             label: {
               show: false,
               color: '#fff',
               fontSize: 12,
-              position: 'top'
+              position: 'top',
             },
             areaStyle: {
               // 可选的
-              opacity: 0
-            }
+              opacity: 0,
+            },
           },
-          color: DEFAULT_COLORS
+          color: DEFAULT_COLORS,
         },
-        view: { width: 500, height: 400, x: 710, y: 580, rotate: 0 } // 计算中间值(1920-500)*0.5,(1080-400)*0.5
-      }
+        view: { width: 500, height: 400, x: 710, y: 580, rotate: 0 }, // 计算中间值(1920-500)*0.5,(1080-400)*0.5
+      },
     },
     {
       id: 'v-bar',
@@ -271,15 +271,15 @@ const database = {
             { x: '1/3', y: 112, s: '系列2' },
             { x: '1/4', y: 56, s: '系列2' },
             { x: '1/5', y: 122, s: '系列2' },
-            { x: '1/6', y: 323, s: '系列2' }
-          ]
+            { x: '1/6', y: 323, s: '系列2' },
+          ],
         },
         apis: {
           labelMap: {
             x: '类目',
             y: '值',
-            s: '系列1'
-          }
+            s: '系列1',
+          },
         },
         background: {
           backgroundType: '1',
@@ -287,7 +287,7 @@ const database = {
           borderColor: '',
           borderWidth: 0,
           borderStyle: '',
-          borderRadius: 0
+          borderRadius: 0,
         },
         config: {
           title: {
@@ -296,75 +296,75 @@ const database = {
             textAlign: 'left',
             textStyle: {
               color: '#ffffff',
-              fontSize: 20
-            }
+              fontSize: 20,
+            },
           },
           grid: { left: 20, top: 60, right: 20, bottom: 30 },
           legend: {
             show: true,
             textStyle: {
               color: '#ffffff',
-              fontSize: 12
+              fontSize: 12,
             },
             itemGap: 12,
             icon: '',
             left: 'center',
             top: 'auto',
             right: 'auto',
-            bottom: 'auto'
+            bottom: 'auto',
           },
           xAxis: {
             show: true,
             axisLabel: {
               color: '#ffffff',
               fontSize: 12,
-              rotate: 0
+              rotate: 0,
             },
             axisLine: {
               show: false,
               lineStyle: {
-                color: '#cccccc'
-              }
+                color: '#cccccc',
+              },
             },
             splitLine: {
               show: true,
               lineStyle: {
-                color: '#cccccc'
-              }
-            }
+                color: '#cccccc',
+              },
+            },
           },
           yAxis: {
             show: true,
             axisLabel: {
               color: '#ffffff',
-              fontSize: 12
+              fontSize: 12,
             },
             axisLine: {
               show: true,
               lineStyle: {
-                color: '#cccccc'
-              }
+                color: '#cccccc',
+              },
             },
             splitLine: {
               show: false,
               lineStyle: {
-                color: '#cccccc'
-              }
-            }
+                color: '#cccccc',
+              },
+            },
           },
           series: {
             label: {
               show: false,
               color: '#fff',
               fontSize: 12,
-              position: 'inside'
+              position: 'inside',
             },
-            barWidth: 'auto' // 可选
+            barWidth: 'auto', // 可选
           },
-          color: DEFAULT_COLORS
+          color: DEFAULT_COLORS,
         },
-        view: { width: 500, height: 400, x: 1300, y: 580, rotate: 0 }
-      }
+        view: { width: 500, height: 400, x: 1300, y: 580, rotate: 0 },
+      },
     },
     {
       id: 'v-pie',
@@ -382,16 +382,19 @@ const database = {
             { x: '1/3', y: 2923, s: '系列1' },
             { x: '1/4', y: 1723, s: '系列1' },
             { x: '1/5', y: 3792, s: '系列1' },
-            { x: '1/6', y: 4593, s: '系列1' }
-          ]
+            { x: '1/6', y: 4593, s: '系列1' },
+          ],
         },
         apis: {
-          level: [['1/1', '1/2', '1/3'], ['1/4', '1/5']],
+          level: [
+            ['1/1', '1/2', '1/3'],
+            ['1/4', '1/5'],
+          ],
           labelMap: {
             x: '类目',
             y: '值',
-            s: '系列1'
-          }
+            s: '系列1',
+          },
         },
         background: {
           backgroundType: '1',
@@ -399,7 +402,7 @@ const database = {
           borderColor: '',
           borderWidth: 0,
           borderStyle: '',
-          borderRadius: 0
+          borderRadius: 0,
         },
         config: {
           title: {
@@ -408,61 +411,61 @@ const database = {
             textAlign: 'left',
             textStyle: {
               color: '#ffffff',
-              fontSize: 20
-            }
+              fontSize: 20,
+            },
           },
           grid: { left: 20, top: 60, right: 20, bottom: 30 },
           legend: {
             show: true,
             textStyle: {
               color: '#ffffff',
-              fontSize: 12
+              fontSize: 12,
             },
             itemGap: 12,
             icon: '',
             left: 'center',
             top: 'auto',
             right: 'auto',
-            bottom: 'auto'
+            bottom: 'auto',
           },
           xAxis: {
             show: false,
             axisLabel: {
               color: '#ffffff',
               fontSize: 12,
-              rotate: 0
+              rotate: 0,
             },
             axisLine: {
               show: false,
               lineStyle: {
-                color: '#cccccc'
-              }
+                color: '#cccccc',
+              },
             },
             splitLine: {
               show: false,
               lineStyle: {
-                color: '#cccccc'
-              }
-            }
+                color: '#cccccc',
+              },
+            },
           },
           yAxis: {
             show: false,
             axisLabel: {
               color: '#ffffff',
-              fontSize: 12
+              fontSize: 12,
             },
             axisLine: {
               show: false,
               lineStyle: {
-                color: '#cccccc'
-              }
+                color: '#cccccc',
+              },
             },
             splitLine: {
               show: false,
               lineStyle: {
-                color: '#cccccc'
-              }
-            }
+                color: '#cccccc',
+              },
+            },
           },
           series: {
             label: {
@@ -470,19 +473,19 @@ const database = {
               color: '',
               fontSize: 12,
               position: 'outside', // 可选inside
-              formatter: '{b}: {@2012} ({d}%)'
+              formatter: '{b}: {@2012} ({d}%)',
             },
             roseType: false, // 饼图可选玫瑰图
             center: ['50%', '50%'], // 饼图可选
-            radius: ['0', '70%'] // 饼图可选
+            radius: ['0', '70%'], // 饼图可选
           },
-          color: DEFAULT_COLORS
+          color: DEFAULT_COLORS,
         },
         chartEvents: {
-          click: chartClick
+          click: chartClick,
         },
-        view: { width: 400, height: 400, x: 136, y: 34, rotate: 0 }
-      }
+        view: { width: 400, height: 400, x: 136, y: 34, rotate: 0 },
+      },
     },
     {
       id: 'v-map',
@@ -504,16 +507,16 @@ const database = {
             { x: '乌鲁木齐', y: 122 },
             { x: '马鞍山', y: 32 },
             { x: '张家界', y: 55 },
-            { x: '三门峡', y: 100 }
-          ]
+            { x: '三门峡', y: 100 },
+          ],
         },
         apis: {
           position: 'china',
           labelMap: {
             x: '位置',
             y: '人口',
-            s: '系列1'
-          }
+            s: '系列1',
+          },
         },
         background: {
           backgroundType: '1',
@@ -521,7 +524,7 @@ const database = {
           borderColor: '',
           borderWidth: 0,
           borderStyle: '',
-          borderRadius: 0
+          borderRadius: 0,
         },
         config: {
           title: {
@@ -530,22 +533,22 @@ const database = {
             textAlign: 'left',
             textStyle: {
               color: '#ffffff',
-              fontSize: 20
-            }
+              fontSize: 20,
+            },
           },
           grid: { left: 20, top: 60, right: 20, bottom: 30 },
           legend: {
             show: true,
             textStyle: {
               color: '#ffffff',
-              fontSize: 12
+              fontSize: 12,
             },
             itemGap: 12,
             icon: '',
             left: 'center',
             top: 'auto',
             right: 'auto',
-            bottom: 'auto'
+            bottom: 'auto',
           },
           visualMap: {
             show: false,
@@ -554,51 +557,51 @@ const database = {
             max: 200,
             inRange: {
               color: ['#50a3ba', '#eac736', '#d94e5d'],
-              symbolSize: [10, 16]
+              symbolSize: [10, 16],
             },
             textStyle: {
               color: '#fff',
-              fontSize: 12
-            }
+              fontSize: 12,
+            },
           },
           xAxis: {
             show: false,
             axisLabel: {
               color: '#ffffff',
               fontSize: 12,
-              rotate: 0
+              rotate: 0,
             },
             axisLine: {
               show: false,
               lineStyle: {
-                color: '#cccccc'
-              }
+                color: '#cccccc',
+              },
             },
             splitLine: {
               show: false,
               lineStyle: {
-                color: '#cccccc'
-              }
-            }
+                color: '#cccccc',
+              },
+            },
           },
           yAxis: {
             show: false,
             axisLabel: {
               color: '#ffffff',
-              fontSize: 12
+              fontSize: 12,
             },
             axisLine: {
               show: false,
               lineStyle: {
-                color: '#cccccc'
-              }
+                color: '#cccccc',
+              },
             },
             splitLine: {
               show: false,
               lineStyle: {
-                color: '#cccccc'
-              }
-            }
+                color: '#cccccc',
+              },
+            },
           },
           // 地图独有的
           geo: {
@@ -608,24 +611,24 @@ const database = {
               normal: {
                 show: false,
                 color: '#fff',
-                fontSize: 12
+                fontSize: 12,
               },
               emphasis: {
                 show: false,
                 color: '#fff',
-                fontSize: 12
-              }
+                fontSize: 12,
+              },
             },
             itemStyle: {
               normal: {
                 areaColor: '#282c3c',
-                borderColor: '#1f9bff'
+                borderColor: '#1f9bff',
               },
               emphasis: {
                 areaColor: '#1d2131',
-                borderColor: '#1f9bff'
-              }
-            }
+                borderColor: '#1f9bff',
+              },
+            },
           },
           series: {
             type: 'scatter', // scatter,effectScatter
@@ -636,27 +639,27 @@ const database = {
             showEffectOn: 'render',
             rippleEffect: {
               brushType: 'stroke',
-              scale: 3
+              scale: 3,
             },
             label: {
               show: false,
               formatter: '{b}',
               color: '',
               fontSize: 12,
-              position: 'inside' // 可选inside
+              position: 'inside', // 可选inside
             },
             itemStyle: {
               emphasis: {
                 borderColor: '#fff',
-                borderWidth: 1
-              }
+                borderWidth: 1,
+              },
             },
-            zlevel: 1
+            zlevel: 1,
           },
-          color: DEFAULT_COLORS
+          color: DEFAULT_COLORS,
         },
-        view: { width: 500, height: 500, x: 710, y: 34, rotate: 0 }
-      }
+        view: { width: 500, height: 500, x: 710, y: 34, rotate: 0 },
+      },
     },
     {
       id: 'v-radar',
@@ -688,15 +691,15 @@ const database = {
             { x: '1/3', y: 3532, s: '指标3' },
             { x: '1/4', y: 2234, s: '指标3' },
             { x: '1/5', y: 2345, s: '指标3' },
-            { x: '1/6', y: 1111, s: '指标3' }
-          ]
+            { x: '1/6', y: 1111, s: '指标3' },
+          ],
         },
         apis: {
           labelMap: {
             x: '类目',
             y: '值',
-            s: '系列1'
-          }
+            s: '系列1',
+          },
         },
         background: {
           backgroundType: '1',
@@ -704,7 +707,7 @@ const database = {
           borderColor: '',
           borderWidth: 0,
           borderStyle: '',
-          borderRadius: 0
+          borderRadius: 0,
         },
         config: {
           title: {
@@ -713,84 +716,84 @@ const database = {
             textAlign: 'left',
             textStyle: {
               color: '#ffffff',
-              fontSize: 20
-            }
+              fontSize: 20,
+            },
           },
           grid: { left: 20, top: 60, right: 20, bottom: 30 },
           legend: {
             show: true,
             textStyle: {
               color: '#ffffff',
-              fontSize: 12
+              fontSize: 12,
             },
             itemGap: 12,
             icon: '',
             left: 'center',
             top: 'auto',
             right: 'auto',
-            bottom: 'auto'
+            bottom: 'auto',
           },
           radar: {
             // 雷达图可选
             shape: 'circle', // polygon
             center: ['50%', '60%'],
-            radius: '75%'
+            radius: '75%',
           },
           xAxis: {
             show: false,
             axisLabel: {
               color: '#ffffff',
               fontSize: 12,
-              rotate: 0
+              rotate: 0,
             },
             axisLine: {
               show: false,
               lineStyle: {
-                color: '#cccccc'
-              }
+                color: '#cccccc',
+              },
             },
             splitLine: {
               show: false,
               lineStyle: {
-                color: '#cccccc'
-              }
-            }
+                color: '#cccccc',
+              },
+            },
           },
           yAxis: {
             show: false,
             axisLabel: {
               color: '#ffffff',
-              fontSize: 12
+              fontSize: 12,
             },
             axisLine: {
               show: false,
               lineStyle: {
-                color: '#cccccc'
-              }
+                color: '#cccccc',
+              },
             },
             splitLine: {
               show: false,
               lineStyle: {
-                color: '#cccccc'
-              }
-            }
+                color: '#cccccc',
+              },
+            },
           },
           series: {
             label: {
               show: false,
               color: '',
               fontSize: 12,
-              position: 'inside' // 可选inside
+              position: 'inside', // 可选inside
             },
             areaStyle: {
               // 可选的
-              opacity: 0
-            }
+              opacity: 0,
+            },
           },
-          color: DEFAULT_COLORS
+          color: DEFAULT_COLORS,
         },
-        view: { width: 400, height: 400, x: 1364, y: 34, rotate: 0 }
-      }
+        view: { width: 400, height: 400, x: 1364, y: 34, rotate: 0 },
+      },
     },
     {
       id: 'v-gauge',
@@ -802,14 +805,14 @@ const database = {
         type: '1',
         modelId: '',
         api_data: {
-          source: [{ x: 'type', y: 60, s: 'value' }]
+          source: [{ x: 'type', y: 60, s: 'value' }],
         },
         apis: {
           labelMap: {
             x: '类目',
             y: '值',
-            s: '系列1'
-          }
+            s: '系列1',
+          },
         },
         background: {
           backgroundType: '1',
@@ -817,7 +820,7 @@ const database = {
           borderColor: '',
           borderWidth: 0,
           borderStyle: '',
-          borderRadius: 0
+          borderRadius: 0,
         },
         config: {
           title: {
@@ -826,29 +829,29 @@ const database = {
             textAlign: 'left',
             textStyle: {
               color: '#ffffff',
-              fontSize: 20
-            }
+              fontSize: 20,
+            },
           },
           grid: { left: 20, top: 60, right: 20, bottom: 30 },
           xAxis: {
-            show: false
+            show: false,
           },
           yAxis: {
-            show: false
+            show: false,
           },
           legend: {
             show: false,
             data: [],
             textStyle: {
               color: '#ffffff',
-              fontSize: 12
+              fontSize: 12,
             },
             itemGap: 12,
             icon: '',
             left: 'center',
             top: 'auto',
             right: 'auto',
-            bottom: 'auto'
+            bottom: 'auto',
           },
           series: {
             name: '',
@@ -866,38 +869,38 @@ const database = {
                 color: [[1, '#f5c942']],
                 shadowColor: '#ccc',
                 shadowBlur: 2,
-                width: 15
-              }
+                width: 15,
+              },
             },
             splitLine: {
               show: true,
               length: 10, // 刻度节点线长度
               lineStyle: {
                 width: 2,
-                color: '#fff'
-              } // 刻度节点线
+                color: '#fff',
+              }, // 刻度节点线
             },
             axisTick: {
-              show: false
+              show: false,
             },
             axisLabel: {
-              show: true
+              show: true,
             },
             // title: {
             //   show: true
             // },
             detail: {
-              show: true
+              show: true,
             },
             pointer: {
               // 指针样式
-              length: '60%'
-            }
-          }
+              length: '60%',
+            },
+          },
           // color: DEFAULT_COLORS
         },
-        view: { width: 400, height: 400, x: 760, y: 340, rotate: 0 }
-      }
+        view: { width: 400, height: 400, x: 760, y: 340, rotate: 0 },
+      },
     },
     {
       id: 'v-ring',
@@ -911,16 +914,16 @@ const database = {
         api_data: {
           source: [
             { x: '1/1', y: 80, s: '系列1' },
-            { x: '1/2', y: 20, s: '系列1' }
-          ]
+            { x: '1/2', y: 20, s: '系列1' },
+          ],
         },
         apis: {
           hoverAnimation: false,
           labelMap: {
             x: '类目',
             y: '值',
-            s: '系列1'
-          }
+            s: '系列1',
+          },
         },
         background: {
           backgroundType: '1',
@@ -928,7 +931,7 @@ const database = {
           borderColor: '',
           borderWidth: 0,
           borderStyle: '',
-          borderRadius: 0
+          borderRadius: 0,
         },
         config: {
           title: {
@@ -937,11 +940,11 @@ const database = {
             textAlign: 'left',
             textStyle: {
               color: '#ffffff',
-              fontSize: 20
-            }
+              fontSize: 20,
+            },
           },
           tooltip: {
-            show: false
+            show: false,
           },
           grid: { left: 20, top: 20, right: 20, bottom: 30 },
           legend: {
@@ -949,20 +952,20 @@ const database = {
             data: [],
             textStyle: {
               color: '#ffffff',
-              fontSize: 12
+              fontSize: 12,
             },
             itemGap: 12,
             icon: '',
             left: 'center',
             top: 'auto',
             right: 'auto',
-            bottom: 'auto'
+            bottom: 'auto',
           },
           xAxis: {
-            show: false
+            show: false,
           },
           yAxis: {
-            show: false
+            show: false,
           },
           series: {
             radius: ['60%', '70%'],
@@ -970,30 +973,30 @@ const database = {
             label: {
               normal: {
                 show: false,
-                formatter: function(val) {
-                  console.log(val)
+                formatter: function (val) {
+                  console.log(val);
                 },
                 position: 'center',
                 textStyle: {
-                  fontSize: '30'
-                }
+                  fontSize: '30',
+                },
               },
               emphasis: {
                 show: false,
                 textStyle: {
                   fontSize: '30',
-                  fontWeight: 'bold'
-                }
-              }
-            }
+                  fontWeight: 'bold',
+                },
+              },
+            },
           },
-          color: DEFAULT_COLORS
+          color: DEFAULT_COLORS,
         },
         chartEvents: {
-          click: chartClick
+          click: chartClick,
         },
-        view: { width: 400, height: 400, x: 760, y: 340, rotate: 0 }
-      }
+        view: { width: 400, height: 400, x: 760, y: 340, rotate: 0 },
+      },
     },
     {
       id: 'v-text',
@@ -1011,7 +1014,7 @@ const database = {
           borderColor: '',
           borderWidth: 0,
           borderStyle: '',
-          borderRadius: 0
+          borderRadius: 0,
         },
         config: {
           title: {
@@ -1019,12 +1022,12 @@ const database = {
             textAlign: 'left',
             textStyle: {
               color: '#ffffff',
-              fontSize: 20
-            }
-          }
+              fontSize: 20,
+            },
+          },
         },
-        view: { width: 500, height: 400, x: 710, y: 580, rotate: 0 } // 计算中间值(1920-500)*0.5,(1080-400)*0.5
-      }
+        view: { width: 500, height: 400, x: 710, y: 580, rotate: 0 }, // 计算中间值(1920-500)*0.5,(1080-400)*0.5
+      },
     },
     {
       id: 'v-image',
@@ -1037,7 +1040,7 @@ const database = {
         apiData: {},
         apis: {},
         config: {
-          imageUrl: ''
+          imageUrl: '',
         },
         background: {
           backgroundType: '1',
@@ -1045,10 +1048,10 @@ const database = {
           borderColor: '',
           borderWidth: 0,
           borderStyle: '',
-          borderRadius: 0
+          borderRadius: 0,
         },
-        view: { width: 500, height: 400, x: 710, y: 580, rotate: 0 }
-      }
+        view: { width: 500, height: 400, x: 710, y: 580, rotate: 0 },
+      },
     },
     {
       id: 'v-tables',
@@ -1067,83 +1070,83 @@ const database = {
                 dataIndex: 'name',
                 key: 'name',
                 scopedSlots: { customRender: 'name' },
-                customHeaderCell: function() {}
+                customHeaderCell: function () {},
               },
               {
                 title: 'Age',
                 dataIndex: 'age',
                 key: 'age',
                 width: 80,
-                customHeaderCell: function() {}
+                customHeaderCell: function () {},
               },
               {
                 title: 'Address',
                 dataIndex: 'address',
                 key: 'address 1',
                 ellipsis: true,
-                customHeaderCell: function() {}
+                customHeaderCell: function () {},
               },
               {
                 title: '02',
                 dataIndex: 'address',
                 key: 'address 2',
                 ellipsis: true,
-                customHeaderCell: function() {}
+                customHeaderCell: function () {},
               },
               {
                 title: '03',
                 dataIndex: 'address',
                 key: 'address 3',
                 ellipsis: true,
-                customHeaderCell: function() {}
+                customHeaderCell: function () {},
               },
               {
                 title: '04',
                 dataIndex: 'address',
                 key: 'address 4',
                 ellipsis: true,
-                customHeaderCell: function() {}
-              }
+                customHeaderCell: function () {},
+              },
             ],
             rows: [
               {
                 key: '1',
                 name: 'John Brown',
                 age: 32,
-                address: 'New York'
+                address: 'New York',
               },
               {
                 key: '2',
                 name: 'Jim Green',
                 age: 42,
-                address: 'London'
+                address: 'London',
               },
               {
                 key: '3',
                 name: 'Joe Black',
                 age: 32,
-                address: 'Sidney'
+                address: 'Sidney',
               },
               {
                 key: '3',
                 name: 'Joe Black',
                 age: 32,
-                address: 'Sidney'
+                address: 'Sidney',
               },
               {
                 key: '3',
                 name: 'Joe Black',
                 age: 32,
-                address: 'Sidney'
+                address: 'Sidney',
               },
               {
                 key: '3',
                 name: 'Joe Black',
                 age: 32,
-                address: 'Sidney'
-              }
-            ]
-          }
+                address: 'Sidney',
+              },
+            ],
+          },
         },
         apis: {},
         background: {
@@ -1152,11 +1155,11 @@ const database = {
           borderColor: '',
           borderWidth: 0,
           borderStyle: '',
-          borderRadius: 0
+          borderRadius: 0,
         },
         config: {
           index: {
-            show: false
+            show: false,
           },
           title: {
             show: true,
@@ -1164,8 +1167,8 @@ const database = {
             textAlign: 'left',
             textStyle: {
               color: '#ffffff',
-              fontSize: 20
-            }
+              fontSize: 20,
+            },
           },
           header: {
             show: true,
@@ -1173,26 +1176,26 @@ const database = {
               color: '#000',
               fontSize: 20,
               fontWeight: 'bold',
-              textAlign: 'left'
+              textAlign: 'left',
             },
-            backgroundColor: ''
+            backgroundColor: '',
           },
           table: {
             textStyle: {
               color: '#000',
               fontSize: 20,
               fontWeight: 'bold',
-              textAlign: 'left'
+              textAlign: 'left',
             },
             oddBackgroundColor: '',
             evenBackgroundColor: '',
             pageSize: 10,
-            ellipsis: true
-          }
+            ellipsis: true,
+          },
         },
-        view: { width: 500, height: 400, x: 710, y: 580, rotate: 0 }
-      }
-    }
-  ]
-}
-export default database
+        view: { width: 500, height: 400, x: 710, y: 580, rotate: 0 },
+      },
+    },
+  ],
+};
+export default database;

@@ -1,64 +1,70 @@
 export default {
-  'high-pie': [{
-    type: 'pie',
-    name: '图形占比',
-    //模块名和所占比，也可以{name: '测试1',y: 12}
-    data: [{
-        name: 'Chrome',
-        y: 61.41
-      },
-      {
-        name: 'IE',
-        y: 11.84
-      },
-      {
-        name: 'Firefox',
-        y: 10.85
-      },
-      {
-        name: 'Edge',
-        y: 4.67
-      },
-      {
-        name: 'Safari',
-        y: 4.18
-      },
-      {
-        name: 'Other',
-        y: 7.05
-      }
-    ]
-  }],
-  'high-column': [{
-    // type: 'pie',
-    name: '图形占比',
-    //模块名和所占比，也可以{name: '测试1',y: 12}
-    data: [{
-        name: 'Chrome',
-        y: 61.41
-      },
-      {
-        name: 'Internet Explorer',
-        y: 11.84
-      },
-      {
-        name: 'Firefox',
-        y: 10.85
-      },
-      {
-        name: 'Edge',
-        y: 4.67
-      },
-      {
-        name: 'Safari',
-        y: 4.18
-      },
-      {
-        name: 'Other',
-        y: 7.05
-      }
-    ]
-  }],
+  'high-pie': [
+    {
+      type: 'pie',
+      name: '图形占比',
+      //模块名和所占比，也可以{name: '测试1',y: 12}
+      data: [
+        {
+          name: 'Chrome',
+          y: 61.41,
+        },
+        {
+          name: 'IE',
+          y: 11.84,
+        },
+        {
+          name: 'Firefox',
+          y: 10.85,
+        },
+        {
+          name: 'Edge',
+          y: 4.67,
+        },
+        {
+          name: 'Safari',
+          y: 4.18,
+        },
+        {
+          name: 'Other',
+          y: 7.05,
+        },
+      ],
+    },
+  ],
+  'high-column': [
+    {
+      // type: 'pie',
+      name: '图形占比',
+      //模块名和所占比，也可以{name: '测试1',y: 12}
+      data: [
+        {
+          name: 'Chrome',
+          y: 61.41,
+        },
+        {
+          name: 'Internet Explorer',
+          y: 11.84,
+        },
+        {
+          name: 'Firefox',
+          y: 10.85,
+        },
+        {
+          name: 'Edge',
+          y: 4.67,
+        },
+        {
+          name: 'Safari',
+          y: 4.18,
+        },
+        {
+          name: 'Other',
+          y: 7.05,
+        },
+      ],
+    },
+  ],
   'v-sun': {
     title: {
       show: true,
@@ -69,8 +75,8 @@ export default {
         color: '#ffffff',
         fontSize: 20,
         fontFamily: 'not specified',
-        fontWeight: 'normal'
-      }
+        fontWeight: 'normal',
+      },
     },
     // grid: {
     //   left: 20,
@@ -79,7 +85,7 @@ export default {
     //   bottom: 30
     // },
     tooltip: {
-      trigger: 'item'
+      trigger: 'item',
     },
     visualMap: {
       type: 'continuous',
@@ -92,20 +98,20 @@ export default {
       top: 'bottom', // 上 中 下
       // bottom: '5%',
       inRange: {
-        color: ['#f69f2e', '#0fabf1', '#ed8693', '#ffff0d', '#0d8686']
+        color: ['#f69f2e', '#0fabf1', '#ed8693', '#ffff0d', '#0d8686'],
       },
       textStyle: {
         color: '#fff',
         fontSize: 15,
-        fontFamily: 'not specified'
-      }
+        fontFamily: 'not specified',
+      },
     },
     series: {
       type: 'sunburst',
       nodeClick: false,
       sort: null,
       emphasis: {
-        focus: 'ancestor'
+        focus: 'ancestor',
       },
       center: ['50%', '50%'],
       radius: [0, '80%'],
@@ -114,7 +120,7 @@ export default {
       tooltip: {
         show: true,
         formatter: '{b}',
-        position: 'top'
+        position: 'top',
       },
       label: {
         show: true,
@@ -123,59 +129,70 @@ export default {
         formatter: '{b}',
         position: 'inside',
         rotate: 'radial',
-        orient: 'vertical'
+        orient: 'vertical',
       },
       itemStyle: {
         borderColor: '#fff',
-        borderWidth: 1
+        borderWidth: 1,
       },
-      data: [{
-        name: '张明1',
-        value: 78,
-        children: [{
-          name: '男',
+      data: [
+        {
+          name: '张明1',
           value: 78,
-          children: []
-        }]
-      },
-      {
-        name: '张明2',
-        value: 42,
-        children: [{
-          name: '男',
+          children: [
+            {
+              name: '男',
+              value: 78,
+              children: [],
+            },
+          ],
+        },
+        {
+          name: '张明2',
           value: 42,
-          children: []
-        }]
-      },
-      {
-        name: '张明3',
-        value: 88,
-        children: [{
-          name: '男',
+          children: [
+            {
+              name: '男',
+              value: 42,
+              children: [],
+            },
+          ],
+        },
+        {
+          name: '张明3',
           value: 88,
-          children: []
-        }]
-      },
-      {
-        name: '张明4',
-        value: 32,
-        children: [{
-          name: '男',
+          children: [
+            {
+              name: '男',
+              value: 88,
+              children: [],
+            },
+          ],
+        },
+        {
+          name: '张明4',
           value: 32,
-          children: []
-        }]
-      },
-      {
-        name: '张明5',
-        value: 20,
-        children: [{
-          name: '男',
+          children: [
+            {
+              name: '男',
+              value: 32,
+              children: [],
+            },
+          ],
+        },
+        {
+          name: '张明5',
           value: 20,
-          children: []
-        }]
-      }
-      ]
-    }
+          children: [
+            {
+              name: '男',
+              value: 20,
+              children: [],
+            },
+          ],
+        },
+      ],
+    },
     // series: {
     //   label: {
     //     show: true,
@@ -197,14 +214,14 @@ export default {
         color: '#ffffff',
         fontSize: 20,
         fontFamily: 'not specified',
-        fontWeight: 'normal'
-      }
+        fontWeight: 'normal',
+      },
     },
     grid: {
       left: 60,
       top: 60,
       right: 80,
-      bottom: 60
+      bottom: 60,
     },
     xAxis: {
       type: 'category',
@@ -216,33 +233,33 @@ export default {
         color: '#fff',
         fontSize: '12',
         align: 'right',
-        padding: [30, 0, 0, 0]
+        padding: [30, 0, 0, 0],
       },
       axisLabel: {
         show: true,
         color: '#ffffff',
         fontSize: 12,
-        rotate: 0
+        rotate: 0,
       },
       axisLine: {
         show: true,
         lineStyle: {
-          color: '#fff'
-        }
+          color: '#fff',
+        },
       },
       splitLine: {
         show: false,
         lineStyle: {
           type: 'solid',
-          color: '#fff'
-        }
+          color: '#fff',
+        },
       },
       axisTick: {
-        show: true
+        show: true,
       },
       splitArea: {
-        show: true
-      }
+        show: true,
+      },
     },
     yAxis: {
       type: 'category',
@@ -253,32 +270,32 @@ export default {
       nameTextStyle: {
         color: '#fff',
         fontSize: 12,
-        padding: [0, 0, 40, 0]
+        padding: [0, 0, 40, 0],
       },
       axisLabel: {
         show: true,
         color: '#ffffff',
-        fontSize: 12
+        fontSize: 12,
       },
       axisLine: {
         show: true,
         lineStyle: {
-          color: '#fff'
-        }
+          color: '#fff',
+        },
       },
       splitLine: {
         show: false,
         lineStyle: {
           type: 'solid',
-          color: '#fff'
-        }
+          color: '#fff',
+        },
       },
       axisTick: {
-        show: false
+        show: false,
       },
       splitArea: {
-        show: true
-      }
+        show: true,
+      },
     },
     visualMap: {
       min: 0,
@@ -290,16 +307,16 @@ export default {
       top: 'bottom', // 上 中 下
       bottom: '5%',
       inRange: {
-        color: ['#ffff35', '#f69f2e']
+        color: ['#ffff35', '#f69f2e'],
       },
       textStyle: {
         color: '#fff',
         fontSize: 15,
-        fontFamily: 'not specified'
-      }
+        fontFamily: 'not specified',
+      },
     },
     tooltip: {
-      trigger: 'item'
+      trigger: 'item',
     },
     series: {
       name: '',
@@ -317,14 +334,14 @@ export default {
         ['9a', 'Tuesday', 24],
         ['10a', 'Saturday', 5],
         ['11a', 'Monday', 20],
-        ['12a', 'Saturday', 12]
+        ['12a', 'Saturday', 12],
       ],
       labelShowList: [], // 记录指标显示的字段
       tooltipShowList: [], // 记录气泡显示的字段
       tooltip: {
         show: true,
         formatter: '{b}',
-        position: 'top'
+        position: 'top',
       },
       label: {
         show: true,
@@ -332,15 +349,15 @@ export default {
         fontSize: 14,
         position: 'inside',
         formatter: '{b}',
-        offset: [0, 0]
+        offset: [0, 0],
       },
       emphasis: {
         itemStyle: {
           shadowBlur: 10,
-          shadowColor: 'rgba(0, 0, 0, 0.5)'
-        }
-      }
-    }
+          shadowColor: 'rgba(0, 0, 0, 0.5)',
+        },
+      },
+    },
     // color: DEFAULT_COLORS
   },
   'v-treemap': {
@@ -353,14 +370,14 @@ export default {
         fontSize: 20,
         fontFamily: 'not specified',
         fontWeight: 'normal',
-        overflow: 'break'
-      }
+        overflow: 'break',
+      },
     },
     grid: {
       left: 50,
       top: 60,
       right: 50,
-      bottom: 50
+      bottom: 50,
     },
     legend: {
       show: false,
@@ -369,18 +386,18 @@ export default {
       type: 'scroll',
       pageIconColor: '#fff',
       pageTextStyle: {
-        color: '#fff'
+        color: '#fff',
       },
       textStyle: {
         color: '#ffffff',
-        fontSize: 12
+        fontSize: 12,
       },
       itemGap: 12,
       icon: '',
       left: 'center',
       top: 'top',
       right: 'auto',
-      bottom: 'auto'
+      bottom: 'auto',
     },
     visualMap: {
       show: true,
@@ -390,10 +407,10 @@ export default {
       max: 0,
       textStyle: {
         color: '#ffffff',
-        fontSize: 12
+        fontSize: 12,
       },
       inRange: {
-        color: ['#f69f2e', '#0fabf1', '#ed8693', '#ffff0d', '#0d8686']
+        color: ['#f69f2e', '#0fabf1', '#ed8693', '#ffff0d', '#0d8686'],
       },
       pieces: [
         { label: '广州市', value: 800 },
@@ -401,13 +418,13 @@ export default {
         { label: '东莞市', value: 100 },
         { label: '南京市', value: 700 },
         { label: '苏州市', value: 200 },
-        { label: '无锡市', value: 100 }
+        { label: '无锡市', value: 100 },
       ],
       itemGap: 12,
       left: 'center',
       top: 'auto',
       right: 'auto',
-      bottom: 'auto'
+      bottom: 'auto',
     },
     xAxis: {
       type: 'value',
@@ -419,23 +436,23 @@ export default {
         color: '#fff',
         fontSize: '12',
         align: 'right',
-        padding: [30, 0, 0, 0]
+        padding: [30, 0, 0, 0],
       },
       axisLabel: {
         show: false,
         color: '#ffffff',
         fontSize: 12,
-        rotate: 0
+        rotate: 0,
       },
       axisLine: {
-        show: false
+        show: false,
       },
       splitLine: {
-        show: false
+        show: false,
       },
       axisTick: {
-        show: false
-      }
+        show: false,
+      },
     },
     yAxis: {
       type: 'value',
@@ -446,22 +463,22 @@ export default {
       nameTextStyle: {
         color: '#fff',
         fontSize: 12,
-        padding: [0, 0, 40, 0]
+        padding: [0, 0, 40, 0],
       },
       axisLabel: {
         show: false,
         color: '#ffffff',
-        fontSize: 12
+        fontSize: 12,
       },
       axisLine: {
-        show: false
+        show: false,
       },
       splitLine: {
-        show: false
+        show: false,
       },
       axisTick: {
-        show: false
-      }
+        show: false,
+      },
     },
     series: {
       name: '矩形树图',
@@ -471,21 +488,15 @@ export default {
       visualMaxList: [],
       // 由于visualMap数组中的颜色定义, 即使隐藏了也会优先取piecewise的颜色集, 所以这里才去分开记录重新赋值到visualMap的方式解决
       continuousColors: ['#ffff0d', '#f69f2e'],
-      piecewiseColors: [
-        '#f69f2e',
-        '#0fabf1',
-        '#ed8693',
-        '#ffff0d',
-        '#0d8686'
-      ],
+      piecewiseColors: ['#f69f2e', '#0fabf1', '#ed8693', '#ffff0d', '#0d8686'],
       nodeClick: false,
       roam: false,
       breadcrumb: {
-        show: false
+        show: false,
       },
       tooltip: {
         show: true,
-        formatter: '{b} {c}'
+        formatter: '{b} {c}',
       },
       // 由于JSON.stringfy不支持转换function类型, 所以需要2个数组记录formatter的字段
       tooltipShowList: [], // 记录tooltip需要展示的字段
@@ -497,55 +508,58 @@ export default {
         fontSize: 12,
         color: '#fff',
         ellipsis: true,
-        formatter: '{b}'
+        formatter: '{b}',
       },
       emphasis: {
         upperLabel: {
           show: true,
           align: 'center',
           position: 'inside',
-          height: 30
-        }
+          height: 30,
+        },
       },
       itemStyle: {
         color: 'transparent',
-        borderWidth: 0.2
+        borderWidth: 0.2,
       },
-      data: [{
-        name: '广东省',
-        value: [1000, 1000],
-        children: [{
-          name: '广州市',
-          value: [800, 800]
+      data: [
+        {
+          name: '广东省',
+          value: [1000, 1000],
+          children: [
+            {
+              name: '广州市',
+              value: [800, 800],
+            },
+            {
+              name: '深圳市',
+              value: [100, 100],
+            },
+            {
+              name: '东莞市',
+              value: [100, 100],
+            },
+          ],
         },
         {
-          name: '深圳市',
-          value: [100, 100]
+          name: '江苏省',
+          value: [1000, 1000],
+          children: [
+            {
+              name: '南京市',
+              value: [700, 700],
+            },
+            {
+              name: '苏州市',
+              value: [200, 200],
+            },
+            {
+              name: '无锡市',
+              value: [100, 100],
+            },
+          ],
         },
-        {
-          name: '东莞市',
-          value: [100, 100]
-        }
-        ]
-      },
-      {
-        name: '江苏省',
-        value: [1000, 1000],
-        children: [{
-          name: '南京市',
-          value: [700, 700]
-        },
-        {
-          name: '苏州市',
-          value: [200, 200]
-        },
-        {
-          name: '无锡市',
-          value: [100, 100]
-        }
-        ]
-      }
-      ]
-    }
-  }
-}
+      ],
+    },
+  },
+};

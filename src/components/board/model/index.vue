@@ -3,44 +3,17 @@
   <div class="board-model" :style="config.style">
     <div style="height: 100%">
       <div class="model-header" v-show="config.title.enable">
-        <a-icon
-          class="model-back"
-          v-if="!model"
-          type="arrow-left"
-          @click="back"
-        />
-        <span class="model-span" v-if="modelExpand">{{
-          config.title.text
-        }}</span>
-        <a-icon
-          class="model-icon"
-          :type="modelExpand ? 'menu-unfold' : 'menu-fold'"
-          @click="toCollapse"
-        />
+        <a-icon class="model-back" v-if="!model" type="arrow-left" @click="back" />
+        <span class="model-span" v-if="modelExpand">{{ config.title.text }}</span>
+        <a-icon class="model-icon" :type="modelExpand ? 'menu-unfold' : 'menu-fold'" @click="toCollapse" />
       </div>
       <!-- 操作界面 -->
       <div v-if="modelExpand" style="height: calc(100% - 150px)">
         <div class="model-operation" v-if="model">
           <div class="operation">
-            <a-radio-group
-              v-model="resourceType"
-              button-style="solid"
-              style="width: 100%"
-            >
-              <a-radio-button
-                :value="8"
-                style="width: 50%"
-                @click.native="changeAddType(8)"
-              >
-                数据模型
-              </a-radio-button>
-              <a-radio-button
-                :value="3"
-                style="width: 50%"
-                @click.native="changeAddType(3)"
-              >
-                数据接入
-              </a-radio-button>
+            <a-radio-group v-model="resourceType" button-style="solid" style="width: 100%">
+              <a-radio-button :value="8" style="width: 50%" @click.native="changeAddType(8)">数据模型</a-radio-button>
+              <a-radio-button :value="3" style="width: 50%" @click.native="changeAddType(3)">数据接入</a-radio-button>
             </a-radio-group>
           </div>
           <div class="operation cls-frstsel">
@@ -63,11 +36,7 @@
                 />
               </a-select-option>
             </a-select>
-            <a-button
-              style="margin-left: 8px"
-              @click="resourceType === 8 ? modelAdd() : sourceAdd()"
-              >添加</a-button
-            >
+            <a-button style="margin-left: 8px" @click="resourceType === 8 ? modelAdd() : sourceAdd()">添加</a-button>
           </div>
           <div class="operation">
             {{ searchValue }}
@@ -84,9 +53,7 @@
               @change="handleChange"
             >
               <template>
-                <a-select-option v-for="d in searchResult" :key="d.id">{{
-                  d.alias
-                }}</a-select-option>
+                <a-select-option v-for="d in searchResult" :key="d.id">{{ d.alias }}</a-select-option>
               </template>
             </a-select>
             <!-- <a-input-search placeholder="请输入关键字搜索" style="width:90%" @change="searchChange" /> -->
@@ -117,10 +84,7 @@
                       <li
                         v-for="(item2, index2) in item"
                         class="filelist"
-                        :class="[
-                          { active: item2.id === searchSelected },
-                          { error: item2.status === 1 }
-                        ]"
+                        :class="[{ active: item2.id === searchSelected }, { error: item2.status === 1 }]"
                         :key="index2 + '_'"
                         :draggable="item2.status === 0"
                         @click="fileClick(item2.id, item2.status)"
@@ -129,9 +93,7 @@
                         @contextmenu.prevent="showMore(item2)"
                       >
                         <img src="@/assets/images/icon_dimension.png" />
-                        <span :class="{ error: item2.status !== 0 }">{{
-                          item2.alias
-                        }}</span>
+                        <span :class="{ error: item2.status !== 0 }">{{ item2.alias }}</span>
                         <a-dropdown
                           :trigger="['click', 'contextmenu']"
                           v-if="!dimensionsChecked.includes(item2.id)"
@@ -139,14 +101,8 @@
                         >
                           <a-icon class="icon-more" type="caret-down" />
                           <a-menu slot="overlay">
-                            <a-menu-item key="3" @click="changeItem(item2, 2)"
-                              >转为度量</a-menu-item
-                            >
-                            <a-sub-menu
-                              key="4"
-                              title="创建地理字段"
-                              @click="openGeoSetting(item2)"
-                            >
+                            <a-menu-item key="3" @click="changeItem(item2, 2)">转为度量</a-menu-item>
+                            <a-sub-menu key="4" title="创建地理字段" @click="openGeoSetting(item2)">
                               <!-- <a-menu-item>国家</a-menu-item>
                               <a-menu-item>省市</a-menu-item> -->
                               <a-menu-item>城市</a-menu-item>
@@ -184,10 +140,7 @@
                       <li
                         v-for="(item2, index2) in item"
                         class="filelist"
-                        :class="[
-                          { active: item2.id === searchSelected },
-                          { error: item2.status === 1 }
-                        ]"
+                        :class="[{ active: item2.id === searchSelected }, { error: item2.status === 1 }]"
                         :key="index2 + '_'"
                         :draggable="item2.status === 0"
                         @click="fileClick(item2.id, item2.status)"
@@ -196,9 +149,7 @@
                         @contextmenu.prevent="showMore(item2)"
                       >
                         <img src="@/assets/images/icon_measure.png" />
-                        <span :class="{ error: item2.status !== 0 }">{{
-                          item2.alias
-                        }}</span>
+                        <span :class="{ error: item2.status !== 0 }">{{ item2.alias }}</span>
                         <a-dropdown
                           :trigger="['click', 'contextmenu']"
                           v-if="!measuresChecked.includes(item2.id)"
@@ -206,9 +157,7 @@
                         >
                           <a-icon class="icon-more" type="caret-down" />
                           <a-menu slot="overlay">
-                            <a-menu-item key="3" @click="changeItem(item2, 1)"
-                              >转为维度</a-menu-item
-                            >
+                            <a-menu-item key="3" @click="changeItem(item2, 1)">转为维度</a-menu-item>
                           </a-menu>
                         </a-dropdown>
                       </li>
@@ -219,11 +168,7 @@
               <!-- </b-scrollbar> -->
             </div>
           </div>
-          <compute-setting
-            :is-show="visible"
-            :compute-type="computeType"
-            @close="close"
-          ></compute-setting>
+          <compute-setting :is-show="visible" :compute-type="computeType" @close="close"></compute-setting>
           <geo-setting
             v-if="createMapVisible"
             :is-show="createMapVisible"
@@ -237,11 +182,7 @@
         <!-- 初始界面 -->
         <div class="model-contain" v-else style="height: 100%">
           <div class="model-search">
-            <a-input-search
-              placeholder="输入关键字搜索"
-              style="width: 90%; margin-left: 15px"
-              @change="modelSearch"
-            />
+            <a-input-search placeholder="输入关键字搜索" style="width: 90%; margin-left: 15px" @change="modelSearch" />
           </div>
           <!-- <b-scrollbar style="height: 100%;"> -->
           <!--大屏数据-->
@@ -260,27 +201,25 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from 'vuex'
-import { deepClone } from '@/utils/deepClone'
-import debounce from 'lodash/debounce'
-import { menuSearchLoop } from '@/utils/menuSearch'
-import { Loading } from 'element-ui'
-import ComputeSetting from '@/views/dataSource/dataModel/model-edit/setting/compute-setting'
-import GeoSetting from './components/geo-setting'
-import AddDataList from './components/addDataList'
+import { mapGetters, mapActions } from 'vuex';
+import debounce from 'lodash/debounce';
+import { menuSearchLoop } from '@/utils/menuSearch';
+import { Loading } from 'element-ui';
+import ComputeSetting from '@/views/dataSource/dataModel/model-edit/setting/compute-setting';
+import GeoSetting from './components/geo-setting';
+import AddDataList from './components/addDataList';
 export default {
   name: 'BoardModel',
   props: {
     config: {
       type: Object,
-      required: true
-    }
+      required: true,
+    },
   },
   components: { ComputeSetting, GeoSetting, AddDataList },
   data() {
     return {
-      customStyle:
-        'background: #ffffff;border-radius: 4px;border: 0;overflow: hidden;color:red !important;',
+      customStyle: 'background: #ffffff;border-radius: 4px;border: 0;overflow: hidden;color:red !important;',
       modelKey: ['0', '1', '2', '3', '4', '5', '6', '7'],
       dimensionsKey: ['0', '1', '2', '3'], // 默认展开
       measuresKey: ['0', '1', '2', '3'],
@@ -307,8 +246,8 @@ export default {
       modelList: [], // 模型菜单
       sourceList: [], // 接入菜单
       key: 0, // 刷新菜单
-      hoveDataModelId: '' // 悬浮选中的数据模型id
-    }
+      hoveDataModelId: '', // 悬浮选中的数据模型id
+    };
   },
   computed: {
     ...mapGetters([
@@ -318,20 +257,20 @@ export default {
       'selectedModelList',
       'currentSelected',
       'currSelected',
-      'canvasMap'
+      'canvasMap',
     ]),
     // 过滤模型列表
     savedModels() {
-      return this.selectedModelList.filter(item => item.resourceType === 8)
+      return this.selectedModelList.filter(item => item.resourceType === 8);
     },
     // 过滤接入列表
     savedSources() {
-      return this.selectedModelList.filter(item => item.resourceType === 3)
+      return this.selectedModelList.filter(item => item.resourceType === 3);
     },
     // 根据类型显示对应列表
     disableItem() {
-      return this.resourceType === 8 ? this.savedModels : this.savedSources
-    }
+      return this.resourceType === 8 ? this.savedModels : this.savedSources;
+    },
   },
   watch: {
     selectedModelList: {
@@ -339,184 +278,167 @@ export default {
         if (val.length > 0) {
           if (!val.find(item => item.id === this.resourceId)) {
             if (this.resourceType === 8) {
-              this.resourceId =
-                this.savedModels.length > 0 ? this.savedModels[0].tableId : ''
+              this.resourceId = this.savedModels.length > 0 ? this.savedModels[0].tableId : '';
             } else {
-              this.resourceId =
-                this.savedSources.length > 0 ? this.savedSources[0].tableId : ''
+              this.resourceId = this.savedSources.length > 0 ? this.savedSources[0].tableId : '';
             }
-            this.model = true
+            this.model = true;
           }
         } else {
           // 模型列表为空清空当前度量列表(文本框选择度量列表)
-          this.resourceId = ''
-          this.$store.dispatch('SetModelMeasures', [])
+          this.resourceId = '';
+          this.$store.dispatch('SetModelMeasures', []);
         }
-        this.disableId = val.map(item => item.tableId)
+        this.disableId = val.map(item => item.tableId);
       },
-      deep: true
+      deep: true,
     },
     currSelected: {
       handler(val) {
         if (val) {
           if (val.datamodelId !== '0' && val.datamodelId !== 0) {
-            this.resourceId = val.datamodelId
-            this.resourceType = val.setting.resourceType
+            this.resourceId = val.datamodelId;
+            this.resourceType = val.setting.resourceType;
           }
-          this.dimensionsChecked = []
-          if (
-            val.setting.api_data.dimensions &&
-            val.setting.api_data.dimensions.length > 0
-          ) {
+          this.dimensionsChecked = [];
+          if (val.setting.api_data.dimensions && val.setting.api_data.dimensions.length > 0) {
             val.setting.api_data.dimensions.map(item => {
-              this.dimensionsChecked.push(item.id)
-            })
+              this.dimensionsChecked.push(item.id);
+            });
           }
-          this.measuresChecked = []
-          if (
-            val.setting.api_data.measures &&
-            val.setting.api_data.measures.length > 0
-          ) {
+          this.measuresChecked = [];
+          if (val.setting.api_data.measures && val.setting.api_data.measures.length > 0) {
             val.setting.api_data.measures.map(item => {
-              this.measuresChecked.push(item.id)
-            })
+              this.measuresChecked.push(item.id);
+            });
           }
         }
       },
-      deep: true
+      deep: true,
     },
     resourceId(val) {
       // 没有选中数据，清空维度度量信息
       if (!val) {
-        this.dimensions = []
-        this.measures = []
-        return
+        this.dimensions = [];
+        this.measures = [];
+        return;
       }
       if (this.selectedModelList.length === 0) {
-        return
+        return;
       }
-      this.getPivoSchemaList(val)
-    }
+      this.getPivoSchemaList(val);
+    },
   },
   methods: {
     ...mapActions(['getScreenDetail']),
     // 数据模型搜索
-    modelSearch: debounce(function(event) {
-      const value = event.target.value
+    modelSearch: debounce(function (event) {
+      const value = event.target.value;
       if (value) {
-        this.handleGetSearchList(value)
+        this.handleGetSearchList(value);
       } else {
-        this.dataList =
-          this.resourceType === 8 ? this.modelList : this.sourceList
+        this.dataList = this.resourceType === 8 ? this.modelList : this.sourceList;
         // 强制刷新菜单
-        this.key++
+        this.key++;
       }
     }, 400),
     // 切换数据类型
     changeAddType(type) {
       // 没有切换数据类型
       if (type === this.resourceType) {
-        return
+        return;
       }
-      this.resourceType = type
+      this.resourceType = type;
       // 默认取对应类型列表第一个值
       if (type === 8) {
-        this.resourceId =
-          this.savedModels.length > 0 ? this.savedModels[0].tableId : ''
+        this.resourceId = this.savedModels.length > 0 ? this.savedModels[0].tableId : '';
       } else {
-        this.resourceId =
-          this.savedSources.length > 0 ? this.savedSources[0].tableId : ''
+        this.resourceId = this.savedSources.length > 0 ? this.savedSources[0].tableId : '';
       }
       // 当前没有选中数据清空维度度量
       if (!this.resourceId) {
-        this.dimensions = []
-        this.measures = []
+        this.dimensions = [];
+        this.measures = [];
       }
     },
     // 搜索关键字
     handleGetSearchList(value) {
       // 按模型/接入搜索
       if (this.resourceType === 8) {
-        this.dataList = this.search(this.modelList, value)
+        this.dataList = this.search(this.modelList, value);
       } else {
-        this.dataList = this.search(this.sourceList, value)
+        this.dataList = this.search(this.sourceList, value);
       }
       // 强制刷新菜单
-      this.key++
+      this.key++;
     },
     // 搜索关键字
     search(list, value) {
-      let result = []
+      let result = [];
       list.map(item => {
-        const newItem = menuSearchLoop(item, value)
+        const newItem = menuSearchLoop(item, value);
         if (newItem) {
-          result.push(newItem)
+          result.push(newItem);
         }
-      })
-      return result
+      });
+      return result;
     },
     // 点击展开收起
     toCollapse() {
-      this.$emit('on-toggle', this.modelExpand)
+      this.$emit('on-toggle', this.modelExpand);
     },
     // 添加数据模型
     modelAdd() {
       if (this.modelList.length > 0) {
-        this.dataList = this.modelList
-        this.model = !this.model
-        return
+        this.dataList = this.modelList;
+        this.model = !this.model;
+        return;
       }
       this.getModelList().then(res => {
         if (res) {
-          this.model = !this.model
+          this.model = !this.model;
         }
-      })
+      });
     },
     // 添加数据接入
     sourceAdd() {
       if (this.sourceList.length > 0) {
-        this.dataList = this.sourceList
-        this.model = !this.model
-        return
+        this.dataList = this.sourceList;
+        this.model = !this.model;
+        return;
       }
       this.getSourceList().then(res => {
         if (res) {
-          this.model = !this.model
+          this.model = !this.model;
         }
-      })
+      });
     },
     // 获取数据接入列表
     async getSourceList() {
-      let catalog = await this.$server.common.getMenuList(
-        '/datasource/catalog/list/1'
-      )
+      let catalog = await this.$server.common.getMenuList('/datasource/catalog/list/1');
       if (catalog.code === 200) {
         catalog.rows.map(item => {
-          item.selected = false
-          item.showMore = false
-        })
-        this.sourceList = catalog.rows
-        this.dataList = catalog.rows
-        return true
+          item.selected = false;
+          item.showMore = false;
+        });
+        this.sourceList = catalog.rows;
+        this.dataList = catalog.rows;
+        return true;
       }
-      return false
+      return false;
     },
     back() {
-      if (
-        this.currSelected &&
-        this.currSelected.datamodelId !== '0' &&
-        this.currSelected.datamodelId !== 0
-      ) {
-        this.resourceId = this.currSelected.datamodelId
-        this.resourceType = this.currSelected.setting.resourceType
+      if (this.currSelected && this.currSelected.datamodelId !== '0' && this.currSelected.datamodelId !== 0) {
+        this.resourceId = this.currSelected.datamodelId;
+        this.resourceType = this.currSelected.setting.resourceType;
       }
-      this.model = true
+      this.model = true;
     },
     // 点击选中模型
     fileHandle(item) {
-      this.model = !this.model
-      this.$store.dispatch('SetDataModel', item)
-      this.saveData(item)
+      this.model = !this.model;
+      this.$store.dispatch('SetDataModel', item);
+      this.saveData(item);
     },
     // 保存选中的模型
     async saveData(item) {
@@ -525,8 +447,8 @@ export default {
         resourceName: item.name,
         datasourceId: '',
         databaseId: '',
-        tableId: item.id
-      }
+        tableId: item.id,
+      };
       // 数据接入
       if (item.resourceType === 3) {
         params = {
@@ -534,34 +456,34 @@ export default {
           datasourceId: item.datasourceId,
           databaseId: item.databaseId,
           tableId: item.id,
-          origin: 3 // 数据源:3,模型:8
-        }
+          origin: 3, // 数据源:3,模型:8
+        };
       } else {
         // 模型
-        params.origin = 8 // 数据源:3,模型:8
+        params.origin = 8; // 数据源:3,模型:8
       }
-      await this.$server.screenManage.screenModuleSave(params)
-      item.resourceName = item.name
-      item.tableId = item.id
-      let list = this.selectedModelList.concat([item])
-      this.$store.dispatch('dataModel/setSelectedModelList', list)
-      this.resourceId = item.id
+      await this.$server.screenManage.screenModuleSave(params);
+      item.resourceName = item.name;
+      item.tableId = item.id;
+      let list = this.selectedModelList.concat([item]);
+      this.$store.dispatch('dataModel/setSelectedModelList', list);
+      this.resourceId = item.id;
     },
     // 拖动开始 type 拖拽的字段类型维度或者度量
     dragstart(item, type, event) {
-      item.file = type
-      item.resourceType = this.resourceType
-      event.dataTransfer.setData('dataFile', JSON.stringify(item))
-      this.$store.dispatch('SetDragFile', type)
+      item.file = type;
+      item.resourceType = this.resourceType;
+      event.dataTransfer.setData('dataFile', JSON.stringify(item));
+      this.$store.dispatch('SetDragFile', type);
     },
     // 拖动结束
     dragsend() {
-      this.$store.dispatch('SetDragFile', '')
+      this.$store.dispatch('SetDragFile', '');
     },
     // 点击维度度量 取消选中效果
-    fileClick(id, status) {
+    fileClick(id) {
       if (id === this.searchSelected) {
-        this.searchSelected = ''
+        this.searchSelected = '';
       }
     },
     // 数据模型列表
@@ -569,52 +491,52 @@ export default {
       return this.$server.screenManage.getCatalogList().then(res => {
         if (res.code === 200) {
           res.data.map(item => {
-            item.selected = false
-            item.showMore = false
-          })
-          this.modelList = res.data
-          this.dataList = res.data
-          return true
+            item.selected = false;
+            item.showMore = false;
+          });
+          this.modelList = res.data;
+          this.dataList = res.data;
+          return true;
         }
-      })
+      });
     },
     // 维度度量搜索
     handleSearch(value) {
       if (value) {
-        let result = []
+        let result = [];
         this.searchList.map(item => {
           if (item.alias.includes(value)) {
-            result.push(item)
+            result.push(item);
           }
-        })
+        });
         if (result.length === 0) {
-          result = [{ alias: '没有符合的搜索结果', id: 11 }]
+          result = [{ alias: '没有符合的搜索结果', id: 11 }];
         }
-        this.searchResult = result
+        this.searchResult = result;
       } else {
-        this.searchResult = []
+        this.searchResult = [];
       }
     },
     // 选择搜索的维度度量
     handleChange(value) {
-      this.searchSelected = value
+      this.searchSelected = value;
     },
     // 右键显示更多
     showMore(item) {
-      item.showMore = true
+      item.showMore = true;
     },
     openModal(computeType) {
-      this.visible = true
-      if (computeType) this.computeType = computeType
+      this.visible = true;
+      if (computeType) this.computeType = computeType;
     },
     openGeoSetting(item) {
-      item.modelId = this.resourceId
-      this.createdMapData = item
-      this.createMapVisible = true
-      item.showMore = false
+      item.modelId = this.resourceId;
+      this.createdMapData = item;
+      this.createMapVisible = true;
+      item.showMore = false;
     },
     close() {
-      this.visible = false
+      this.visible = false;
     },
     // 转为维度或者度量
     changeItem(item, num) {
@@ -623,13 +545,13 @@ export default {
         datamodelId: item.datamodelId,
         pivotschemaId: item.pivotschemaId,
         role: num, // 转成维度传1，转成度量传2
-        screenId: this.screenId
-      }
+        screenId: this.screenId,
+      };
       this.$server.screenManage.screenModuleTransform(params).then(res => {
         if (res.code === 200) {
-          this.getPivoSchemaList(this.resourceId, 2)
+          this.getPivoSchemaList(this.resourceId, 2);
         }
-      })
+      });
     },
     // 维度、度量列表
     getPivoSchemaList(id, type = 1) {
@@ -637,101 +559,95 @@ export default {
         lock: true,
         text: '加载中...',
         target: 'body',
-        background: 'rgb(255, 255, 255, 0.6)'
-      })
+        background: 'rgb(255, 255, 255, 0.6)',
+      });
       this.$server.screenManage
         .getPivoSchemaList(id, this.screenId, type)
         .then(res => {
           if (res.code === 200) {
             res.data.dimensions.map(item => {
-              item.showMore = false
-            })
+              item.showMore = false;
+            });
             res.data.measures.map(item => {
-              item.showMore = false
-            })
-            let datas = res.data
-            let dimensions = datas.dimensions
-            let measures = datas.measures
-            this.dimensions = this.transData(dimensions)
+              item.showMore = false;
+            });
+            let datas = res.data;
+            let dimensions = datas.dimensions;
+            let measures = datas.measures;
+            this.dimensions = this.transData(dimensions);
             dimensions = dimensions.map(item => {
-              return { ...item, visible: true, produceType: 0 }
-            })
-            this.measures = this.transData(measures)
+              return { ...item, visible: true, produceType: 0 };
+            });
+            this.measures = this.transData(measures);
             measures = measures.map(item => {
               return {
                 ...item,
                 visible: true,
                 produceType: 0,
-                resourceType: this.resourceType
-              }
-            })
-            this.$store.dispatch('SetModelMeasures', measures)
-            this.searchList = [...dimensions, ...measures]
+                resourceType: this.resourceType,
+              };
+            });
+            this.$store.dispatch('SetModelMeasures', measures);
+            this.searchList = [...dimensions, ...measures];
 
             this.detailInfo.pivotSchema = {
               dimensions,
-              measures
-            } // 聚合运算数据
+              measures,
+            }; // 聚合运算数据
 
             // 获取被删除的数据(status===1)
             this.$emit('getErrorData', {
               dimensions: dimensions.filter(item => item.status === 1),
-              measures: measures.filter(item => item.status === 1)
-            })
+              measures: measures.filter(item => item.status === 1),
+            });
           }
         })
         .finally(() => {
-          loadingInstance.close()
-        })
+          loadingInstance.close();
+        });
     },
     transData(data) {
       const result = Object.values(
         data.reduce((obj, cur) => {
           if (obj[cur.tableNo]) {
-            Object.prototype.toString.call(obj[cur.tableNo]) ===
-            '[object Array]'
+            Object.prototype.toString.call(obj[cur.tableNo]) === '[object Array]'
               ? obj[cur.tableNo].push(cur)
-              : (obj[cur.tableNo] = [obj[cur.tableNo], cur])
+              : (obj[cur.tableNo] = [obj[cur.tableNo], cur]);
           } else {
-            obj[cur.tableNo] = [cur]
+            obj[cur.tableNo] = [cur];
           }
-          return obj
-        }, {})
-      )
-      return result
+          return obj;
+        }, {}),
+      );
+      return result;
     },
     handleSave(datas) {
-      let selected = this.canvasMap.find(
-        item => item.id === this.currentSelected
-      )
-      selected.setting.api_data.mapDatas = datas
+      let selected = this.canvasMap.find(item => item.id === this.currentSelected);
+      selected.setting.api_data.mapDatas = datas;
     },
     getHover(val) {
-      let datamoel = this.canvasMap.map(x => x.datamodelId)
+      let datamoel = this.canvasMap.map(x => x.datamodelId);
       if (!datamoel.includes(val)) {
-        this.hoveDataModelId = val
+        this.hoveDataModelId = val;
       } else {
-        this.hoveDataModelId = ''
+        this.hoveDataModelId = '';
       }
     },
     async getDelDataModel(screenId, tableId) {
-      console.log('****', this.screenId)
-      let res = await this.$server.dataModel.delDataModel(
-        this.screenId,
-        tableId
-      )
+      console.log('****', this.screenId);
+      let res = await this.$server.dataModel.delDataModel(this.screenId, tableId);
       if (res.code === 200) {
-        this.$message.success('删除成功')
+        this.$message.success('删除成功');
         this.getScreenDetail({
           id: this.$route.query.id,
-          tabId: this.$route.query.tabId
-        })
+          tabId: this.$route.query.tabId,
+        });
       } else {
-        this.$message.error(res.msg || res || '删除失败')
+        this.$message.error(res.msg || res || '删除失败');
       }
-    }
-  }
-}
+    },
+  },
+};
 </script>
 
 <style lang="stylus">

@@ -8,29 +8,25 @@
 </template>
 
 <script>
-import MaterialListItem from './material-list-item.vue'
+import MaterialListItem from './material-list-item.vue';
 export default {
   name: 'MaterialList',
   props: {
     materialList: {
       type: Array,
       default() {
-        return []
-      }
-    }
+        return [];
+      },
+    },
   },
   components: {
-    MaterialListItem
+    MaterialListItem,
   },
   data() {
-    return {
-
-    }
+    return {};
   },
-  methods: {
-
-  }
-}
+  methods: {},
+};
 </script>
 
 <style lang="less" scoped>

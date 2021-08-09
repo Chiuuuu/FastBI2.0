@@ -8,9 +8,7 @@
     @cancel="handleClose"
   >
     <template #footer>
-      <a-button key="back" @click="handleClose">
-        取消
-      </a-button>
+      <a-button key="back" @click="handleClose">取消</a-button>
     </template>
     <a-button
       class="arrow arrow-left"
@@ -26,7 +24,7 @@
       icon="right"
       @click="handleChangePage('add')"
     />
-    <a-spin style="padding: 0 50px;" :spinning="loading">
+    <a-spin style="padding: 0 50px" :spinning="loading">
       <div class="table-area scrollbar">
         <table class="table">
           <thead>
@@ -41,7 +39,7 @@
                 <th :key="item.name">
                   <div class="wrap">
                     <div class="txt" :title="item.name">
-                      <span class='txt-title'>{{item.name}}</span>
+                      <span class="txt-title">{{ item.name }}</span>
                     </div>
                   </div>
                 </th>
@@ -49,13 +47,13 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="(item,index) in colPagination.tableData" :key="index">
-              <td><div class="txt txt-order">{{index+1}}</div></td>
-              <td
-                v-for="(col, i) in colPagination.currentCol"
-                :key="i"
-                :title="item[col.name]"
-              ><div class="txt" :title="item[col.name]">{{ item[col.name] }}</div></td>
+            <tr v-for="(item, index) in colPagination.tableData" :key="index">
+              <td>
+                <div class="txt txt-order">{{ index + 1 }}</div>
+              </td>
+              <td v-for="(col, i) in colPagination.currentCol" :key="i" :title="item[col.name]">
+                <div class="txt" :title="item[col.name]">{{ item[col.name] }}</div>
+              </td>
             </tr>
           </tbody>
         </table>
@@ -66,15 +64,15 @@
 </template>
 
 <script>
-import ColPagination from '@/utils/table-col-pagination'
+import ColPagination from '@/utils/table-col-pagination';
 export default {
   name: 'renderTableInfo',
   props: {
     isShow: Boolean,
     item: {
-        type: Object,
-        default: () => {}
-    }
+      type: Object,
+      default: () => {},
+    },
   },
   data() {
     return {
@@ -82,70 +80,70 @@ export default {
       colPagination: new ColPagination({
         total: 0,
         size: 50,
-        page: 1
+        page: 1,
       }),
       data: [],
-      loading: true
-    }
+      loading: true,
+    };
   },
   watch: {
     isShow: {
       immediate: true,
       handler(newVal) {
         if (newVal) {
-          this.colPagination = this.$options.data().colPagination
-          this.handleGetData()
+          this.colPagination = this.$options.data().colPagination;
+          this.handleGetData();
         }
-      }
-    }
+      },
+    },
   },
   methods: {
     /**
      * 获取数据
-    */
+     */
     async handleGetData() {
-      const { size, page } = this.colPagination.config
+      const { size, page } = this.colPagination.config;
       if (!this.colPagination.validPageSection()) {
-        this.loading = true
+        this.loading = true;
         const result = await this.$server.dataModel.getTableDetailInfo({
           tableName: this.item.name,
           tableId: this.item.id,
           databaseId: this.item.databaseId,
           current: page,
-          columnSize: size
-        })
+          columnSize: size,
+        });
 
         if (result.code === 200) {
-          this.colPagination.config.total = result.data.total
-          this.colPagination.handleColCache(result.data.columnNameList, result.data.rows)
+          this.colPagination.config.total = result.data.total;
+          this.colPagination.handleColCache(result.data.columnNameList, result.data.rows);
           this.$nextTick(() => {
-            this.loading = false
-          })
+            this.loading = false;
+          });
         } else {
           this.$message.error(result.msg, 1).then(() => {
-            this.loading = false
-          })
+            this.loading = false;
+          });
         }
       }
     },
     handleChangePage(type) {
       if (type === 'add') {
-        this.colPagination.config.page++
+        this.colPagination.config.page++;
       } else if (type === 'minus') {
-        this.colPagination.config.page--
+        this.colPagination.config.page--;
       }
-      this.handleGetData()
+      this.handleGetData();
     },
     handleClose() {
-      this.$emit('close')
-    }
-  }
-}
+      this.$emit('close');
+    },
+  },
+};
 </script>
 <style lang="less" scoped>
 @deep: ~'>>>';
 .widthModal {
-  @{deep} .ant-modal-body{
+  @{deep} .ant-modal-body {
     padding: 0;
   }
 }
@@ -165,7 +163,8 @@ export default {
     word-wrap: break-word;
     word-break: break-all;
   }
-  th,td {
+  th,
+  td {
     padding: 0 12px;
     height: 30px;
     line-height: 30px;

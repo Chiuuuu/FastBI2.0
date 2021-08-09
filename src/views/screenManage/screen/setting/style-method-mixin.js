@@ -1,7 +1,7 @@
-import boardSetting from '@/views/screenManage/screen/setting'
-import { mutationTypes as historyMutation } from '@/store/modules/history'
-import cloneDeep from 'lodash/cloneDeep'
-import merge from 'lodash/merge'
+import boardSetting from '@/views/screenManage/screen/setting';
+import { mutationTypes as historyMutation } from '@/store/modules/history';
+import cloneDeep from 'lodash/cloneDeep';
+import merge from 'lodash/merge';
 
 const StyleMethodMixin = {
   methods: {
@@ -12,29 +12,25 @@ const StyleMethodMixin = {
      * 3. 重置添加图表功能的配置(在drawing-board-header.vue文件)
      */
     handleClickReset() {
-      const component = merge(
-        cloneDeep(this.currentCom),
-        cloneDeep(boardSetting[this.currentCom.type]),
-        {
-          id: this.currentCom.id,
-          setting: {
-            style: {
-              title: {
-                text: `未命名图表${this.currentCom.id}`
-              },
-              position: {
-                ...this.currentCom.setting.style.position
-              },
-              size: {
-                ...this.currentCom.setting.style.size
-              }
-            }
-          }
-        }
-      )
+      const component = merge(cloneDeep(this.currentCom), cloneDeep(boardSetting[this.currentCom.type]), {
+        id: this.currentCom.id,
+        setting: {
+          style: {
+            title: {
+              text: `未命名图表${this.currentCom.id}`,
+            },
+            position: {
+              ...this.currentCom.setting.style.position,
+            },
+            size: {
+              ...this.currentCom.setting.style.size,
+            },
+          },
+        },
+      });
 
-      const newStyle = component.setting.style
-      this.handleChange(null, newStyle, true)
+      const newStyle = component.setting.style;
+      this.handleChange(null, newStyle, true);
     },
     /**
      * 样式改变
@@ -53,13 +49,13 @@ const StyleMethodMixin = {
         style: isReset
           ? val
           : {
-              [key]: val
+              [key]: val,
             },
         // eslint-disable-next-line no-unneeded-ternary
-        afterExecute: afterExecute ? afterExecute : () => {}
-      })
-    }
-  }
-}
+        afterExecute: afterExecute ? afterExecute : () => {},
+      });
+    },
+  },
+};
 
-export default StyleMethodMixin
+export default StyleMethodMixin;

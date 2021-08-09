@@ -9,12 +9,7 @@
       style="width: 100%"
       @change="setSelfProperty"
     >
-      <a-select-option
-        v-for="i in concatDimAndMea"
-        :key="i.alias"
-        :value="i.alias"
-        >{{ i.alias }}</a-select-option
-      >
+      <a-select-option v-for="i in concatDimAndMea" :key="i.alias" :value="i.alias">{{ i.alias }}</a-select-option>
     </a-select>
     <gui-field label="文本">
       <gui-inline label="字号">
@@ -28,10 +23,7 @@
         ></a-input-number>
       </gui-inline>
       <gui-inline label="颜色">
-        <el-color-picker
-          v-model="selfConfig.series.label.color"
-          @change="setSelfProperty"
-        ></el-color-picker>
+        <el-color-picker v-model="selfConfig.series.label.color" @change="setSelfProperty"></el-color-picker>
       </gui-inline>
     </gui-field>
     <gui-field label="显示位置">
@@ -39,18 +31,16 @@
         <a-radio-group :value="selfConfig.series.label.position" size="small">
           <a-radio-button
             value="inside"
-            @click.native.stop="
-              onRadioChange($event, selfConfig.series.label, 'position')
-            "
-            >内部</a-radio-button
+            @click.native.stop="onRadioChange($event, selfConfig.series.label, 'position')"
           >
+            内部
+          </a-radio-button>
           <a-radio-button
             value="outside"
-            @click.native.stop="
-              onRadioChange($event, selfConfig.series.label, 'position')
-            "
-            >外部</a-radio-button
+            @click.native.stop="onRadioChange($event, selfConfig.series.label, 'position')"
           >
+            外部
+          </a-radio-button>
         </a-radio-group>
       </gui-inline>
     </gui-field>
@@ -59,18 +49,16 @@
         <a-radio-group :value="selfConfig.series.label.orient" size="small">
           <a-radio-button
             value="vertical"
-            @click.native.stop="
-              onRadioChange($event, selfConfig.series.label, 'orient')
-            "
-            >垂直</a-radio-button
+            @click.native.stop="onRadioChange($event, selfConfig.series.label, 'orient')"
           >
+            垂直
+          </a-radio-button>
           <a-radio-button
             value="horizontal"
-            @click.native.stop="
-              onRadioChange($event, selfConfig.series.label, 'orient')
-            "
-            >水平</a-radio-button
+            @click.native.stop="onRadioChange($event, selfConfig.series.label, 'orient')"
           >
+            水平
+          </a-radio-button>
         </a-radio-group>
       </gui-inline>
     </gui-field>
@@ -78,40 +66,36 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from 'vuex'
-import GuiField from '../gui-field'
-import GuiInline from '../gui-inline'
+import { mapGetters } from 'vuex';
+import GuiField from '../gui-field';
+import GuiInline from '../gui-inline';
 export default {
   data() {
-    return {}
+    return {};
   },
   inject: ['switchChange', 'setSelfProperty', 'onRadioChange'],
   props: {
     selfConfig: {
       type: Object,
       default() {
-        return {}
-      }
-    }
+        return {};
+      },
+    },
   },
   computed: {
     ...mapGetters(['currSelected']),
     // 维度度量合并列表
     concatDimAndMea() {
-      const {
-        dimensions = [],
-        measures = []
-      } = this.currSelected.setting.api_data
-      return dimensions.concat(measures)
-    }
+      const { dimensions = [], measures = [] } = this.currSelected.setting.api_data;
+      return dimensions.concat(measures);
+    },
   },
-  methods: {
-  },
+  methods: {},
   components: {
     GuiField,
-    GuiInline
-  }
-}
+    GuiInline,
+  },
+};
 </script>
 
 <style scoped></style>

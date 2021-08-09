@@ -1,19 +1,9 @@
 <template>
-  <a-modal
-    v-model="visible"
-    title="选择地图"
-    @ok="handleOk"
-    @cancel="closeChild"
-  >
+  <a-modal v-model="visible" title="选择地图" @ok="handleOk" @cancel="closeChild">
     <div class="type-line">
       <span class="label">地图类型：</span>
       <a-select v-model="mapType" style="width: 300px">
-        <a-select-option
-          v-for="item in mapTypeList"
-          :key="item.key"
-          :value="item.key"
-          @change="region = ''"
-        >
+        <a-select-option v-for="item in mapTypeList" :key="item.key" :value="item.key" @change="region = ''">
           {{ item.name }}
         </a-select-option>
       </a-select>
@@ -36,40 +26,40 @@ export default {
       mapTypeList: [
         // { key: 1, name: '中国地图' },
         // { key: 2, name: '省级地图' },
-        { key: 3, name: '市级地图' }
+        { key: 3, name: '市级地图' },
       ],
       provinceList: [
-        { key: 1, name: '广东省' }
+        { key: 1, name: '广东省' },
         //   { key: 2, name: '湖南省' }
       ],
       cityList: [
-        { key: 1, name: '广州市' }
+        { key: 1, name: '广州市' },
         //   { key: 2, name: '深圳市' }
       ],
       mapType: 3,
-      region: 1
-    }
+      region: 1,
+    };
   },
   computed: {
     regionList() {
       if (this.mapType === 2) {
-        return this.provinceList
+        return this.provinceList;
       }
       if (this.mapType === 3) {
-        return this.cityList
+        return this.cityList;
       }
-      return []
-    }
+      return [];
+    },
   },
   methods: {
     handleOk() {
-      this.$emit('ok')
+      this.$emit('ok');
     },
     closeChild() {
-      this.$emit('close')
-    }
-  }
-}
+      this.$emit('close');
+    },
+  },
+};
 </script>
 <style lang="less" scoped>
 .type-line {

@@ -9,29 +9,26 @@
   </a-row>
 </template>
 <script>
-import Menu from './components/role-menu'
-import Main from './components/role-main'
+import Menu from './components/role-menu';
+import Main from './components/role-main';
 
-import { mapState } from 'vuex'
 export default {
   name: 'roles',
   components: {
     Menu,
-    Main
+    Main,
   },
   data() {
-    return {
-
-    }
+    return {};
   },
   methods: {
     handleChangeTab(key) {
-      this.$refs.main.activeTab = key
-    }
+      this.$refs.main.activeTab = key;
+    },
   },
   beforeDestroy() {
-    this.$store.commit('projectRoles/SET_ROLEID', 0)
-    this.$store.commit('common/SET_MENUSELECTID', -1)
-  }
-}
+    this.$store.commit('projectRoles/SET_ROLEID', 0);
+    this.$store.commit('common/SET_MENUSELECTID', -1);
+  },
+};
 </script>

@@ -22,12 +22,7 @@
         <!-- 页面比例设置 start -->
         <div class="tool-scale">
           <span class="num" ref="js-slider-result">{{ boardScale }}%</span>
-          <div
-            class="zoomer out"
-            @click="handleChangeScale('subtraction', 0.01)"
-          >
-            －
-          </div>
+          <div class="zoomer out" @click="handleChangeScale('subtraction', 0.01)">－</div>
           <Slider
             class="range-box"
             :value="boardScale"
@@ -36,9 +31,7 @@
           >
             <div class="mark-middle"></div>
           </Slider>
-          <div class="zoomer in" @click="handleChangeScale('add', 0.01)">
-            ＋
-          </div>
+          <div class="zoomer in" @click="handleChangeScale('add', 0.01)">＋</div>
           <!-- <div class="auto-width">[＋]</div>
           <div class="auto-screen-width">[＋]</div> -->
         </div>
@@ -48,9 +41,9 @@
   </div>
 </template>
 <script>
-import { mapState } from 'vuex'
-import { mutationTypes as boardMutaion } from '@/store/modules/board'
-import Slider from '@/components/slider/slider'
+import { mapState } from 'vuex';
+import { mutationTypes as boardMutaion } from '@/store/modules/board';
+import Slider from '@/components/slider/slider';
 
 /**
  * @description 编辑大屏底部工具栏
@@ -58,45 +51,45 @@ import Slider from '@/components/slider/slider'
 export default {
   name: 'DrawdingBoardPageTools',
   components: {
-    Slider
+    Slider,
   },
   computed: {
     ...mapState({
       boardScale: state => {
-        return (state.board.scale * 100).toFixed(0)
-      }
-    })
+        return (state.board.scale * 100).toFixed(0);
+      },
+    }),
   },
   methods: {
     /**
      * @description 滑块改变
      */
     handleSliderChange(value) {
-      this.$refs['js-slider-result'].innerHTML = value + '%'
+      this.$refs['js-slider-result'].innerHTML = value + '%';
     },
     /**
      * @description 比例设置
      */
     handleChangeScale(type, step) {
-      let scale = this.$store.state.board.scale
+      let scale = this.$store.state.board.scale;
       if (type === 'add') {
-        scale = +(this.$store.state.board.scale + step).toFixed(2)
-        scale = Math.min(1, scale)
+        scale = +(this.$store.state.board.scale + step).toFixed(2);
+        scale = Math.min(1, scale);
       } else {
-        scale = +(this.$store.state.board.scale - step).toFixed(2)
-        scale = Math.max(0, scale)
+        scale = +(this.$store.state.board.scale - step).toFixed(2);
+        scale = Math.max(0, scale);
       }
       this.$store.commit(boardMutaion.SET_BOARD_SCALE, {
-        scale
-      })
+        scale,
+      });
     },
     /**
      * @description 滑块改变之后
      */
     handleAfaterSliderChange(value) {
       this.$store.commit(boardMutaion.SET_BOARD_SCALE, {
-        scale: value
-      })
+        scale: value,
+      });
     },
     /**
      * @description 页面tab切换
@@ -105,15 +98,15 @@ export default {
       this.$router.push({
         name: 'screenEditor',
         params: {
-          id: 1
+          id: 1,
         },
         query: {
-          tid: 2
-        }
-      })
-    }
-  }
-}
+          tid: 2,
+        },
+      });
+    },
+  },
+};
 </script>
 <style lang="less" scoped>
 @import url('../../../../assets/less/common/variables.less');

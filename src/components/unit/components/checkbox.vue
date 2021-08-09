@@ -11,27 +11,27 @@ export default {
     label: {
       // 标题
       type: String,
-      default: ''
+      default: '',
     },
     value: {
       // 值
       type: Boolean,
-      default: false
-    }
+      default: false,
+    },
   },
   model: {
     prop: 'value',
-    event: 'change'
+    event: 'change',
   },
   methods: {
     /*
      * 值变化
      */
     handleChange(event) {
-      this.$emit('change', event.target.checked)
-    }
-  }
-}
+      this.$emit('change', event.target.checked);
+    },
+  },
+};
 </script>
 <style lang="less" scoped>
 .unit-checkbox {

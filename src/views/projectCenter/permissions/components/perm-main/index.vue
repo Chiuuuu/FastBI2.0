@@ -19,36 +19,36 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
-import Content from '../tab-content/content'
+import { mapState } from 'vuex';
+import Content from '../tab-content/content';
 
 export default {
   name: 'permMain',
   components: {
-    Content
+    Content,
   },
   computed: {
     ...mapState({
       editType: state => state.projectPermissions.editType,
       permissionId: state => state.projectPermissions.permissionId,
-      formInfo: state => state.projectPermissions.permissionInfo
-    })
+      formInfo: state => state.projectPermissions.permissionInfo,
+    }),
   },
   methods: {
     handleChangeModule(key) {
-      this.$store.commit('projectPermissions/SET_EDITTYPE', key)
-    }
-  }
-}
+      this.$store.commit('projectPermissions/SET_EDITTYPE', key);
+    },
+  },
+};
 </script>
 
 <style lang="less" scoped>
-@import "../../../main.less";
+@import '../../../main.less';
 @{deep} .content .ant-form-item-label {
-    width: 100px !important;
-    padding-left: 16px;
-    label {
-        color: rgba(0, 0, 0, 0.65);
-    }
+  width: 100px !important;
+  padding-left: 16px;
+  label {
+    color: rgba(0, 0, 0, 0.65);
+  }
 }
 </style>

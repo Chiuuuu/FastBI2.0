@@ -1,16 +1,16 @@
-import BoardType from '@/views/screenManage/screen/setting/default-type'
-import BASE from '@/views/screenManage/screen/setting/default-base'
-import merge from 'lodash/merge'
-import cloneDeep from 'lodash/cloneDeep'
+import BoardType from '@/views/screenManage/screen/setting/default-type';
+import BASE from '@/views/screenManage/screen/setting/default-base';
+import merge from 'lodash/merge';
+import cloneDeep from 'lodash/cloneDeep';
 
-const fontSize = 14
+const fontSize = 14;
 export default merge(cloneDeep(BASE), {
   type: BoardType.ChartNestPie,
   setting: {
     data: {
       outerIng: [], // 外圈
       innerIng: [], // 内圈
-      measures: [] // 度量
+      measures: [], // 度量
     },
     style: {
       echart: {
@@ -24,10 +24,10 @@ export default merge(cloneDeep(BASE), {
           bottom: 50,
           containLabel: true,
           backgroundColor: 'transparent',
-          borderColor: 'transparent'
+          borderColor: 'transparent',
         },
         tooltip: {
-          trigger: 'item'
+          trigger: 'item',
         },
         legend: {
           // 图例
@@ -35,13 +35,13 @@ export default merge(cloneDeep(BASE), {
           orient: 'horizontal',
           textStyle: {
             color: '#ffffff',
-            fontSize: 16
+            fontSize: 16,
           },
           itemGap: 12,
           icon: 'circle',
           position: 'left-top',
           left: 'left',
-          top: 'top'
+          top: 'top',
         },
         customRadius: 90, // 整体半径
         customFormatterWay: 'nv',
@@ -54,14 +54,14 @@ export default merge(cloneDeep(BASE), {
           fontSize,
           minMargin: fontSize,
           edgeDistance: 1.5 * fontSize,
-          lineHeight: 1.5 * fontSize
+          lineHeight: 1.5 * fontSize,
         },
         customLabelLayout: {
           // 标签是否允许重叠
-          hideOverlap: false
+          hideOverlap: false,
         },
-        customCenter: [50, 50] // 坐标中心点
-      }
-    }
-  }
-})
+        customCenter: [50, 50], // 坐标中心点
+      },
+    },
+  },
+});

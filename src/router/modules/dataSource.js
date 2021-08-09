@@ -1,10 +1,10 @@
-import PERMISSION_CODE from '@/config/permission'
+import PERMISSION_CODE from '@/config/permission';
 
-const RouteView = () => import('@/layout/routeView')
-const PageView = () => import('@/layout/pageView')
-const dataAccessView = () => import('@/views/dataSource/dataAccess/dataAccess')
-const dataModelView = () => import('@/views/dataSource/dataModel/dataModel')
-const dataModelEditView = () => import('@/views/dataSource/dataModel/model-edit/Model-Edit')
+const RouteView = () => import('@/layout/routeView');
+const PageView = () => import('@/layout/pageView');
+const dataAccessView = () => import('@/views/dataSource/dataAccess/dataAccess');
+const dataModelView = () => import('@/views/dataSource/dataModel/dataModel');
+const dataModelEditView = () => import('@/views/dataSource/dataModel/model-edit/Model-Edit');
 
 export default {
   path: '/dataSource',
@@ -13,7 +13,7 @@ export default {
   meta: {
     title: '数据管理',
     icon: 'bar-chart',
-    permissions: [PERMISSION_CODE.PAGE.datasource, PERMISSION_CODE.PAGE.datamodel]
+    permissions: [PERMISSION_CODE.PAGE.datasource, PERMISSION_CODE.PAGE.datamodel],
   },
   children: [
     {
@@ -22,8 +22,8 @@ export default {
       component: dataAccessView,
       meta: {
         title: '数据接入',
-        permissions: [PERMISSION_CODE.PAGE.datasource]
-      }
+        permissions: [PERMISSION_CODE.PAGE.datasource],
+      },
     },
     {
       path: 'dataModel',
@@ -32,7 +32,7 @@ export default {
       component: PageView,
       meta: {
         title: '数据建模',
-        permissions: [PERMISSION_CODE.PAGE.datamodel]
+        permissions: [PERMISSION_CODE.PAGE.datamodel],
       },
       children: [
         {
@@ -41,8 +41,8 @@ export default {
           component: dataModelView,
           meta: {
             sideBar: 'dataModel', // 用于显示对对应的菜单
-            permissions: [PERMISSION_CODE.PAGE.datamodel]
-          }
+            permissions: [PERMISSION_CODE.PAGE.datamodel],
+          },
         },
         {
           path: 'modelEdit',
@@ -50,10 +50,10 @@ export default {
           component: dataModelEditView,
           meta: {
             sideBar: 'dataModel',
-            permissions: [PERMISSION_CODE.PAGE.datamodel]
-          }
-        }
-      ]
-    }
-  ]
-}
+            permissions: [PERMISSION_CODE.PAGE.datamodel],
+          },
+        },
+      ],
+    },
+  ],
+};

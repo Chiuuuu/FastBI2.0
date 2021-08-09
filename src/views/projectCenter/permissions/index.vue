@@ -9,23 +9,20 @@
   </a-row>
 </template>
 <script>
-import Menu from './components/perm-menu'
-import Main from './components/perm-main'
+import Menu from './components/perm-menu';
+import Main from './components/perm-main';
 
-import { mapState } from 'vuex'
 export default {
   name: 'permissions',
   components: {
     Menu,
-    Main
+    Main,
   },
   data() {
-    return {
-
-    }
+    return {};
   },
   beforeDestroy() {
-    this.$store.commit('projectPermissions/SET_PERMISSIONID', 0)
-  }
-}
+    this.$store.commit('projectPermissions/SET_PERMISSIONID', 0);
+  },
+};
 </script>

@@ -2,7 +2,7 @@
   <div class="material-list-item">
     <!-- 标题 -->
     <div class="title-area">
-      <div style="padding-top:20px" v-if="mode === 'show'">{{ data.name }}</div>
+      <div style="padding-top: 20px" v-if="mode === 'show'">{{ data.name }}</div>
       <a-form-model v-else ref="form" :model="form" :rules="rules">
         <a-form-model-item prop="name">
           <a-input
@@ -23,19 +23,17 @@
     <!-- 操作栏 -->
     <div class="controller">
       <a-popconfirm title="是否确定删除？" ok-text="确定" cancel-text="取消" @confirm="handleDelete">
-        <a :class="{ 'disabled': data.parentId == 1 }">删除</a>
+        <a :class="{ disabled: data.parentId == 1 }">删除</a>
       </a-popconfirm>
-      <a :class="{ 'disabled': data.parentId == 1 }" @click="handleReset">重命名</a>
+      <a :class="{ disabled: data.parentId == 1 }" @click="handleReset">重命名</a>
       <a-popconfirm ok-text="确定" cancel-text="取消" @confirm="handleChangeParent">
         <i slot="icon"></i>
         <a-select slot="title" v-model="parentId">
-          <a-select-option
-            v-for="item in categoryList"
-            :value="item.id"
-            :key="item.id"
-          >{{ item.name }}</a-select-option>
+          <a-select-option v-for="item in categoryList" :value="item.id" :key="item.id">
+            {{ item.name }}
+          </a-select-option>
         </a-select>
-        <a :class="{ 'disabled': data.parentId == 1 }">移动到分类</a>
+        <a :class="{ disabled: data.parentId == 1 }">移动到分类</a>
       </a-popconfirm>
     </div>
     <!-- 操作栏end -->
@@ -43,7 +41,7 @@
 </template>
 
 <script>
-import commonValidateField from '@/utils/validator'
+import commonValidateField from '@/utils/validator';
 export default {
   name: 'MaterialListItem',
   inject: ['getCategoryList', 'getCategoryId'],
@@ -51,96 +49,96 @@ export default {
     data: {
       type: Object,
       default() {
-        return {}
-      }
-    }
+        return {};
+      },
+    },
   },
   data() {
     return {
       parentId: this.getCategoryId(), // 分类id
       mode: 'show',
       form: {
-        name: ''
+        name: '',
       },
       rules: {
         name: [
           {
             required: true,
-            message: '请输入素材名称'
+            message: '请输入素材名称',
           },
           {
             min: 1,
             max: 10,
-            message: '请输入1~10个字的素材名称'
+            message: '请输入1~10个字的素材名称',
           },
-          commonValidateField.noEmoji({ title: '素材名称' })
-        ]
-      }
-    }
+          commonValidateField.noEmoji({ title: '素材名称' }),
+        ],
+      },
+    };
   },
   computed: {
     categoryList() {
-      return this.getCategoryList().filter(n => n.id !== 1)
+      return this.getCategoryList().filter(n => n.id !== 1);
     },
     imageUrl() {
-      return process.env.VUE_APP_SERVICE_URL + this.data.filePath
-    }
+      return process.env.VUE_APP_SERVICE_URL + this.data.filePath;
+    },
   },
   methods: {
     // 显示时截掉文件后缀
     formatName(name) {
-      const index = name.lastIndexOf('.')
-      return name.slice(0, index)
+      const index = name.lastIndexOf('.');
+      return name.slice(0, index);
     },
     // http交互时带上当前最新名字+后缀
     getHoleName(name) {
-      const index = this.data.name.lastIndexOf('.')
-      return name + this.data.name.slice(index)
+      const index = this.data.name.lastIndexOf('.');
+      return name + this.data.name.slice(index);
     },
     handlePreviewImage() {
-      let imageUrl = this.imageUrl
-      const index = imageUrl.indexOf('/thumbnail')
-      imageUrl = imageUrl.slice(0, index) + imageUrl.slice(index + 10)
-      this.$emit('preview', imageUrl)
+      let imageUrl = this.imageUrl;
+      const index = imageUrl.indexOf('/thumbnail');
+      imageUrl = imageUrl.slice(0, index) + imageUrl.slice(index + 10);
+      this.$emit('preview', imageUrl);
     },
     handleReset() {
-      this.mode = 'edit'
-      this.form.name = this.formatName(this.data.name)
+      this.mode = 'edit';
+      this.form.name = this.formatName(this.data.name);
       this.$nextTick(() => {
-        this.$refs.input.focus()
-      })
+        this.$refs.input.focus();
+      });
     },
     handleResetNameBlur() {
-      if (this.mode === 'show') return
-      this.$refs.form.validate(async (ok) => {
+      if (this.mode === 'show') return;
+      this.$refs.form.validate(async ok => {
         if (ok) {
           const result = await this.$server.screenMaterial.updateMaterial({
             id: this.data.id,
             name: this.getHoleName(this.form.name),
-            parentId: this.parentId
-          })
+            parentId: this.parentId,
+          });
           if (result.code === 200) {
-            this.mode = 'show'
-            this.data.name = this.getHoleName(this.form.name)
-            this.form.name = ''
+            this.mode = 'show';
+            this.data.name = this.getHoleName(this.form.name);
+            this.form.name = '';
           } else {
-            this.mode = 'show'
-            this.$message.error(result.msg || '请求失败')
+            this.mode = 'show';
+            this.$message.error(result.msg || '请求失败');
           }
         }
-      })
+      });
     },
     async handleDelete() {
       const result = await this.$server.screenMaterial.deleMaterial({
         id: this.data.id,
         name: this.data.name,
-        parentId: this.parentId
-      })
+        parentId: this.parentId,
+      });
       if (result.code === 200) {
-        this.$message.success('删除成功')
-        this.$emit('refresh')
+        this.$message.success('删除成功');
+        this.$emit('refresh');
       } else {
-        this.$message.error(result.msg || '请求失败')
+        this.$message.error(result.msg || '请求失败');
       }
     },
     async handleChangeParent() {
@@ -148,17 +146,17 @@ export default {
         id: this.data.id,
         name: this.data.name,
         parentId: this.parentId,
-        oldGroupId: this.getCategoryId()
-      })
+        oldGroupId: this.getCategoryId(),
+      });
       if (result.code === 200) {
-        this.$message.success('移动成功')
-        this.$emit('refresh')
+        this.$message.success('移动成功');
+        this.$emit('refresh');
       } else {
-        this.$message.error(result.msg)
+        this.$message.error(result.msg);
       }
-    }
-  }
-}
+    },
+  },
+};
 </script>
 
 <style lang="less" scoped>

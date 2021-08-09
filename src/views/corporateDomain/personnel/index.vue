@@ -6,14 +6,14 @@
   </a-row>
 </template>
 <script>
-import Main from './components/persn-main'
+import Main from './components/persn-main';
 export default {
   name: 'corporatepersonnel',
   components: {
-    Main
+    Main,
   },
   data() {
-    return {}
-  }
-}
+    return {};
+  },
+};
 </script>

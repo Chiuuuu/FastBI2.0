@@ -9,38 +9,38 @@
   </a-row>
 </template>
 <script>
-import Menu from './components/material-menu'
-import Main from './components/main-content'
+import Menu from './components/material-menu';
+import Main from './components/main-content';
 export default {
   name: 'ScreenMaterial',
   components: {
     Menu,
-    Main
+    Main,
   },
   provide() {
     return {
       getCategoryId: this.getCategoryId,
-      getCategoryList: this.getCategoryList
-    }
+      getCategoryList: this.getCategoryList,
+    };
   },
   data() {
     return {
       categoryId: '',
-      categoryList: []
-    }
+      categoryList: [],
+    };
   },
   watch: {
     categoryId() {
-      this.$refs.main && this.$refs.main.handleGetData()
-    }
+      this.$refs.main && this.$refs.main.handleGetData();
+    },
   },
   methods: {
     getCategoryId() {
-      return this.categoryId
+      return this.categoryId;
     },
     getCategoryList() {
-      return this.categoryList
-    }
-  }
-}
+      return this.categoryList;
+    },
+  },
+};
 </script>

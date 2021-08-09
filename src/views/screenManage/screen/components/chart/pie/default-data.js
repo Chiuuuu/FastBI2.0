@@ -4,6 +4,6 @@ export default {
     { value: 1796, name: '西北' },
     { value: 5146, name: '华北' },
     { value: 11115, name: '华东' },
-    { value: 16237, name: '其它' }
-  ]
-}
+    { value: 16237, name: '其它' },
+  ],
+};

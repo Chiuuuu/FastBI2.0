@@ -19,11 +19,7 @@
                     ></UnitField>
                   </div>
                 </CollapsePanel>
-                <CollapsePanel
-                  class="content-item"
-                  panel="dataFilter"
-                  header="数据筛选"
-                >
+                <CollapsePanel class="content-item" panel="dataFilter" header="数据筛选">
                   <!-- 数据筛选 start -->
                   <UnitDataFilter class="setting-unit-content">
                     <template #tip>
@@ -36,11 +32,7 @@
             </TabPanel>
             <TabPanel tab="style" label="样式">
               <Collapse v-model="styleCollapseActive">
-                <CollapsePanel
-                  class="content-item"
-                  panel="position"
-                  :isTogger="false"
-                >
+                <CollapsePanel class="content-item" panel="position" :isTogger="false">
                   <!-- 位置 start -->
                   <UnitPosition
                     class="setting-unit-content"
@@ -49,11 +41,7 @@
                   ></UnitPosition>
                   <!-- 位置 end -->
                 </CollapsePanel>
-                <CollapsePanel
-                  class="content-item"
-                  panel="size"
-                  :isTogger="false"
-                >
+                <CollapsePanel class="content-item" panel="size" :isTogger="false">
                   <!-- 尺寸 start -->
                   <UnitSize
                     class="setting-unit-content"
@@ -87,8 +75,8 @@
                             height =>
                               handleChange('echart', {
                                 thead: {
-                                  height
-                                }
+                                  height,
+                                },
                               })
                           "
                         ></a-input-number>
@@ -98,13 +86,11 @@
                     <!-- 背景颜色 start -->
                     <UnitBackgroundColor
                       class="mb-8"
-                      :color="
-                        currentCom.setting.style.echart.thead.background.color
-                      "
+                      :color="currentCom.setting.style.echart.thead.background.color"
                       @change="
                         color =>
                           handleChange('echart', {
-                            thead: { background: { color } }
+                            thead: { background: { color } },
                           })
                       "
                     ></UnitBackgroundColor>
@@ -115,13 +101,11 @@
                       <a-col :span="4">
                         <div class="font-color">
                           <ColorPicker
-                            :value="
-                              currentCom.setting.style.echart.thead.font.color
-                            "
+                            :value="currentCom.setting.style.echart.thead.font.color"
                             @change="
                               color =>
                                 handleChange('echart', {
-                                  thead: { font: { color } }
+                                  thead: { font: { color } },
                                 })
                             "
                           ></ColorPicker>
@@ -129,14 +113,12 @@
                       </a-col>
                       <a-col :span="16">
                         <a-input-number
-                          :value="
-                            currentCom.setting.style.echart.thead.font.size
-                          "
+                          :value="currentCom.setting.style.echart.thead.font.size"
                           :min="12"
                           @change="
                             size =>
                               handleChange('echart', {
-                                thead: { font: { size } }
+                                thead: { font: { size } },
                               })
                           "
                         />
@@ -150,12 +132,7 @@
                         <a-col :span="5" :offset="1" :key="item">
                           <div
                             class="font-align"
-                            :class="
-                              item ===
-                              currentCom.setting.style.echart.thead.text.align
-                                ? 'selected'
-                                : ''
-                            "
+                            :class="item === currentCom.setting.style.echart.thead.text.align ? 'selected' : ''"
                             @click="handleTheadTextAlign('align', item)"
                           >
                             <a-icon :type="`align-${item}`" />
@@ -182,8 +159,8 @@
                             height =>
                               handleChange('echart', {
                                 tbody: {
-                                  height
-                                }
+                                  height,
+                                },
                               })
                           "
                         ></a-input-number>
@@ -198,7 +175,7 @@
                       @change="
                         odd =>
                           handleChange('echart', {
-                            tbody: { odd }
+                            tbody: { odd },
                           })
                       "
                     ></UnitBackgroundColor>
@@ -212,7 +189,7 @@
                       @change="
                         even =>
                           handleChange('echart', {
-                            tbody: { even }
+                            tbody: { even },
                           })
                       "
                     ></UnitBackgroundColor>
@@ -224,13 +201,11 @@
                       <a-col :span="4">
                         <div class="font-color">
                           <ColorPicker
-                            :value="
-                              currentCom.setting.style.echart.tbody.font.color
-                            "
+                            :value="currentCom.setting.style.echart.tbody.font.color"
                             @change="
                               color =>
                                 handleChange('echart', {
-                                  tbody: { font: { color } }
+                                  tbody: { font: { color } },
                                 })
                             "
                           ></ColorPicker>
@@ -238,14 +213,12 @@
                       </a-col>
                       <a-col :span="16">
                         <a-input-number
-                          :value="
-                            currentCom.setting.style.echart.tbody.font.size
-                          "
+                          :value="currentCom.setting.style.echart.tbody.font.size"
                           :min="12"
                           @change="
                             size =>
                               handleChange('echart', {
-                                tbody: { font: { size } }
+                                tbody: { font: { size } },
                               })
                           "
                         />
@@ -259,12 +232,7 @@
                         <a-col :span="5" :offset="1" :key="item">
                           <div
                             class="font-align"
-                            :class="
-                              item ===
-                              currentCom.setting.style.echart.tbody.text.align
-                                ? 'selected'
-                                : ''
-                            "
+                            :class="item === currentCom.setting.style.echart.tbody.text.align ? 'selected' : ''"
                             @click="handleTbodyTextAlign('align', item)"
                           >
                             <a-icon :type="`align-${item}`" />
@@ -275,11 +243,7 @@
                   </div>
                   <!-- 表格 end -->
                 </CollapsePanel>
-                <CollapsePanel
-                  class="content-item"
-                  panel="bgAndBorder"
-                  header="背景和边框"
-                >
+                <CollapsePanel class="content-item" panel="bgAndBorder" header="背景和边框">
                   <div class="setting-unit-content">
                     <!-- 背景颜色 start -->
                     <UnitBackgroundColor
@@ -296,20 +260,10 @@
                     <!-- 边框设置 end -->
                   </div>
                 </CollapsePanel>
-                <CollapsePanel
-                  class="content-item"
-                  panel="reset"
-                  :isTogger="false"
-                >
+                <CollapsePanel class="content-item" panel="reset" :isTogger="false">
                   <!-- 恢复默认配置 start -->
                   <div class="setting-unit-content">
-                    <a-button
-                      class="btn-ghost reset"
-                      type="link"
-                      icon="redo"
-                      block
-                      @click="handleClickReset"
-                    >
+                    <a-button class="btn-ghost reset" type="link" icon="redo" block @click="handleClickReset">
                       恢复默认配置
                     </a-button>
                   </div>
@@ -325,51 +279,51 @@
   </div>
 </template>
 <script>
-import BoardType from '@/views/screenManage/screen/setting/default-type'
-import StyleMethodMixin from '@/views/screenManage/screen/setting/style-method-mixin'
+import BoardType from '@/views/screenManage/screen/setting/default-type';
+import StyleMethodMixin from '@/views/screenManage/screen/setting/style-method-mixin';
 export default {
   name: `${BoardType.ChartTable}Setting`,
   mixins: [StyleMethodMixin],
   props: {
     currentCom: {
       type: Object,
-      required: true
-    }
+      required: true,
+    },
   },
   data() {
     return {
       tabAcitve: 'style', // tab选项栏活动目标
       dataCollapseActive: ['targe', 'range'],
       align: ['left', 'center', 'right'], // 对齐方式
-      styleCollapseActive: []
-    }
+      styleCollapseActive: [],
+    };
   },
   methods: {
     handleLabel(key, value) {
       this.handleChange('echart', {
         label: {
-          [key]: value
-        }
-      })
+          [key]: value,
+        },
+      });
     },
     handleTheadTextAlign(key, value) {
       this.handleChange('echart', {
         thead: {
           text: {
-            [key]: value
-          }
-        }
-      })
+            [key]: value,
+          },
+        },
+      });
     },
     handleTbodyTextAlign(key, value) {
       this.handleChange('echart', {
         tbody: {
           text: {
-            [key]: value
-          }
-        }
-      })
-    }
-  }
-}
+            [key]: value,
+          },
+        },
+      });
+    },
+  },
+};
 </script>

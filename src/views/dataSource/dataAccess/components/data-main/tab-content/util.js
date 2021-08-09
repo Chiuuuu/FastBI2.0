@@ -1,79 +1,76 @@
 export let validateIP = (rule, value, callback) => {
   if (value === '') {
-    callback(new Error('请输入服务器ip地址'))
+    callback(new Error('请输入服务器ip地址'));
   } else {
-    var re = /^(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])$/
-    var bl = re.test(value)
+    var re =
+      /^(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])$/;
+    var bl = re.test(value);
     if (!bl) {
-      callback(new Error('ip地址格式错误'))
+      callback(new Error('ip地址格式错误'));
     }
-    callback()
+    callback();
   }
-}
+};
 
 /**
  * excel文件(数据库对象)
  */
 export class MapSheet {
   constructor(mapSheet) {
-    this.sheetList = []
-    this.tableList = []
-    this.isNewFile = !Array.isArray(mapSheet)
-    this.formatMapSheet(mapSheet)
+    this.sheetList = [];
+    this.tableList = [];
+    this.isNewFile = !Array.isArray(mapSheet);
+    this.formatMapSheet(mapSheet);
   }
 
   formatMapSheet(mapSheet) {
-    if (!mapSheet || Object.keys(mapSheet).length < 1) return
+    if (!mapSheet || Object.keys(mapSheet).length < 1) return;
     if (this.isNewFile) {
-      const list = Object.entries(mapSheet)
-      this.formatSheet(list)
-      this.formatTable(list)
+      const list = Object.entries(mapSheet);
+      this.formatSheet(list);
+      this.formatTable(list);
     } else {
-      this.formatSheet(mapSheet)
+      this.formatSheet(mapSheet);
     }
   }
 
   formatSheet(list) {
-    let sheetList = []
+    let sheetList = [];
     if (this.isNewFile) {
-      list.map(([key, value]) => {
+      // list.map(([key, value]) => {
+      list.map(arr => {
         sheetList.push({
-          name: key
-        })
-      })
+          name: arr[0],
+        });
+      });
     } else {
-      sheetList = sheetList.concat(list)
+      sheetList = sheetList.concat(list);
     }
-    this.sheetList = sheetList
+    this.sheetList = sheetList;
   }
 
   formatTable(list) {
-    let tableList = []
-    list.map(([key, value]) => {
-      tableList.push(value)
-    })
-    this.tableList = tableList
+    let tableList = [];
+    // list.map(([key, value]) => {
+    list.map(arr => {
+      tableList.push(arr[1]);
+    });
+    this.tableList = tableList;
   }
 
   addSheet(sheet, index) {
     if (index !== undefined) {
-      this.sheetList[index] = sheet
+      this.sheetList[index] = sheet;
     } else {
-      this.sheetList.push(sheet)
+      this.sheetList.push(sheet);
     }
   }
 
   addTable(table, index) {
     if (index !== undefined) {
-      this.tableList[index] = table
+      this.tableList[index] = table;
     } else {
-      this.tableList.push(table)
+      this.tableList.push(table);
     }
   }
 }
-
-// export let findParentId = (menuid, menuList) => {
-//     menuList.find(item => {
-//         item.
-//     })
-// }

@@ -7,7 +7,7 @@
       class="menu-body scrollbar"
       :openKeys="openKeys"
       :selectedKeys="selectedKeys"
-      @openChange="v => openKeys = v"
+      @openChange="v => (openKeys = v)"
       mode="inline"
       theme="dark"
     >
@@ -19,73 +19,68 @@
               <span>{{ item.meta.title }}</span>
             </span>
           </template>
-          <a-menu-item
-            v-for="subItem in item.children"
-            :key="subItem.path"
-            @click="selectMenu(subItem)"
-            >{{ subItem.meta.title }}</a-menu-item
-          >
+          <a-menu-item v-for="subItem in item.children" :key="subItem.path" @click="selectMenu(subItem)">
+            {{ subItem.meta.title }}
+          </a-menu-item>
         </a-sub-menu>
       </template>
     </a-menu>
   </div>
 </template>
 <script>
-import ManageRoutes from '@/router/modules/layout'
-import { getRenderRouter } from '@/utils/permission'
-import isEqual from 'lodash/isEqual'
+import { getRenderRouter } from '@/utils/permission';
 export default {
   data() {
-    const renderRouter = getRenderRouter(this.$store.state.permission.routes)
-    const menuData = this.getMenuData(renderRouter.children)
+    const renderRouter = getRenderRouter(this.$store.state.permission.routes);
+    const menuData = this.getMenuData(renderRouter.children);
     return {
       menuData: menuData,
       openKeys: [],
-      selectedKeys: []
-    }
+      selectedKeys: [],
+    };
   },
   watch: {
-    '$route.path': function() {
-      this.setSelectKeys()
-    }
+    '$route.path': function () {
+      this.setSelectKeys();
+    },
   },
   created() {
-    this.setSelectKeys()
+    this.setSelectKeys();
   },
   methods: {
     setSelectKeys() {
-      const path = this.$route.path
-      const key = '/' + path.split('/').splice(1).shift()
+      const path = this.$route.path;
+      const key = '/' + path.split('/').splice(1).shift();
       if (!this.openKeys.includes(key)) {
-        this.openKeys.push(key)
+        this.openKeys.push(key);
       }
       // this.openKeys = this.openKeys.concat(['/' + path.split('/').splice(1).shift()]).filter((path, index, list) => {
       //   return list.indexOf(path) === index
       // })
-      this.selectedKeys = [this.$router.currentRoute.meta.sideBar || this.$router.currentRoute.name] // [value.split('/').pop()]
+      this.selectedKeys = [this.$router.currentRoute.meta.sideBar || this.$router.currentRoute.name]; // [value.split('/').pop()]
     },
     getMenuData(list) {
-      const sidebar = []
+      const sidebar = [];
       list.forEach(item => {
         if (item.meta && item.meta.title) {
-          const newItem = { ...item }
-          delete newItem.children
-          sidebar.push(newItem)
+          const newItem = { ...item };
+          delete newItem.children;
+          sidebar.push(newItem);
           if (item.children) {
-            newItem.children = this.getMenuData(item.children)
+            newItem.children = this.getMenuData(item.children);
           }
         }
-      })
-      return sidebar
+      });
+      return sidebar;
     },
     // 点击选择菜单栏跳转页面
-    selectMenu(item, id) {
+    selectMenu(item) {
       this.$router.push({
-        name: item.name
-      })
-    }
-  }
-}
+        name: item.name,
+      });
+    },
+  },
+};
 </script>
 
 <style lang="stylus" scoped>

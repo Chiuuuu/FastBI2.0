@@ -10,18 +10,18 @@ export default {
   props: {
     label: {
       type: String,
-      default: ''
+      default: '',
     },
     tab: {
       type: [String, Number],
       required: true,
-      default: ''
-    }
+      default: '',
+    },
   },
   computed: {
     active() {
-      return this.tabs.value === this.tab
-    }
-  }
-}
+      return this.tabs.value === this.tab;
+    },
+  },
+};
 </script>

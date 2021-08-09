@@ -12,16 +12,11 @@ const getters = {
   canvasMap: state => state.canvasMaps.canvasMap, // 画布映射数组
 
   canvasMapIdList: state =>
-    state.canvasMaps.canvasMap.length > 0
-      ? state.canvasMaps.canvasMap.map(item => item.id)
-      : [], // 画板图层id顺序列表
+    state.canvasMaps.canvasMap.length > 0 ? state.canvasMaps.canvasMap.map(item => item.id) : [], // 画板图层id顺序列表
 
   currentSelected: state => state.canvasMaps.singleSelected, // 当前选中的组件
 
-  currSelected: state =>
-    state.canvasMaps.canvasMap.find(
-      item => item.id === state.canvasMaps.singleSelected
-    ), // 当前选中的组件
+  currSelected: state => state.canvasMaps.canvasMap.find(item => item.id === state.canvasMaps.singleSelected), // 当前选中的组件
 
   contextMenuInfo: state => state.canvasMaps.contextMenuInfo, // 右键菜单信息
 
@@ -53,7 +48,7 @@ const getters = {
 
   currentPageId: state => state.app.currentPageId, // 当前度量列表
 
-  polymerizeType: state => state.app.polymerizeType // 所有聚合方式及中文映射
-}
+  polymerizeType: state => state.app.polymerizeType, // 所有聚合方式及中文映射
+};
 
-export default getters
+export default getters;

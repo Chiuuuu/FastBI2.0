@@ -1,10 +1,7 @@
 <template>
   <div
     class="u-bitem edit"
-    :class="[
-      className,
-      itemData.tableNo === 0 && itemData.status === 1 ? 'error' : ''
-    ]"
+    :class="[className, itemData.tableNo === 0 && itemData.status === 1 ? 'error' : '']"
     ref="file"
   >
     <div class="txt">
@@ -19,121 +16,113 @@
   </div>
 </template>
 <script>
-import ContextMenu from '@/components/dataSource/contextmenu'
-import { addClass, removeClass } from 'bin-ui/src/utils/dom'
+import ContextMenu from '@/components/dataSource/contextmenu';
+import { addClass, removeClass } from 'bin-ui/src/utils/dom';
 export default {
   name: 'PanelItem',
   props: {
     className: {
       required: true,
       type: String,
-      validator: function(value) {
+      validator: function (value) {
         // 这个值必须匹配下列字符串中的一个
-        return ['dimensions', 'measures'].indexOf(value) !== -1
-      }
+        return ['dimensions', 'measures'].indexOf(value) !== -1;
+      },
     },
     itemData: {
       type: Object,
-      default: () => {}
+      default: () => {},
     },
     detailInfo: {
       type: Object,
-      default: () => {}
+      default: () => {},
     },
     imgURI: {
       type: String,
-      default: ''
+      default: '',
     },
     contextmenus: {
       type: Array,
-      default: function() {
-        return []
-      }
-    }
+      default: function () {
+        return [];
+      },
+    },
   },
   mounted() {
     if (this.hasContextmenus) {
-      this.initContextMenu()
+      this.initContextMenu();
     }
   },
   beforeDestroy() {
     if (this.hasContextmenus) {
-      this.destoryContextMenu()
+      this.destoryContextMenu();
     }
   },
   computed: {
     hasContextmenus() {
-      return this.contextmenus.length !== 0
-    }
+      return this.contextmenus.length !== 0;
+    },
   },
   methods: {
     initContextMenu() {
-      this.$refs.file &&
-        this.$refs.file.addEventListener('contextmenu', this.handleConextMenu)
+      this.$refs.file && this.$refs.file.addEventListener('contextmenu', this.handleConextMenu);
     },
     destoryContextMenu() {
-      this.$refs.file &&
-        this.$refs.file.removeEventListener(
-          'contextmenu',
-          this.handleConextMenu
-        )
+      this.$refs.file && this.$refs.file.removeEventListener('contextmenu', this.handleConextMenu);
     },
     handleConextMenu(e) {
-      e.preventDefault()
-      this.handleCreateMenu(e)
+      e.preventDefault();
+      this.handleCreateMenu(e);
     },
     handleCreateMenu(e) {
-      e.stopPropagation()
-      const that = this
+      e.stopPropagation();
+      const that = this;
       // 每次点击获取他的原始数据类型
-      let _dataType = this.itemData.dataType
-      console.log('原始数据类型', _dataType)
-      addClass(this.$refs.file, 'file-active')
+      let _dataType = this.itemData.dataType;
+      console.log('原始数据类型', _dataType);
+      addClass(this.$refs.file, 'file-active');
       function addEvent(target) {
-        target.$$fun = function() {
-          Array.prototype.push.call(arguments, that)
-          target.onClick.apply(this, arguments)
-        }
+        target.$$fun = function () {
+          Array.prototype.push.call(arguments, that);
+          target.onClick.apply(this, arguments);
+        };
       }
-      const produceType = this.itemData.produceType
+      const produceType = this.itemData.produceType;
       const contextmenus = that.contextmenus.filter(item => {
         if (produceType !== 0) {
-          return item
+          return item;
         } else {
           if (item.type !== 'custom') {
-            return item
+            return item;
           }
         }
-      })
+      });
       this.contenxtmenu = new ContextMenu({
         vm: that,
         menus: contextmenus.map(item => {
           if (item['children'] && item.children.length) {
             item.children.forEach(subitem => {
               if (subitem.dataType === _dataType) {
-                subitem.name = `还原为${subitem.name.split('为')[1]}`
+                subitem.name = `还原为${subitem.name.split('为')[1]}`;
               }
-              addEvent(subitem)
-            })
+              addEvent(subitem);
+            });
           } else {
-            addEvent(item)
+            addEvent(item);
           }
-          return item
+          return item;
         }),
         customStyle: () => {
           return {
-            left:
-              this.className === 'dimensions'
-                ? `${e.clientX}px`
-                : `${e.clientX - 180}px`,
-            top: `${e.clientY - (contextmenus.length + 1) * 28}px`
-          }
+            left: this.className === 'dimensions' ? `${e.clientX}px` : `${e.clientX - 180}px`,
+            top: `${e.clientY - (contextmenus.length + 1) * 28}px`,
+          };
         },
-        handleMarkCancel: function() {
-          removeClass(that.$refs.file, 'file-active')
-        }
-      })
-    }
-  }
-}
+        handleMarkCancel: function () {
+          removeClass(that.$refs.file, 'file-active');
+        },
+      });
+    },
+  },
+};
 </script>

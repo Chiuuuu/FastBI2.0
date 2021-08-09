@@ -4,9 +4,7 @@
       class="mb-8"
       :color="grid.backgroundColor"
       label="绘图背景"
-      @change="
-        backgroundColor => handleGridChange('backgroundColor', backgroundColor)
-      "
+      @change="backgroundColor => handleGridChange('backgroundColor', backgroundColor)"
     ></UnitBackgroundColor>
     <UnitBackgroundColor
       class="mb-8"
@@ -38,15 +36,9 @@
               :value="yAxis.splitLine.lineStyle.type"
               @change="type => handleYaxis('lineStyle', { type })"
             >
-              <a-select-option value="solid">
-                实线
-              </a-select-option>
-              <a-select-option value="dashed">
-                虚线
-              </a-select-option>
-              <a-select-option value="dotted">
-                点线
-              </a-select-option>
+              <a-select-option value="solid">实线</a-select-option>
+              <a-select-option value="dashed">虚线</a-select-option>
+              <a-select-option value="dotted">点线</a-select-option>
             </a-select>
           </a-col>
           <!-- 水平网格线 类型 end -->
@@ -87,15 +79,9 @@
               :value="xAxis.splitLine.lineStyle.type"
               @change="type => handleXaxis('lineStyle', { type })"
             >
-              <a-select-option value="solid">
-                实线
-              </a-select-option>
-              <a-select-option value="dashed">
-                虚线
-              </a-select-option>
-              <a-select-option value="dotted">
-                点线
-              </a-select-option>
+              <a-select-option value="solid">实线</a-select-option>
+              <a-select-option value="dashed">虚线</a-select-option>
+              <a-select-option value="dotted">点线</a-select-option>
             </a-select>
           </a-col>
           <!-- 垂直网格线 类型 end -->
@@ -123,18 +109,18 @@ export default {
     grid: {
       // 网格配置
       type: Object,
-      required: true
+      required: true,
     },
     xAxis: {
       // X轴
       type: Object,
-      required: true
+      required: true,
     },
     yAxis: {
       // Y轴
       type: Object,
-      required: true
-    }
+      required: true,
+    },
   },
   methods: {
     /**
@@ -143,9 +129,9 @@ export default {
     handleGridChange(key, value) {
       this.handleChange('echart', {
         grid: {
-          [key]: value
-        }
-      })
+          [key]: value,
+        },
+      });
     },
     /**
      * @description 垂直网格线设置
@@ -154,10 +140,10 @@ export default {
       this.handleChange('echart', {
         xAxis: {
           splitLine: {
-            [key]: value
-          }
-        }
-      })
+            [key]: value,
+          },
+        },
+      });
     },
     /**
      * @description 水平网格线设置
@@ -166,14 +152,14 @@ export default {
       this.handleChange('echart', {
         yAxis: {
           splitLine: {
-            [key]: value
-          }
-        }
-      })
+            [key]: value,
+          },
+        },
+      });
     },
     handleChange(key, value) {
-      this.$emit('change', key, value)
-    }
-  }
-}
+      this.$emit('change', key, value);
+    },
+  },
+};
 </script>

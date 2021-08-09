@@ -1,14 +1,14 @@
-import BoardType from '@/views/screenManage/screen/setting/default-type'
-import BASE from '@/views/screenManage/screen/setting/default-base'
-import merge from 'lodash/merge'
-import cloneDeep from 'lodash/cloneDeep'
+import BoardType from '@/views/screenManage/screen/setting/default-type';
+import BASE from '@/views/screenManage/screen/setting/default-base';
+import merge from 'lodash/merge';
+import cloneDeep from 'lodash/cloneDeep';
 
 export default merge(cloneDeep(BASE), {
   type: BoardType.ChartTreemap,
   setting: {
     data: {
       dimensions: [], // 维度
-      measures: [] // 度量
+      measures: [], // 度量
     },
     style: {
       echart: {
@@ -21,20 +21,20 @@ export default merge(cloneDeep(BASE), {
           orient: 'horizontal',
           textStyle: {
             color: '#ffffff',
-            fontSize: 16
+            fontSize: 16,
           },
           itemGap: 12,
           icon: 'circle',
           position: 'left-top',
           left: 'left',
-          top: 'top'
+          top: 'top',
         },
         customLabel: {
           show: true,
           color: '#fff',
-          fontSize: 16
-        }
-      }
-    }
-  }
-})
+          fontSize: 16,
+        },
+      },
+    },
+  },
+});

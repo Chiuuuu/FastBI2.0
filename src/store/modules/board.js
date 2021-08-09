@@ -1,8 +1,8 @@
-import store from '@/store'
-import { mutationTypes as historyMutation } from '@/store/modules/history'
-import boardSetting from '@/views/screenManage/screen/setting'
-import mergeWith from 'lodash/mergeWith'
-import cloneDeep from 'lodash/cloneDeep'
+import store from '@/store';
+import { mutationTypes as historyMutation } from '@/store/modules/history';
+import boardSetting from '@/views/screenManage/screen/setting';
+import mergeWith from 'lodash/mergeWith';
+import cloneDeep from 'lodash/cloneDeep';
 
 export const mutationTypes = {
   RESETSTATE: 'board/RESETSTATE',
@@ -16,14 +16,14 @@ export const mutationTypes = {
   SET_PAGE_STYLE: 'board/SET_PAGE_STYLE',
   SET_BOARD_SCALE: 'board/SET_BOARD_SCALE',
   SET_DRAG_MOVE: 'board/SET_DRAG_MOVE',
-  SET_BOARD_MODEL: 'board/SET_BOARD_MODEL'
-}
+  SET_BOARD_MODEL: 'board/SET_BOARD_MODEL',
+};
 
 export const parameter = {
   EDIT: 'edit',
   PREVIEW: 'preview',
-  FULLSCREEN: 'fullScreen'
-}
+  FULLSCREEN: 'fullScreen',
+};
 
 // https://tahazsh.com/vuebyte-reset-module-state
 const getDefaultState = () => {
@@ -33,12 +33,12 @@ const getDefaultState = () => {
     currentCom: null, // 当前画板选中的组件
     currentComState: 'stop', // 当前画板选中的组件状态
     scale: 1, // 画板的比例
-    page: cloneDeep(boardSetting['Page'])
-  }
-}
+    page: cloneDeep(boardSetting['Page']),
+  };
+};
 
 // TODO:需要记录上一个组件 prevCom
-const state = getDefaultState()
+const state = getDefaultState();
 
 /**
  * @description 合并样式
@@ -47,25 +47,22 @@ const state = getDefaultState()
  * @param {array} replaceMerge 替换合并的数组
  * @return {object}
  */
-const mergeStyle = function(state, style, replaceMerge) {
+const mergeStyle = function (state, style, replaceMerge) {
   // https://www.lodashjs.com/docs/lodash.mergeWith
-  return mergeWith(state.currentCom.setting.style, style, function(
-    objValue,
-    srcValue
-  ) {
+  return mergeWith(state.currentCom.setting.style, style, function (objValue, srcValue) {
     if (replaceMerge && replaceMerge.length) {
       replaceMerge.forEach(key => {
         if (srcValue[key]) {
-          objValue[key] = srcValue[key]
+          objValue[key] = srcValue[key];
         }
-      })
+      });
     }
-  })
-}
+  });
+};
 
 const mutations = {
   RESETSTATE(state) {
-    Object.assign(state, getDefaultState())
+    Object.assign(state, getDefaultState());
   },
   /**
    * 组件列表添加
@@ -78,8 +75,8 @@ const mutations = {
       commandType: 'Add',
       target: state,
       item: component,
-      index
-    })
+      index,
+    });
   },
 
   /**
@@ -93,9 +90,9 @@ const mutations = {
       commandType: 'Dele',
       target: state.components,
       item: component,
-      index
-    })
-    state.currentCom = null
+      index,
+    });
+    state.currentCom = null;
   },
 
   /**
@@ -109,8 +106,8 @@ const mutations = {
       commandType: 'Position',
       target: state,
       method,
-      index
-    })
+      index,
+    });
   },
   /**
    * 设置当前组件
@@ -118,7 +115,7 @@ const mutations = {
    * @param {object} Playload.component 组件
    */
   SET_CURCOM(state, { component }) {
-    state.currentCom = component
+    state.currentCom = component;
   },
 
   /**
@@ -127,7 +124,7 @@ const mutations = {
    * @param {string} Playload.comState 状态
    */
   SET_CURCOM_STATE(state, { comState }) {
-    state.currentComState = comState
+    state.currentComState = comState;
   },
 
   /**
@@ -139,8 +136,8 @@ const mutations = {
     state.currentCom.setting.style = mergeWith(
       state.currentCom.setting.style,
       style,
-      mergeStyle(state, style, replaceMerge)
-    )
+      mergeStyle(state, style, replaceMerge),
+    );
   },
 
   /**
@@ -148,9 +145,7 @@ const mutations = {
    * @param {object} Playload
    */
   SET_STYLE(state, { style, replaceMerge = ['series'] }) {
-    state.currentCom.setting.style = cloneDeep(
-      mergeStyle(state, style, replaceMerge)
-    )
+    state.currentCom.setting.style = cloneDeep(mergeStyle(state, style, replaceMerge));
   },
   /**
    * 设置屏幕比例
@@ -158,7 +153,7 @@ const mutations = {
    * @param {number | string} Playload.scale 比例
    */
   SET_BOARD_SCALE(state, { scale }) {
-    state.scale = scale
+    state.scale = scale;
   },
   /**
    * 设置屏幕模式
@@ -166,14 +161,14 @@ const mutations = {
    * @param {number | string} Playload.model 模式
    */
   SET_BOARD_MODEL(state, { model }) {
-    state.model = model
-  }
-}
+    state.model = model;
+  },
+};
 
-const actions = {}
+const actions = {};
 export default {
   namespaced: true,
   state,
   mutations,
-  actions
-}
+  actions,
+};

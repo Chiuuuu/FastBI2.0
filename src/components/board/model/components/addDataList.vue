@@ -4,9 +4,9 @@
     <a-collapse v-model="modelKey" :bordered="false">
       <template #expandIcon="props">
         <a-icon
-          :type="props.isActive ? 'folder-open':'folder'"
+          :type="props.isActive ? 'folder-open' : 'folder'"
           :rotate="props.isActive ? 0 : 0"
-          style="font-size:16px"
+          style="font-size: 16px"
         />
       </template>
       <template v-for="(item, index) in menuList">
@@ -39,14 +39,12 @@
                       :class="disableList.includes(item3.id) ? 'disable' : ''"
                       @click.native="fileHandle(item3)"
                     >
-                      <div style="margin-left:25px;cursor: pointer;">
+                      <div style="margin-left: 25px; cursor: pointer">
                         <p
                           @click="fileHandle(item4)"
                           v-for="item4 in item3.children"
                           :key="item4.id"
-                          :class="
-                            disableList.includes(item4.id) ? 'disable' : ''
-                          "
+                          :class="disableList.includes(item4.id) ? 'disable' : ''"
                         >
                           {{ item4.name }}
                         </p>
@@ -58,7 +56,7 @@
             </template>
           </a-collapse>
           <!--模型的只有两层数据-->
-          <div v-else style="margin-left:25px;cursor: pointer;">
+          <div v-else style="margin-left: 25px; cursor: pointer">
             <p
               @click="fileHandle(item2)"
               v-for="item2 in item.children"
@@ -74,100 +72,95 @@
   </div>
 </template>
 <script>
-import { registerMap } from 'echarts'
 export default {
   props: {
     dataList: {
-      type: Array
+      type: Array,
     },
     disableList: {
-      type: Array
+      type: Array,
     },
     // 数据类型（接入:3|模型:8）
     type: {
       type: Number,
       require: true,
-      default: 8
-    }
+      default: 8,
+    },
   },
   data() {
     return {
-      customStyle:
-        'background: #ffffff;border-radius: 4px;border: 0;overflow: hidden;color:red !important;',
+      customStyle: 'background: #ffffff;border-radius: 4px;border: 0;overflow: hidden;color:red !important;',
       modelKey: [],
       secModelKey: [],
       thrModelKey: [],
-      menuList: []
-    }
+      menuList: [],
+    };
   },
   mounted() {
-    this.menuList = this.dataList
-    this.modelKey = []
+    this.menuList = this.dataList;
+    this.modelKey = [];
     this.menuList.forEach((item, index) => {
       if (item.fileType === 0) {
-        this.modelKey.push(String(index))
+        this.modelKey.push(String(index));
       }
-    })
+    });
   },
   methods: {
     fileHandle(item) {
       // 数据接入没有datasourceId不是三级数据，往下请求三级数据
       if (this.type === 3) {
         if (item.fileType === 2) {
-          this.getTableList(item)
-          return
+          this.getTableList(item);
+          return;
         }
         if (item.fileType === 1) {
-          this.getGroupList(item)
-          return
+          this.getGroupList(item);
+          return;
         }
       }
       if (item.fileType !== 0 && !this.disableList.includes(item.id)) {
-        item.resourceType = this.type
-        this.$emit('fileHandle', item)
+        item.resourceType = this.type;
+        this.$emit('fileHandle', item);
       }
     },
     // 获取数据接入表格列表
     async getGroupList(item) {
       // 三级数据不需要请求
       if (!item.children) {
-        return
+        return;
       }
       // 表列表已经存在的不用再请求一次
       if (item.children.length > 0) {
-        return
+        return;
       }
       // 根据数据源获取已抽取的库组
-      const res = await this.$server.dataModel.getDataBaseDataInfoList(
-        item.id,
-        ''
-      )
+      const res = await this.$server.dataModel.getDataBaseDataInfoList(item.id, '');
       if (res.code === 500) {
-        this.$message.error(res.msg)
-        return
+        this.$message.error(res.msg);
+        return;
       }
       // 库组列表
       const groupList = res.data.map(group => {
-        return { ...group, fileType: 2, children: [] }
-      })
-      item.children = groupList
+        return { ...group, fileType: 2, children: [] };
+      });
+      item.children = groupList;
     },
     async getTableList(item) {
       // 表列表已经存在的不用再请求一次
       if (item.children.length > 0) {
-        return
+        return;
       }
       // 根据库组id查询已抽取的表
-      const res = await this.$server.dataModel.getTableListById(item.id)
+      const res = await this.$server.dataModel.getTableListById(item.id);
       if (res.code === 500) {
-        this.$message.error(res.msg)
-        return
+        this.$message.error(res.msg);
+        return;
       }
-      let tableList = res.data
-      item.children = tableList
-    }
-  }
-}
+      let tableList = res.data;
+      item.children = tableList;
+    },
+  },
+};
 </script>
 <style lang="less" scoped>
 .model-main {

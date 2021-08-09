@@ -1,4 +1,4 @@
-import $axios from '@/axios'
+import $axios from '@/axios';
 export default {
   /** ---------------------------------------素材分类------------------------------------------------------------------ */
   /**
@@ -6,7 +6,7 @@ export default {
    * @returns
    */
   getMaterialCategoryList() {
-    return $axios.get('/screen/material/groupList')
+    return $axios.get('/screen/material/groupList');
   },
   /**
    * @description 添加素材分类
@@ -15,7 +15,7 @@ export default {
    * @returns
    */
   addCategory(params = {}) {
-    return $axios.post(`/screen/material/addGroup`, params)
+    return $axios.post(`/screen/material/addGroup`, params);
   },
   /**
    * @description 修改素材分类
@@ -25,7 +25,7 @@ export default {
    * @returns
    */
   updateCategory(params = {}) {
-    return $axios.post(`/screen/material/renameGroup`, params)
+    return $axios.post(`/screen/material/renameGroup`, params);
   },
   /**
    * @description 获取素材库分类
@@ -33,7 +33,7 @@ export default {
    * @returns
    */
   deleCategory(id) {
-    return $axios.get('screen/material/delGroup/' + id)
+    return $axios.get('screen/material/delGroup/' + id);
   },
   /** ---------------------------------------素材分类end------------------------------------------------------------------ */
 
@@ -47,7 +47,7 @@ export default {
    * @returns
    */
   getMaterialList(params = {}) {
-    return $axios.post(`/screen/material/picList`, params)
+    return $axios.post(`/screen/material/picList`, params);
   },
   /**
    * @description 新增素材
@@ -61,8 +61,8 @@ export default {
       method: 'post',
       headers: { 'Content-Type': 'multipart/form-data' },
       url: '/screen/material/upload',
-      data
-    })
+      data,
+    });
   },
   /**
    * @description 重命名素材
@@ -72,8 +72,8 @@ export default {
    * @param {string} params.name 素材名称
    * @returns
    */
-   updateMaterial(params = {}) {
-    return $axios.post(`/screen/material/renamePic`, params)
+  updateMaterial(params = {}) {
+    return $axios.post(`/screen/material/renamePic`, params);
   },
   /**
    * @description 移动素材
@@ -84,8 +84,8 @@ export default {
    * @param {string} params.name 素材名称
    * @returns
    */
-   actionMoveMaterial(params = {}) {
-    return $axios.post(`/screen/material/movePic`, params)
+  actionMoveMaterial(params = {}) {
+    return $axios.post(`/screen/material/movePic`, params);
   },
   /**
    * @description 删除素材
@@ -95,8 +95,8 @@ export default {
    * @param {string} params.name 素材名称
    * @returns
    */
-   deleMaterial(params = {}) {
-    return $axios.post(`/screen/material/delPic`, params)
-  }
+  deleMaterial(params = {}) {
+    return $axios.post(`/screen/material/delPic`, params);
+  },
   /** ---------------------------------------素材end---------------------------------------------------------------------- */
-}
+};

@@ -24,41 +24,39 @@ export default {
     panel: {
       // 相当于key，作为唯一值
       type: [String, Number],
-      default: ''
+      default: '',
     },
     header: {
       // 标题
       type: String,
-      default: ''
+      default: '',
     },
     isTogger: {
       // 是否能折叠
       type: Boolean,
-      default: true
-    }
+      default: true,
+    },
   },
   data() {
     return {
-      toggleCollapse: this.isTogger
-        ? this.collapse.value.includes(this.panel)
-        : true
-    }
+      toggleCollapse: this.isTogger ? this.collapse.value.includes(this.panel) : true,
+    };
   },
   methods: {
     handleSelectPanel(key) {
-      if (!this.isTogger) return
+      if (!this.isTogger) return;
 
-      this.toggleCollapse = !this.toggleCollapse
+      this.toggleCollapse = !this.toggleCollapse;
       if (this.toggleCollapse) {
-        this.collapse.value.push(key)
+        this.collapse.value.push(key);
       } else {
-        const index = this.collapse.value.findIndex(item => item === key)
-        this.collapse.value.splice(index, 1)
+        const index = this.collapse.value.findIndex(item => item === key);
+        this.collapse.value.splice(index, 1);
       }
-      this.collapse.$emit('click-panel', this.collapse.value)
-    }
-  }
-}
+      this.collapse.$emit('click-panel', this.collapse.value);
+    },
+  },
+};
 </script>
 <style lang="less">
 .collapse-item {

@@ -27,20 +27,21 @@
       :data-source="userData"
       :loading="loading"
       :scroll="{ y: 'calc(100vh - 350px)', x: 1210 }"
-      @change="handleTableChange">
+      @change="handleTableChange"
+    >
       <!-- 列属性编辑 -->
       <template v-for="index in 6">
         <PropsEdit
           v-if="propNameList.length > 0"
           :slot="'col' + (index - 1)"
-          :key="(index - 1)"
-          :index="(index - 1)"
+          :key="index - 1"
+          :index="index - 1"
           :active-index="activePropIndex"
           :title="propNameList[index - 1].name"
-          @changePropsEdit="activePropIndex = (index - 1)"
+          @changePropsEdit="activePropIndex = index - 1"
           @cancelPropsEdit="activePropIndex = -1"
           @savePropsEdit="handleSaveEditCol"
-          />
+        />
       </template>
 
       <!-- 行属性编辑 -->
@@ -64,32 +65,32 @@
 </template>
 
 <script>
-import { trimFormData } from '@/utils/form-utils'
-import PropsEdit from './props-edit'
-import TableEdit from './table-edit'
+import { trimFormData } from '@/utils/form-utils';
+import PropsEdit from './props-edit';
+import TableEdit from './table-edit';
 
 const userColumn = [
   {
     title: '用户名',
     width: 150,
     ellipsis: true,
-    dataIndex: 'username'
+    dataIndex: 'username',
   },
   {
     title: '姓名',
     width: 100,
     ellipsis: true,
-    dataIndex: 'name'
-  }
-]
+    dataIndex: 'name',
+  },
+];
 
 for (let i = 0; i < 6; i++) {
   userColumn.push({
     scopedSlots: { customRender: 'custom' + i, title: 'col' + i },
     dataIndex: 'userattrList.' + i,
     width: 240,
-    ellipsis: true
-  })
+    ellipsis: true,
+  });
 }
 
 userColumn.push({
@@ -97,14 +98,14 @@ userColumn.push({
   width: 120,
   fixed: 'right',
   dataIndex: 'config',
-  scopedSlots: { customRender: 'config' }
-})
+  scopedSlots: { customRender: 'config' },
+});
 
 export default {
   name: 'userProp',
   components: {
     PropsEdit,
-    TableEdit
+    TableEdit,
   },
   data() {
     return {
@@ -117,106 +118,105 @@ export default {
       editRow: '',
       userSearch: {
         username: '',
-        name: ''
+        name: '',
       },
       userData: [],
       pagination: {
         current: 1,
         pageSize: 10,
-        total: 0
+        total: 0,
       },
       userColumn,
-      propNameList: []
-    }
+      propNameList: [],
+    };
   },
-  created () {
-    this.handleGetData()
+  created() {
+    this.handleGetData();
   },
   methods: {
     async handleGetData(pagination) {
-      this.activePropIndex = -1
-      this.activeTableIndex = -1
-      this.loading = true
+      this.activePropIndex = -1;
+      this.activeTableIndex = -1;
+      this.loading = true;
       const params = Object.assign({}, trimFormData(this.userSearch), {
         pageSize: this.pagination.pageSize,
-        current: pagination ? pagination.current : this.$options.data().pagination.current
-      })
-      const res = await this.$server.corporateDomain.getPropListByName(params)
-        .finally(() => {
-          this.loading = false
-        })
+        current: pagination ? pagination.current : this.$options.data().pagination.current,
+      });
+      const res = await this.$server.corporateDomain.getPropListByName(params).finally(() => {
+        this.loading = false;
+      });
       if (res.code === 200) {
         if (res.headers) {
-          this.propNameList = res.headers.slice(-6)
+          this.propNameList = res.headers.slice(-6);
         }
-        this.userData = res.rows
-        this.pagination.total = res.total
-        this.pagination.current = params.current
+        this.userData = res.rows;
+        this.pagination.total = res.total;
+        this.pagination.current = params.current;
       } else {
-        this.$message.error(res.msg)
+        this.$message.error(res.msg);
       }
     },
-    resetForm(tab) {
-      this.$refs.form.resetFields()
+    resetForm() {
+      this.$refs.form.resetFields();
       this.$nextTick(() => {
-        this.handleGetData()
-      })
+        this.handleGetData();
+      });
     },
-    handleTableChange(pagination, filters, sorter) {
-      this.handleGetData(pagination)
+    handleTableChange(pagination) {
+      this.handleGetData(pagination);
     },
     /* 处理列 */
     async handleSaveEditCol(index, data) {
-      const headers = [].concat(this.propNameList)
-      headers[index].name = data
+      const headers = [].concat(this.propNameList);
+      headers[index].name = data;
       const res = await this.$server.corporateDomain.updateUserProp({
-        headers
-      })
+        headers,
+      });
       if (res.code === 200) {
-        this.activePropIndex = -1
-        this.$message.success('保存成功')
-        this.handleGetData()
+        this.activePropIndex = -1;
+        this.$message.success('保存成功');
+        this.handleGetData();
       } else {
-        this.$message.error(res.msg)
+        this.$message.error(res.msg);
       }
     },
 
     /* 处理行 */
     handleEditUserRow(record, index) {
       if (this.activeTableIndex !== -1) {
-        return this.$message.error('请先完成操作')
+        return this.$message.error('请先完成操作');
       } else {
         // this.editRow = Object.assign({}, record)
-        this.editRow = JSON.parse(JSON.stringify(record))
-        this.activeTableIndex = index
+        this.editRow = JSON.parse(JSON.stringify(record));
+        this.activeTableIndex = index;
       }
     },
     getChangeText(index, value) {
-      this.editRow.userattrList[index].attrValue = value
+      this.editRow.userattrList[index].attrValue = value;
     },
     async handleSaveEditRow() {
-      let valid = true
+      let valid = true;
       this.editRow.userattrList.map(item => {
         if (item.attrValue.length > 50) {
-          valid = false
+          valid = false;
         }
-      })
-      if (!valid) return this.$message.error('请输入50个字符以内的属性')
+      });
+      if (!valid) return this.$message.error('请输入50个字符以内的属性');
       const res = await this.$server.corporateDomain.updateUserProp({
-        rows: new Array(this.editRow)
-      })
+        rows: new Array(this.editRow),
+      });
       if (res.code === 200) {
-        this.userData.splice(this.activeTableIndex, 1, this.editRow)
-        this.$message.success('保存成功')
-        this.activeTableIndex = -1
+        this.userData.splice(this.activeTableIndex, 1, this.editRow);
+        this.$message.success('保存成功');
+        this.activeTableIndex = -1;
       } else {
-        this.$message.error('修改失败')
+        this.$message.error('修改失败');
       }
-    }
-  }
-}
+    },
+  },
+};
 </script>
 
 <style lang="less" scoped>
-@import "../../../main.less";
+@import '../../../main.less';
 </style>

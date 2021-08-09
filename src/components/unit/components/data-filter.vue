@@ -25,23 +25,23 @@ export default {
   name: 'UnitDataFilter',
   data() {
     return {
-      visible: false // 是否显示弹窗
-    }
+      visible: false, // 是否显示弹窗
+    };
   },
   mounted() {
-    this.$EventBus.$on('drop:dataFilter', this.showModel)
+    this.$EventBus.$on('drop:dataFilter', this.showModel);
   },
   beforeDestroy() {
-    this.$EventBus.$off('drop:dataFilter', this.showModel)
+    this.$EventBus.$off('drop:dataFilter', this.showModel);
   },
   methods: {
     showModel() {
-      this.visible = true
+      this.visible = true;
     },
     handleOk(e) {
-      console.log(e)
-      this.visible = false
-    }
-  }
-}
+      console.log(e);
+      this.visible = false;
+    },
+  },
+};
 </script>

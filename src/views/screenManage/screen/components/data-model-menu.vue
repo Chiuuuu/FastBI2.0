@@ -4,7 +4,8 @@
       <p class="title">默认数据模型</p>
       <div class="menu-list-wrapper">
         <div class="menu-model-add" @click="handleAddDataModel">
-          <span class="symbol-add">+</span> 添加数据模型
+          <span class="symbol-add">+</span>
+          添加数据模型
         </div>
         <ul class="menu-list reset-scrollbar">
           <li class="menu-item selected">
@@ -31,12 +32,7 @@
       />
       <div class="menu-list-wrapper" v-if="searchResult.length">
         <ul class="menu-list reset-scrollbar">
-          <li
-            class="menu-item"
-            v-for="item in searchResult"
-            :key="item.id"
-            @click="handleSelectResult(item)"
-          >
+          <li class="menu-item" v-for="item in searchResult" :key="item.id" @click="handleSelectResult(item)">
             {{ item.name }}
           </li>
         </ul>
@@ -54,75 +50,75 @@ export default {
     dimension: {
       // 维度
       type: Array,
-      required: true
+      required: true,
     },
     measure: {
       // 度量
       type: Array,
-      required: true
-    }
+      required: true,
+    },
   },
   data() {
     return {
-      searchResult: [] // 搜索结果列表
-    }
+      searchResult: [], // 搜索结果列表
+    };
   },
   methods: {
     /**
      * @description 打开添加数据模型
      */
     handleAddDataModel() {
-      this.$emit('open', true)
+      this.$emit('open', true);
     },
     /**
      * @description 维度度量字段搜索
      */
     handleSearch(event) {
       if (!event.target.value) {
-        this.handleClearSearch()
+        this.handleClearSearch();
       }
     },
     /**
      * @description 维度度量字段搜索，回车或者点搜索执行
      */
     handleSearchFiled(value) {
-      if (!value) return
-      this.searchResult = []
-      value = typeof value === 'string' ? value.trim() : value
+      if (!value) return;
+      this.searchResult = [];
+      value = typeof value === 'string' ? value.trim() : value;
       this.dimension.forEach(item => {
         if (item.name.toLowerCase().indexOf(value.toLowerCase()) > -1) {
-          this.searchResult.push(item)
+          this.searchResult.push(item);
         }
-      })
+      });
       this.measure.forEach(item => {
         if (item.name.toLowerCase().indexOf(value.toLowerCase()) > -1) {
-          this.searchResult.push(item)
+          this.searchResult.push(item);
         }
-      })
+      });
       if (this.searchResult.length === 0) {
         this.searchResult.push({
           name: '没有符合的数据',
-          id: -1
-        })
+          id: -1,
+        });
       }
     },
     /**
      * @description 维度度量字段搜索，字段选中
      */
     handleSelectResult(data) {
-      if (data.id === -1) return
-      this.handleClearSearch()
-      this.$emit('selectSearchFiled', data)
+      if (data.id === -1) return;
+      this.handleClearSearch();
+      this.$emit('selectSearchFiled', data);
     },
     /**
      * @description 清空搜索
      */
     handleClearSearch() {
-      this.searchResult = []
-      this.$refs['js-filed-search'].$refs.input.setValue('')
-    }
-  }
-}
+      this.searchResult = [];
+      this.$refs['js-filed-search'].$refs.input.setValue('');
+    },
+  },
+};
 </script>
 <style lang="less" scoped>
 @deep: ~'>>>';
@@ -140,8 +136,7 @@ export default {
   cursor: pointer;
   border: 0;
   background-color: #f9fafb;
-  box-shadow: 0 0 0 1px rgba(63, 63, 68, 0.07),
-    0 1px 3px 0 rgba(63, 63, 68, 0.12);
+  box-shadow: 0 0 0 1px rgba(63, 63, 68, 0.07), 0 1px 3px 0 rgba(63, 63, 68, 0.12);
   &::after {
     position: absolute;
     top: 50%;

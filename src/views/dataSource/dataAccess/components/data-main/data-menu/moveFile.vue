@@ -33,21 +33,21 @@ export default {
   data() {
     return {
       form: {
-        folderId: ''
-      }
-    }
+        folderId: '',
+      },
+    };
   },
   watch: {
-    selected(selected) {
-      this.form.folderId = this.menuList[0] ? this.menuList[0].id : ''
-    }
+    selected() {
+      this.form.folderId = this.menuList[0] ? this.menuList[0].id : '';
+    },
   },
   methods: {
     handleSelectFolder(value) {
-      this.folderId = value
-    }
-  }
-}
+      this.folderId = value;
+    },
+  },
+};
 </script>
 <style lang="less" scoped>
 @deep: ~'>>>';

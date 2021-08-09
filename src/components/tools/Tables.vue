@@ -1,16 +1,6 @@
 <template>
-  <div
-    class="dv-tables"
-    style="width: 100%;height:100%;"
-    :style="backgroundStyle"
-    ref="wrap"
-  >
-    <div
-      class="titles"
-      ref="titles"
-      v-if="config.title && config.title.show"
-      :style="titleStyle"
-    >
+  <div class="dv-tables" style="width: 100%; height: 100%" :style="backgroundStyle" ref="wrap">
+    <div class="titles" ref="titles" v-if="config.title && config.title.show" :style="titleStyle">
       <span>{{ config.title.content }}</span>
     </div>
     <div class="tables">
@@ -20,7 +10,7 @@
         @scroll="getScrollLeft"
         :style="{
           width: showTableSize.tableX + 'px',
-          height: showTableSize.tableY + 'px'
+          height: showTableSize.tableY + 'px',
         }"
       >
         <table
@@ -30,20 +20,11 @@
           :style="{ width: tableWidth + 'px' }"
         >
           <colgroup>
-            <col
-              v-for="(value, index) in colWidths"
-              :key="index"
-              :style="{ width: value + 'px' }"
-            />
+            <col v-for="(value, index) in colWidths" :key="index" :style="{ width: value + 'px' }" />
           </colgroup>
           <thead>
             <tr>
-              <th
-                :style="HeaderStyle"
-                class="data"
-                v-for="(column, index) in columns"
-                :key="index"
-              >
+              <th :style="HeaderStyle" class="data" v-for="(column, index) in columns" :key="index">
                 {{ column.title }}
               </th>
             </tr>
@@ -53,28 +34,15 @@
           class="tbody"
           :style="{
             width: bodyWidth + 'px',
-            height: bodyHeight + 'px'
+            height: bodyHeight + 'px',
           }"
         >
-          <table
-            class="table-content table-body yscroll"
-            ref="tablebody"
-            :style="{ width: tableWidth + 'px' }"
-          >
+          <table class="table-content table-body yscroll" ref="tablebody" :style="{ width: tableWidth + 'px' }">
             <colgroup>
-              <col
-                v-for="(value, index) in colWidths"
-                :key="index"
-                :style="{ width: value + 'px' }"
-              />
+              <col v-for="(value, index) in colWidths" :key="index" :style="{ width: value + 'px' }" />
             </colgroup>
             <tr v-for="(row, index) in tableData" :key="index">
-              <td
-                :style="customRow(index)"
-                class="data data-body"
-                v-for="(value, key) in row"
-                :key="key"
-              >
+              <td :style="customRow(index)" class="data data-body" v-for="(value, key) in row" :key="key">
                 {{ value }}
               </td>
             </tr>
@@ -90,32 +58,27 @@
 </template>
 
 <script>
-import {
-  addResizeListener,
-  removeResizeListener
-} from 'bin-ui/src/utils/resize-event'
-import { formatData, convertData } from '../../utils/formatData'
-import { mapGetters } from 'vuex'
-import { deepClone } from '@/utils/deepClone'
+import { addResizeListener, removeResizeListener } from 'bin-ui/src/utils/resize-event';
+import { convertData } from '../../utils/formatData';
 export default {
   name: 'ChartsTables',
   props: {
     config: {
       type: Object,
-      required: true
+      required: true,
     },
     apiData: {
       type: Object,
-      required: true
+      required: true,
     },
     background: {
       type: Object,
-      required: true
+      required: true,
     },
     chartSize: {
       type: Object,
-      required: true
-    }
+      required: true,
+    },
   },
   data() {
     return {
@@ -130,50 +93,50 @@ export default {
       tableWidth: '',
       bodyHeight: '',
       bodyWidth: '',
-      colWidths: []
-    }
+      colWidths: [],
+    };
   },
   watch: {
     config: {
-      handler(val, oldval) {
+      handler(val) {
         if (val) {
-          this.showHeader = val.header.show
-        //   for (let item of this.columns) {
-        //     // 是否自动换行
-        //     item.ellipsis = val.table.ellipsis
-        //   }
-          this._calcStyle()
+          this.showHeader = val.header.show;
+          //   for (let item of this.columns) {
+          //     // 是否自动换行
+          //     item.ellipsis = val.table.ellipsis
+          //   }
+          this._calcStyle();
         }
       },
       deep: true,
-      immediate: true
+      immediate: true,
     },
     apiData: {
       handler(val) {
         if (val) {
           if (val.tableList.length > 0 && val.source && val.source.columns) {
-            this.columns = val.source.columns
-            let rows = val.source.rows
-            let newRows = []
+            this.columns = val.source.columns;
+            let rows = val.source.rows;
+            let newRows = [];
             // 给列数据key重新排序
             for (let row of rows) {
-              let newObj = {}
+              let newObj = {};
               for (let col of this.columns) {
-                newObj[col.key] = row[col.key]
+                newObj[col.key] = row[col.key];
               }
-              newRows.push(newObj)
+              newRows.push(newObj);
             }
-            this.tableData = newRows
-            this._calcStyle()
-            return
+            this.tableData = newRows;
+            this._calcStyle();
+            return;
           }
-          this.columns = val.columns || []
-          this.tableData = val.rows || []
-          this._calcStyle()
+          this.columns = val.columns || [];
+          this.tableData = val.rows || [];
+          this._calcStyle();
         }
       },
       deep: true,
-      immediate: true
+      immediate: true,
     },
     background: {
       handler(val) {
@@ -186,113 +149,100 @@ export default {
             borderColor: val.borderColor,
             borderWidth: val.borderWidth + 'px',
             borderStyle: val.borderStyle,
-            borderRadius: val.borderRadius + 'px'
-          }
+            borderRadius: val.borderRadius + 'px',
+          };
         }
       },
       deep: true,
-      immediate: true
-    }
+      immediate: true,
+    },
   },
   mounted() {
-    this._calcStyle()
-    addResizeListener(this.$refs.wrap, this._calcStyle)
+    this._calcStyle();
+    addResizeListener(this.$refs.wrap, this._calcStyle);
   },
   beforeDestroy() {
-    removeResizeListener(this.$refs.wrap, this._calcStyle)
+    removeResizeListener(this.$refs.wrap, this._calcStyle);
   },
   methods: {
     afterConfig(options) {
       if (this.typeName === 've-map') {
-        let data = [...options.series[0].data]
-        options.series[0].data = convertData(data)
+        let data = [...options.series[0].data];
+        options.series[0].data = convertData(data);
       }
-      return options
+      return options;
     },
     async _calcStyle() {
       // 计算表格每列宽度
-      await this.getColWidths()
+      await this.getColWidths();
 
-      const wrap = this.$refs.wrap
-      const title = this.$refs.titles
-      if (!wrap) return
-      let width = wrap.clientWidth
-      let height = wrap.clientHeight
+      const wrap = this.$refs.wrap;
+      const title = this.$refs.titles;
+      if (!wrap) return;
+      let width = wrap.clientWidth;
+      let height = wrap.clientHeight;
       if (this.config.title.show && title) {
-        height -= title.clientHeight
+        height -= title.clientHeight;
       }
-      this.width = width + 'px'
-      this.height = height + 'px'
+      this.width = width + 'px';
+      this.height = height + 'px';
 
       // 计算表宽(单元格宽度求和)
       this.tableWidth = this.colWidths.reduce((total, value) => {
-        return total + value
-      })
+        return total + value;
+      });
 
       // 计算显示尺寸(比较表格内容的尺寸和缩放框的大小)
-      let currentChartSize = this.chartSize.height
+      let currentChartSize = this.chartSize.height;
       if (this.config.title.show && title) {
-        currentChartSize -= title.offsetHeight
+        currentChartSize -= title.offsetHeight;
       }
       this.showTableSize = {
         tableX: Math.min(this.tableWidth, this.chartSize.width),
         // tableX: this.chartSize.width,
         tableY:
-          Math.min(
-            this.$refs.tablebody.clientHeight +
-              this.$refs.tableheader.clientHeight,
-            currentChartSize
-          ) - 10 // 去掉滚动轴占高
-      }
+          Math.min(this.$refs.tablebody.clientHeight + this.$refs.tableheader.clientHeight, currentChartSize) - 10, // 去掉滚动轴占高
+      };
       // 获取表格内容高度
-      this.bodyHeight =
-        this.showTableSize.tableY - this.$refs.tableheader.clientHeight
+      this.bodyHeight = this.showTableSize.tableY - this.$refs.tableheader.clientHeight;
     },
     // 计算单元格宽度
     async getColWidths() {
-      this.colWidths = []
+      this.colWidths = [];
       for (let row of this.tableData) {
-        let index = 0
+        let index = 0;
         for (let col of this.columns) {
           if (col.ellipsis && this.config.table.columnWidth) {
-            this.colWidths[index] = this.config.table.columnWidth
-            continue
+            this.colWidths[index] = this.config.table.columnWidth;
+            continue;
           }
           // 计算每个单元格的大小（取每一列最长的宽度作为单位格宽度）
           if (!this.colWidths[index]) {
             // 默认取表头宽度
-            this.colWidths[index] =
-              this.getActaulLen(col.title) *
-                this.config.header.textStyle.fontSize *
-                0.6 +
-              30
+            this.colWidths[index] = this.getActaulLen(col.title) * this.config.header.textStyle.fontSize * 0.6 + 30;
           }
-          let colWidth =
-            this.getActaulLen(row[col.key]) *
-              this.config.table.textStyle.fontSize *
-              0.6 +
-            30
+          let colWidth = this.getActaulLen(row[col.key]) * this.config.table.textStyle.fontSize * 0.6 + 30;
           if (colWidth > this.colWidths[index]) {
-            this.colWidths[index] = colWidth
+            this.colWidths[index] = colWidth;
           }
-          index++
+          index++;
         }
       }
-      return true
+      return true;
     },
     // 汉字转换成两个字符长度
     getActaulLen(value) {
       if (!value) {
-        return 0
+        return 0;
       }
-      let str = value
+      let str = value;
       if (typeof str === 'number') {
-        str = str.toString()
+        str = str.toString();
       }
-      return str.replace(/[\u0391-\uFFE5]/g, 'aa').length
+      return str.replace(/[\u0391-\uFFE5]/g, 'aa').length;
     },
     getScrollLeft(e) {
-      this.bodyWidth = e.target.scrollLeft + this.showTableSize.tableX
+      this.bodyWidth = e.target.scrollLeft + this.showTableSize.tableX;
     },
     // // 设置表头样式
     // customHeaderRow() {
@@ -309,9 +259,9 @@ export default {
           'font-size': this.config.table.textStyle.fontSize + 'px',
           'font-weight': this.config.table.textStyle.fontWeight,
           backgroundColor: this.config.table.oddBackgroundColor,
-          'white-space': this.config.table.ellipsis ? 'normal' : 'nowrap'
+          'white-space': this.config.table.ellipsis ? 'normal' : 'nowrap',
           //   }
-        }
+        };
       } else {
         return {
           //   style: {
@@ -320,15 +270,15 @@ export default {
           'font-size': this.config.table.textStyle.fontSize + 'px',
           'font-weight': this.config.table.textStyle.fontWeight,
           backgroundColor: this.config.table.evenBackgroundColor,
-          'white-space': this.config.table.ellipsis ? 'normal' : 'nowrap'
+          'white-space': this.config.table.ellipsis ? 'normal' : 'nowrap',
           //   }
-        }
+        };
       }
-    }
+    },
   },
   computed: {
     titleEle() {
-      return this.$refs.titles
+      return this.$refs.titles;
     },
     titleStyle() {
       return {
@@ -337,8 +287,8 @@ export default {
         fontSize: this.config.title.textStyle.fontSize + 'px',
         textAlign: this.config.title.textAlign,
         fontFamily: this.config.title.textStyle.fontFamily,
-        fontWeight: this.config.title.textStyle.fontWeight
-      }
+        fontWeight: this.config.title.textStyle.fontWeight,
+      };
     },
     HeaderStyle() {
       return {
@@ -348,7 +298,7 @@ export default {
         'text-align': this.config.header.textStyle.textAlign,
         'background-color': this.config.header.backgroundColor,
         'font-size': this.config.header.textStyle.fontSize + 'px',
-        'font-weight': this.config.header.textStyle.fontWeight
+        'font-weight': this.config.header.textStyle.fontWeight,
         // },
         // on: {
         //   // 鼠标单击行
@@ -356,8 +306,8 @@ export default {
         //     // do something
         //   }
         // }
-      }
-    }
-  }
-}
+      };
+    },
+  },
+};
 </script>

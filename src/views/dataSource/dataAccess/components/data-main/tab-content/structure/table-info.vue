@@ -36,11 +36,9 @@
           <tbody>
             <tr v-for="(item, index) in colPagination.tableData" :key="index">
               <td>{{ index + 1 }}</td>
-              <td
-                v-for="(col, i) in colPagination.currentCol"
-                :key="i"
-                :title="item[col['COLUMN_NAME']]"
-              >{{ item[col['COLUMN_NAME']] }}</td>
+              <td v-for="(col, i) in colPagination.currentCol" :key="i" :title="item[col['COLUMN_NAME']]">
+                {{ item[col['COLUMN_NAME']] }}
+              </td>
             </tr>
           </tbody>
         </table>
@@ -51,12 +49,12 @@
 </template>
 
 <script>
-import ColPagination from '@/utils/table-col-pagination'
+import ColPagination from '@/utils/table-col-pagination';
 export default {
   name: 'tableInfo',
   props: {
     show: Boolean,
-    tableId: String
+    tableId: String,
   },
   data() {
     return {
@@ -65,75 +63,75 @@ export default {
       colPagination: new ColPagination({
         total: 0,
         size: 50,
-        page: 1
-      })
-    }
+        page: 1,
+      }),
+    };
   },
   filters: {
-    formatType: function(value) {
+    formatType: function (value) {
       switch (value) {
         case 'BIGINT':
         case 'INT':
-          return '整数'
+          return '整数';
         case 'DECIMAL':
-          return '数值'
+          return '数值';
         case 'TIMESTAMP':
         case 'TIME':
-          return '日期时间'
+          return '日期时间';
         case 'DATE':
-          return '日期'
+          return '日期';
         case 'DOUBLE':
-          return '小数'
+          return '小数';
         case 'VARCHAR':
-          return '字符串'
+          return '字符串';
         default:
-          return '字符串'
+          return '字符串';
       }
-    }
+    },
   },
   watch: {
-    show(newValue, oldValue) {
+    show(newValue) {
       if (newValue) {
-        this.colPagination = this.$options.data().colPagination
-        this.handleGetTableInfo()
+        this.colPagination = this.$options.data().colPagination;
+        this.handleGetTableInfo();
       }
-    }
+    },
   },
   methods: {
     handleGetTableInfo() {
-      const { size, page } = this.colPagination.config
+      const { size, page } = this.colPagination.config;
       if (!this.colPagination.validPageSection()) {
-        this.spinning = true
+        this.spinning = true;
         const params = {
           id: this.tableId,
           size: size,
-          page: page
-        }
+          page: page,
+        };
         this.$server.dataAccess
           .getTableInfo(params)
-          .then((res) => {
+          .then(res => {
             if (res.code === 200) {
-              this.colPagination.config.total = res.total
-              this.colPagination.handleColCache(res.tableDataInfo.headers, res.tableDataInfo.rows)
+              this.colPagination.config.total = res.total;
+              this.colPagination.handleColCache(res.tableDataInfo.headers, res.tableDataInfo.rows);
             } else {
-              this.$message.error(res.msg)
+              this.$message.error(res.msg);
             }
           })
           .finally(() => {
-            this.spinning = false
-          })
+            this.spinning = false;
+          });
       }
     },
     handleChangePage(type) {
       if (type === 'add') {
-        this.colPagination.config.page++
+        this.colPagination.config.page++;
       } else if (type === 'minus') {
-        this.colPagination.config.page--
+        this.colPagination.config.page--;
       }
-      this.handleGetTableInfo()
-    }
-  }
-}
+      this.handleGetTableInfo();
+    },
+  },
+};
 </script>
 
 <style lang="less" scoped>

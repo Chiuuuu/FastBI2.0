@@ -5,11 +5,7 @@
         <div class="head">
           <h1>操作记录</h1>
           <div>
-            <a-select
-              v-model="project"
-              style="width: 120px"
-              placeholder="请选择项目"
-            >
+            <a-select v-model="project" style="width: 120px" placeholder="请选择项目">
               <a-select-option v-for="item in projectList" :key="item.value">
                 {{ item.name }}
               </a-select-option>
@@ -34,12 +30,12 @@
   </a-row>
 </template>
 <script>
-import recordMain from './components/record-main/record-main.vue'
+import recordMain from './components/record-main/record-main.vue';
 
 export default {
   name: 'record',
   components: {
-    recordMain
+    recordMain,
   },
   data() {
     return {
@@ -49,22 +45,19 @@ export default {
         { value: '11', name: '项目1' },
         { value: '22', name: '项目2' },
         { value: '33', name: '项目4' },
-        { value: '44', name: '项目5' }
-      ]
-    }
-  },
-  watch: {
-    project(newVal, oldVal) {}
+        { value: '44', name: '项目5' },
+      ],
+    };
   },
   methods: {
     handleChangeModule(key) {
-      const tab = this.$refs[`${key}Manage`]
+      const tab = this.$refs[`${key}Manage`];
       if (tab) {
-        tab.getList()
+        tab.getList();
       }
-    }
-  }
-}
+    },
+  },
+};
 </script>
 <style lang="less" scoped>
 @import '../main.less';

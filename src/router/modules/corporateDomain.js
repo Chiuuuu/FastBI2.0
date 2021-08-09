@@ -1,8 +1,8 @@
-import PERMISSION_CODE from '@/config/permission'
+import PERMISSION_CODE from '@/config/permission';
 
-const RouteView = () => import('@/layout/routeView')
-const PersonelView = () => import('@/views/corporateDomain/personnel')
-const ProjectView = () => import('@/views/corporateDomain/project')
+const RouteView = () => import('@/layout/routeView');
+const PersonelView = () => import('@/views/corporateDomain/personnel');
+const ProjectView = () => import('@/views/corporateDomain/project');
 
 export default {
   path: '/corporateDomain',
@@ -11,7 +11,7 @@ export default {
   meta: {
     title: '企业域管理',
     icon: 'cloud',
-    permissions: [PERMISSION_CODE.PAGE.personnel, PERMISSION_CODE.PAGE.project]
+    permissions: [PERMISSION_CODE.PAGE.personnel, PERMISSION_CODE.PAGE.project],
   },
   children: [
     {
@@ -20,8 +20,8 @@ export default {
       component: PersonelView,
       meta: {
         title: '人员管理',
-        permissions: [PERMISSION_CODE.PAGE.personnel]
-      }
+        permissions: [PERMISSION_CODE.PAGE.personnel],
+      },
     },
     {
       path: 'project',
@@ -29,8 +29,8 @@ export default {
       component: ProjectView,
       meta: {
         title: '项目管理',
-        permissions: [PERMISSION_CODE.PAGE.project]
-      }
-    }
-  ]
-}
+        permissions: [PERMISSION_CODE.PAGE.project],
+      },
+    },
+  ],
+};

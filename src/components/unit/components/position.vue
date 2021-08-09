@@ -7,19 +7,13 @@
       <a-col :span="10" class="col-offset">
         <div class="unit-block-title">X</div>
         <!-- X轴 start -->
-        <a-input-number
-          :value="position.left"
-          @change="val => handleChange('left', val)"
-        />
+        <a-input-number :value="position.left" @change="val => handleChange('left', val)" />
         <!-- X轴 end -->
       </a-col>
       <a-col :span="10" class="col-offset">
         <div class="unit-block-title">Y</div>
         <!-- Y轴 start -->
-        <a-input-number
-          :value="position.top"
-          @change="val => handleChange('top', val)"
-        />
+        <a-input-number :value="position.top" @change="val => handleChange('top', val)" />
         <!-- Y轴 end -->
       </a-col>
     </a-row>
@@ -35,15 +29,15 @@ export default {
     position: {
       // 位置配置
       type: Object,
-      required: true
-    }
+      required: true,
+    },
   },
   methods: {
     handleChange(key, val) {
       this.$emit('change', {
-        [key]: val
-      })
-    }
-  }
-}
+        [key]: val,
+      });
+    },
+  },
+};
 </script>

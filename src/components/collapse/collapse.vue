@@ -13,19 +13,19 @@ export default {
     value: {
       // 活动值
       type: Array,
-      default: () => []
-    }
+      default: () => [],
+    },
   },
   model: {
     prop: 'value',
-    event: 'click-panel'
+    event: 'click-panel',
   },
   provide() {
     return {
-      collapse: this
-    }
-  }
-}
+      collapse: this,
+    };
+  },
+};
 </script>
 <style lang="less">
 .collapse-list {

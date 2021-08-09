@@ -8,10 +8,7 @@
     <!-- 样式 start -->
     <a-col :span="16">
       <div class="background-color">
-        <ColorPicker
-          :value="color"
-          @change="color => handleChange(color)"
-        ></ColorPicker>
+        <ColorPicker :value="color" @change="color => handleChange(color)"></ColorPicker>
       </div>
     </a-col>
     <!-- 样式 end -->
@@ -27,20 +24,20 @@ export default {
     color: {
       // 颜色值
       type: String,
-      required: true
+      required: true,
     },
     label: {
       // 名称
       type: String,
-      default: '背景颜色'
-    }
+      default: '背景颜色',
+    },
   },
   methods: {
     handleChange(value) {
-      this.$emit('change', value)
-    }
-  }
-}
+      this.$emit('change', value);
+    },
+  },
+};
 </script>
 <style lang="less" scoped>
 @import url('../../../assets/less/mixins/set-color-picker.less');

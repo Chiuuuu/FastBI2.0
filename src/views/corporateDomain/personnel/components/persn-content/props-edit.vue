@@ -8,8 +8,8 @@
     <a-icon class="edit-icon" type="form" @click="handleEditProp" />
   </div>
   <div v-else>
-    <a-input style="width:120px" v-model="editValue" size="small"></a-input>
-    <a style="margin-right:5px" @click="handleSave">保存</a>
+    <a-input style="width: 120px" v-model="editValue" size="small"></a-input>
+    <a style="margin-right: 5px" @click="handleSave">保存</a>
     <a @click="handleCancel">取消</a>
   </div>
 </template>
@@ -20,53 +20,53 @@ export default {
   props: {
     title: String,
     activeIndex: Number,
-    index: Number
+    index: Number,
   },
   data() {
     return {
-      editValue: this.title
-    }
+      editValue: this.title,
+    };
   },
   methods: {
     handleValidateIndex() {
       if (this.activeIndex === -1) {
-        return true
+        return true;
       } else {
-        this.$message.error('请完成操作')
-        return false
+        this.$message.error('请完成操作');
+        return false;
       }
     },
     handleEditProp() {
       if (this.handleValidateIndex()) {
-        this.$emit('changePropsEdit', this.index)
+        this.$emit('changePropsEdit', this.index);
       }
     },
     handleSave() {
       if (this.editValue.length > 20 || this.editValue.length < 1) {
-        return this.$message.error('请输入1-20个字符的属性')
+        return this.$message.error('请输入1-20个字符的属性');
       }
-      this.$emit('savePropsEdit', this.index, this.editValue)
+      this.$emit('savePropsEdit', this.index, this.editValue);
     },
     handleCancel() {
-      this.$emit('cancelPropsEdit')
-    }
-  }
-}
+      this.$emit('cancelPropsEdit');
+    },
+  },
+};
 </script>
 
 <style scoped>
-  .props-line {
-    width: 208px;
-    height: 100%;
-    display: flex;
-    align-items: center;
-  }
-  .overflow {
-    display: inline-block;
-    max-width: 190px;
-    margin-right: 4px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
+.props-line {
+  width: 208px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+.overflow {
+  display: inline-block;
+  max-width: 190px;
+  margin-right: 4px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
 </style>

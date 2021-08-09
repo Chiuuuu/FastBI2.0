@@ -8,9 +8,7 @@
       </div>
       <div class="body">
         <div class="schema-list-wrapper">
-          <Collapse
-            class="schema-list reset-scrollbar js-schema-dimension-list"
-          >
+          <Collapse class="schema-list reset-scrollbar js-schema-dimension-list">
             <CollapsePanel class="schema-item" panel="order" header="订单">
               <ul class="field-list">
                 <template v-for="item in dimension">
@@ -70,40 +68,38 @@
   </div>
 </template>
 <script>
-import DataPanelItem from './data-panel-item.vue'
-import { mutationTypes as historyMutation } from '@/store/modules/history'
+import DataPanelItem from './data-panel-item.vue';
+import { mutationTypes as historyMutation } from '@/store/modules/history';
 export default {
   name: 'DataPanel',
   components: {
-    DataPanelItem
+    DataPanelItem,
   },
   props: {
     dimension: {
       type: Array,
-      required: true
+      required: true,
     },
     measure: {
       type: Array,
-      required: true
+      required: true,
     },
     selectFiled: {
       type: Object,
-      default: () => {}
-    }
+      default: () => {},
+    },
   },
   mounted() {
-    this.$EventBus.$on('drop:dimension-list', this.dropDimensionList)
-    this.$EventBus.$on('drop:measure-list', this.dropMeasureList)
+    this.$EventBus.$on('drop:dimension-list', this.dropDimensionList);
+    this.$EventBus.$on('drop:measure-list', this.dropMeasureList);
   },
   beforeDestroy() {
-    this.$EventBus.$off('drop:dimension-list', this.dropDimensionList)
-    this.$EventBus.$off('drop:measure-list', this.dropMeasureList)
+    this.$EventBus.$off('drop:dimension-list', this.dropDimensionList);
+    this.$EventBus.$off('drop:measure-list', this.dropMeasureList);
   },
   methods: {
     isSelected(item) {
-      return (
-        item.id === this.selectFiled.id && item.name === this.selectFiled.name
-      )
+      return item.id === this.selectFiled.id && item.name === this.selectFiled.name;
     },
     recordHistory(target, data, action) {
       this.$store.commit(historyMutation.COMMAND, {
@@ -111,37 +107,37 @@ export default {
         store: this.$store,
         target,
         item: data,
-        action
-      })
+        action,
+      });
     },
     dropDimensionList(item) {
       const target = [
         {
           method: 'add',
-          list: this.dimension
+          list: this.dimension,
         },
         {
           method: 'dele',
-          list: this.measure
-        }
-      ]
-      this.recordHistory(target, item, 'move')
+          list: this.measure,
+        },
+      ];
+      this.recordHistory(target, item, 'move');
     },
     dropMeasureList(item) {
       const target = [
         {
           method: 'add',
-          list: this.measure
+          list: this.measure,
         },
         {
           method: 'dele',
-          list: this.dimension
-        }
-      ]
-      this.recordHistory(target, item, 'move')
-    }
-  }
-}
+          list: this.dimension,
+        },
+      ];
+      this.recordHistory(target, item, 'move');
+    },
+  },
+};
 </script>
 <style lang="less">
 .data-panel {
