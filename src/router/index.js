@@ -32,6 +32,9 @@ export function resetRouter() {
 router.beforeEach(async (to, from, next) => {
   BinUI.LoadingBar.start();
   Modal.destroyAll();
+
+  // 删除出现的右键菜单
+  store.dispatch('common/destroy_context_menu');
   // store.dispatch('SingleSelected', null);
   store.commit('common/SET_PRIVILEGES', []);
 

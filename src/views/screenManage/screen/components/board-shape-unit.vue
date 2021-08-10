@@ -134,10 +134,12 @@ export default {
         this.isShowShapMover = true;
       }
     },
+    model(val) {
+      val === parameter.EDIT ? this.initContextMenu() : this.destoryContextMenu();
+    },
   },
   mounted() {
     if (this.model === parameter.EDIT) {
-      // TODO:添加销毁动作
       this.initContextMenu();
     }
   },
