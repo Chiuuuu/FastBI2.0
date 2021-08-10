@@ -97,6 +97,7 @@ export default {
   data() {
     return {
       parameter,
+      fullscreenchangeList: ['fullscreenchange', 'mozfullscreenchange', 'webkitfullscreenchange', 'MSFullscreenChange'],
       boardFrameStyle: {}, // 画板外框样式
       boardCanvasStyle: {}, // 画板样式
       cacheBoardScale: '', // 缓存画板比例
@@ -165,7 +166,6 @@ export default {
     doWithRect() {
       // 如果是从全屏退出则不需要再次处理比例
       if (this.exitFullscreen()) return;
-
       this.$nextTick(() => {
         const boardContentRect = this.$refs['js-board-content'].getBoundingClientRect();
         const SCALE = this.setRatio(boardContentRect);
@@ -221,10 +221,7 @@ export default {
     fullScreenPreview() {
       this.$nextTick(() => {
         const requiredFullScreenDom = this.$refs['js-board-content'];
-        this.doWithBoardFrameStyle();
         requestFullScreen(requiredFullScreenDom);
-        // TODO:更改全屏方式
-        // https://blog.csdn.net/zqian1994/article/details/105814522
       });
     },
     /**
@@ -232,6 +229,17 @@ export default {
      */
     exitFullscreen() {
       if (!checkFullScreen() && this.boardModel === this.parameter.FULLSCREEN) {
+        return true;
+      }
+      return false;
+    },
+    /**
+     * @description 全屏事件执行方法
+     */
+    listenerFun() {
+      let isFullScreen = checkFullScreen();
+      if (!isFullScreen) {
+        // 退出全屏
         // 从全屏退出只能是编辑或预览模式
         this.$store.commit(boardMutaion.SET_BOARD_MODEL, {
           model: this.type === this.parameter.EDIT ? this.parameter.EDIT : this.parameter.PREVIEW,
@@ -242,23 +250,36 @@ export default {
             scale: this.cacheBoardScale,
           });
         }
-        this.doWithBoardFrameStyle();
-        return true;
       }
-      return false;
+      this.doWithBoardFrameStyle();
+    },
+    /**
+     * @description 监听全屏事件
+     */
+    listenerFullScreen() {
+      this.fullscreenchangeList.forEach(listener => {
+        document.addEventListener(listener, this.listenerFun);
+      });
+    },
+    /**
+     * @description 取消监听全屏事件
+     */
+    removeListenerFullScreen() {
+      this.fullscreenchangeList.forEach(listener => {
+        document.removeEventListener(listener, this.listenerFun);
+      });
     },
   },
   mounted() {
     this.$nextTick(() => {
       this.doWithRect();
-      // 监听页面比例修改样式
-      // this.doWithBoardFrameStyle();
-      // this.doWithBoardCanvasStyle();
       window.addEventListener('resize', this.doWithRect);
+      this.listenerFullScreen();
     });
   },
   beforeDestroy() {
     window.removeEventListener('resize', this.doWithRect);
+    this.removeListenerFullScreen();
   },
 };
 </script>
