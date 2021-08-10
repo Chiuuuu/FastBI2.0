@@ -90,7 +90,7 @@
               <div class="u-icon">
                 <i class="bi-data bi-data-line-chart"></i>
               </div>
-              <span class="text"></span>
+              <span class="text">文本框</span>
             </div>
           </li>
           <!-- 文本框 end -->
