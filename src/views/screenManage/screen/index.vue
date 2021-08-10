@@ -15,7 +15,7 @@
       <!-- 内容编辑区 end -->
 
       <!-- 内容编辑区工具栏 start -->
-      <DrawingBoardPageTools></DrawingBoardPageTools>
+      <DrawingBoardPageTools :tabs="tabs" v-model="tabActive"></DrawingBoardPageTools>
       <!-- 内容编辑区工具栏 end-->
 
       <!-- 配置设置栏 start -->
@@ -32,6 +32,7 @@ import DrawingBoardSide from './container/drawing-board-side';
 import DrawingBoardContent from './container/drawing-board-content';
 import DrawingBoardPageTools from './container/drawing-board-page-tools';
 import DrawingBoardSetting from './container/drawing-board-setting';
+import { Loading } from 'element-ui';
 
 /**
  * @description 编辑大屏
@@ -44,12 +45,6 @@ export default {
     DrawingBoardContent,
     DrawingBoardPageTools,
     DrawingBoardSetting,
-  },
-  watch: {
-    $route() {
-      console.log(this.$route.params.id);
-      console.log(this.$route.query.tid);
-    },
   },
   computed: {
     ...mapState({
@@ -67,16 +62,57 @@ export default {
   data() {
     return {
       parameter,
+      tabs: [],
+      tabActive: '',
     };
   },
   mounted() {
     // 1. 根据大屏id去获取tab的id
     // 2. 初始化为编辑模式
     this.$store.commit(boardMutaion.RESETSTATE);
+    this.initEdit();
     // // 初始化为编辑模式
     // this.$store.commit(boardMutaion.SET_BOARD_MODEL, {
     //   model: this.parameter.EDIT,
     // });
+  },
+  methods: {
+    initEdit() {
+      const screenId = this.$route.query.id;
+      if (!screenId) return;
+      this.getScreenTabsById(screenId);
+    },
+    /**
+     * @description 获取大屏分页
+     */
+    async getScreenTabsById(screenId) {
+      let loadingInstance = Loading.service({
+        lock: true,
+        text: '加载中...',
+        target: document.querySelector('.screen-manage'),
+      });
+      // 先获取大屏对应的页签信息
+      const result = await this.$server.screenManage.getScreenTabs(screenId);
+      if (result && result.code === 200) {
+        this.tabs = [].concat(result.rows);
+        this.tabActive = result.rows[0].id;
+        this.getScreenDetailByTabId(screenId, this.tabActive);
+      } else {
+        result.msg && this.$message.error(result.msg);
+      }
+      loadingInstance.close();
+    },
+    /**
+     * @description 获取大屏分页详情
+     */
+    async getScreenDetailByTabId(screenId, tabId) {
+      const result = await this.$server.screenManage.getScreenDetailById(screenId, tabId);
+      if (result && result.code === 200) {
+        this.$store.commit('common/SET_PRIVILEGES', result.data.privileges || []);
+      } else {
+        this.$message.error(result.msg);
+      }
+    },
   },
 };
 </script>

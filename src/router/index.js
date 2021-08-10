@@ -32,7 +32,7 @@ export function resetRouter() {
 router.beforeEach(async (to, from, next) => {
   BinUI.LoadingBar.start();
   Modal.destroyAll();
-  store.dispatch('SingleSelected', null);
+  // store.dispatch('SingleSelected', null);
   store.commit('common/SET_PRIVILEGES', []);
 
   const hasToken = store.state.common.adminToken;

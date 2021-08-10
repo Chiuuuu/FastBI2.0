@@ -11,8 +11,15 @@
       <div class="pagebar-middle">
         <div class="pagebar-center">
           <ul class="page-list">
-            <li class="page-item active">页面1</li>
-            <li class="page-item" @click="handleTabChange">页面2</li>
+            <li
+              class="page-item"
+              v-for="tab in tabs"
+              :key="tab.id"
+              :class="tab.id === value ? 'active' : ''"
+              @click="handleChange(item)"
+            >
+              {{ tab.name }}
+            </li>
           </ul>
           <div class="page-add">+</div>
         </div>
@@ -50,6 +57,21 @@ import Slider from '@/components/slider/slider';
  */
 export default {
   name: 'DrawdingBoardPageTools',
+  props: {
+    tabs: {
+      // 标签列表
+      type: Array,
+      required: true,
+    },
+    value: {
+      type: [String, Number],
+      default: '',
+    },
+  },
+  model: {
+    prop: 'value',
+    event: 'change',
+  },
   components: {
     Slider,
   },
@@ -94,16 +116,8 @@ export default {
     /**
      * @description 页面tab切换
      */
-    handleTabChange() {
-      this.$router.push({
-        name: 'screenEditor',
-        params: {
-          id: 1,
-        },
-        query: {
-          tid: 2,
-        },
-      });
+    handleChange(item) {
+      this.$emit('change', item);
     },
   },
 };
@@ -143,6 +157,7 @@ export default {
     &-middle {
       .pagebar-center {
         .page-list {
+          overflow: hidden;
           .page-item {
             float: left;
             min-width: 70px;

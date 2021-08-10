@@ -127,10 +127,13 @@ export default {
         }
       },
     },
-    boardScale() {
-      // 监听页面比例修改样式
-      this.doWithBoardFrameStyle();
-      this.doWithBoardCanvasStyle();
+    boardScale: {
+      immediate: true,
+      handler() {
+        // 监听页面比例修改样式
+        this.doWithBoardFrameStyle();
+        this.doWithBoardCanvasStyle();
+      },
     },
     boardModel(val) {
       // 监听大屏模式
@@ -248,6 +251,9 @@ export default {
   mounted() {
     this.$nextTick(() => {
       this.doWithRect();
+      // 监听页面比例修改样式
+      // this.doWithBoardFrameStyle();
+      // this.doWithBoardCanvasStyle();
       window.addEventListener('resize', this.doWithRect);
     });
   },

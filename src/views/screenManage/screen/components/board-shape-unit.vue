@@ -136,10 +136,15 @@ export default {
     },
   },
   mounted() {
-    this.initContextMenu();
+    if (this.model === parameter.EDIT) {
+      // TODO:添加销毁动作
+      this.initContextMenu();
+    }
   },
   beforeDestroy() {
-    this.destoryContextMenu();
+    if (this.model === parameter.EDIT) {
+      this.destoryContextMenu();
+    }
   },
   methods: {
     /**
