@@ -47,34 +47,42 @@ export default {
         {
           id: 1,
           name: '产品名称',
+          file: 'dimensions',
         },
         {
           id: 2,
           name: '制造商',
+          file: 'dimensions',
         },
         {
           id: 3,
           name: '发货日期',
+          file: 'dimensions',
         },
         {
           id: 4,
           name: '国家',
+          file: 'dimensions',
         },
         {
           id: 5,
           name: '地区',
+          file: 'dimensions',
         },
         {
           id: 6,
           name: '城市',
+          file: 'dimensions',
         },
         {
           id: 7,
           name: '子类别',
+          file: 'dimensions',
         },
         {
           id: 8,
           name: '客户名称',
+          file: 'dimensions',
         },
       ],
       // 度量
@@ -82,22 +90,27 @@ export default {
         {
           id: 1,
           name: '成本',
+          file: 'measures',
         },
         {
           id: 2,
           name: '折扣',
+          file: 'measures',
         },
         {
           id: 3,
           name: '数量',
+          file: 'measures',
         },
         {
           id: 4,
           name: '类别代码',
+          file: 'measures',
         },
         {
           id: 5,
           name: '销售额',
+          file: 'measures',
         },
       ],
     };
