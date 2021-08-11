@@ -1,5 +1,10 @@
 <template>
-  <li class="field-item text-item clearfix" ref="js-field-item" :class="selected ? 'selected' : ''">
+  <li
+    class="field-item text-item clearfix"
+    ref="js-field-item"
+    :data-index="fieldIndex"
+    :class="selected ? 'selected' : ''"
+  >
     <div :class="['prefix-icon bi-data', icon]"></div>
     <p>{{ data.name }}</p>
     <div class="suffix-btn"></div>
@@ -16,6 +21,10 @@ export default {
   name: 'DataPanelItem',
   inject: ['boardSettingWrapper'],
   props: {
+    fieldIndex: {
+      type: [Number, String],
+      required: true,
+    },
     type: {
       // 类型
       type: String,
