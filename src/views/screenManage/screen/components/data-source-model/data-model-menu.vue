@@ -1,23 +1,25 @@
 <template>
   <div class="data-model-wrapper">
     <div class="menu-btn model-menu">
-      <p class="title">默认数据模型</p>
+      <p class="title">{{ currentSelected ? currentSelected.name : '请选择模型' }}</p>
       <div class="menu-list-wrapper">
         <div class="menu-model-add" @click="handleAddDataModel">
           <span class="symbol-add">+</span>
           添加数据模型
         </div>
         <ul class="menu-list reset-scrollbar">
-          <li class="menu-item selected">
-            默认数据模型
+          <li
+            class="menu-item"
+            :class="{ selected: currentSelected && currentSelected.id === item.id }"
+            v-for="(item, index) in selectedList"
+            :data-index="index"
+            :key="item.id"
+            @click="handleSelectDataModel(item)"
+          >
+            {{ item.name }}
             <div class="u-icon">
-              <a-icon type="check" />
-            </div>
-          </li>
-          <li class="menu-item" v-for="item in 25" :key="item">
-            未知数据模型
-            <div class="u-icon">
-              <a-icon type="delete" />
+              <a-icon class="check-icon" v-if="currentSelected && currentSelected.id === item.id" type="check"></a-icon>
+              <a-icon class="delete-icon" type="delete" @click.stop="handleDelete(item)" />
             </div>
           </li>
         </ul>
@@ -47,6 +49,18 @@
 export default {
   name: 'DataModelMenu',
   props: {
+    selectedList: {
+      type: Array,
+      default() {
+        return [];
+      },
+    },
+    currentSelected: {
+      type: Object,
+      default() {
+        return null;
+      },
+    },
     dimension: {
       // 维度
       type: Array,
@@ -64,11 +78,22 @@ export default {
     };
   },
   methods: {
+    handleStringifyItem(item) {
+      return JSON.stringify(item);
+    },
     /**
      * @description 打开添加数据模型
      */
     handleAddDataModel() {
       this.$emit('open', true);
+    },
+    /**
+     * @description 选择数据模型
+     */
+    handleSelectDataModel(item) {
+      this.currentSelected = item;
+      this.$emit('update:currentSelected', item);
+      this.$store.dispatch('SetDataModel', item);
     },
     /**
      * @description 维度度量字段搜索
@@ -109,6 +134,13 @@ export default {
       if (data.id === -1) return;
       this.handleClearSearch();
       this.$emit('selectSearchFiled', data);
+    },
+    /**
+     * @description 删除选中
+     */
+    handleDelete(item) {
+      const list = this.selectedList.filter(n => n.id !== item.id);
+      this.$store.dispatch('dataModel/setSelectedModelList', list);
     },
     /**
      * @description 清空搜索
@@ -226,6 +258,20 @@ export default {
       text-overflow: ellipsis;
       white-space: nowrap;
       cursor: pointer;
+      .delete-icon {
+        display: none;
+      }
+      .check-icon {
+        display: inline-block;
+      }
+      &:hover {
+        .delete-icon {
+          display: inline-block;
+        }
+        .check-icon {
+          display: none;
+        }
+      }
       &.selected {
         background-color: #eee;
         .anticon {

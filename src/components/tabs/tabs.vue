@@ -99,6 +99,7 @@ export default {
   .tabs-content {
     position: relative;
     padding-top: 1px;
+    height: calc(100% - 37px);
     overflow-y: auto;
   }
 }

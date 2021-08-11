@@ -4,23 +4,22 @@
     <div class="dimension-area">
       <div class="head">
         <h4 class="title">维度</h4>
-        <div class="u-icon">＋</div>
+        <!-- <div class="u-icon">＋</div> -->
       </div>
       <div class="body">
         <div class="schema-list-wrapper">
-          <Collapse class="schema-list reset-scrollbar js-schema-dimension-list">
-            <CollapsePanel class="schema-item" panel="order" header="订单">
-              <ul class="field-list">
-                <template v-for="item in dimension">
-                  <DataPanelItem
-                    :key="item.id"
-                    type="dimension"
-                    :data="item"
-                    :selected="isSelected(item)"
-                  ></DataPanelItem>
-                </template>
-              </ul>
-            </CollapsePanel>
+          <Collapse ref="dimensionList" class="schema-list reset-scrollbar js-schema-dimension-list">
+            <ul class="field-list">
+              <template v-for="(item, index) in dimension">
+                <DataPanelItem
+                  :key="item.id"
+                  type="dimension"
+                  :data="item"
+                  :field-index="index"
+                  :selected="isSelected(item)"
+                ></DataPanelItem>
+              </template>
+            </ul>
           </Collapse>
         </div>
       </div>
@@ -31,35 +30,22 @@
     <div class="measure-area">
       <div class="head">
         <h4 class="title">度量</h4>
-        <div class="u-icon">＋</div>
+        <!-- <div class="u-icon">＋</div> -->
       </div>
       <div class="body">
         <div class="schema-list-wrapper">
-          <Collapse class="schema-list reset-scrollbar js-schema-measure-list">
-            <CollapsePanel class="schema-item" panel="order" header="订单">
-              <ul class="field-list">
-                <template v-for="item in measure">
-                  <DataPanelItem
-                    :key="item.id"
-                    type="measure"
-                    :data="item"
-                    :selected="isSelected(item)"
-                  ></DataPanelItem>
-                </template>
-              </ul>
-            </CollapsePanel>
-            <CollapsePanel class="schema-item" panel="area" header="区域">
-              <ul class="field-list">
-                <template v-for="item in measure">
-                  <DataPanelItem
-                    :key="item.id"
-                    type="measure"
-                    :data="item"
-                    :selected="isSelected(item)"
-                  ></DataPanelItem>
-                </template>
-              </ul>
-            </CollapsePanel>
+          <Collapse ref="measureList" class="schema-list reset-scrollbar js-schema-measure-list">
+            <ul class="field-list">
+              <template v-for="(item, index) in measure">
+                <DataPanelItem
+                  :key="item.id"
+                  type="measure"
+                  :data="item"
+                  :field-index="index"
+                  :selected="isSelected(item)"
+                ></DataPanelItem>
+              </template>
+            </ul>
           </Collapse>
         </div>
       </div>
@@ -68,6 +54,7 @@
   </div>
 </template>
 <script>
+import ContextMenu from '@/components/contextmenu';
 import DataPanelItem from './data-panel-item.vue';
 import { mutationTypes as historyMutation } from '@/store/modules/history';
 export default {
@@ -89,15 +76,133 @@ export default {
       default: () => {},
     },
   },
+  data() {
+    return {
+      contextMenuDim: [
+        // 右键菜单
+        {
+          name: '转换为维度',
+          onClick: this.handleChangeRole,
+        },
+        {
+          name: '创建地理字段',
+          children: [
+            {
+              name: '城市',
+              onClick: this.handleCreateGeoRole,
+            },
+          ],
+        },
+      ],
+      contextMenuMea: [
+        // 右键菜单
+        {
+          name: '转换为维度',
+          onClick: this.handleChangeRole,
+        },
+      ],
+    };
+  },
   mounted() {
     this.$EventBus.$on('drop:dimension-list', this.dropDimensionList);
     this.$EventBus.$on('drop:measure-list', this.dropMeasureList);
+    const contextmenuDim = this.$refs.dimensionList;
+    const contextmenuMea = this.$refs.measureList;
+    contextmenuDim && contextmenuDim.$el.addEventListener('contextmenu', this.handleDimConextMenu);
+    contextmenuMea && contextmenuMea.$el.addEventListener('contextmenu', this.handleMeaConextMenu);
   },
   beforeDestroy() {
     this.$EventBus.$off('drop:dimension-list', this.dropDimensionList);
     this.$EventBus.$off('drop:measure-list', this.dropMeasureList);
+    const contextmenuDim = this.$refs.dimensionList;
+    const contextmenuMea = this.$refs.measureList;
+    contextmenuDim && contextmenuDim.$el.removeEventListener('contextmenu', this.handleDimConextMenu);
+    contextmenuMea && contextmenuMea.$el.removeEventListener('contextmenu', this.handleMeaConextMenu);
   },
   methods: {
+    /**
+     * @description 监听事件
+     */
+    handleDimConextMenu(e) {
+      e.preventDefault();
+      this.handleCreateMenu(e, 'dimension');
+    },
+    handleMeaConextMenu(e) {
+      e.preventDefault();
+      this.handleCreateMenu(e, 'measure');
+    },
+    /**
+     * @description 创建右键菜单
+     */
+    handleCreateMenu(e, type) {
+      e.stopPropagation();
+      let flag = false;
+      let target = e.target;
+      if (target.classList.contains('field-item')) {
+        flag = true;
+      } else {
+        target = target.parentNode;
+        flag = target.classList.contains('field-item');
+      }
+      if (!flag) return;
+      let contextMenu = [];
+      let data = {};
+      let index = target.dataset.index;
+      if (type === 'dimension') {
+        contextMenu = this.contextMenuDim;
+        data = this.dimension[index];
+      } else if (type === 'measure') {
+        contextMenu = this.contextMenuMea;
+        data = this.measure[index];
+      }
+      const that = this;
+      function addEvent(target) {
+        target.$$fun = function () {
+          Array.prototype.push.call(arguments, that, { data, index });
+          target.onClick.apply(this, arguments);
+        };
+      }
+      // eslint-disable-next-line no-new
+      new ContextMenu({
+        vm: that,
+        menus: contextMenu.map(item => {
+          if (item['children'] && item.children.length) {
+            item.children.forEach(subitem => {
+              addEvent(subitem);
+            });
+          } else {
+            addEvent(item);
+          }
+          return item;
+        }),
+        target: e,
+        handleMarkCancel: function () {},
+      });
+    },
+    /**
+     * @description 转换维度度量
+     */
+    handleChangeRole(e, item, vm, { data, index }) {
+      this.$emit('changeRole', { data, index });
+    },
+    /**
+     * @description 创建地理角色
+     */
+    handleCreateGeoRole(e, item) {
+      console.log(e, item);
+    },
+    /**
+     * @description 获取旋转div的样式
+     */
+    getRotateStyle(type = 'left') {
+      const space = this.config.style.size.height > 10 ? this.config.style.size.height : 10;
+      return {
+        width: `${space}px`,
+        height: `${space}px`,
+        marginTop: `-${space / 2}px`,
+        [type === 'left' ? 'left' : 'right']: `-${space}px`,
+      };
+    },
     isSelected(item) {
       return item.id === this.selectFiled.id && item.name === this.selectFiled.name;
     },
@@ -141,7 +246,7 @@ export default {
 </script>
 <style lang="less">
 .data-panel {
-  height: calc(100% - 123px);
+  height: 100%;
   .dimension-area,
   .measure-area {
     position: relative;
