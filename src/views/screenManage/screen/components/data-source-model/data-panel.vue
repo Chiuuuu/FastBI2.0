@@ -51,16 +51,30 @@
       </div>
     </div>
     <!-- 度量面板 end -->
+
+    <!-- 地理字段设置 -->
+    <GeoSetting
+      v-if="createMapVisible"
+      region="城市"
+      :is-show="createMapVisible"
+      :dimensions-data="createdMapData"
+      :type="resourceType"
+      @close="createMapVisible = false"
+      @handleSave="handleSave"
+    />
   </div>
 </template>
 <script>
 import ContextMenu from '@/components/contextmenu';
 import DataPanelItem from './data-panel-item.vue';
 import { mutationTypes as historyMutation } from '@/store/modules/history';
+import GeoSetting from './data-geo-setting/data-geo-setting.vue';
 export default {
   name: 'DataPanel',
+  inject: ['getResourceType'],
   components: {
     DataPanelItem,
+    GeoSetting,
   },
   props: {
     dimension: {
@@ -101,7 +115,14 @@ export default {
           onClick: this.handleChangeRole,
         },
       ],
+      createdMapData: {}, // 地理字段对象
+      createMapVisible: false, // 控制地理字段设置modal
     };
+  },
+  computed: {
+    resourceType() {
+      return this.getResourceType();
+    },
   },
   mounted() {
     this.$EventBus.$on('drop:dimension-list', this.dropDimensionList);
@@ -120,6 +141,7 @@ export default {
     contextmenuMea && contextmenuMea.$el.removeEventListener('contextmenu', this.handleMeaConextMenu);
   },
   methods: {
+    handleSave() {},
     /**
      * @description 监听事件
      */
@@ -132,10 +154,9 @@ export default {
       this.handleCreateMenu(e, 'measure');
     },
     /**
-     * @description 创建右键菜单
+     * @description 事件委托: 判断是否点击到了item
      */
-    handleCreateMenu(e, type) {
-      e.stopPropagation();
+    judgeItemClick(e, type) {
       let flag = false;
       let target = e.target;
       if (target.classList.contains('field-item')) {
@@ -144,21 +165,33 @@ export default {
         target = target.parentNode;
         flag = target.classList.contains('field-item');
       }
-      if (!flag) return;
-      let contextMenu = [];
-      let data = {};
+      if (!flag) return flag;
       let index = target.dataset.index;
       if (type === 'dimension') {
+        return this.dimension[index];
+      } else if (type === 'measure') {
+        return this.measure[index];
+      } else {
+        return false;
+      }
+    },
+    /**
+     * @description 创建右键菜单
+     */
+    handleCreateMenu(e, type) {
+      e.stopPropagation();
+      const data = this.judgeItemClick(e, type);
+      if (!data) return;
+      let contextMenu = [];
+      if (type === 'dimension') {
         contextMenu = this.contextMenuDim;
-        data = this.dimension[index];
       } else if (type === 'measure') {
         contextMenu = this.contextMenuMea;
-        data = this.measure[index];
       }
       const that = this;
       function addEvent(target) {
         target.$$fun = function () {
-          Array.prototype.push.call(arguments, that, { data, index });
+          Array.prototype.push.call(arguments, that, data);
           target.onClick.apply(this, arguments);
         };
       }
@@ -182,14 +215,41 @@ export default {
     /**
      * @description 转换维度度量
      */
-    handleChangeRole(e, item, vm, { data, index }) {
-      this.$emit('changeRole', { data, index });
+    handleChangeRole(e, item, vm, data) {
+      let addList = [],
+        deleList = [];
+      if (data.role === 1) {
+        // 维度转度量
+        data.role === 2;
+        addList = this.measure;
+        deleList = this.dimension;
+      } else if (data.role === 2) {
+        // 度量转维度
+        data.role === 1;
+        addList = this.dimension;
+        deleList = this.measure;
+      }
+      const target = [
+        {
+          method: 'add',
+          list: addList,
+        },
+        {
+          method: 'dele',
+          list: deleList,
+        },
+      ];
+      this.recordHistory(target, data, 'move');
     },
     /**
      * @description 创建地理角色
      */
-    handleCreateGeoRole(e, item) {
-      console.log(e, item);
+    handleCreateGeoRole(e, item, vm, data) {
+      debugger;
+      data.modelId = this.resourceId;
+      this.createdMapData = data;
+      this.createMapVisible = true;
+      data.showMore = false;
     },
     /**
      * @description 获取旋转div的样式
@@ -216,6 +276,7 @@ export default {
       });
     },
     dropDimensionList(item) {
+      item.role = 1;
       const target = [
         {
           method: 'add',
@@ -229,6 +290,7 @@ export default {
       this.recordHistory(target, item, 'move');
     },
     dropMeasureList(item) {
+      item.role = 2;
       const target = [
         {
           method: 'add',

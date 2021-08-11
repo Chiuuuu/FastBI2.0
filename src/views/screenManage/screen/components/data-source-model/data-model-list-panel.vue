@@ -73,6 +73,7 @@ import { mapGetters } from 'vuex';
  */
 export default {
   name: 'DataModelListPanel',
+  inject: ['getResourceType'],
   props: {
     selectedList: {
       type: Array,
@@ -94,7 +95,6 @@ export default {
   },
   data() {
     return {
-      resourceType: 8, // 模型暂时写死8
       searchValue: '', // 搜索字段
       searchList: [], // 搜索列表
       list: [],
@@ -133,7 +133,8 @@ export default {
       //   origin: 8,
       // };
       // await this.$server.screenManage.screenModuleSave(params);
-      item.resourceType = this.resourceType;
+      item.resourceType = this.getResourceType();
+      console.log(item.resourceType);
       item.resourceName = item.name;
       this.$emit('update:currentSelected', item);
       let list = this.selectedModelList.concat([item]);

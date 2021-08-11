@@ -129,7 +129,6 @@ export default {
     return {
       showPopover: false,
       loadingTable: false,
-      resourceType: 3, // 数据接入暂时写死3
       iconType: [1, 2, 5, 11, 12],
       databaseList: [],
       databaseId: '',
@@ -205,7 +204,8 @@ export default {
       //   origin: 3,
       // };
       // await this.$server.screenManage.screenModuleSave(params);
-      item.resourceType = this.resourceType;
+      item.resourceType = this.getResourceType();
+      console.log(item.resourceType, 1111111111111111111111111);
       item.resourceName = item.name;
       this.$emit('update:currentSelected', item);
       let list = this.selectedModelList.concat([item]);
