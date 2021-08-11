@@ -49,6 +49,7 @@ import BoardImage from '../components/image/image';
 import ShapeLine from '../components/shape/line/line';
 import ShapeRound from '../components/shape/round/round';
 import ShapeRectangular from '../components/shape/rectangular/rectangular';
+import ChartMap from '../components/chart/map/map';
 
 import { parameter, mutationTypes as boardMutaion } from '@/store/modules/board';
 
@@ -77,6 +78,7 @@ export default {
     ChartTable,
     BoardText,
     BoardImage,
+    ChartMap,
   },
   props: {
     components: {

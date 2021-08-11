@@ -74,6 +74,10 @@ const chartList = [
     name: '表格',
     type: BoardType.ChartTable,
   },
+  {
+    name: '地图',
+    type: BoardType.ChartMap,
+  },
 ];
 
 export default chartList;

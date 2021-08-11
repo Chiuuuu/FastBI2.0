@@ -226,6 +226,10 @@ export default {
         [DROG_TYPE.XAXIS]: this.handleXaxis,
         [DROG_TYPE.YAXIS]: this.handleYaxis,
         [DROG_TYPE.FIELD]: this.handleField,
+        [DROG_TYPE.LATITUDE]: this.handleLatitude,
+        [DROG_TYPE.LABELDIMENSION]: this.handleLabelDimension,
+        [DROG_TYPE.LABELMEASURE]: this.handleLabelLongitude,
+        [DROG_TYPE.LABELLATITUDE]: this.handleLabelLatitude,
       };
 
       const fun = funs[dropType];
@@ -297,11 +301,64 @@ export default {
       };
     },
     /**
+     * @description 拼接经度纬度到维度
+     */
+    handleMapDimension(isLabel = false) {
+      // 构造度量列表
+      let dimensionList = [];
+      let datas = this.currentCom.setting.data;
+      let latitude = isLabel ? datas.labelLatitude : datas.latitude;
+      let longitude = isLabel ? datas.labelLongitude : datas.longitude;
+      if (latitude) {
+        dimensionList = [...dimensionList, ...latitude];
+      }
+      if (longitude) {
+        dimensionList = [...dimensionList, ...longitude];
+      }
+      return dimensionList;
+    },
+    /**
      * @description 当放置到经度
      */
     handleSetLong(data, method = 'add') {
       return {
-        long: this.conversionArry('long', data, method),
+        longitude: this.conversionArry('longitude', data, method),
+        dimensions: this.handleMapDimension(),
+      };
+    },
+    /**
+     * @description 当放置到纬度
+     */
+    handleLatitude(data, method = 'add') {
+      return {
+        latitude: this.conversionArry('latitude', data, method),
+        dimensions: this.handleMapDimension(),
+      };
+    },
+    /**
+     * @description 当放置到纬度
+     */
+    handleLabelDimension(data, method = 'add') {
+      return {
+        labelDimension: this.conversionArry('labelDimension', data, method),
+      };
+    },
+    /**
+     * @description 当放置到纬度
+     */
+    handleLabelLongitude(data, method = 'add') {
+      return {
+        labelLatitude: this.conversionArry('labelLatitude', data, method),
+        labelDimensions: this.handleMapDimension(true),
+      };
+    },
+    /**
+     * @description 当放置到纬度
+     */
+    handleLabelLatitude(data, method = 'add') {
+      return {
+        labelLatitude: this.conversionArry('labelLatitude', data, method),
+        labelDimensions: this.handleMapDimension(true),
       };
     },
     /**

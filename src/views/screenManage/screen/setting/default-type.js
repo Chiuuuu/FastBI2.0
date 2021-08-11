@@ -20,5 +20,6 @@ const BoardType = {
   ShapeLine: 'ShapeLine',
   ShapeRound: 'ShapeRound',
   ShapeRectangular: 'ShapeRectangular',
+  ChartMap: 'ChartMap',
 };
 export default BoardType;

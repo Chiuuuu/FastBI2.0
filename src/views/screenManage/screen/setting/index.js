@@ -19,6 +19,7 @@ import BoardImage from '@/views/screenManage/screen/components/image/default-set
 import ShapeLine from '@/views/screenManage/screen/components/shape/line/default-setting';
 import ShapeRound from '@/views/screenManage/screen/components/shape/round/default-setting';
 import ShapeRectangular from '@/views/screenManage/screen/components/shape/rectangular/default-setting';
+import ChartMap from '@/views/screenManage/screen/components/chart/map/default-setting';
 import Page from '@/views/screenManage/screen/components/page/default-setting';
 
 export default {
@@ -40,5 +41,6 @@ export default {
   ShapeRectangular,
   BoardText,
   BoardImage,
+  ChartMap,
   Page,
 };
