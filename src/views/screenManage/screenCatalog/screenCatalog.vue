@@ -86,7 +86,7 @@
             style="width: 18px; heigth: 18px"
             src="@/assets/images/chart/timeout.png"
           />
-          <a-button class="btn_n1" @click="openScreen">全屏</a-button>
+          <a-button class="btn_n1" @click="handleChangeBoardModel">全屏</a-button>
           <a-button v-if="hasPublishPermission" class="btn_n1" @click="release">
             <span>发布</span>
             <a-dropdown v-show="isPublish === 1" :trigger="['click']" placement="bottomCenter" v-model="releaceMore">
@@ -102,7 +102,17 @@
           <a-button type="primary" class="btn_pr" v-if="hasEditPermission" @click="editScreen">编辑大屏</a-button>
         </div>
         <div class="contain" ref="contain">
-          <div class="empty">
+          <div class="drawing-board-preview scrollbar" v-if="fileSelectId > 0">
+            <div class="preview-board-app">
+              <!-- 内容编辑区 start -->
+              <DrawingBoardContent :components="components" :type="parameter.PREVIEW"></DrawingBoardContent>
+              <!-- 内容编辑区 end -->
+
+              <!-- 内容编辑区工具栏 start -->
+              <DrawingBoardPageTools :tabs="tabs" v-model="tabActive"></DrawingBoardPageTools>
+            </div>
+          </div>
+          <div class="empty" v-else>
             <img src="@/assets/images/icon_empty_state.png" class="empty_img" />
             <p class="empty_word">暂无内容 ， 请先添加大屏目录数据或者选择一个大屏目录 ~</p>
           </div>
@@ -244,7 +254,9 @@
 import NewFolder from '@/components/newFolder/newFolder';
 import MenuFile from '@/components/dataSource/menu-group/file';
 import MenuFolder from '@/components/dataSource/menu-group/folder';
-
+import DrawingBoardContent from '@/views/screenManage/screen/container/drawing-board-content';
+import DrawingBoardPageTools from '@/views/screenManage/screen/container/drawing-board-page-tools';
+import { parameter, mutationTypes as boardMutaion } from '@/store/modules/board';
 import { mapGetters, mapActions } from 'vuex'; // 导入vuex
 import { checkActionPermission, hasPermission } from '@/utils/permission';
 import debounce from 'lodash/debounce';
@@ -258,9 +270,185 @@ export default {
     MenuFile,
     MenuFolder,
     vueQr,
+    DrawingBoardContent,
+    DrawingBoardPageTools,
   },
   data() {
     return {
+      parameter,
+      tabs: [],
+      tabActive: '',
+      components: [
+        {
+          id: 131,
+          type: 'ChartLine',
+          tabs: [],
+          setting: {
+            data: {
+              expands: [],
+              dataModelId: '111',
+              dimensions: [],
+              measures: [],
+              filter: {},
+            },
+            style: {
+              expands: [],
+              position: {
+                left: 0,
+                top: 0,
+              },
+              size: {
+                width: 360,
+                height: 270,
+              },
+              border: {
+                color: 'transparent',
+                width: 1,
+                style: 'solid',
+                radius: 0,
+              },
+              background: {
+                color: 'black',
+              },
+              title: {
+                text: '未命名图表0',
+                show: true,
+                marginBottom: 10,
+                font: {
+                  size: 16,
+                  align: 'center',
+                  family: 'sans-serif',
+                  color: 'rgb(217, 217, 217)',
+                },
+              },
+              echart: {
+                grid: {
+                  show: true,
+                  left: 50,
+                  top: 60,
+                  right: 50,
+                  bottom: 50,
+                  containLabel: true,
+                  backgroundColor: 'transparent',
+                  borderColor: 'transparent',
+                },
+                tooltip: {
+                  trigger: 'axis',
+                },
+                legend: {
+                  show: true,
+                  orient: 'horizontal',
+                  textStyle: {
+                    color: '#ffffff',
+                    fontSize: 16,
+                  },
+                  itemGap: 12,
+                  icon: 'circle',
+                  position: 'left-top',
+                  left: 'left',
+                  top: 'top',
+                },
+                label: {
+                  show: true,
+                  color: '#fff',
+                  fontSize: 16,
+                  position: 'top',
+                },
+                labelLayout: {
+                  hideOverlap: true,
+                },
+                customLinear: 'line',
+                customShowSymbol: true,
+                xAxis: {
+                  type: 'category',
+                  boundaryGap: true,
+                  nameLocation: 'middle',
+                  nameGap: 10,
+                  name: '12312',
+                  cache: {
+                    name: '12312',
+                  },
+                  nameShow: true,
+                  nameTextStyle: {
+                    color: 'yellow',
+                    fontSize: '12',
+                    align: 'center',
+                    padding: [30, 0, 0, 0],
+                  },
+                  axisLabel: {
+                    show: true,
+                    color: '#fff',
+                    fontSize: 12,
+                    rotate: 0,
+                  },
+                  axisLine: {
+                    show: true,
+                    lineStyle: {
+                      color: '#fff',
+                      width: 1,
+                      type: 'solid',
+                    },
+                  },
+                  splitLine: {
+                    show: false,
+                    lineStyle: {
+                      width: 1,
+                      type: 'solid',
+                      color: '#fff',
+                    },
+                  },
+                  axisTick: {
+                    show: false,
+                  },
+                },
+                yAxis: {
+                  type: 'value',
+                  position: 'left',
+                  name: '名称',
+                  cache: {
+                    name: '名称',
+                  },
+                  nameShow: true,
+                  nameLocation: 'middle',
+                  nameTextStyle: {
+                    color: '#fff',
+                    fontSize: 12,
+                    padding: [0, 0, 40, 0],
+                  },
+                  axisLabel: {
+                    show: true,
+                    color: '#fff',
+                    fontSize: 12,
+                    rotate: 0,
+                  },
+                  axisLine: {
+                    show: true,
+                    lineStyle: {
+                      color: '#fff',
+                      width: 1,
+                      type: 'solid',
+                    },
+                  },
+                  splitLine: {
+                    show: true,
+                    lineStyle: {
+                      width: 1,
+                      type: 'solid',
+                      color: '#fff',
+                    },
+                  },
+                  axisTick: {
+                    show: true,
+                  },
+                },
+              },
+            },
+            interaction: {
+              expands: [],
+            },
+          },
+        },
+      ],
       current: ['mail'],
       openKeys: ['sub1'],
       folderList: [], // 文件夹列表
@@ -370,7 +558,6 @@ export default {
         return this.$store.state.common.menuSelectId;
       },
       set(value) {
-        this.$store.dispatch('SetScreenId', value);
         this.$store.commit('common/SET_MENUSELECTID', value);
       },
     },
@@ -409,32 +596,15 @@ export default {
     },
   },
   mounted() {
+    // 初始化为预览模式
+    this.$store.commit(boardMutaion.SET_BOARD_MODEL, {
+      model: this.parameter.PREVIEW,
+    });
+
     this.getList();
     this.$on('fileSelect', this.handleFileSelect);
 
     this.getScreenList();
-    // this.$nextTick(() => {
-    //   this.catalogContentStyle = {
-    //     overflow: 'hidden',
-    //     height: '100%'
-    //   }
-    // })
-
-    window.onresize = () => {
-      // 全屏下监控是否按键了ESC
-      if (!this.checkFull()) {
-        // 全屏下按键esc后要执行的动作
-        this.componentKey -= 1;
-        this.$store.dispatch('SetIsScreen', false);
-        this.$store.dispatch('ToggleContextMenu');
-        // this.$nextTick(() => {
-        //   this.catalogContentStyle = {
-        //     overflow: hidden,
-        //     height: this.$refs.screenCatalog.clientHeight + 20 + 'px'
-        //   }
-        // })
-      }
-    };
   },
   methods: {
     ...mapActions(['addScreenData', 'saveScreenData', 'renameScreenData', 'SetCanvasRange']),
@@ -451,6 +621,8 @@ export default {
           // 没有选择文件的时候默认选择第一个文件
           if (this.fileSelectId === -1 && this.folderList.length > 0) {
             this.getFirstScreen(this.folderList, 0);
+          } else {
+            this.getScreenTabsById();
           }
         }
       });
@@ -463,14 +635,47 @@ export default {
       if (list[index].fileType === 1) {
         this.fileSelectId = this.folderList[index].id;
         this.fileSelectName = this.folderList[index].name;
+        this.getScreenTabsById();
         return;
       }
       if (list[index].children.length > 0) {
         this.fileSelectId = this.folderList[index].children[0].id;
         this.fileSelectName = this.folderList[index].children[0].name;
+        this.getScreenTabsById();
         return;
       }
       this.getFirstScreen(list, index + 1);
+    },
+    /**
+     * @description 获取大屏分页
+     */
+    async getScreenTabsById() {
+      let loadingInstance = Loading.service({
+        lock: true,
+        text: '加载中...',
+        target: document.querySelector('.screen-manage'),
+      });
+      // 先获取大屏对应的页签信息
+      const result = await this.$server.screenManage.getScreenTabs(this.fileSelectId);
+      if (result && result.code === 200) {
+        this.tabs = [].concat(result.rows);
+        this.tabActive = result.rows[0].id;
+        this.getScreenDetailByTabId(this.tabActive);
+      } else {
+        result.msg && this.$message.error(result.msg);
+      }
+      loadingInstance.close();
+    },
+    /**
+     * @description 获取大屏分页详情
+     */
+    async getScreenDetailByTabId(tabId) {
+      const result = await this.$server.screenManage.getScreenDetailById(this.fileSelectId, tabId);
+      if (result && result.code === 200) {
+        this.$store.commit('common/SET_PRIVILEGES', result.data.privileges || []);
+      } else {
+        this.$message.error(result.msg);
+      }
     },
     // 搜索文件
     menuSearch: debounce(function (event) {
@@ -649,7 +854,10 @@ export default {
             this.$store.dispatch('dataModel/setSelectedModelList', []);
             this.$router.push({
               name: 'screenEdit',
-              query: { id: res },
+              query: {
+                id: res,
+                model: 'add',
+              },
             });
             this.fileSelectName = values.name;
             // 新建默认赋予所有权限
@@ -686,18 +894,16 @@ export default {
     },
     // 编辑大屏
     editScreen() {
-      if (!this.screenId) {
+      if (!this.fileSelectId) {
         this.$message.error(' 请先添加大屏目录数据或者选择一个大屏目录');
         return;
       }
-      // 编辑大屏默认缩放是0.65
-      this.SetCanvasRange(0.65);
       this.$store.dispatch('dataModel/setSelectedModelList', []);
       this.$router.push({
         name: 'screenEdit',
         query: {
           id: this.fileSelectId,
-          tabId: this.pageList[0].id,
+          tabId: this.tabActive,
         },
       });
     },
@@ -750,6 +956,15 @@ export default {
     hideFolder() {
       this.folderVisible = false;
     },
+    /**
+     * @description 全屏
+     */
+    handleChangeBoardModel() {
+      this.$store.commit(boardMutaion.SET_BOARD_MODEL, {
+        model: this.parameter.FULLSCREEN,
+      });
+    },
+    // TODO: 删除
     // 打开全屏
     openScreen() {
       this.$store.dispatch('SetIsScreen', true);
@@ -774,6 +989,7 @@ export default {
         }
       });
     },
+    // TODO: 删除
     /**
      * 是否全屏并按键ESC键的方法
      */
@@ -933,4 +1149,74 @@ export default {
 
 <style lang="styl" scoped>
 @import './screenCatalog.styl';
+</style>
+<style lang="less">
+.drawing-board-preview {
+  color: black;
+  font-family: sans-serif;
+  overflow: hidden;
+  height: calc(100% - 29px);
+
+  .reset-scrollbar {
+    &::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+    &::-webkit-scrollbar-button {
+      display: none;
+    }
+    &::-webkit-scrollbar-button {
+      display: none;
+    }
+
+    &::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    &::-webkit-scrollbar-corner {
+      background: transparent;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      border-radius: 5px;
+      background: #b8b8b8;
+    }
+
+    &::-webkit-scrollbar-thumb:hover {
+      background: #9f9f9f;
+    }
+  }
+
+  .preview-board-app {
+    height: 100%;
+    position: relative;
+    .drawing-board-content,
+    .drawing-board-page-tools {
+      position: absolute;
+      right: 0;
+      left: 0;
+    }
+    .drawing-board-content {
+      top: 0;
+    }
+  }
+
+  @name: ~'board-chart-unit';
+  .@{name}-wrapper {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+
+    .@{name}-title {
+      height: 40px;
+      line-height: 40px;
+      font-family: avenir, 'PingFang SC', 'Microsoft YaHei', Arial, sans-serif;
+      word-break: break-all;
+    }
+    .@{name} {
+      width: 100%;
+      height: calc(100% - 50px);
+    }
+  }
+}
 </style>

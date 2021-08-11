@@ -252,7 +252,7 @@ export default {
      */
     handleOutEdit() {
       this.$router.push({
-        path: '/screen',
+        name: 'catalog',
       });
     },
   },

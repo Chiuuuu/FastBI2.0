@@ -134,12 +134,19 @@ export default {
         this.isShowShapMover = true;
       }
     },
+    model(val) {
+      val === parameter.EDIT ? this.initContextMenu() : this.destoryContextMenu();
+    },
   },
   mounted() {
-    this.initContextMenu();
+    if (this.model === parameter.EDIT) {
+      this.initContextMenu();
+    }
   },
   beforeDestroy() {
-    this.destoryContextMenu();
+    if (this.model === parameter.EDIT) {
+      this.destoryContextMenu();
+    }
   },
   methods: {
     /**

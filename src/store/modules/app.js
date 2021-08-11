@@ -272,7 +272,7 @@ const app = {
           }
           // 需求改动，删除图表跟模型删除分开
           //   dispatch('dataModel/setSelectedModelList', res.data)
-          dispatch('SingleSelected', null);
+          // dispatch('SingleSelected', null);
           dispatch('HideContextMenu');
           // 保存图层顺序
           dispatch('saveScreenData');

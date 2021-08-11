@@ -45,6 +45,19 @@ const actions = {
     state.commit('SET_TOKEN', token);
     window.localStorage.setItem('tokenInfo', JSON.stringify({ token: token }));
   },
+  /**
+   * @description 销毁右键菜单
+   */
+  destroy_context_menu() {
+    const mark = document.querySelector('#js-context-menu-mark');
+    if (mark) {
+      document.body.removeChild(mark);
+    }
+    const contextmenu = document.querySelector('#js-context-menu');
+    if (contextmenu) {
+      document.body.removeChild(contextmenu);
+    }
+  },
 };
 
 export default {
