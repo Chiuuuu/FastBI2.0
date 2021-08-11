@@ -85,6 +85,12 @@ export default {
       if (this.dropDataFilter) {
         addClass(this.dropDataFilter, 'drop-start');
       }
+
+      // 数据排序
+      this.dropDataSort = document.querySelector('.js-drop-data-sort');
+      if (this.dropDataSort) {
+        addClass(this.dropDataSort, 'drop-start');
+      }
     },
     /**
      * @description 设置拖拽结束时放置区样式
@@ -95,6 +101,10 @@ export default {
       }
       if (this.dropDataFilter) {
         removeClass(this.dropDataFilter, 'drop-start');
+      }
+
+      if (this.dropDataSort) {
+        removeClass(this.dropDataSort, 'drop-start');
       }
     },
     /**
@@ -144,6 +154,7 @@ export default {
 
           this.handleIsDragInDrop(mouseEvent, this.dropList, dragdrop);
           this.handleIsDragInDrop(mouseEvent, this.dropDataFilter, dragdrop);
+          this.handleIsDragInDrop(mouseEvent, this.dropDataSort, dragdrop);
         },
         ondragend: (dragdrop, mouseEvent) => {
           this.$store.commit('dragdrop/SET_DRAG', {
@@ -154,12 +165,16 @@ export default {
           });
           const b = dragdrop.checkMouseInTarget(mouseEvent, this.dropList);
           const c = dragdrop.checkMouseInTarget(mouseEvent, this.dropDataFilter);
+          const d = dragdrop.checkMouseInTarget(mouseEvent, this.dropDataSort);
           if (b) {
             dragdrop.drop = this.dropList;
             this.dropType = this.boardSettingWrapper.DROG_TYPE.LIST;
           } else if (c) {
             dragdrop.drop = this.dropDataFilter;
             this.dropType = this.boardSettingWrapper.DROG_TYPE.DATAFILTER;
+          } else if (d) {
+            dragdrop.drop = this.dropDataSort;
+            this.dropType = this.boardSettingWrapper.DROG_TYPE.DATASORT;
           }
           this.handleSetDragEndDropsStyle();
         },
@@ -173,6 +188,9 @@ export default {
             },
             [this.boardSettingWrapper.DROG_TYPE.DATAFILTER]: () => {
               this.$EventBus.$emit('drop:dataFilter', this.data);
+            },
+            [this.boardSettingWrapper.DROG_TYPE.DATASORT]: () => {
+              this.$EventBus.$emit('drop:dataSort', this.data);
             },
           };
 

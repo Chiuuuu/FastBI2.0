@@ -49,6 +49,22 @@
                   </UnitDataFilter>
                   <!-- 数据筛选 end -->
                 </CollapsePanel>
+                <CollapsePanel class="content-item" panel="dataSort" header="排序">
+                  <!-- 数据排序 start -->
+                  <UnitDataSort
+                    class="setting-unit-content"
+                    type="dataSort"
+                    label="拖入字段"
+                    limit
+                    :openAggre="true"
+                    :list="currentCom.setting.data.options.sort"
+                  >
+                    <template #tip>
+                      <UnitTip content="应用于当前图层"></UnitTip>
+                    </template>
+                  </UnitDataSort>
+                  <!-- 数据排序 end -->
+                </CollapsePanel>
               </Collapse>
             </TabPanel>
             <TabPanel tab="style" label="样式">
@@ -326,7 +342,7 @@ export default {
   data() {
     return {
       tabAcitve: 'style', // tab选项栏活动目标
-      dataCollapseActive: ['dimension', 'measure', 'reset'], // 折叠打开选项
+      dataCollapseActive: ['dimension', 'measure', 'dataFilter', 'dataSort', 'reset'], // 折叠打开选项
       styleCollapseActive: [],
       colorModal: false,
       cacheBarColors: [].concat(this.currentCom.setting.style.echart.customBarColors),

@@ -4,6 +4,7 @@ import UnitBorder from './components/border.vue';
 import UnitCheckbox from './components/checkbox.vue';
 import UnitConnect from './components/connect.vue';
 import UnitDataFilter from './components/data-filter.vue';
+import UnitDataSort from './components/data-sort.vue';
 import UnitField from './components/field.vue';
 import UnitPosition from './components/position.vue';
 import UnitSize from './components/size.vue';
@@ -22,6 +23,7 @@ const UnitList = [
   UnitCheckbox,
   UnitConnect,
   UnitDataFilter,
+  UnitDataSort,
   UnitField,
   UnitPosition,
   UnitSize,

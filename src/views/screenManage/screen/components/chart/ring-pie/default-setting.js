@@ -10,6 +10,13 @@ export default merge(cloneDeep(BASE), {
     data: {
       progress: [], // 进度
       targe: [], // 目标
+      options: {
+        //数据筛选、排序
+        imensionsLimit: [], // 数据筛选 -- 拖入的维度
+        measuresLimit: [], // 数据筛选 -- 拖入的度量
+        fileList: [], // 数据筛选 -- 拖入的维度、度量
+        sort: [], //数据排序
+      },
     },
     style: {
       echart: {

@@ -162,6 +162,11 @@ export default {
       type: String,
       required: true,
     },
+    openAggre: {
+      // 是否开启聚合函数
+      type: Boolean,
+      default: false,
+    },
     list: {
       // 需要渲染的列表
       type: Array,
@@ -199,7 +204,7 @@ export default {
           '选项10',
           '选项11',
         ],
-        indeterminate: '', //全选 -- 样式控制
+        indeterminate: false, //全选 -- 样式控制
         checkAll: false,
         checkedList: [],
         manualList: ['111'],
@@ -420,7 +425,6 @@ export default {
      * @description 字段删除
      */
     handleFiledDelete(mouseEvent, handler, currentVM, item) {
-      console.log(item);
       this.handleDropField({
         dropType: this.type,
         data: item,
@@ -484,7 +488,7 @@ export default {
      * @description 维度-列表 选择
      */
     onCheckChange(checkedList) {
-      this.currentFile.indeterminate = !!checkedList.length && checkedList.length < this.currentFile.searchList.length;
+      this.currentFile.indeterminate = checkedList.length && checkedList.length < this.currentFile.searchList.length;
       this.currentFile.checkAll = checkedList.length === this.currentFile.searchList.length;
     },
     /**
@@ -494,6 +498,7 @@ export default {
       Object.assign(this.currentFile, {
         checkedList: e.target.checked ? this.currentFile.searchList : [],
         checkAll: e.target.checked,
+        indeterminate: false,
       });
     },
     /**

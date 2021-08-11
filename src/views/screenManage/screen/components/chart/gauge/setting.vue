@@ -64,7 +64,13 @@
                 </CollapsePanel>
                 <CollapsePanel class="content-item" panel="dataFilter" header="数据筛选">
                   <!-- 数据筛选 start -->
-                  <UnitDataFilter class="setting-unit-content">
+                  <UnitDataFilter
+                    class="setting-unit-content"
+                    type="dataFilter"
+                    label="拖入字段"
+                    limit
+                    :list="currentCom.setting.data.options.fileList"
+                  >
                     <template #tip>
                       <UnitTip content="应用于当前图层"></UnitTip>
                     </template>
@@ -484,7 +490,7 @@ export default {
   data() {
     return {
       tabAcitve: 'style', // tab选项栏活动目标
-      dataCollapseActive: ['progress', 'range', 'targe'], // 折叠打开选项
+      dataCollapseActive: ['progress', 'range', 'targe', 'dataFilter'], // 折叠打开选项
       styleCollapseActive: [],
     };
   },

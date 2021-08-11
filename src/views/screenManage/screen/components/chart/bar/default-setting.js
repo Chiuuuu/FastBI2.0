@@ -10,7 +10,8 @@ export default merge(cloneDeep(BASE), {
       dimensions: [], // 维度
       measures: [], // 度量
       options: {
-        dimensionsLimit: [], // 数据筛选 -- 拖入的维度
+        //数据筛选、排序
+        imensionsLimit: [], // 数据筛选 -- 拖入的维度
         measuresLimit: [], // 数据筛选 -- 拖入的度量
         fileList: [], // 数据筛选 -- 拖入的维度、度量
         sort: [], //数据排序

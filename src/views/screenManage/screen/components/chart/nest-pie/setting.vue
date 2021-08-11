@@ -46,12 +46,34 @@
                 </CollapsePanel>
                 <CollapsePanel class="content-item" panel="dataFilter" header="数据筛选">
                   <!-- 数据筛选 start -->
-                  <UnitDataFilter class="setting-unit-content">
+                  <UnitDataFilter
+                    class="setting-unit-content"
+                    type="dataFilter"
+                    label="拖入字段"
+                    limit
+                    :list="currentCom.setting.data.options.fileList"
+                  >
                     <template #tip>
                       <UnitTip content="应用于当前图层"></UnitTip>
                     </template>
                   </UnitDataFilter>
                   <!-- 数据筛选 end -->
+                </CollapsePanel>
+                <CollapsePanel class="content-item" panel="dataSort" header="排序">
+                  <!-- 数据排序 start -->
+                  <UnitDataSort
+                    class="setting-unit-content"
+                    type="dataSort"
+                    label="拖入字段"
+                    limit
+                    :openAggre="true"
+                    :list="currentCom.setting.data.options.sort"
+                  >
+                    <template #tip>
+                      <UnitTip content="应用于当前图层"></UnitTip>
+                    </template>
+                  </UnitDataSort>
+                  <!-- 数据排序 end -->
                 </CollapsePanel>
               </Collapse>
             </TabPanel>
@@ -279,7 +301,7 @@ export default {
   data() {
     return {
       tabAcitve: 'style', // tab选项栏活动目标
-      dataCollapseActive: ['dimension', 'measure', 'reset'], // 折叠打开选项
+      dataCollapseActive: ['dimension', 'measure', 'reset', 'dataFilter', 'dataSort'], // 折叠打开选项
       styleCollapseActive: [],
     };
   },
