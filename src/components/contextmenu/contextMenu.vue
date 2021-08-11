@@ -88,17 +88,23 @@ export default {
         this.styleObj = {};
         return;
       }
-      // 浏览器可视区域的高度(兼容处理)
+      // 浏览器可视区域的高度和宽度(兼容处理)
       const clientHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
-      // 获取列表高度
+      const clientWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+      // 获取列表高度和宽度
       const ctxMenuDomHeight = this.$refs.ctxMenuRef.offsetHeight;
+      const ctxMenuDomWidth = this.$refs.ctxMenuRef.offsetWidth;
       // 点击目标的位置
       const targetY = this.target.clientY;
+      const targetX = this.target.clientX;
       // 是否超过底部
       const isMoreThanBottom = targetY + ctxMenuDomHeight - clientHeight > 0;
       const top = isMoreThanBottom ? targetY - ctxMenuDomHeight : targetY;
+      // 是否超过右部
+      const isMoreThanRight = targetX + ctxMenuDomWidth - clientWidth > 0;
+      const left = isMoreThanRight ? targetX - ctxMenuDomWidth : targetX;
       this.styleObj = {
-        left: this.target.clientX + 'px',
+        left: left + 'px',
         top: top + 'px',
       };
     },
