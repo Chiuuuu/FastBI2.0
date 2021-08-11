@@ -16,12 +16,7 @@
 
           <!-- 数据总面板 start -->
           <a-spin class="data-panel-box" :spinning="spinning">
-            <DataPanel
-              :dimension="dimension"
-              :measure="measure"
-              :selectFiled="selectFiled"
-              @changeRole="handleChangeRole"
-            ></DataPanel>
+            <DataPanel :dimension="dimension" :measure="measure" :selectFiled="selectFiled"></DataPanel>
           </a-spin>
           <!-- 数据总面板 end -->
         </div>
@@ -50,12 +45,7 @@
 
           <!-- 数据总面板 start -->
           <a-spin class="data-panel-box" :spinning="spinning">
-            <DataPanel
-              :dimension="dimension"
-              :measure="measure"
-              :selectFiled="selectFiled"
-              @changeRole="handleChangeRole"
-            ></DataPanel>
+            <DataPanel :dimension="dimension" :measure="measure" :selectFiled="selectFiled"></DataPanel>
           </a-spin>
           <!-- 数据总面板 end -->
         </div>
@@ -96,10 +86,16 @@ export default {
     DataSourceMenu,
     DataSourceListPanel,
   },
+  provide() {
+    return {
+      getResourceType: () => this.resourceType,
+    };
+  },
   data() {
     return {
       showDataModel: false, // 是否显示数据模型列表
       showDataSource: false, // 是否显示数据接入列表
+      resourceType: 8, // 8是模型, 3是接入(只用于传参时给后端判断, 不是数据库字段)
       tabAcitve: 'showDataModel', //  选中的tabKey
       selectFiled: {}, // 搜索字段选中的字段
       currentModel: null, // 当前选中的模型
@@ -169,22 +165,12 @@ export default {
     handleChangeTab(key) {
       // 切换时, 默认恢复成列表窗口
       this[key] = false;
-      // // 切换时, 维度度量也要相应切换(没有选中值时显示为空)
-      // if (key === 'showDataModel') {
-      //   if (this.currentModel) {
-      //     this.handleGetPivoSchemaList(this.currentModel.id);
-      //   } else {
-      //     this.dimension = [];
-      //     this.measure = [];
-      //   }
-      // } else if (key === 'showDataSource') {
-      //   if (this.currentSource) {
-      //     this.handleGetPivoSchemaList(this.currentSource.id);
-      //   } else {
-      //     this.dimension = [];
-      //     this.measure = [];
-      //   }
-      // }
+      // 切换时, 维度度量也要相应切换(没有选中值时显示为空)
+      if (key === 'showDataModel') {
+        this.resourceType = 8;
+      } else if (key === 'showDataSource') {
+        this.resourceType = 3;
+      }
     },
     /**
      * @description 打开/关闭 数据模型列表
@@ -225,18 +211,6 @@ export default {
       } else if (this.tabAcitve === 'showDataSource') {
         this.sourceDimension = dimension;
         this.sourceMeasure = measure;
-      }
-    },
-    /**
-     * @description 转换维度度量
-     */
-    handleChangeRole({ data, index }) {
-      if (data.role === 1) {
-        data.role === 2;
-        this.measure.push(this.dimension.splice(index, 1)[0]);
-      } else if (data.role === 2) {
-        data.role === 1;
-        this.dimension.push(this.measure.splice(index, 1)[0]);
       }
     },
   },

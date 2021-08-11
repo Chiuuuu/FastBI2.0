@@ -71,6 +71,7 @@ export default {
     // 2. 初始化为编辑模式
     this.$store.commit(boardMutaion.RESETSTATE);
     this.initEdit();
+    this.$store.commit('SET_SCREEN_ID', this.$route.query.id);
     // // 初始化为编辑模式
     // this.$store.commit(boardMutaion.SET_BOARD_MODEL, {
     //   model: this.parameter.EDIT,
