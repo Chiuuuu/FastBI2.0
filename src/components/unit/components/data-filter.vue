@@ -43,21 +43,41 @@
             <br />
             <div class="pick-checkbox-box hasborder">
               <div class="scrollbar">
-                <a-checkbox>全选</a-checkbox>
-                <a-checkbox-group class="f-flexcolumn" :options="currentFile.searchList" />
+                <a-checkbox
+                  :checked="currentFile.checkAll"
+                  :indeterminate="currentFile.indeterminate"
+                  @change="onCheckAllChange"
+                >
+                  全选
+                </a-checkbox>
+                <a-checkbox-group
+                  class="f-flexcolumn"
+                  v-model="currentFile.checkedList"
+                  :options="currentFile.searchList"
+                  @change="onCheckChange"
+                />
               </div>
             </div>
           </div>
           <!--手动-->
           <div class="item" v-if="currentFile.operation === 'manual'">
-            <a-input type="text" :class="['pick-input']" placeholder="请输入内容"></a-input>
-            <a-button type="primary">添加</a-button>
+            <a-input
+              type="text"
+              :class="['pick-input']"
+              placeholder="请输入内容"
+              v-model="currentFile.inputCon"
+            ></a-input>
+            <a-button type="primary" @click="handleAddCon">添加</a-button>
             <br />
             <div class="pick-checkbox-box">
               <div class="scrollbar">
-                <div class="pick-property" v-for="item in currentFile.manualList" :key="item">
+                <div class="pick-property" v-for="(item, index) in currentFile.manualList" :key="item">
                   <span>{{ item }}</span>
-                  <a-icon type="close" class="pick-icon-close" />
+                  <a-icon
+                    type="close"
+                    class="pick-icon-close"
+                    @click="deleList(currentFile.manualList, item, undefined, index)"
+                  />
                 </div>
               </div>
             </div>
@@ -66,7 +86,7 @@
         <!-- 维度 end -->
         <!-- 度量 start-->
         <div v-else>
-          <a-button type="primary" @click="addCondition">添加条件</a-button>
+          <a-button type="primary" @click="addDimensionsCondition">添加条件</a-button>
           <div class="pick-checkbox-box" style="margin: 0; padding: 0">
             <div class="scrollbar">
               <br />
@@ -96,7 +116,11 @@
                   class="inputnumber"
                   style="text-overflow: clip"
                 ></a-input-number>
-                <a-icon type="close" class="pick-icon-close" />
+                <a-icon
+                  type="close"
+                  class="pick-icon-close"
+                  @click="deleList(currentFile.conditionList, item, undefined, index)"
+                />
               </div>
             </div>
           </div>
@@ -175,9 +199,14 @@ export default {
           '选项10',
           '选项11',
         ],
+        indeterminate: '', //全选 -- 样式控制
+        checkAll: false,
+        checkedList: [],
         manualList: ['111'],
         // 度量
+        inputCon: '',
         conditionList: [],
+        type: 1, //1只显示 2排除
       },
       currentType: '', //当前选中的类型
       currentData: {}, //当前弹框字段数据
@@ -452,9 +481,32 @@ export default {
     },
     // ------弹框
     /**
-     * @description 度量添加条件
+     * @description 维度-列表 选择
      */
-    addCondition() {
+    onCheckChange(checkedList) {
+      this.currentFile.indeterminate = !!checkedList.length && checkedList.length < this.currentFile.searchList.length;
+      this.currentFile.checkAll = checkedList.length === this.currentFile.searchList.length;
+    },
+    /**
+     * @description 维度-列表 全选
+     */
+    onCheckAllChange(e) {
+      Object.assign(this.currentFile, {
+        checkedList: e.target.checked ? this.currentFile.searchList : [],
+        checkAll: e.target.checked,
+      });
+    },
+    /**
+     * @description 维度-手动添加内容
+     */
+    handleAddCon() {
+      this.currentFile.manualList.push(this.currentFile.inputCon);
+      this.currentFile.inputCon = '';
+    },
+    /**
+     * @description 度量-添加条件
+     */
+    addDimensionsCondition() {
       if (this.currentFile.conditionList.length < 5) {
         this.currentFile.conditionList.push({
           condition: 'range', // 条件选择，显示
@@ -466,10 +518,46 @@ export default {
         this.$message.error('限制只能添加5个');
       }
     },
+    /**
+     * @description 度量-条件选择变化
+     */
+    changeCondition() {},
+    /**
+     * @description 维度-手动、度量-条件：数组删除数据
+     * @param {array} list
+     * @param {any} data
+     * @param {number} index
+     */
+    deleList(list, data, key, index) {
+      arrayDeleData(list, data, key, index);
+    },
   },
 };
 </script>
 <style lang="less" scoped>
+@deep: ~'>>>';
+@{deep} .ant-modal-content {
+  font-size: 12px !important;
+  .ant-modal-body {
+    padding: 15px 24px;
+  }
+  .ant-radio-wrapper,
+  .ant-btn,
+  .ant-select,
+  .ant-checkbox-wrapper,
+  .ant-input {
+    font-size: 12px;
+  }
+  .ant-checkbox-indeterminate {
+    .ant-checkbox-inner {
+      background-color: #617bff;
+      &::after {
+        height: 1px;
+        background-color: #fff;
+      }
+    }
+  }
+}
 .pilly-item {
   cursor: inherit !important;
 }
@@ -483,8 +571,8 @@ export default {
   }
   .pick-checkbox-box {
     overflow: hidden;
-    height: 200px;
-    margin: 10px 0;
+    height: 220px;
+    margin: 0;
     padding: 13px 0 13px 13px;
   }
   .hasborder {
@@ -533,6 +621,7 @@ export default {
   }
   .inputnumber {
     width: 100px;
+    font-size: 12px;
   }
   .symbol {
     margin: 0 5px;
