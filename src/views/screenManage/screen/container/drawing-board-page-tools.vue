@@ -81,6 +81,21 @@ import Slider from '@/components/slider/slider';
  */
 export default {
   name: 'DrawdingBoardPageTools',
+  props: {
+    tabs: {
+      // 标签列表
+      type: Array,
+      required: true,
+    },
+    value: {
+      type: [String, Number],
+      default: '',
+    },
+  },
+  model: {
+    prop: 'value',
+    event: 'change',
+  },
   components: {
     Slider,
   },

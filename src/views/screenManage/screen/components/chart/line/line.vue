@@ -51,7 +51,7 @@ export default {
     getDefaultData() {
       this.serverData = null;
       const options = this.doWithOptions(defaultData);
-      this.updateSaveChart(options);
+      this.chartInstane.setOption(options);
     },
     /**
      * @description 处理 图表样式 线形

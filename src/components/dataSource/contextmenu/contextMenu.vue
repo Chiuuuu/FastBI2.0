@@ -1,5 +1,5 @@
 <template>
-  <div v-if="renderMenus.length > 0" class="m-overlay m-overlay-shadow" :style="styleObj">
+  <div v-if="renderMenus.length > 0" class="m-overlay m-overlay-shadow" id="js-context-menu" :style="styleObj">
     <div class="m-ctxMenu" ref="ctxMenuRef">
       <ul>
         <li class="z-clickable" v-for="item in renderMenus" :key="item.name" @click="handleItemClick($event, item)">

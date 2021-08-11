@@ -7,6 +7,7 @@ var instance = '';
 var ContextMenu = function (options) {
   var defaultOpitons = options || {};
   let mark = document.createElement('div');
+  mark.id = 'js-context-menu-mark';
   mark.className = 'm-window mask-transparent';
   mark.style.zIndex = '1001';
 

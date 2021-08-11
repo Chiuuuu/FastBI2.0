@@ -21,6 +21,7 @@
 <script>
 import BoardPageSetting from '../components/page/setting';
 import BoardTextSetting from '../components/text/setting';
+import BoardImageSetting from '../components/image/setting';
 import ShapeLineSetting from '../components/shape/line/setting';
 import ShapeRoundSetting from '../components/shape/round/setting';
 import ShapeRectangularSetting from '../components/shape/rectangular/setting';
@@ -95,6 +96,7 @@ export default {
     ChartProgressSetting,
     ChartTableSetting,
     BoardTextSetting,
+    BoardImageSetting,
   },
   computed: {
     ...mapState({

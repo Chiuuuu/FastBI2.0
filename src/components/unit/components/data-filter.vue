@@ -1,32 +1,226 @@
 <template>
   <div class="unit-data-filter">
     <div class="unit-field">
-      <div class="dropable js-drop-data-filter">
+      <div class="dropable js-drop-data-filter" ref="js-dropable">
         <div class="drop-area">
           <div class="drop-body">
-            <div class="body-empty">拖入字段</div>
+            <!-- 当有字段拖入的时候 start -->
+            <div v-if="list.length" class="pillys">
+              <div
+                class="pilly-item mb-6"
+                :style="{ backgroundColor: item.file == 'dimensions' ? '#4a90e2' : '#40c0a8', color: '#fff' }"
+                v-for="item in list"
+                :key="item.id"
+                @click="showModel(item)"
+              >
+                <p class="text">{{ item.name }}</p>
+                <div class="suffix-btn" @click.stop="handleFiledOps($event, item)"></div>
+              </div>
+            </div>
+            <!-- 当有字段拖入的时候 start -->
+            <div class="body-empty">
+              <p class="text">{{ label }}</p>
+            </div>
+            <!-- <div class="body-empty">拖入字段</div> -->
           </div>
         </div>
       </div>
     </div>
     <slot name="tip"></slot>
-    <a-modal v-model="visible" title="Basic Modal" @ok="handleOk">
-      <p>Some contents...</p>
-      <p>Some contents...</p>
-      <p>Some contents...</p>
+    <!-- 数据筛选 弹窗 -->
+    <a-modal v-model="visible" title="数据筛选" @ok="handleOk">
+      <div class="data-filter-modal">
+        <!-- 维度 start -->
+        <div v-if="currentType === 'dimensions'">
+          <a-radio-group v-model="currentFile.operation">
+            <a-radio :value="'list'">列表</a-radio>
+            <a-radio :value="'manual'">手动</a-radio>
+          </a-radio-group>
+          <!-- 列表 -->
+          <div class="item" v-if="currentFile.operation === 'list'">
+            <a-input type="text" :class="['pick-input']" placeholder="请输入搜索内容"></a-input>
+            <a-button type="primary">查询</a-button>
+            <br />
+            <div class="pick-checkbox-box hasborder">
+              <div class="scrollbar">
+                <a-checkbox>全选</a-checkbox>
+                <a-checkbox-group class="f-flexcolumn" :options="currentFile.searchList" />
+              </div>
+            </div>
+          </div>
+          <!--手动-->
+          <div class="item" v-if="currentFile.operation === 'manual'">
+            <a-input type="text" :class="['pick-input']" placeholder="请输入内容"></a-input>
+            <a-button type="primary">添加</a-button>
+            <br />
+            <div class="pick-checkbox-box">
+              <div class="scrollbar">
+                <div class="pick-property" v-for="item in currentFile.manualList" :key="item">
+                  <span>{{ item }}</span>
+                  <a-icon type="close" class="pick-icon-close" />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- 维度 end -->
+        <!-- 度量 start-->
+        <div v-else>
+          <a-button type="primary" @click="addCondition">添加条件</a-button>
+          <div class="pick-checkbox-box" style="margin: 0; padding: 0">
+            <div class="scrollbar">
+              <br />
+              <div :class="['pick-condition-box']" v-for="(item, index) in currentFile.conditionList" :key="index">
+                <a-select
+                  :class="['pick-select', 'has-margin']"
+                  v-model="item.condition"
+                  @change="changeCondition(item)"
+                >
+                  <a-select-option v-for="option in conditionOptions" :key="option.label" :value="option.op">
+                    {{ option.label }}
+                  </a-select-option>
+                </a-select>
+                <a-input-number
+                  v-model="item.firstValue"
+                  size="default"
+                  placeholder="请输入数值"
+                  class="inputnumber"
+                  style="text-overflow: clip"
+                ></a-input-number>
+                <span class="symbol" v-show="item.condition === 'range'">-</span>
+                <a-input-number
+                  v-show="item.condition === 'range'"
+                  v-model="item.secondValue"
+                  size="default"
+                  placeholder="请输入数值"
+                  class="inputnumber"
+                  style="text-overflow: clip"
+                ></a-input-number>
+                <a-icon type="close" class="pick-icon-close" />
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- 度量 end-->
+        <a-radio-group v-model="currentFile.type">
+          <a-radio :value="1">只显示</a-radio>
+          <a-radio :value="2">排除</a-radio>
+        </a-radio-group>
+
+        <template slot="footer">
+          <a-button key="cancel" @click="screenVisible = false">取消</a-button>
+          <a-button key="submit" type="primary" style="background: '#617BFF'">确定</a-button>
+        </template>
+      </div>
     </a-modal>
   </div>
 </template>
 <script>
+import { mapState } from 'vuex';
+import { addClass, removeClass } from '@/utils/dom';
+import ContextMenu from '@/components/contextmenu';
+import { arrayAddData, arrayDeleData } from '@/utils';
+import { mutationTypes as historyMutation } from '@/store/modules/history';
+import { DROG_TYPE } from '@/views/screenManage/screen/container/drawing-board-setting.vue';
 /**
  * @description 数据筛选设置
  */
 export default {
   name: 'UnitDataFilter',
+  props: {
+    type: {
+      // 类型
+      type: String,
+      default: '',
+    },
+    label: {
+      // 标题
+      type: String,
+      required: true,
+    },
+    list: {
+      // 需要渲染的列表
+      type: Array,
+      default: () => [],
+    },
+  },
   data() {
     return {
       visible: false, // 是否显示弹窗
+      screenVisible: false,
+      searchList: [],
+      conditionOptions: [
+        { label: '范围', op: 'range' },
+        { label: '大于', op: 'more' },
+        { label: '小于', op: 'less' },
+        { label: '大于等于', op: 'moreOrEqual' },
+        { label: '小于等于', op: 'lessOrEqual' },
+        { label: '等于', op: 'equal' },
+        { label: '不等于', op: 'notEqual' },
+      ], // 条件选项
+      currentFile: {
+        // 当前选中的维度/度量数据
+        // 维度
+        operation: 'list', //list列表，manual手动
+        searchList: [
+          '选项1',
+          '选项2',
+          '选项3',
+          '选项4',
+          '选项5',
+          '选项6',
+          '选项7',
+          '选项8',
+          '选项9',
+          '选项10',
+          '选项11',
+        ],
+        manualList: ['111'],
+        // 度量
+        conditionList: [],
+      },
+      currentType: '', //当前选中的类型
+      currentData: {}, //当前弹框字段数据
     };
+  },
+  computed: {
+    ...mapState({
+      currentCom: state => state.board.currentCom,
+      dragdropState: state => state.dragdrop,
+    }),
+  },
+  watch: {
+    dragdropState: {
+      deep: true,
+      handler(dragdrop) {
+        // 如果状态不存在
+        if (!dragdrop.status) return;
+
+        // 数组
+        // if (Array.isArray(this.receive)) {
+        //   if (!this.receive.includes(dragdrop.dropType)) return;
+        // } else if (dragdrop.dropType !== this.receive) {
+        //   // 字符串
+        //   return;
+        // }
+        this.currentType = dragdrop.data.file;
+
+        // 根据状态执行方法
+        const status = {
+          dragmove: this.handleDragmove,
+          dragend: this.handleDragend,
+        };
+
+        const fn = status[dragdrop.status];
+
+        if (!fn) {
+          return console.error(`There is no status: [${dragdrop.status}]`);
+        }
+
+        const dropDom = this.$refs['js-dropable'];
+        fn(dropDom, dragdrop);
+      },
+    },
   },
   mounted() {
     this.$EventBus.$on('drop:dataFilter', this.showModel);
@@ -35,13 +229,318 @@ export default {
     this.$EventBus.$off('drop:dataFilter', this.showModel);
   },
   methods: {
-    showModel() {
+    showModel(item) {
+      if (item) {
+        this.currentType = item.file;
+        this.currentData = item;
+      }
       this.visible = true;
     },
     handleOk(e) {
       console.log(e);
       this.visible = false;
+      this.handleDropField({
+        dropType: this.type,
+        data: this.currentData,
+      });
+    },
+    /**
+     * @description 校验鼠标是否在放置区中
+     * @param {object} mouseEvent 鼠标
+     * @param {object} target 放置区
+     */
+    checkMouseInTarget(mouseEvent, target) {
+      if (target) {
+        const x = mouseEvent.clientX;
+        const y = mouseEvent.clientY;
+        const left = target.getBoundingClientRect().left;
+        const right = target.getBoundingClientRect().right;
+        const top = target.getBoundingClientRect().top;
+        const bottom = target.getBoundingClientRect().bottom;
+        return x >= left && x <= right && y >= top && y <= bottom;
+      } else {
+        return false;
+      }
+    },
+    /**
+     * @description 判断拖拽是否在放置区
+     */
+    handleIsDragInDrop(target, dragdrop) {
+      if (target) {
+        const isMouseOnTarget = this.checkMouseInTarget(dragdrop.mouseEvent, target);
+        if (isMouseOnTarget) {
+          this.handleSetDragoverDropStyle(target);
+        } else {
+          this.handleSetDragleaveDropStyle(target);
+        }
+      }
+    },
+    /**
+     * @description 设置拖拽进入放置区样式
+     */
+    handleSetDragoverDropStyle(drop) {
+      drop && addClass(drop, 'drop-over');
+    },
+    /**
+     * @description 设置拖拽离开放置区样式
+     */
+    handleSetDragleaveDropStyle(drop) {
+      drop && removeClass(drop, 'drop-over');
+    },
+    /**
+     * @description 设置拖拽移动过程
+     */
+    handleDragmove(dropDom, dragdrop) {
+      // 拖拽过程中的样式
+      addClass(dropDom, 'drop-start');
+
+      // 判断是否拖拽是否在放置区
+      this.handleIsDragInDrop(dropDom, dragdrop);
+    },
+    /**
+     * @description 设置拖拽结束
+     */
+    handleDragend(dropDom, dragdrop) {
+      // 依次样式
+      removeClass(dropDom, 'drop-start');
+
+      // 判断结束的时候，拖拽是否在放置区
+      const isMouseOnTarget = this.checkMouseInTarget(dragdrop.mouseEvent, dropDom);
+      if (isMouseOnTarget) {
+        // 如果在，则放入
+        this.handleDrop(dropDom, dragdrop);
+      }
+    },
+    handleDrop(dropDom, dragdrop) {
+      // 移除放入的样式
+      this.handleSetDragleaveDropStyle(dropDom);
+      this.handleDropField({
+        dropType: this.type,
+        data: dragdrop.data,
+      });
+    },
+    /**
+     * @description 字段放置之后执行
+     * @param {object} options
+     * @param {string} options.dropType 放置的类型
+     * @param {any} options.data 放置的数据
+     * @param {string} options.method 放置的方法
+     */
+    handleDropField({ dropType, data, method }) {
+      // 有弹框时，不执行
+      if (this.visible == true) {
+        this.currentData = arguments[0].data;
+        return;
+      }
+      const funs = {
+        [DROG_TYPE.DATAFILTER]: this.handleSetDataFilter,
+      };
+
+      const fun = funs[dropType];
+      if (!fun) {
+        return console.error(`There is no drag-in method: [${dropType}]`);
+      }
+
+      const result = fun(data, method);
+      if (result && typeof result.justSkip === 'undefined') {
+        this.$store.commit(historyMutation.COMMAND, {
+          commandType: 'Data',
+          target: this.currentCom,
+          store: this.$store,
+          eventBus: this.$EventBus,
+          data: result,
+        });
+      }
+    },
+    /**
+     * @description 列表公共处理方法
+     * @param {array} list 列表
+     * @param {any} data 数据
+     * @param {string} method 方法
+     */
+    handleList(list, data, method = 'add') {
+      if (method === 'add') {
+        // 如果数据有重复则直接返回
+        if (list.includes(data)) return list;
+
+        arrayAddData(list, data);
+      } else if (method === 'dele') {
+        arrayDeleData(list, data);
+      }
+      return list;
+    },
+    /**
+     * @description 当放置到数据筛选
+     */
+    handleSetDataFilter(data, method = 'add') {
+      let options = Object.assign({}, this.currentCom.setting.data.options);
+      options[this.currentType + 'Limit'] = this.conversionArry(this.currentType + 'Limit', data, method);
+      options['fileList'] = this.conversionArry('fileList', data, method);
+
+      return { options };
+    },
+    /**
+     * @description 公共转换成数组
+     */
+    conversionArry(key, data, method) {
+      let arry = [].concat(this.currentCom.setting.data.options[key]);
+      arry = this.handleList(arry, data, method);
+      return arry;
+    },
+    /**
+     * @description 字段删除
+     */
+    handleFiledDelete(mouseEvent, handler, currentVM, item) {
+      console.log(item);
+      this.handleDropField({
+        dropType: this.type,
+        data: item,
+        method: 'dele',
+      });
+    },
+    /**
+     * @description 获取右键菜单
+     */
+    getOpsMenu() {
+      const normal = [
+        {
+          name: '删除',
+          onClick: this.handleFiledDelete,
+        },
+      ];
+      const aggrengation = [
+        {
+          name: '聚合方式',
+          children: [
+            {
+              name: '平均',
+              onClick: this.handleFiledDelete,
+            },
+          ],
+        },
+      ];
+      return this.openAggre ? [...normal, ...aggrengation] : normal;
+    },
+    /**
+     * @description 点击开启右键菜单
+     */
+    handleFiledOps(event, item) {
+      const that = this;
+      this.currentType = item.file;
+      function addEvent(target) {
+        target.$$fun = function () {
+          Array.prototype.push.call(arguments, that, item);
+          target.onClick.apply(this, arguments);
+        };
+      }
+      // eslint-disable-next-line no-new
+      new ContextMenu({
+        vm: that,
+        menus: that.getOpsMenu().map(item => {
+          if (item['children'] && item.children.length) {
+            item.children.forEach(subitem => {
+              addEvent(subitem);
+            });
+          } else {
+            addEvent(item);
+          }
+          return item;
+        }),
+        target: event,
+        handleMarkCancel: function () {},
+      });
+    },
+    // ------弹框
+    /**
+     * @description 度量添加条件
+     */
+    addCondition() {
+      if (this.currentFile.conditionList.length < 5) {
+        this.currentFile.conditionList.push({
+          condition: 'range', // 条件选择，显示
+          action: '', // 条件选择，实际
+          firstValue: '',
+          secondValue: '',
+        });
+      } else {
+        this.$message.error('限制只能添加5个');
+      }
     },
   },
 };
 </script>
+<style lang="less" scoped>
+.pilly-item {
+  cursor: inherit !important;
+}
+.data-filter-modal {
+  .pick-input {
+    width: 400px;
+    height: 32px;
+    border: 1px solid #e5e5e5;
+    border-radius: 4px;
+    margin: 13px 4px 5px 0;
+  }
+  .pick-checkbox-box {
+    overflow: hidden;
+    height: 200px;
+    margin: 10px 0;
+    padding: 13px 0 13px 13px;
+  }
+  .hasborder {
+    border: 1px solid #e5e5e5;
+    border-radius: 2px;
+  }
+  .scrollbar {
+    margin-bottom: -17px;
+    margin-right: -11px;
+    overflow: auto;
+    height: 100%;
+    overflow-x: hidden;
+  }
+  .f-flexcolumn {
+    display: flex;
+    flex-direction: column;
+  }
+  .pick-property {
+    padding: 0 3px;
+    width: 200px;
+    display: flex;
+    justify-content: space-between;
+    font-size: 14px;
+  }
+  .pick-icon-close {
+    background: rgba(0, 0, 0, 0.65);
+    color: #fff;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    line-height: 14px;
+    font-size: 9px;
+    cursor: pointer;
+  }
+  .pick-condition-box {
+    position: relative;
+    display: flex;
+    align-items: center;
+    margin: 10px 20px 10px 0;
+  }
+  .pick-select {
+    width: 200px;
+  }
+  .pick-select.has-margin {
+    margin-right: 10px;
+  }
+  .inputnumber {
+    width: 100px;
+  }
+  .symbol {
+    margin: 0 5px;
+  }
+  .pick-condition-box {
+    .pick-icon-close {
+      margin-left: 15px;
+    }
+  }
+}
+</style>
