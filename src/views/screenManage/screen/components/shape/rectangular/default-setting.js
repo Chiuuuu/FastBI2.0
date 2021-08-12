@@ -11,11 +11,11 @@ export default merge(cloneDeep(BASE), {
         border: {
           width: 1,
           style: 'solid',
-          color: '#fff',
+          color: '#000',
           radius: 0,
         },
         background: {
-          color: 'red',
+          color: '#fff',
         },
         opacity: 1,
       },

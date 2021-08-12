@@ -487,7 +487,7 @@ export default {
      * @description 维度-列表 选择
      */
     onCheckChange(checkedList) {
-      this.currentFile.indeterminate = checkedList.length && checkedList.length < this.currentFile.searchList.length;
+      this.currentFile.indeterminate = !!checkedList.length && checkedList.length < this.currentFile.searchList.length;
       this.currentFile.checkAll = checkedList.length === this.currentFile.searchList.length;
     },
     /**

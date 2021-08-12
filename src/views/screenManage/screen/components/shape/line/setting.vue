@@ -22,6 +22,7 @@
                   <UnitSize
                     class="setting-unit-content"
                     :size="currentCom.setting.style.size"
+                    :heightMax="20"
                     @change="size => handleChange('size', size)"
                   ></UnitSize>
                   <!-- 尺寸 end -->
@@ -69,6 +70,40 @@
                           </a-select>
                         </a-col>
                         <!-- 边框 类型 end -->
+                      </a-row>
+                    </div>
+                    <!-- 线条阴影 -->
+                    <div class="unit-boxShadow">
+                      <a-row class="unit-show-block mb-8">
+                        <a-col :span="6">
+                          <div class="unit-block-title">线条阴影</div>
+                        </a-col>
+                        <!-- 线条阴影 start -->
+                        <a-col :span="16" :offset="2">
+                          <UnitCheckbox
+                            class="show-btn"
+                            label="启用"
+                            style="top: -3px"
+                            :value="currentCom.setting.style.echart.boxShadow ? true : false"
+                            @change="value => handleBoxShadowChange(value)"
+                          ></UnitCheckbox>
+                        </a-col>
+                        <!-- 线条阴影 end -->
+                      </a-row>
+                      <a-row class="unit-show-block mb-8" v-if="currentCom.setting.style.echart.boxShadow">
+                        <a-col :span="6">
+                          <div class="unit-block-title">线条颜色</div>
+                        </a-col>
+                        <!-- 线条颜色 start -->
+                        <a-col :span="16" :offset="2">
+                          <div class="shadow-color">
+                            <ColorPicker
+                              :value="currentCom.setting.style.echart.shadowColor"
+                              @change="color => handleshadowColorChange(color)"
+                            ></ColorPicker>
+                          </div>
+                        </a-col>
+                        <!-- 线条颜色 end -->
                       </a-row>
                     </div>
                   </div>
@@ -167,6 +202,29 @@ export default {
       });
     },
     /**
+     * @description 线条阴影 启用设置
+     */
+    handleBoxShadowChange(value, color) {
+      let boxShadow = '';
+      if (value || color) {
+        boxShadow = `0 ${this.currentCom.setting.style.size.height / 2}px ${
+          this.currentCom.setting.style.size.height
+        }px ${this.currentCom.setting.style.echart.shadowColor}`;
+      }
+      this.handleChange('echart', {
+        boxShadow,
+      });
+    },
+    /**
+     * @description 线条颜色
+     */
+    handleshadowColorChange(shadowColor) {
+      this.handleChange('echart', {
+        shadowColor,
+      });
+      this.handleBoxShadowChange('', shadowColor);
+    },
+    /**
      * 求新坐标
      * @param {*} x 初始x坐标
      * @param {*} y 初始y坐标
@@ -191,3 +249,10 @@ export default {
   },
 };
 </script>
+<style lang="less" scoped>
+@import url('@/assets/less/mixins/set-color-picker.less');
+.shadow-color {
+  .set-color-picker();
+  height: 26px;
+}
+</style>
