@@ -199,7 +199,7 @@ export default {
       let measure = [];
       if (res && res.code === 200) {
         dimension = res.data.dimensions || [];
-        measure = res.data.measure || [];
+        measure = res.data.measures || [];
       } else {
         this.dimension = [];
         this.measure = [];

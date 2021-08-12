@@ -126,6 +126,16 @@
             </div>
           </li>
           <!-- 形状 end -->
+          <!-- 素材库 start -->
+          <li class="btn-item" @click="openSourceModal">
+            <div class="tool-btn">
+              <div class="u-icon">
+                <i class="bi-data bi-data-line-chart"></i>
+              </div>
+              <span class="text">素材库</span>
+            </div>
+          </li>
+          <!-- 素材库 end -->
         </ul>
       </div>
       <!-- 图表工具栏 end -->
@@ -151,6 +161,13 @@
         </ul>
       </div>
       <!-- 预览退出 end -->
+
+      <!-- 素材库模态框 -->
+      <ScreenSourceModal
+        :visible="sourceModalVisible"
+        @close="sourceModalVisible = false"
+        @sourceSelect="getSelectedSource"
+      />
     </div>
   </header>
   <!-- 工具栏 end -->
@@ -166,6 +183,7 @@ import boardSetting from '@/views/screenManage/screen/setting';
 import { mutationTypes as historyMutation } from '@/store/modules/history';
 import { parameter, mutationTypes as boardMutaion } from '@/store/modules/board';
 import { mapState } from 'vuex';
+import ScreenSourceModal from '../components/screen-source/modal';
 
 /**
  * @description 编辑大屏菜单工具栏
@@ -179,7 +197,11 @@ export default {
       shapeList, // 形状列表
       BoardType, // 图表类型
       screenName: '未命名大屏',
+      sourceModalVisible: false, // 素材库模态框
     };
+  },
+  components: {
+    ScreenSourceModal,
   },
   computed: {
     ...mapState({
@@ -196,25 +218,55 @@ export default {
   },
   methods: {
     /**
+     * @description 打开素材库
+     */
+    openSourceModal() {
+      this.sourceModalVisible = true;
+    },
+    /**
+     * @description 获取选中的素材库
+     */
+    getSelectedSource(data) {
+      console.log(data);
+      const mergeObj = {
+        setting: {
+          data: {
+            imgUrl: data.filePath,
+            name: data.name,
+          },
+          style: {
+            title: {
+              text: data.name,
+            },
+          },
+        },
+      };
+      this.handleAddChart(BoardType.Source, mergeObj);
+      this.sourceModalVisible = false;
+    },
+    /**
      * @description 获取形状列表
      */
     getShapList() {},
     /**
      * @description 添加图表
      */
-    handleAddChart(type) {
+    handleAddChart(type, mergeObj = {}) {
       const id = generateID();
-      const component = merge(cloneDeep(boardSetting[type]), {
-        id,
-        setting: {
-          style: {
-            title: {
-              text: `未命名图表${id}`,
+      const component = merge(
+        cloneDeep(boardSetting[type]),
+        {
+          id,
+          setting: {
+            style: {
+              title: {
+                text: `未命名图表${id}`,
+              },
             },
           },
         },
-      });
-
+        mergeObj,
+      );
       this.$store.commit(boardMutaion.ADD_COM, {
         component,
       });

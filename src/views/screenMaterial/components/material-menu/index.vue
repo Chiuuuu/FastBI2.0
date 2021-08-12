@@ -137,12 +137,6 @@ export default {
         list: this.categoryList.slice(1),
       });
     },
-    /**
-     * 是否为文件夹
-     */
-    handleIsFolder(item) {
-      return item.fileType === 0;
-    },
     // 添加分组
     handleCategoryAdd(params) {
       if (params.name === '默认分组') {

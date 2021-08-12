@@ -46,6 +46,7 @@ import ChartProgress from '../components/progress/progress';
 import ChartTable from '../components/table/table';
 import BoardText from '../components/text/text';
 import BoardImage from '../components/image/image';
+import BoardSource from '../components/screen-source/source';
 import ShapeLine from '../components/shape/line/line';
 import ShapeRound from '../components/shape/round/round';
 import ShapeRectangular from '../components/shape/rectangular/rectangular';
@@ -77,6 +78,7 @@ export default {
     ChartTable,
     BoardText,
     BoardImage,
+    BoardSource,
   },
   props: {
     components: {

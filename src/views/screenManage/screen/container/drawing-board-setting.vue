@@ -22,6 +22,7 @@
 import BoardPageSetting from '../components/page/setting';
 import BoardTextSetting from '../components/text/setting';
 import BoardImageSetting from '../components/image/setting';
+import BoardSourceSetting from '../components/screen-source/setting';
 import ShapeLineSetting from '../components/shape/line/setting';
 import ShapeRoundSetting from '../components/shape/round/setting';
 import ShapeRectangularSetting from '../components/shape/rectangular/setting';
@@ -97,6 +98,7 @@ export default {
     ChartTableSetting,
     BoardTextSetting,
     BoardImageSetting,
+    BoardSourceSetting,
   },
   computed: {
     ...mapState({
