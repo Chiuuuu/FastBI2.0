@@ -8,7 +8,7 @@
             <div v-if="list.length" class="pillys">
               <div
                 class="pilly-item mb-6"
-                :style="{ backgroundColor: item.file == 'dimensions' ? '#4a90e2' : '#40c0a8', color: '#fff' }"
+                :style="{ backgroundColor: item.role === 1 ? '#4a90e2' : '#40c0a8', color: '#fff' }"
                 v-for="item in list"
                 :key="item.id"
               >
@@ -17,7 +17,7 @@
                     style="font-weight: bolder"
                     :type="item.asc === 1 ? 'icon-paixu-5' : 'icon-paixu-3'"
                   ></icon-font>
-                  {{ item.name }}
+                  {{ formatAggregator(item) }}
                 </p>
                 <div class="suffix-btn" @click.stop="handleFiledOps($event, item)"></div>
               </div>
@@ -76,43 +76,33 @@ export default {
   },
   data() {
     return {
-      visible: false, // 是否显示弹窗
-      screenVisible: false,
-      searchList: [],
-      conditionOptions: [
-        { label: '范围', op: 'range' },
-        { label: '大于', op: 'more' },
-        { label: '小于', op: 'less' },
-        { label: '大于等于', op: 'moreOrEqual' },
-        { label: '小于等于', op: 'lessOrEqual' },
-        { label: '等于', op: 'equal' },
-        { label: '不等于', op: 'notEqual' },
-      ], // 条件选项
-      currentFile: {
-        // 当前选中的维度/度量数据
-        // 维度
-        operation: 'list', //list列表，manual手动
-        searchList: [
-          '选项1',
-          '选项2',
-          '选项3',
-          '选项4',
-          '选项5',
-          '选项6',
-          '选项7',
-          '选项8',
-          '选项9',
-          '选项10',
-          '选项11',
+      polymerizeType: {
+        normal: [
+          { name: '升序', value: 1, onClick: this.handleFiledAsc },
+          { name: '降序', value: 2, onClick: this.handleFiledAsc },
+          { name: '移除', value: '', onClick: this.handleFiledDelete },
         ],
-        indeterminate: '', //全选 -- 样式控制
-        checkAll: false,
-        checkedList: [],
-        manualList: ['111'],
-        // 度量
-        inputCon: '',
-        conditionList: [],
-        type: 1, //1只显示 2排除
+        dimensions: [
+          {
+            name: '聚合方式',
+            children: [
+              { name: '计数', value: 'CNT', onClick: this.handFiledAggrengation },
+              { name: '去重计数', value: 'DCNT', onClick: this.handFiledAggrengation },
+            ],
+          },
+        ],
+        measures: [
+          {
+            name: '聚合方式',
+            children: [
+              { name: '求和', value: 'SUM', onClick: this.handFiledAggrengation },
+              { name: '平均', value: 'AVG', onClick: this.handFiledAggrengation },
+              { name: '最大值', value: 'MAX', onClick: this.handFiledAggrengation },
+              { name: '最小值', value: 'MIN', onClick: this.handFiledAggrengation },
+              { name: '计数', value: 'CNT', onClick: this.handFiledAggrengation },
+            ],
+          },
+        ],
       },
       currentType: '', //当前选中的类型
       currentData: {}, //当前弹框字段数据
@@ -125,6 +115,9 @@ export default {
     }),
   },
   watch: {
+    currentCom(val) {
+      console.log(val, 'val-----');
+    },
     dragdropState: {
       deep: true,
       handler(dragdrop) {
@@ -138,7 +131,7 @@ export default {
         //   // 字符串
         //   return;
         // }
-        this.currentType = dragdrop.data.file;
+        this.currentType = dragdrop.data.role === 1 ? 'dimensions' : 'measures';
 
         // 根据状态执行方法
         const status = {
@@ -260,7 +253,6 @@ export default {
           data: result,
         });
       }
-      console.log(this.currentCom);
     },
     /**
      * @description 列表公共处理方法
@@ -284,7 +276,7 @@ export default {
      */
     handleSetDataSort(data, method = 'add') {
       let options = Object.assign({}, this.currentCom.setting.data.options);
-      data.asc = 1; //初始拖入默认升序
+      data = Object.assign({}, data, { asc: 1 }); //初始拖入默认升序 asc=1
       options['sort'] = this.conversionArry('sort', data, method);
       return { options };
     },
@@ -326,49 +318,50 @@ export default {
         eventBus: this.$EventBus,
         data: { options },
       });
-      console.log(this.currentCom);
+    },
+    /**
+     * @description 字段聚合方式
+     */
+    handFiledAggrengation(mouseEvent, handler, currentVM, item) {
+      if (handler.value === item.defaultAggregator) {
+        return;
+      }
+      let options = Object.assign({}, this.currentCom.setting.data.options);
+      options['sort'].forEach(data => {
+        if (data.id == item.id) {
+          data.defaultAggregator = handler.value;
+        }
+      });
+      this.$store.commit(historyMutation.COMMAND, {
+        commandType: 'Data',
+        target: this.currentCom,
+        store: this.$store,
+        eventBus: this.$EventBus,
+        data: { options },
+      });
+    },
+    /**
+     * @description 字段聚合方式
+     */
+    formatAggregator(item) {
+      let type = item.role === 1 ? 'dimensions' : 'measures';
+      const fun = this.polymerizeType[type][0]['children'].find(x => x.value === item.defaultAggregator);
+      return `${item.alias} (${fun.name})`;
     },
     /**
      * @description 获取右键菜单
      * @param {String} type 字段类型-维度/度量
      */
     getOpsMenu(type) {
-      const normal = [
-        { name: '升序', value: 1, onClick: this.handleFiledAsc },
-        { name: '降序', value: 2, onClick: this.handleFiledAsc },
-        { name: '移除', value: '', onClick: this.handleFiledDelete },
-      ];
-      const aggrengation =
-        type == 'dimensions'
-          ? [
-              {
-                name: '聚合方式',
-                children: [
-                  { name: '计数', value: 'CNT', onClick: this.handleFiledDelete },
-                  { name: '去重计数', value: 'DCNT', onClick: this.handleFiledDelete },
-                ],
-              },
-            ]
-          : [
-              {
-                name: '聚合方式',
-                children: [
-                  { name: '求和', value: 'SUM', onClick: this.handleFiledDelete },
-                  { name: '平均', value: 'AVG', onClick: this.handleFiledDelete },
-                  { name: '最大值', value: 'MAX', onClick: this.handleFiledDelete },
-                  { name: '最小值', value: 'MIN', onClick: this.handleFiledDelete },
-                  { name: '计数', value: 'CNT', onClick: this.handleFiledDelete },
-                ],
-              },
-            ];
-      return this.openAggre ? [...aggrengation, ...normal] : normal;
+      const aggrengation = this.polymerizeType[type];
+      return this.openAggre ? [...aggrengation, ...this.polymerizeType['normal']] : this.polymerizeType['normal'];
     },
     /**
      * @description 点击开启右键菜单
      */
     handleFiledOps(event, item) {
       const that = this;
-      this.currentType = item.file;
+      this.currentType = item.role === 1 ? 'dimensions' : 'measures';
       function addEvent(target) {
         target.$$fun = function () {
           Array.prototype.push.call(arguments, that, item);
@@ -378,7 +371,7 @@ export default {
       // eslint-disable-next-line no-new
       new ContextMenu({
         vm: that,
-        menus: that.getOpsMenu(item.file).map(item => {
+        menus: that.getOpsMenu(this.currentType).map(item => {
           if (item['children'] && item.children.length) {
             item.children.forEach(subitem => {
               addEvent(subitem);

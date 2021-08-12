@@ -8,7 +8,7 @@
             <div v-if="list.length" class="pillys">
               <div
                 class="pilly-item mb-6"
-                :style="{ backgroundColor: item.file == 'dimensions' ? '#4a90e2' : '#40c0a8', color: '#fff' }"
+                :style="{ backgroundColor: item.role === 1 ? '#4a90e2' : '#40c0a8', color: '#fff' }"
                 v-for="item in list"
                 :key="item.id"
                 @click="showModel(item)"
@@ -236,7 +236,7 @@ export default {
         //   // 字符串
         //   return;
         // }
-        this.currentType = dragdrop.data.file;
+        this.currentType = dragdrop.data.role === 1 ? 'dimensions' : 'measures';
 
         // 根据状态执行方法
         const status = {
@@ -264,7 +264,7 @@ export default {
   methods: {
     showModel(item) {
       if (item) {
-        this.currentType = item.file;
+        this.currentType = item.role === 1 ? 'dimensions' : 'measures';
         this.currentData = item;
       }
       this.visible = true;
@@ -458,7 +458,7 @@ export default {
      */
     handleFiledOps(event, item) {
       const that = this;
-      this.currentType = item.file;
+      this.currentType = item.role === 1 ? 'dimensions' : 'measures';
       function addEvent(target) {
         target.$$fun = function () {
           Array.prototype.push.call(arguments, that, item);
