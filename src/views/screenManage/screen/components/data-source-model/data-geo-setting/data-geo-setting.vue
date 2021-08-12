@@ -78,7 +78,7 @@
 <script>
 import optionObj from './map-options';
 import echarts from 'echarts';
-import guangZhouJson from '@/utils/guangdong.json';
+import guangZhouJson from '@/utils/guangzhou.json';
 import matchWindow from './match-window';
 const colu = [
   {
