@@ -77,7 +77,7 @@
 
 <script>
 import optionObj from './map-options';
-import echarts from 'echarts';
+import * as echarts from 'echarts';
 import guangZhouJson from '@/utils/guangzhou.json';
 import matchWindow from './match-window';
 const colu = [
@@ -177,9 +177,7 @@ export default {
     },
   },
   mounted() {
-    this.$nextTick(() => {
-      this.drawMap();
-    });
+    this.drawMap();
     // this.getProvinceList()
     this.getDimensionsDatas();
   },
@@ -227,6 +225,12 @@ export default {
       }
     },
     drawMap() {
+      if (!this.$refs.mapChart) {
+        this.$nextTick(() => {
+          this.drawMap();
+        });
+        return;
+      }
       this.myChart = echarts.init(this.$refs.mapChart);
       echarts.registerMap('guangzhou', guangZhouJson);
       let option = optionObj;
