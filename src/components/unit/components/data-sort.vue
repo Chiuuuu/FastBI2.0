@@ -12,7 +12,13 @@
                 v-for="item in list"
                 :key="item.id"
               >
-                <p class="text">{{ item.name }}</p>
+                <p class="text">
+                  <icon-font
+                    style="font-weight: bolder"
+                    :type="item.asc === 1 ? 'icon-paixu-5' : 'icon-paixu-3'"
+                  ></icon-font>
+                  {{ item.name }}
+                </p>
                 <div class="suffix-btn" @click.stop="handleFiledOps($event, item)"></div>
               </div>
             </div>
@@ -20,7 +26,6 @@
             <div class="body-empty">
               <p class="text">{{ label }}</p>
             </div>
-            <!-- <div class="body-empty">拖入字段</div> -->
           </div>
         </div>
       </div>
@@ -35,11 +40,18 @@ import ContextMenu from '@/components/contextmenu';
 import { arrayAddData, arrayDeleData } from '@/utils';
 import { mutationTypes as historyMutation } from '@/store/modules/history';
 import { DROG_TYPE } from '@/views/screenManage/screen/container/drawing-board-setting.vue';
+import { Icon } from 'ant-design-vue';
+const IconFont = Icon.createFromIconfontCN({
+  scriptUrl: '//at.alicdn.com/t/font_2276651_mlklp2yb77i.js',
+}); // 引入iconfont
 /**
  * @description 数据排序设置
  */
 export default {
   name: 'UnitDataSort',
+  components: {
+    IconFont,
+  },
   props: {
     type: {
       // 类型
@@ -145,12 +157,6 @@ export default {
       },
     },
   },
-  // mounted() {
-  //   // this.$EventBus.$on('drop:dataFilter', this.showModel);
-  // },
-  // beforeDestroy() {
-  //   // this.$EventBus.$off('drop:dataFilter', this.showModel);
-  // },
   methods: {
     /**
      * @description 校验鼠标是否在放置区中
@@ -254,6 +260,7 @@ export default {
           data: result,
         });
       }
+      console.log(this.currentCom);
     },
     /**
      * @description 列表公共处理方法
@@ -273,12 +280,12 @@ export default {
       return list;
     },
     /**
-     * @description 当放置到数据筛选
+     * @description 当放置到数据排序
      */
     handleSetDataSort(data, method = 'add') {
       let options = Object.assign({}, this.currentCom.setting.data.options);
+      data.asc = 1; //初始拖入默认升序
       options['sort'] = this.conversionArry('sort', data, method);
-
       return { options };
     },
     /**
@@ -293,7 +300,6 @@ export default {
      * @description 字段删除
      */
     handleFiledDelete(mouseEvent, handler, currentVM, item) {
-      console.log(mouseEvent, handler, currentVM, item);
       this.handleDropField({
         dropType: this.type,
         data: item,
@@ -304,15 +310,23 @@ export default {
      * @description 字段升序/降序
      */
     handleFiledAsc(mouseEvent, handler, currentVM, item) {
-      console.log(mouseEvent, handler, currentVM, item);
       if (handler.value === item.asc) {
         return;
       }
-      // this.handleDropField({
-      //   dropType: this.type,
-      //   data: item,
-      //   method: 'dele',
-      // });
+      let options = Object.assign({}, this.currentCom.setting.data.options);
+      options['sort'].forEach(data => {
+        if (data.id == item.id) {
+          data.asc = handler.value;
+        }
+      });
+      this.$store.commit(historyMutation.COMMAND, {
+        commandType: 'Data',
+        target: this.currentCom,
+        store: this.$store,
+        eventBus: this.$EventBus,
+        data: { options },
+      });
+      console.log(this.currentCom);
     },
     /**
      * @description 获取右键菜单

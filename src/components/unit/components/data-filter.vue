@@ -21,7 +21,6 @@
             <div class="body-empty">
               <p class="text">{{ label }}</p>
             </div>
-            <!-- <div class="body-empty">拖入字段</div> -->
           </div>
         </div>
       </div>
