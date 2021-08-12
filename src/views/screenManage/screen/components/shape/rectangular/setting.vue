@@ -56,6 +56,8 @@
                     <!-- 边框设置 start -->
                     <UnitBorder
                       :border="currentCom.setting.style.echart.border"
+                      :widthMax="20"
+                      :radiusMax="70"
                       @change="handleBorderChange"
                     ></UnitBorder>
                     <!-- 边框设置 end -->

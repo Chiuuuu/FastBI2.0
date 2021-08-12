@@ -52,7 +52,6 @@
                       </a-col>
                       <!-- 透明度 end -->
                     </a-row>
-
                     <div class="unit-border">
                       <a-row class="unit-show-block mb-8">
                         <a-col :span="4">
@@ -74,6 +73,7 @@
                           <a-input-number
                             :value="currentCom.setting.style.echart.border.width"
                             :min="0"
+                            :max="20"
                             @change="width => handleChange('echart', { border: { width } })"
                           />
                         </a-col>

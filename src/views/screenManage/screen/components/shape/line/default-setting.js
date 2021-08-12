@@ -8,7 +8,7 @@ export default merge(cloneDeep(BASE), {
   setting: {
     style: {
       size: {
-        height: 20,
+        height: 2,
         width: 400,
       },
       echart: {
@@ -18,6 +18,8 @@ export default merge(cloneDeep(BASE), {
         },
         opacity: 1,
         rotate: 0,
+        boxShadow: '',
+        shadowColor: '#fff',
       },
     },
   },

@@ -58,7 +58,7 @@ export default {
       const {
         style: {
           size,
-          echart: { border, opacity },
+          echart: { border, opacity, boxShadow },
         },
       } = this.options;
 
@@ -68,6 +68,7 @@ export default {
 
       let style = {
         opacity,
+        boxShadow,
       };
 
       style = getStyle(style, checkProps, [], ['border']);

@@ -284,11 +284,10 @@ export default {
       .pillys {
         .pilly-item {
           padding: 0 18px;
-          height: 20px;
-          line-height: 18px;
+          height: 24px;
+          line-height: 22px;
           position: relative;
           border-radius: 100px;
-          position: relative;
           &:hover {
             .suffix-btn {
               display: block;

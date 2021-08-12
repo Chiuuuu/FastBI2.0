@@ -14,7 +14,12 @@
 
       <!-- 边框 大小 start -->
       <a-col :span="16">
-        <a-input-number :value="border.width" :min="0" @change="width => handleChange('border', { width })" />
+        <a-input-number
+          :value="border.width"
+          :min="0"
+          :max="borderWidthMax"
+          @change="width => handleChange('border', { width })"
+        />
       </a-col>
       <!-- 边框 大小 end -->
     </a-row>
@@ -37,7 +42,12 @@
         <div class="unit-block-title">边框圆角</div>
       </a-col>
       <a-col :span="16">
-        <a-input-number :value="border.radius" :min="0" @change="radius => handleChange('border', { radius })" />
+        <a-input-number
+          :value="border.radius"
+          :min="0"
+          :max="radiusMax"
+          @change="radius => handleChange('border', { radius })"
+        />
       </a-col>
     </a-row>
   </div>
@@ -53,6 +63,16 @@ export default {
       // 边框配置
       type: Object,
       default: () => {},
+    },
+    // 边框宽度最大值设置
+    widthMax: {
+      type: Number,
+      default: () => Number.POSITIVE_INFINITY,
+    },
+    // 边框圆角最大值设置
+    radiusMax: {
+      type: Number,
+      default: () => Number.POSITIVE_INFINITY,
     },
   },
   methods: {

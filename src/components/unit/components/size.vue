@@ -10,7 +10,7 @@
       </a-col>
       <a-col :span="10" class="col-offset">
         <div class="unit-block-title">H</div>
-        <a-input-number :value="size.height" :min="0" @change="val => handleChange('height', val)" />
+        <a-input-number :value="size.height" :min="0" :max="heightMax" @change="val => handleChange('height', val)" />
       </a-col>
     </a-row>
   </div>
@@ -26,6 +26,11 @@ export default {
       // 尺寸配置
       type: Object,
       required: true,
+    },
+    // 高度最大值设置
+    heightMax: {
+      type: Number,
+      default: () => Number.POSITIVE_INFINITY,
     },
   },
   methods: {
