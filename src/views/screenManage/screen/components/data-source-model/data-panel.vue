@@ -245,7 +245,6 @@ export default {
      * @description 创建地理角色
      */
     handleCreateGeoRole(e, item, vm, data) {
-      debugger;
       data.modelId = this.resourceId;
       this.createdMapData = data;
       this.createMapVisible = true;

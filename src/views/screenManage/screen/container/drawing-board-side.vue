@@ -81,6 +81,8 @@ export default {
         [BoardType.ShapeRectangular]: 'bi-data-gauge-chart',
         [BoardType.Text]: 'bi-data-bar-chart',
         [BoardType.Image]: 'bi-data-bar-chart',
+        [BoardType.ChartMap]: 'bi-data-map-charst',
+        [BoardType.Source]: 'bi-data-bar-chart',
       };
       return icon[type];
     },

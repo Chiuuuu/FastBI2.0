@@ -22,6 +22,7 @@
 import BoardPageSetting from '../components/page/setting';
 import BoardTextSetting from '../components/text/setting';
 import BoardImageSetting from '../components/image/setting';
+import BoardSourceSetting from '../components/screen-source/setting';
 import ShapeLineSetting from '../components/shape/line/setting';
 import ShapeRoundSetting from '../components/shape/round/setting';
 import ShapeRectangularSetting from '../components/shape/rectangular/setting';
@@ -39,6 +40,7 @@ import ChartHeatmapSetting from '../components/chart/heatmap/setting';
 import ChartProgressSetting from '../components/progress/setting';
 import ChartTableSetting from '../components/table/setting';
 import BoardSettingRight from '../components/board-setting-right';
+import ChartMapSetting from '../components/chart/map/setting';
 import { mapState } from 'vuex';
 
 /**
@@ -49,7 +51,7 @@ export const DROG_TYPE = {
   FIELD: 'field', // 字段
   DATAFILTER: 'dataFilter', // 数据筛选
   DATASORT: 'dataSort', // 数据排序
-  LONG: 'long', // 经度
+  LONG: 'longitude', // 经度
   DIMENSION: 'dimension', // 维度字段
   MEASURE: 'measure', // 度量字段
   RROGRESS: 'progress', // 进度值
@@ -60,6 +62,11 @@ export const DROG_TYPE = {
   MAX: 'max', // 最大值
   XAXIS: 'xaxis', // x轴
   YAXIS: 'yaxis', // y轴
+  LATITUDE: 'latitude', // 经度
+  LABELDIMENSION: 'labelDimension', // 散点维度字段
+  LABELMEASURE: 'labelMeasure', // 散点度量字段
+  LABELLONGITUDE: 'labelLongitude', // 散点经度
+  LABELLATITUDE: 'labelLatitude', // 散点纬度
 };
 
 /**
@@ -98,6 +105,8 @@ export default {
     ChartTableSetting,
     BoardTextSetting,
     BoardImageSetting,
+    ChartMapSetting,
+    BoardSourceSetting,
   },
   computed: {
     ...mapState({
