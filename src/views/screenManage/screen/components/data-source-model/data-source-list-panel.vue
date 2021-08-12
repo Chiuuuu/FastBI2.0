@@ -205,7 +205,6 @@ export default {
       // };
       // await this.$server.screenManage.screenModuleSave(params);
       item.resourceType = this.getResourceType();
-      console.log(item.resourceType, 1111111111111111111111111);
       item.resourceName = item.name;
       this.$emit('update:currentSelected', item);
       let list = this.selectedModelList.concat([item]);

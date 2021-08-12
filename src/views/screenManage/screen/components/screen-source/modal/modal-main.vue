@@ -15,8 +15,8 @@
     <a-spin :spinning="spinning" class="material-list-spin scrollbar">
       <div class="material-list-area">
         <!-- 图片 -->
-        <div class="material-list-item" v-for="item in materialList" :key="item.id" @click="handleSelectImage(item)">
-          <img class="image" :src="handleImgUrl(item)" :alt="item.name" />
+        <div class="material-list-item" v-for="item in materialList" :key="item.id">
+          <img class="image" :src="handleImgUrl(item)" :alt="item.name" @click="handleSelectImage(item)" />
           <div>{{ item.name }}</div>
         </div>
       </div>

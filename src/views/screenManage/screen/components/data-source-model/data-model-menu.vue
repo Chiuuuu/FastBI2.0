@@ -91,9 +91,7 @@ export default {
      * @description 选择数据模型
      */
     handleSelectDataModel(item) {
-      this.currentSelected = item;
       this.$emit('update:currentSelected', item);
-      this.$store.dispatch('SetDataModel', item);
     },
     /**
      * @description 维度度量字段搜索
