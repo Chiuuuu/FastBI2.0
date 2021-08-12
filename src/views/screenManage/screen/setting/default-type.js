@@ -17,6 +17,7 @@ const BoardType = {
   ChartTable: 'ChartTable',
   Text: 'BoardText',
   Image: 'BoardImage',
+  Source: 'BoardSource',
   ShapeLine: 'ShapeLine',
   ShapeRound: 'ShapeRound',
   ShapeRectangular: 'ShapeRectangular',

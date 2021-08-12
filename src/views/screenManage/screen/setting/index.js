@@ -16,6 +16,7 @@ import ChartProgress from '@/views/screenManage/screen/components/progress/defau
 import ChartTable from '@/views/screenManage/screen/components/table/default-setting';
 import BoardText from '@/views/screenManage/screen/components/text/default-setting';
 import BoardImage from '@/views/screenManage/screen/components/image/default-setting';
+import BoardSource from '@/views/screenManage/screen/components/screen-source/default-setting';
 import ShapeLine from '@/views/screenManage/screen/components/shape/line/default-setting';
 import ShapeRound from '@/views/screenManage/screen/components/shape/round/default-setting';
 import ShapeRectangular from '@/views/screenManage/screen/components/shape/rectangular/default-setting';
@@ -42,5 +43,6 @@ export default {
   BoardText,
   BoardImage,
   ChartMap,
+  BoardSource,
   Page,
 };
