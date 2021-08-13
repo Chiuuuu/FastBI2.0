@@ -8,7 +8,10 @@
             <div v-if="list.length" class="pillys">
               <div
                 class="pilly-item mb-6"
-                :style="{ backgroundColor: item.role === 1 ? '#4a90e2' : '#40c0a8', color: '#fff' }"
+                :style="{
+                  backgroundColor: judgeFiledType(item.role) === 'dimensions' ? '#4a90e2' : '#40c0a8',
+                  color: '#fff',
+                }"
                 v-for="item in list"
                 :key="item.id"
               >
@@ -124,14 +127,7 @@ export default {
         // 如果状态不存在
         if (!dragdrop.status) return;
 
-        // 数组
-        // if (Array.isArray(this.receive)) {
-        //   if (!this.receive.includes(dragdrop.dropType)) return;
-        // } else if (dragdrop.dropType !== this.receive) {
-        //   // 字符串
-        //   return;
-        // }
-        this.currentType = dragdrop.data.role === 1 ? 'dimensions' : 'measures';
+        this.currentType = this.judgeFiledType(dragdrop.data.role);
 
         // 根据状态执行方法
         const status = {
@@ -151,6 +147,13 @@ export default {
     },
   },
   methods: {
+    /**
+     * @description 判断字段类型
+     * @param {Number} role 字段类型 1维度，2度量
+     */
+    judgeFiledType(role) {
+      return role === 1 ? 'dimensions' : 'measures';
+    },
     /**
      * @description 校验鼠标是否在放置区中
      * @param {object} mouseEvent 鼠标
@@ -344,7 +347,7 @@ export default {
      * @description 字段聚合方式
      */
     formatAggregator(item) {
-      let type = item.role === 1 ? 'dimensions' : 'measures';
+      let type = this.judgeFiledType(item.role);
       const fun = this.polymerizeType[type][0]['children'].find(x => x.value === item.defaultAggregator);
       return `${item.alias} (${fun.name})`;
     },
@@ -361,7 +364,7 @@ export default {
      */
     handleFiledOps(event, item) {
       const that = this;
-      this.currentType = item.role === 1 ? 'dimensions' : 'measures';
+      this.currentType = this.judgeFiledType(item.role);
       function addEvent(target) {
         target.$$fun = function () {
           Array.prototype.push.call(arguments, that, item);
