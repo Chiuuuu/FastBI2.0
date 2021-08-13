@@ -1,3 +1,4 @@
+import DEFAULT_COLORS from './default-colors';
 /**
  * @description 默认公共配置项
  * tabs => 存放tab选项卡的
@@ -61,7 +62,9 @@ export default {
           weight: 'normal',
         },
       },
-      echart: {}, // 图表插件的配置
+      echart: {
+        color: DEFAULT_COLORS,
+      }, // 图表插件的配置
     },
     interaction: {
       // 交互

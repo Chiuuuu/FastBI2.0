@@ -141,6 +141,15 @@
                   ></UnitYaxis>
                   <!-- Y轴 end -->
                 </CollapsePanel>
+                <CollapsePanel class="content-item" panel="yaxis" header="颜色">
+                  <!-- 颜色 start -->
+                  <UnitChartColor
+                    :color="currentCom.setting.style.echart.color"
+                    type="color"
+                    @change="(key, value) => handleChange(key, value)"
+                  ></UnitChartColor>
+                  <!-- 颜色 end -->
+                </CollapsePanel>
                 <CollapsePanel class="content-item" panel="legend" header="图例">
                   <UnitLegend
                     :legend="currentCom.setting.style.echart.legend"
