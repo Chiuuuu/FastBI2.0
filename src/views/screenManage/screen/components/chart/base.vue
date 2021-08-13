@@ -40,6 +40,8 @@ export default {
         fontSize: `${style.title.font.size}px`,
         textAlign: `${style.title.font.align}`,
         marginBottom: `${style.title.marginBottom}px`,
+        fontWeight: `${style.title.font.weight}`,
+        fontFamily: `${style.title.font.family}`,
       };
     },
     chartStyle() {
