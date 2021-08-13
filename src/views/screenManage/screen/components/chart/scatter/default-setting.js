@@ -129,6 +129,9 @@ export default merge(cloneDeep(BASE), {
               color: '#fff',
             },
           },
+          axisTick: {
+            show: true,
+          },
         },
         customFormatterWay: 'nv',
         customLabel: {

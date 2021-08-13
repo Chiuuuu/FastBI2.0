@@ -264,7 +264,6 @@ export default {
         border,
       };
       style = getStyle(style, checkProps, ['width', 'height', 'left', 'top', 'radius'], ['background', 'border']);
-      console.log(style);
 
       return style;
     },

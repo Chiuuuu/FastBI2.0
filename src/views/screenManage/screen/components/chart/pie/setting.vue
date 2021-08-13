@@ -120,6 +120,15 @@
                     <!-- 边框设置 end -->
                   </div>
                 </CollapsePanel>
+                <CollapsePanel class="content-item" panel="yaxis" header="颜色">
+                  <!-- 颜色 start -->
+                  <UnitChartColor
+                    :color="currentCom.setting.style.echart.color"
+                    type="color"
+                    @change="(key, value) => handleChange(key, value)"
+                  ></UnitChartColor>
+                  <!-- 颜色 end -->
+                </CollapsePanel>
                 <CollapsePanel class="content-item" panel="legend" header="样式设置">
                   <div class="setting-unit-content">
                     <a-row class="unit-show-block mb-8">
