@@ -8,7 +8,10 @@
             <div v-if="list.length" class="pillys">
               <div
                 class="pilly-item mb-6"
-                :style="{ backgroundColor: item.role === 1 ? '#4a90e2' : '#40c0a8', color: '#fff' }"
+                :style="{
+                  backgroundColor: judgeFiledType(item.role) === 'dimensions' ? '#4a90e2' : '#40c0a8',
+                  color: '#fff',
+                }"
                 v-for="item in list"
                 :key="item.id"
                 @click="showModel(item)"
@@ -229,14 +232,7 @@ export default {
         // 如果状态不存在
         if (!dragdrop.status) return;
 
-        // 数组
-        // if (Array.isArray(this.receive)) {
-        //   if (!this.receive.includes(dragdrop.dropType)) return;
-        // } else if (dragdrop.dropType !== this.receive) {
-        //   // 字符串
-        //   return;
-        // }
-        this.currentType = dragdrop.data.role === 1 ? 'dimensions' : 'measures';
+        this.currentType = this.judgeFiledType(dragdrop.data.role);
 
         // 根据状态执行方法
         const status = {
@@ -262,13 +258,27 @@ export default {
     this.$EventBus.$off('drop:dataFilter', this.showModel);
   },
   methods: {
+    /**
+     * @description 判断字段类型
+     * @param {Number} role 字段类型 1维度，2度量
+     */
+    judgeFiledType(role) {
+      return role === 1 ? 'dimensions' : 'measures';
+    },
+    /**
+     * @description 维度、度量数据筛选弹框
+     * @param {Object} item 当前选择的字段
+     */
     showModel(item) {
       if (item) {
-        this.currentType = item.role === 1 ? 'dimensions' : 'measures';
+        this.currentType = this.judgeFiledType(item.role);
         this.currentData = item;
       }
       this.visible = true;
     },
+    /**
+     * @description 维度、度量数据筛选弹框 -- 确定
+     */
     handleOk(e) {
       console.log(e);
       this.visible = false;
@@ -458,7 +468,7 @@ export default {
      */
     handleFiledOps(event, item) {
       const that = this;
-      this.currentType = item.role === 1 ? 'dimensions' : 'measures';
+      this.currentType = this.judgeFiledType(item.role);
       function addEvent(target) {
         target.$$fun = function () {
           Array.prototype.push.call(arguments, that, item);
