@@ -1,3 +1,4 @@
+import DEFAULT_COLORS from './default-colors';
 /**
  * @description 默认公共配置项
  * tabs => 存放tab选项卡的
@@ -14,6 +15,13 @@ export default {
       expands: [],
       dataModelId: '11', // 数据模型id
       filter: {}, // 数据筛选
+      options: {
+        //数据筛选、排序
+        dimensionsLimit: [], // 数据筛选 -- 拖入的维度
+        measuresLimit: [], // 数据筛选 -- 拖入的度量
+        fileList: [], // 数据筛选 -- 拖入的维度、度量
+        sort: [], //数据排序
+      },
     },
     style: {
       // 样式
@@ -37,6 +45,7 @@ export default {
       },
       background: {
         // 背景
+        size: 0,
         color: 'black',
         image: '',
       },
@@ -53,7 +62,9 @@ export default {
           weight: 'normal',
         },
       },
-      echart: {}, // 图表插件的配置
+      echart: {
+        color: DEFAULT_COLORS,
+      }, // 图表插件的配置
     },
     interaction: {
       // 交互

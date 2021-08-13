@@ -98,6 +98,13 @@
                 </CollapsePanel>
                 <CollapsePanel class="content-item" panel="bgAndBorder" header="背景和边框">
                   <div class="setting-unit-content">
+                    <!-- 背景图片 start -->
+                    <UnitBackgroundImage
+                      class="mb-8"
+                      :background="currentCom.setting.style.background"
+                      @change="value => handleChange('background', value)"
+                    ></UnitBackgroundImage>
+                    <!-- 背景图片 end -->
                     <!-- 背景颜色 start -->
                     <UnitBackgroundColor
                       class="mb-8"
@@ -312,7 +319,16 @@
               <Collapse>
                 <CollapsePanel class="content-item" panel="connect" header="图表联动">
                   <!-- 图表联动 start -->
-                  <UnitConnect class="setting-unit-content"></UnitConnect>
+                  <UnitConnect
+                    class="setting-unit-content"
+                    :dataLinkState="currentCom.setting.style.echart.customIsOpenDataLink"
+                    @change="
+                      value =>
+                        handleChange('echart', {
+                          customIsOpenDataLink: value,
+                        })
+                    "
+                  ></UnitConnect>
                   <!-- 图表联动 end -->
                 </CollapsePanel>
               </Collapse>

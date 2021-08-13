@@ -746,6 +746,13 @@
                 </CollapsePanel>
                 <CollapsePanel class="content-item" panel="bgAndBorder" header="背景和边框">
                   <div class="setting-unit-content">
+                    <!-- 背景图片 start -->
+                    <UnitBackgroundImage
+                      class="mb-8"
+                      :background="currentCom.setting.style.background"
+                      @change="value => handleChange('background', value)"
+                    ></UnitBackgroundImage>
+                    <!-- 背景图片 end -->
                     <!-- 背景颜色 start -->
                     <UnitBackgroundColor
                       class="mb-8"
@@ -805,61 +812,15 @@ export default {
       colorModal: false,
       cacheBarColors: [].concat(this.currentCom.setting.style.echart.customBarColors),
       themeColors: ['yellow', 'blue', 'green'], // 地图填充色色系选择
-      mapFillTooltipSelectList: [
-        {
-          alias: 'diqu',
-        },
-        {
-          pivotschemaId: '580668640785190914',
-          modifyBy: '1',
-          gmtModified: '2021-08-03 10:15:31',
-          role: 2,
-          level: 0,
-          dataType: 'BIGINT',
-          gmtCreate: '2021-08-03 10:15:31',
-          screenId: '580913649205354529',
-          createBy: '1',
-          file: 'measures',
-          screenTableId: '580668632711155713',
-          name: 'renkoushuliang',
-          showMore: false,
-          defaultAggregator: 'SUM',
-          alias: 'renkoushuliang',
-          expr: '',
-          id: '582359483040518182',
-          produceType: 0,
-          status: 0,
-          resourceType: 8,
-        },
-      ],
-      mapFillPointSelectList: [
-        {
-          alias: '地区名/diqu',
-        },
-        {
-          pivotschemaId: '580668640785190914',
-          modifyBy: '1',
-          gmtModified: '2021-08-03 10:15:31',
-          role: 2,
-          level: 0,
-          dataType: 'BIGINT',
-          gmtCreate: '2021-08-03 10:15:31',
-          screenId: '580913649205354529',
-          createBy: '1',
-          file: 'measures',
-          screenTableId: '580668632711155713',
-          name: 'renkoushuliang',
-          showMore: false,
-          defaultAggregator: 'SUM',
-          alias: 'renkoushuliang',
-          expr: '',
-          id: '582359483040518182',
-          produceType: 0,
-          status: 0,
-          resourceType: 8,
-        },
-      ],
+      mapFillPointSelectList: [], // 地图填充指标选择列表
+      mapFillTooltipSelectList: [], // 地图填充提示框选择列表
+      mapLabelPointSelectList: [], // 地图标记层指标选择列表
+      mapLabelTooltipSelectList: [], // 地图标记层提示框内容选择列表
     };
+  },
+  mounted() {
+    // 构造显示内容可选列表
+    this.handleMapFormatterSelect();
   },
   methods: {
     /**
@@ -932,10 +893,40 @@ export default {
       this.handleSelect('mapStyle', 'customThemeColor', color);
       this.handleSelect('visualMap', 'inRange', { color: themeColorNMap[color] });
     },
+    /**
+     * @description 处理类型切换
+     */
     handleDataType(key, value) {
       this.handleChange('echart', {
         [key]: value,
       });
+    },
+    /**
+     * @description 初始化地图指标显示内容列表
+     */
+    handleMapFormatterSelect() {
+      // 填充
+      let { dimensions, measures } = this.currentCom.setting.data;
+      if (this.currentCom.setting.style.echart.customFillDataType === 'area') {
+        // 地区添加地区名/维度
+        let di = dimensions[0] ? dimensions[0].alias : '';
+        this.mapFillPointSelectList = [{ alias: di ? `地区名/${di}` : '' }].concat(measures);
+        this.mapFillTooltipSelectList = [{ alias: di }].concat(measures);
+      } else {
+        this.mapFillTooltipSelectList = dimensions.concat(measures);
+        this.mapFillPointSelectList = [{ alias: '地区名' }].concat(this.mapFillTooltipSelectList);
+      }
+      // 散点
+      let { labelDimensions, labelMeasures } = this.currentCom.setting.data;
+      if (this.currentCom.setting.style.echart.customLabelDataType === 'area') {
+        // 标记点添加维度
+        let labelDi = labelDimensions[0] ? labelDimensions[0].alias : '';
+        this.mapLabelPointSelectList = [{ alias: labelDi ? `地区名/${labelDi}` : '' }].concat(labelMeasures);
+        this.mapLabelTooltipSelectList = [{ alias: labelDi }].concat(labelMeasures);
+      } else {
+        this.mapLabelTooltipSelectList = labelDimensions.concat(labelMeasures);
+        this.mapLabelPointSelectList = [{ alias: '地区名' }].concat(this.mapLabelTooltipSelectList);
+      }
     },
   },
 };

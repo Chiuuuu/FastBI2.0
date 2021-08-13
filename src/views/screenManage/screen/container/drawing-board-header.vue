@@ -184,6 +184,8 @@ import { mutationTypes as historyMutation } from '@/store/modules/history';
 import { parameter, mutationTypes as boardMutaion } from '@/store/modules/board';
 import { mapState } from 'vuex';
 import ScreenSourceModal from '../components/screen-source/modal';
+import Vue from 'vue';
+import MapSelectView from '../mapSelectView';
 
 /**
  * @description 编辑大屏菜单工具栏
@@ -251,10 +253,19 @@ export default {
     /**
      * @description 添加图表
      */
-    handleAddChart(type, mergeObj = {}) {
+    handleAddChart(type, mergeObj = {}, mapOkRegion = '') {
+      // 新建地图选择区域
+      if (type === 'ChartMap' && !mapOkRegion) {
+        this.showMapSelectView();
+        return;
+      }
+      let setting = cloneDeep(boardSetting[type]);
+      if (mapOkRegion) {
+        setting.setting.style.echart.geo.map = mapOkRegion;
+      }
       const id = generateID();
       const component = merge(
-        cloneDeep(boardSetting[type]),
+        setting,
         {
           id,
           setting: {
@@ -270,6 +281,27 @@ export default {
       this.$store.commit(boardMutaion.ADD_COM, {
         component,
       });
+    },
+    /**
+     * @description 地图选择区域弹窗
+     */
+    showMapSelectView() {
+      const MapTypeView = Vue.extend(MapSelectView);
+      this.view = new MapTypeView({
+        propsData: {
+          visible: this.visible,
+        },
+      }).$mount();
+      this.view.$on('ok', region => {
+        this.view.remove();
+        this.handleAddChart('ChartMap', {}, region);
+      });
+      document.body.appendChild(this.view.$el);
+      this.view.remove = function () {
+        //  该方法用于销毁实例
+        this.$el.remove();
+        this.$destroy();
+      };
     },
     /**
      * @description 撤销功能

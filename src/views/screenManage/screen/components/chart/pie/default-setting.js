@@ -10,13 +10,6 @@ export default merge(cloneDeep(BASE), {
     data: {
       dimensions: [], // 维度
       measures: [], // 度量
-      options: {
-        //数据筛选、排序
-        imensionsLimit: [], // 数据筛选 -- 拖入的维度
-        measuresLimit: [], // 数据筛选 -- 拖入的度量
-        fileList: [], // 数据筛选 -- 拖入的维度、度量
-        sort: [], //数据排序
-      },
     },
     style: {
       echart: {
@@ -69,6 +62,7 @@ export default merge(cloneDeep(BASE), {
         customInRadius: 0, // 内半径
         customOutRadius: 65, // 外半径
         customCenter: [50, 50], // 坐标中心点
+        customIsOpenDataLink: false, // 是否开启图表联动
       },
     },
   },

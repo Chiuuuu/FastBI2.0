@@ -25,7 +25,7 @@
       <!-- 轴 颜色 end -->
 
       <!-- 轴 线 大小 start -->
-      <a-col :span="12" :offset="1">
+      <a-col :span="13">
         <a-input-number
           :value="axis.axisLine.lineStyle.width"
           :min="0"
@@ -147,6 +147,18 @@
       </a-row>
     </div>
     <!-- 轴文字相关设置 end -->
+
+    <!-- 轴刻度是否显示 start -->
+    <div class="axis-name-box mb-8">
+      <p>轴刻度</p>
+      <UnitCheckbox
+        class="show-btn"
+        label="显示"
+        :value="axis.axisTick.show"
+        @change="show => handleAxisTick('show', show)"
+      ></UnitCheckbox>
+    </div>
+    <!-- 轴刻度是否显示 end -->
   </div>
 </template>
 <script>
@@ -202,6 +214,18 @@ export default {
       this.handleChange('echart', {
         [this.type]: {
           axisLabel: {
+            [key]: value,
+          },
+        },
+      });
+    },
+    /**
+     * @description 坐标轴刻度的相关设置
+     */
+    handleAxisTick(key, value) {
+      this.handleChange('echart', {
+        [this.type]: {
+          axisTick: {
             [key]: value,
           },
         },
