@@ -17,7 +17,7 @@
         <a-input-number
           :value="border.width"
           :min="0"
-          :max="borderWidthMax"
+          :max="widthMax"
           @change="width => handleChange('border', { width })"
         />
       </a-col>

@@ -146,6 +146,10 @@ export default merge(cloneDeep(BASE), {
           fontSize: 16,
           position: 'outside',
         },
+        customItemStyle: {
+          // 图形样式
+          borderRadius: 0, //圆角半径
+        },
         customShape: 'vertical', // vertical(垂直) || horizontal(水平)
         customBarWidth: 60,
         customStack: false, // 是否开启堆叠

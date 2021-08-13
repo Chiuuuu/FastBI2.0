@@ -91,6 +91,7 @@ export default {
         this.doWithBarGap(item);
         this.doWithStack(item, echart.customStack);
         this.doWithKeyValue(item, 'label', echart.customLabel);
+        this.doWithKeyValue(item, 'itemStyle', echart.customItemStyle);
         this.doWithBarWidth(item, echart.customBarWidth, fetchData.series.length);
       });
       const legend = this.doWithlegend(fetchData.series);

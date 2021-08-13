@@ -139,7 +139,7 @@
                         <div class="unit-block-title">方向</div>
                       </a-col>
 
-                      <!-- 形状 方式 start -->
+                      <!-- 方向 start -->
                       <a-col :span="18">
                         <a-radio-group
                           name="radioGroup"
@@ -150,7 +150,25 @@
                           <a-radio value="vertical">垂直</a-radio>
                         </a-radio-group>
                       </a-col>
-                      <!-- 形状 方式 end -->
+                      <!-- 方向 end -->
+                    </a-row>
+                    <a-row class="unit-show-block mb-8">
+                      <a-col :span="6" class="unit-show-block position">
+                        <div class="unit-block-title">圆角</div>
+                      </a-col>
+                      <!-- 圆角 start -->
+                      <a-col :span="18">
+                        <!-- 圆角是否启用 start -->
+                        <UnitCheckbox
+                          class="show-btn"
+                          label="启用"
+                          style="top: -8px"
+                          :value="currentCom.setting.style.echart.customItemStyle.borderRadius ? true : false"
+                          @change="value => handleItemStyle('borderRadius', value)"
+                        ></UnitCheckbox>
+                        <!-- 圆角是否启用 end -->
+                      </a-col>
+                      <!-- 圆角 end -->
                     </a-row>
                   </div>
                 </CollapsePanel>
@@ -410,6 +428,20 @@ export default {
     handleLabel(key, value) {
       this.handleChange('echart', {
         customLabel: {
+          [key]: value,
+        },
+      });
+    },
+    /**
+     * @description 图形样式设置
+     */
+    handleItemStyle(key, value) {
+      // 圆角开启
+      if (key === 'borderRadius') {
+        value = value === true ? [50, 50, 0, 0] : 0;
+      }
+      this.handleChange('echart', {
+        customItemStyle: {
           [key]: value,
         },
       });
