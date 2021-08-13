@@ -164,6 +164,7 @@ export default merge(cloneDeep(BASE), {
           '#9a60b4',
           '#ea7ccc',
         ], // 柱状条颜色
+        customIsOpenDataLink: false, // 是否开启图表联动
       },
     },
   },

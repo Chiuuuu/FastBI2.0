@@ -62,6 +62,7 @@ export default {
     this.initChart();
     this.getChartData();
     window.addEventListener('resize', this.screenAdapter);
+    this.addClick();
   },
   destroyed() {
     window.removeEventListener('resize', this.screenAdapter);
@@ -174,6 +175,20 @@ export default {
         this.initChart();
         this.screenAdapter();
       });
+    },
+    /**
+     * @description 处理点击(图表联动)
+     */
+    addClick() {},
+    /**
+     * @description 点击时其他数据变透明(图表联动)
+     */
+    hexToRgba(hex, opacity) {
+      return hex && hex.replace(/\s+/g, '').length === 7
+        ? `rgba(${parseInt('0x' + hex.slice(1, 3))},${parseInt('0x' + hex.slice(3, 5))},${parseInt(
+            '0x' + hex.slice(5, 7),
+          )},${opacity})`
+        : '';
     },
   },
 };
