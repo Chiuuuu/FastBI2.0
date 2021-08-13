@@ -50,6 +50,7 @@ export default {
           align: 'center',
           family: 'sans-serif',
           color: 'rgb(217, 217, 217)',
+          weight: 'normal',
         },
       },
       echart: {}, // 图表插件的配置
