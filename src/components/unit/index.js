@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import UnitBackgroundColor from './components/background-color.vue';
+import UnitBackgroundImage from './components/background-image.vue';
 import UnitBorder from './components/border.vue';
 import UnitCheckbox from './components/checkbox.vue';
 import UnitConnect from './components/connect.vue';
@@ -19,6 +20,7 @@ import UnitInputField from './components/input-field.vue';
 
 const UnitList = [
   UnitBackgroundColor,
+  UnitBackgroundImage,
   UnitBorder,
   UnitCheckbox,
   UnitConnect,

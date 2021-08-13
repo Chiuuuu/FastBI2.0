@@ -6,6 +6,8 @@
       :value="title.show"
       @change="show => handleTitleChange('show', show)"
     ></UnitCheckbox>
+
+    <!-- 标题 内容 start -->
     <div class="mb-8">
       <a-input
         :value="title.text"
@@ -13,6 +15,9 @@
         @blur="event => handleTitleChange('text', event.target.value)"
       ></a-input>
     </div>
+    <!-- 标题 内容 end -->
+
+    <!-- 标题 文本 start -->
     <a-row class="unit-show-block mb-8">
       <a-col :span="4">
         <div class="unit-block-title">文本</div>
@@ -26,8 +31,11 @@
         <a-input-number :value="title.font.size" :min="0" @change="size => handleTitleFontChange('size', size)" />
       </a-col>
     </a-row>
+    <!-- 标题 文本 end -->
+
+    <!-- 标题 字体 start -->
     <a-row class="unit-show-block mb-8">
-      <a-col :span="4">
+      <a-col :span="6">
         <div class="unit-block-title">字体</div>
       </a-col>
       <a-col :span="16" :offset="2">
@@ -49,8 +57,11 @@
         </a-select>
       </a-col>
     </a-row>
+    <!-- 标题 字体 end -->
+
+    <!-- 标题 粗细 start -->
     <a-row class="unit-show-block mb-8">
-      <a-col :span="4">
+      <a-col :span="6">
         <div class="unit-block-title">粗细</div>
       </a-col>
       <a-col :span="16" :offset="2">
@@ -65,12 +76,15 @@
         </a-select>
       </a-col>
     </a-row>
+    <!-- 标题 粗细 end -->
+
+    <!-- 标题 对齐 start -->
     <a-row class="unit-show-block mb-8">
-      <a-col :span="6">
+      <a-col :span="12">
         <div class="unit-block-title">对齐</div>
       </a-col>
       <template v-for="item in align">
-        <a-col :span="5" :offset="1" :key="item">
+        <a-col :span="4" :key="item">
           <div
             class="font-align"
             :class="item === title.font.align ? 'selected' : ''"
@@ -81,6 +95,9 @@
         </a-col>
       </template>
     </a-row>
+    <!-- 标题 对齐 end -->
+
+    <!-- 标题 间隔 start -->
     <a-row class="unit-show-block">
       <a-col :span="12">
         <div class="unit-block-title">距绘图区间隔</div>
@@ -93,6 +110,7 @@
         />
       </a-col>
     </a-row>
+    <!-- 标题 间隔 end -->
   </div>
 </template>
 <script>

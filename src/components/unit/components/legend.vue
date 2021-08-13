@@ -7,9 +7,10 @@
       @change="value => handleLegend('show', value)"
     ></UnitCheckbox>
 
+    <!-- 图例 字体 start -->
     <a-row class="unit-show-block mb-8">
-      <a-col :span="6">
-        <div class="unit-block-title">设置</div>
+      <a-col :span="4">
+        <div class="unit-block-title">文本</div>
       </a-col>
       <!-- 图例 字体 颜色 start -->
       <a-col :span="4">
@@ -20,7 +21,7 @@
       <!-- 图例 字体 颜色 end -->
 
       <!-- 图例 字体 大小 start -->
-      <a-col :span="12" :offset="1">
+      <a-col :span="16">
         <a-input-number
           :min="0"
           :value="legend.textStyle.fontSize"
@@ -29,24 +30,36 @@
       </a-col>
       <!-- 图例 字体 大小 end -->
     </a-row>
+    <!-- 图例 字体 end -->
+
+    <!-- 图例 间隔 start -->
     <a-row class="unit-show-block mb-8">
-      <a-col :span="6" class="unit-show-block position">
-        <div class="unit-block-title">排列</div>
+      <a-col :span="6">
+        <div class="unit-block-title">图例间隔</div>
       </a-col>
 
-      <!-- 图例 排列方式 start -->
-      <a-col :span="18">
-        <a-radio-group
-          name="radioGroup"
-          :value="legend.orient"
-          @change="event => handleLegend('orient', event.target.value)"
-        >
-          <a-radio value="horizontal">水平</a-radio>
-          <a-radio value="vertical">垂直</a-radio>
-        </a-radio-group>
+      <a-col :span="16" :offset="2">
+        <a-input-number :min="0" :value="legend.itemGap" @change="itemGap => handleLegend('itemGap', itemGap)" />
       </a-col>
-      <!-- 图例 排列方式 end -->
     </a-row>
+    <!-- 图例 间隔 end -->
+
+    <!-- 图例 形状 start -->
+    <a-row class="unit-show-block mb-8">
+      <a-col :span="6">
+        <div class="unit-block-title">图例形状</div>
+      </a-col>
+
+      <a-col :span="16" :offset="2">
+        <a-select style="width: 100%" :value="legend.icon" @change="icon => handleLegend('icon', icon)">
+          <a-select-option value="circle">圆形</a-select-option>
+          <a-select-option value="rect">矩形</a-select-option>
+          <a-select-option value="roundRect">圆矩形</a-select-option>
+          <a-select-option value="diamond">菱形</a-select-option>
+        </a-select>
+      </a-col>
+    </a-row>
+    <!-- 图例 形状 end -->
 
     <!-- 图例 位置 start -->
     <a-row>
@@ -65,7 +78,7 @@
         </a-radio-group>
       </a-col>
     </a-row>
-    <a-row>
+    <a-row class="mb-8">
       <a-col :span="18" :offset="6">
         <a-radio-group
           :value="handleCutting(legend.position).suffix"
@@ -79,6 +92,46 @@
       </a-col>
     </a-row>
     <!-- 图例 位置 end -->
+
+    <!-- 图例 图标位置 start -->
+    <a-row class="unit-show-block mb-8">
+      <a-col :span="8" class="unit-show-block position">
+        <div class="unit-block-title">图标位置</div>
+      </a-col>
+
+      <a-col :span="9" :offset="7">
+        <a-radio-group
+          name="radioGroup"
+          size="small"
+          :value="legend.align"
+          @change="event => handleLegend('align', event.target.value)"
+        >
+          <a-radio-button value="left">左</a-radio-button>
+          <a-radio-button value="right">右</a-radio-button>
+        </a-radio-group>
+      </a-col>
+    </a-row>
+    <!-- 图例 图标位置 end -->
+
+    <!-- 图例 排列方式 start -->
+    <a-row class="unit-show-block mb-8">
+      <a-col :span="8" class="unit-show-block position">
+        <div class="unit-block-title">排列</div>
+      </a-col>
+
+      <a-col :span="12" :offset="4">
+        <a-radio-group
+          name="radioGroup"
+          size="small"
+          :value="legend.orient"
+          @change="event => handleLegend('orient', event.target.value)"
+        >
+          <a-radio-button value="horizontal">水平</a-radio-button>
+          <a-radio-button value="vertical">垂直</a-radio-button>
+        </a-radio-group>
+      </a-col>
+    </a-row>
+    <!-- 图例 排列方式 end -->
   </div>
 </template>
 <script>

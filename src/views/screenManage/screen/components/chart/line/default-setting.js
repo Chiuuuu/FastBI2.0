@@ -9,13 +9,6 @@ export default merge(cloneDeep(BASE), {
     data: {
       dimensions: [], // 维度
       measures: [], // 度量
-      options: {
-        //数据筛选、排序
-        imensionsLimit: [], // 数据筛选 -- 拖入的维度
-        measuresLimit: [], // 数据筛选 -- 拖入的度量
-        fileList: [], // 数据筛选 -- 拖入的维度、度量
-        sort: [], //数据排序
-      },
     },
     style: {
       echart: {
@@ -42,6 +35,7 @@ export default merge(cloneDeep(BASE), {
             color: '#ffffff',
             fontSize: 16,
           },
+          align: 'left',
           itemGap: 12,
           icon: 'circle',
           position: 'left-top',
