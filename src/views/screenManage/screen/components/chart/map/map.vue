@@ -3,7 +3,8 @@ import BoardType from '@/views/screenManage/screen/setting/default-type';
 import BaseChart from '../base';
 import defaultData from './default-data';
 import merge from 'lodash/merge';
-import guangzhou from '@/utils/guangzhou.json';
+import registerMap from './registerMap';
+// import { mutationTypes as boardMutation } from '@/store/modules/board';
 const mapSeries = 0;
 const scatterSeries = 1;
 
@@ -209,15 +210,32 @@ export default {
       };
       const options = this.doWithOptions(this.serverData);
       this.updateSaveChart(options);
+      // 获取数据之后需要重置显示内容列表
+      //   this.$store.commit(boardMutation.SET_STYLE, {
+      //     style: {
+      //       echart: {
+      //         customPointShowList,
+      //         customShowTooltip,
+      //         customPointShowListForLabel,
+      //         customShowTooltipForLabel,
+      //       },
+      //     },
+      //   });
     },
     /*
      * 处理默认数据
      */
     getDefaultData() {
-      this.$echarts.registerMap('guangzhou', guangzhou);
+      this.registerMap();
       this.serverData = null;
       const options = this.doWithOptions(defaultData);
       this.updateSaveChart(options);
+    },
+    /*
+     * 地图注册
+     */
+    registerMap() {
+      registerMap(this.options.style.echart.geo.map);
     },
     /**
      * @description 更新图表样式

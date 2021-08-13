@@ -9,6 +9,11 @@ import merge from 'lodash/merge';
 export default {
   name: `${BoardType.ChartBar}View`,
   extends: BaseChart,
+  data() {
+    return {
+      currentIndex: null, // 图表联动选中的下标
+    };
+  },
   methods: {
     /**
      * @description 判断是否获取服务端数据
@@ -119,11 +124,13 @@ export default {
           {
             name: '2022年',
             type: 'bar',
+            selectedMode: 'single',
             data: [18203, 23489, 29034, 104970, 131744, 630230],
           },
           {
             name: '2023年',
             type: 'bar',
+            selectedMode: 'single',
             data: [19325, 23438, 31000, 121594, 134141, 681807],
           },
         ],
@@ -153,6 +160,76 @@ export default {
 
       const newOptions = this.doWithOptions(data);
       this.chartInstane.setOption(newOptions);
+      this.addClick();
+    },
+    /**
+     * @description 添加点击事件(图表联动)
+     */
+    addClick() {
+      const options = this.chartInstane.getOption();
+      this.chartInstane.off('click');
+      // 设置点击数据进行联动
+      this.handleDataClick(options);
+      // 设置点击空白重置联动
+      this.handleChartClick();
+    },
+    /**
+     * @description 处理点击数据显示选中效果
+     */
+    handleDataClick(options) {
+      let self = this;
+      this.chartInstane.on('click', function (e) {
+        if (!self.options.style.echart.customIsOpenDataLink) {
+          return;
+        }
+        // 重复点击选中项
+        if (e.dataIndex === self.currentIndex) {
+          // 重置图表
+          self.resetChart(options);
+          return;
+        }
+        // series添加颜色回调函数控制，选中
+        const formatterFn = function (params) {
+          return params.dataIndex === e.dataIndex
+            ? options.color[params.seriesIndex]
+            : self.hexToRgba(options.color[params.seriesIndex], 0.4);
+        };
+        options.series.forEach(item => {
+          item.itemStyle = Object.assign(item.itemStyle, { color: formatterFn });
+        });
+        self.chartInstane.setOption(options);
+        // 记录当前选择数据的index
+        self.currentIndex = e.dataIndex;
+      });
+    },
+    /**
+     * @description 处理图表点击事件(点击非数据区域重置)
+     */
+    handleChartClick() {
+      let self = this;
+      this.chartInstane.getZr().on('click', function (params) {
+        let hasSelected = self.currentIndex || self.currentIndex === 0;
+        // 没有选中数据不需要执行重置
+        if (typeof params.target === 'undefined' && hasSelected) {
+          // 重置图表
+          // 这里重新获取options，不然条形图设置改不到
+          const options = self.chartInstane.getOption();
+          self.resetChart(options);
+        }
+      });
+    },
+    /**
+     * @description 取消选中
+     */
+    resetChart(options) {
+      options.series.forEach(item => {
+        item.itemStyle.color && delete item.itemStyle.color;
+      });
+      // 还原数据
+      //   resetOriginData(self.chartId, self.canvasMap);
+      this.chartInstane.clear();
+      this.chartInstane.setOption(options);
+      this.currentIndex = '';
     },
   },
 };

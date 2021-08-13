@@ -147,6 +147,7 @@ export default merge(cloneDeep(BASE), {
         },
         customShowSymbol: true, // 是否显示标记点,
         customLinear: 'line', // 线形 line || curve || trapezoidal
+        customIsOpenDataLink: false, // 是否开启图表联动
       },
     },
   },

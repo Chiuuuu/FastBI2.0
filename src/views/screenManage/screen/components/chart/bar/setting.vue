@@ -319,7 +319,16 @@
               <Collapse>
                 <CollapsePanel class="content-item" panel="connect" header="图表联动">
                   <!-- 图表联动 start -->
-                  <UnitConnect class="setting-unit-content"></UnitConnect>
+                  <UnitConnect
+                    class="setting-unit-content"
+                    :dataLinkState="currentCom.setting.style.echart.customIsOpenDataLink"
+                    @change="
+                      value =>
+                        handleChange('echart', {
+                          customIsOpenDataLink: value,
+                        })
+                    "
+                  ></UnitConnect>
                   <!-- 图表联动 end -->
                 </CollapsePanel>
               </Collapse>
