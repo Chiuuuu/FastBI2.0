@@ -485,6 +485,9 @@ export default {
                 float: left;
                 width: 50%;
                 cursor: pointer;
+                &:hover {
+                  color: #103ffa;
+                }
               }
             }
           }
