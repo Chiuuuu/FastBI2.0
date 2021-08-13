@@ -17,6 +17,7 @@
                   :data="item"
                   :field-index="index"
                   :selected="isSelected(item)"
+                  @arrowClick="handleDimConextMenu"
                 ></DataPanelItem>
               </template>
             </ul>
@@ -43,6 +44,7 @@
                   :data="item"
                   :field-index="index"
                   :selected="isSelected(item)"
+                  @arrowClick="handleMeaConextMenu"
                 ></DataPanelItem>
               </template>
             </ul>
@@ -95,7 +97,7 @@ export default {
       contextMenuDim: [
         // 右键菜单
         {
-          name: '转换为维度',
+          name: '转换为度量',
           onClick: this.handleChangeRole,
         },
         {
@@ -220,12 +222,12 @@ export default {
         deleList = [];
       if (data.role === 1) {
         // 维度转度量
-        data.role === 2;
+        data.role = 2;
         addList = this.measure;
         deleList = this.dimension;
       } else if (data.role === 2) {
         // 度量转维度
-        data.role === 1;
+        data.role = 1;
         addList = this.dimension;
         deleList = this.measure;
       }

@@ -7,7 +7,7 @@
   >
     <div :class="['prefix-icon bi-data', icon]"></div>
     <p>{{ data.name }}</p>
-    <div class="suffix-btn"></div>
+    <div class="suffix-btn" @click="e => $emit('arrowClick', e)"></div>
   </li>
 </template>
 <script>
