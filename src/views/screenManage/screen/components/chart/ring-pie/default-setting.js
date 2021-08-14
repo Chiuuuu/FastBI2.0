@@ -3,7 +3,7 @@ import BASE from '@/views/screenManage/screen/setting/default-base';
 import merge from 'lodash/merge';
 import cloneDeep from 'lodash/cloneDeep';
 
-const fontSize = 24;
+const fontSize = 16;
 export default merge(cloneDeep(BASE), {
   type: BoardType.ChartRingPie,
   setting: {
@@ -35,17 +35,24 @@ export default merge(cloneDeep(BASE), {
             color: '#fff',
             position: 'center', // outside || inside
             fontSize,
+            fontWeight: 'normal',
+            fontFamily: 'sans-serif',
             rich: {
               sub: {
+                show: true,
+                color: '#fff',
                 fontSize: 0.8 * fontSize,
+                fontWeight: 'normal',
+                fontFamily: 'sans-serif',
               },
             },
             formatter: '',
           },
         },
+        customFixed: 0, // 小数位
         customInRadius: 60, // 内半径
         customOutRadius: 70, // 外半径
-        customColors: ['#5470c6', '#91cc75'], // 颜色
+        customColors: ['#0185fe', '#9ed1ef'], // 颜色
       },
     },
   },

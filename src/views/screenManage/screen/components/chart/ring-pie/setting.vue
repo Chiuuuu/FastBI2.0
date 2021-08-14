@@ -215,33 +215,109 @@
                       </a-col>
                       <!-- 内容显示 end -->
                     </a-row>
+                    <!-- 小数位数 start -->
+                    <a-row class="unit-show-block mb-8">
+                      <a-col :span="6">
+                        <div class="unit-block-title">小数位数</div>
+                      </a-col>
+                      <a-col :span="16" :offset="2">
+                        <a-input-number
+                          :value="currentCom.setting.style.echart.customFixed"
+                          :min="0"
+                          :max="5"
+                          @change="customFixed => this.handleChange('echart', { customFixed })"
+                        />
+                      </a-col>
+                    </a-row>
+                    <!-- 小数位数 end -->
 
+                    <!-- 标签相关设置 start -->
+                    <!-- 文本 start -->
                     <a-row class="unit-show-block mb-8">
                       <a-col :span="4">
-                        <div class="unit-block-title">字体</div>
+                        <div class="unit-block-title">文本</div>
                       </a-col>
-
-                      <!-- 标签 字体 颜色 start -->
                       <a-col :span="4">
                         <div class="font-color">
                           <ColorPicker
                             :value="currentCom.setting.style.echart.customSeries.label.color"
-                            @change="color => handleLabel('color', color)"
+                            @change="color => this.handleLabel('color', color)"
                           ></ColorPicker>
                         </div>
                       </a-col>
-                      <!-- 标签 字体 颜色 end -->
-
-                      <!-- 标签 字体 大小 start -->
                       <a-col :span="16">
                         <a-input-number
                           :value="currentCom.setting.style.echart.customSeries.label.fontSize"
                           :min="0"
-                          @change="fontSize => handleLabel('fontSize', fontSize)"
+                          @change="fontSize => this.handleLabel('fontSize', fontSize)"
                         />
                       </a-col>
-                      <!-- 标签 字体 大小 end -->
                     </a-row>
+                    <!-- 文本 end -->
+
+                    <!-- 字体 start -->
+                    <a-row class="unit-show-block mb-8">
+                      <a-col :span="6">
+                        <div class="unit-block-title">字体</div>
+                      </a-col>
+                      <a-col :span="16" :offset="2">
+                        <a-select
+                          style="width: 100%"
+                          :value="currentCom.setting.style.echart.customSeries.label.fontFamily"
+                          @change="fontFamily => this.handleLabel('fontFamily', fontFamily)"
+                        >
+                          <a-select-option value="sans-serif">默认</a-select-option>
+                          <a-select-option value="simfang">simfang</a-select-option>
+                          <a-select-option value="fangsong">仿宋_GB2312</a-select-option>
+                          <a-select-option value="times">times</a-select-option>
+                          <a-select-option value="msyh">微软雅黑</a-select-option>
+                          <a-select-option value="simkai">simkai</a-select-option>
+                          <a-select-option value="pangmenzhengdao">庞门正道标题体</a-select-option>
+                          <a-select-option value="HuXiaoBoNanShenTi">HuXiaoBoNanShenTi</a-select-option>
+                          <a-select-option value="youshe">优设标题黑</a-select-option>
+                          <a-select-option value="digital-7-4">digital-7-4</a-select-option>
+                        </a-select>
+                      </a-col>
+                    </a-row>
+                    <!-- 字体 end -->
+
+                    <!-- 粗细 start -->
+                    <a-row class="unit-show-block mb-8">
+                      <a-col :span="6">
+                        <div class="unit-block-title">粗细</div>
+                      </a-col>
+                      <a-col :span="16" :offset="2">
+                        <a-select
+                          style="width: 100%"
+                          :value="currentCom.setting.style.echart.customSeries.label.fontWeight"
+                          @change="fontWeight => this.handleLabel('fontWeight', fontWeight)"
+                        >
+                          <a-select-option value="normal">正常</a-select-option>
+                          <a-select-option value="bolder">加粗</a-select-option>
+                          <a-select-option value="lighter">更细</a-select-option>
+                        </a-select>
+                      </a-col>
+                    </a-row>
+                    <!-- 粗细 end -->
+
+                    <!-- 显示位置 start -->
+                    <a-row class="mb-8">
+                      <a-col :span="6">
+                        <div class="unit-block-title">位置</div>
+                      </a-col>
+                      <a-col :span="18">
+                        <a-radio-group
+                          :value="currentCom.setting.style.echart.customSeries.label.position"
+                          size="small"
+                          @change="e => this.handleLabel('position', e.target.value)"
+                        >
+                          <a-radio-button value="center">中心</a-radio-button>
+                          <a-radio-button value="outside">外部</a-radio-button>
+                          <a-radio-button value="inside">内部</a-radio-button>
+                        </a-radio-group>
+                      </a-col>
+                    </a-row>
+                    <!-- 显示位置 end -->
                   </div>
                 </CollapsePanel>
                 <CollapsePanel class="content-item" panel="reset" :isTogger="false">

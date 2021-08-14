@@ -30,14 +30,18 @@ export default {
      * @description 处理标签字体等
      */
     doWithLabel(label) {
-      const { fontSize } = label;
+      const { fontSize, fontWeight, fontFamily } = label;
       return Object.assign({}, label, {
         rich: {
           title: {
             fontSize: 2.5 * fontSize,
+            fontWeight,
+            fontFamily,
           },
           sub: {
             fontSize: 0.8 * fontSize,
+            fontWeight,
+            fontFamily,
           },
         },
       });
@@ -57,14 +61,14 @@ export default {
         name: data[1].name,
       };
     },
-    doWithFormatter(data, way) {
+    doWithFormatter(data, way, customFixed) {
       let percent = 0;
 
       if (this.options.style.echart.customTarge && data.length > 1) {
-        percent = +((data[0].value / data[1].value) * 100).toFixed(2);
+        percent = (+((data[0].value / data[1].value) * 100)).toFixed(customFixed);
       } else {
         // 如果不开启目标值设置，以1为基准
-        percent = +((data[0].value / 1) * 100).toFixed(2);
+        percent = (+((data[0].value / 1) * 100)).toFixed(customFixed);
       }
       const name = data[0].name;
       const value = data[0].value;
@@ -81,12 +85,13 @@ export default {
       return formatter;
     },
     doWithOptions(data) {
-      const { customInRadius, customOutRadius, customColors, customFormatterWay, customTarge } =
+      const { customInRadius, customOutRadius, customColors, customFixed, customFormatterWay, customTarge } =
         this.options.style.echart;
-      const { label } = this.options.style.echart.customSeries;
+      let { label } = this.options.style.echart.customSeries;
+      label = this.doWithLabel(label);
       data = [].concat(data);
       const radius = this.doWithRadius(customInRadius, customOutRadius);
-      const formatter = this.doWithFormatter(data, customFormatterWay);
+      const formatter = this.doWithFormatter(data, customFormatterWay, customFixed);
 
       if (customTarge) {
         // 1.开启目标值需要处理数据
