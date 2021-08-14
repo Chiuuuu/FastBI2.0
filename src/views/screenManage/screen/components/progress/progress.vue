@@ -69,6 +69,8 @@ export default {
         {
           color: label.color,
           fontSize: `${label.fontSize}px`,
+          fontWeight: label.fontWeight,
+          fontFamily: label.fontFamily,
         },
         {
           position: label.position,
@@ -94,8 +96,9 @@ export default {
      * @description 处理进度条配置
      */
     doWithProgress(echart) {
-      const { background } = echart.progress;
+      let { background } = echart.progress;
       const borderRadius = this.doWithRadius(echart);
+      background = this.doWithBackgroundColor(background, echart.customColor, echart.customGradient);
       const style = getStyle(
         {
           ...borderRadius,
@@ -107,6 +110,24 @@ export default {
         ['background'],
       );
       return style;
+    },
+    /**
+     * @description 处理进度条背景渐变色
+     */
+    doWithBackgroundColor(background, customColor, customGradient) {
+      if (customColor === 'linear') {
+        return Object.assign(background, {
+          image: `linear-gradient(to right,${customGradient[0]},${customGradient[1]})`,
+          size: 'auto',
+        });
+      } else if (customColor === 'radial') {
+        return Object.assign(background, {
+          image: `radial-gradient(${customGradient[0]},${customGradient[1]})`,
+          size: 'auto',
+        });
+      } else {
+        return Object.assign(background, { size: 0 });
+      }
     },
     /**
      * @description 处理进度条外层配置
@@ -147,6 +168,7 @@ export default {
     },
     doWithData(data) {
       const { current, max, min } = data;
+      const customFixed = this.options.style.echart.customFixed; // 自定义小数位
 
       let percent;
       if (typeof current !== 'number' || typeof max !== 'number' || typeof min !== 'number') {
@@ -161,7 +183,7 @@ export default {
         percent = 100;
       } else {
         let result = (current / (max - min)) * 100;
-        percent = result.toFixed(2);
+        percent = result.toFixed(customFixed);
       }
 
       return {

@@ -12,6 +12,7 @@ import projectPermissions from './modules/projectCenter/permissions';
 import board from './modules/board';
 import history from './modules/history';
 import dragdrop from './modules/dragdrop';
+import screen from './modules/screen';
 
 Vue.use(Vuex);
 
@@ -21,6 +22,7 @@ export default new Vuex.Store({
     common,
     dataAccess,
     dataModel,
+    screen,
     user,
     permission,
     projectRoles,

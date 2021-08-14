@@ -127,6 +127,7 @@
                       <a-col :span="16">
                         <a-input-number
                           :min="0"
+                          :max="100"
                           :value="currentCom.setting.style.echart.size.height"
                           @change="
                             height =>
@@ -172,6 +173,7 @@
                           <a-col :span="10" :offset="1">
                             <a-input-number
                               :min="0"
+                              :max="20"
                               :value="currentCom.setting.style.echart.border.width"
                               @change="width => handleBorder('width', width)"
                             ></a-input-number>
@@ -179,16 +181,70 @@
                         </a-row>
                       </a-col>
                     </a-row>
-                    <a-row class="unit-show-block">
+
+                    <!-- 颜色类型 start -->
+                    <a-row class="unit-show-block mb-8">
+                      <a-col :span="8">
+                        <div class="unit-block-title">颜色类型</div>
+                      </a-col>
+
+                      <!-- 内容显示 start -->
+                      <a-col :span="16">
+                        <a-select
+                          :value="currentCom.setting.style.echart.customColor"
+                          style="width: 100%"
+                          @change="customColor => handleChange('echart', { customColor })"
+                        >
+                          <a-select-option value="single">单色</a-select-option>
+                          <a-select-option value="linear">线性渐变</a-select-option>
+                          <a-select-option value="radial">径向渐变</a-select-option>
+                        </a-select>
+                      </a-col>
+                      <!-- 内容显示 end -->
+                    </a-row>
+                    <!-- 颜色类型 end -->
+
+                    <!-- 进度条颜色 start -->
+                    <a-row class="unit-show-block mb-8">
                       <!-- 进度值 颜色 start -->
+                      <!-- 单色 -->
                       <UnitBackgroundColor
+                        v-if="currentCom.setting.style.echart.customColor === 'single'"
                         class="mb-8"
                         label="进度颜色"
                         :color="currentCom.setting.style.echart.progress.background.color"
                         @change="color => handleProgress('background', { color })"
                       ></UnitBackgroundColor>
-                      <!-- 进度值 颜色 end -->
+                      <!-- 渐变色 -->
+                      <template v-else>
+                        <a-col :span="6">
+                          <div class="unit-block-title">进度颜色</div>
+                        </a-col>
+                        <a-col :span="4" :offset="10">
+                          <div class="font-color">
+                            <!-- 进度值 颜色1 start -->
+                            <ColorPicker
+                              class="mb-8"
+                              :value="currentCom.setting.style.echart.customGradient[0]"
+                              @change="color => handleProgressColor(color, 0)"
+                            ></ColorPicker>
+                            <!-- 进度值 颜色1 end -->
+                          </div>
+                        </a-col>
+                        <a-col :span="4">
+                          <div class="font-color">
+                            <!-- 进度值 颜色2 start -->
+                            <ColorPicker
+                              class="mb-8"
+                              :value="currentCom.setting.style.echart.customGradient[1]"
+                              @change="color => handleProgressColor(color, 1)"
+                            ></ColorPicker>
+                            <!-- 进度值 颜色2 end -->
+                          </div>
+                        </a-col>
+                      </template>
                     </a-row>
+                    <!-- 进度条颜色 end -->
                     <a-row class="unit-show-block">
                       <!-- 底部 颜色 start -->
                       <UnitBackgroundColor
@@ -212,6 +268,7 @@
                       <a-col :span="16">
                         <a-input-number
                           :min="0"
+                          :max="100"
                           :value="currentCom.setting.style.echart.radius[item.prop]"
                           @change="value => handleRadius(item.prop, value)"
                         ></a-input-number>
@@ -238,7 +295,7 @@
                     </a-row>
                   </div>
                 </CollapsePanel>
-                <CollapsePanel class="content-item" panel="label" header="标签">
+                <CollapsePanel class="content-item" panel="label" header="指标">
                   <div class="setting-unit-content">
                     <UnitCheckbox
                       class="show-btn"
@@ -267,34 +324,91 @@
                       <!-- 内容显示 end -->
                     </a-row>
 
-                    <!-- 标签相关设置 start -->
+                    <!-- 小数位数 start -->
                     <a-row class="unit-show-block mb-8">
                       <a-col :span="6">
-                        <div class="unit-block-title">字体设置</div>
+                        <div class="unit-block-title">小数位数</div>
                       </a-col>
+                      <a-col :span="16" :offset="2">
+                        <a-input-number
+                          :value="currentCom.setting.style.echart.customFixed"
+                          :min="0"
+                          :max="5"
+                          @change="customFixed => this.handleChange('echart', { customFixed })"
+                        />
+                      </a-col>
+                    </a-row>
+                    <!-- 小数位数 end -->
 
-                      <!-- 字体 颜色 start -->
-                      <a-col :span="4" :offset="1">
+                    <!-- 指标相关设置 start -->
+                    <!-- 文本 start -->
+                    <a-row class="unit-show-block mb-8">
+                      <a-col :span="4">
+                        <div class="unit-block-title">文本</div>
+                      </a-col>
+                      <a-col :span="4">
                         <div class="font-color">
                           <ColorPicker
                             :value="currentCom.setting.style.echart.label.color"
-                            @change="color => handleLabel('color', color)"
+                            @change="color => this.handleLabel('color', color)"
                           ></ColorPicker>
                         </div>
                       </a-col>
-                      <!-- 字体 颜色 end -->
-
-                      <!-- 字体 大小 start -->
-                      <a-col :span="12" :offset="1">
+                      <a-col :span="16">
                         <a-input-number
                           :value="currentCom.setting.style.echart.label.fontSize"
                           :min="0"
-                          @change="fontSize => handleLabel('fontSize', fontSize)"
+                          @change="fontSize => this.handleLabel('fontSize', fontSize)"
                         />
                       </a-col>
-                      <!-- 字体 大小 end -->
                     </a-row>
-                    <!-- 标签相关设置 end -->
+                    <!-- 文本 end -->
+
+                    <!-- 字体 start -->
+                    <a-row class="unit-show-block mb-8">
+                      <a-col :span="6">
+                        <div class="unit-block-title">字体</div>
+                      </a-col>
+                      <a-col :span="16" :offset="2">
+                        <a-select
+                          style="width: 100%"
+                          :value="currentCom.setting.style.echart.label.fontFamily"
+                          @change="fontFamily => this.handleLabel('fontFamily', fontFamily)"
+                        >
+                          <a-select-option value="sans-serif">默认</a-select-option>
+                          <a-select-option value="simfang">simfang</a-select-option>
+                          <a-select-option value="fangsong">仿宋_GB2312</a-select-option>
+                          <a-select-option value="times">times</a-select-option>
+                          <a-select-option value="msyh">微软雅黑</a-select-option>
+                          <a-select-option value="simkai">simkai</a-select-option>
+                          <a-select-option value="pangmenzhengdao">庞门正道标题体</a-select-option>
+                          <a-select-option value="HuXiaoBoNanShenTi">HuXiaoBoNanShenTi</a-select-option>
+                          <a-select-option value="youshe">优设标题黑</a-select-option>
+                          <a-select-option value="digital-7-4">digital-7-4</a-select-option>
+                        </a-select>
+                      </a-col>
+                    </a-row>
+                    <!-- 字体 end -->
+
+                    <!-- 粗细 start -->
+                    <a-row class="unit-show-block mb-8">
+                      <a-col :span="6">
+                        <div class="unit-block-title">粗细</div>
+                      </a-col>
+                      <a-col :span="16" :offset="2">
+                        <a-select
+                          style="width: 100%"
+                          :value="currentCom.setting.style.echart.label.fontWeight"
+                          @change="fontWeight => this.handleLabel('fontWeight', fontWeight)"
+                        >
+                          <a-select-option value="normal">正常</a-select-option>
+                          <a-select-option value="bolder">加粗</a-select-option>
+                          <a-select-option value="lighter">更细</a-select-option>
+                        </a-select>
+                      </a-col>
+                    </a-row>
+                    <!-- 粗细 end -->
+                    <!-- 指标相关设置 end -->
 
                     <!-- 位置设置 start -->
                     <div class="axis-name-box mb-8">
@@ -452,6 +566,11 @@ export default {
           [key]: value,
         },
       });
+    },
+    handleProgressColor(item, index) {
+      const color = this.currentCom.setting.style.echart.customGradient;
+      color[index] = item;
+      this.handleProgress('customGradient', color);
     },
     handleLabel(key, value) {
       this.handleChange('echart', {

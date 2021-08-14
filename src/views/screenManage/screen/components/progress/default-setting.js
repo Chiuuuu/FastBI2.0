@@ -32,13 +32,15 @@ export default merge(cloneDeep(BASE), {
         },
         size: {
           width: 100, // 宽度为百分比
-          height: 20, // 高度为px
+          height: 5, // 高度为px
         },
         showWay: 'percent', // 值 || 百分比
         label: {
           show: true,
           color: '#fff',
           fontSize: 14,
+          fontWeight: 'normal',
+          fontFamily: 'sans-serif',
           position: {
             left: 0,
             top: 0,
@@ -47,7 +49,7 @@ export default merge(cloneDeep(BASE), {
         border: {
           width: 1,
           style: 'solid',
-          color: 'red',
+          color: '#9ed1ef',
         },
         radius: {
           topLeft: 0,
@@ -62,13 +64,18 @@ export default merge(cloneDeep(BASE), {
           left: 0,
         },
         background: {
-          color: 'transparent',
+          color: '#9ed1ef',
         },
         progress: {
           background: {
-            color: 'red',
+            color: '#0185fe',
+            image: '',
+            size: 0,
           },
         },
+        customFixed: 0,
+        customColor: 'single', // linear || radial
+        customGradient: ['#0185fe', '#87d068'],
       },
     },
   },

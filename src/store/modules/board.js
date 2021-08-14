@@ -3,6 +3,7 @@ import { mutationTypes as historyMutation } from '@/store/modules/history';
 import boardSetting from '@/views/screenManage/screen/setting';
 import mergeWith from 'lodash/mergeWith';
 import cloneDeep from 'lodash/cloneDeep';
+import omit from 'lodash/omit';
 
 export const mutationTypes = {
   RESETSTATE: 'board/RESETSTATE',
@@ -61,8 +62,11 @@ const mergeStyle = function (state, style, replaceMerge) {
 };
 
 const mutations = {
-  RESETSTATE(state) {
-    Object.assign(state, getDefaultState());
+  RESETSTATE(state, { components, page }) {
+    Object.assign(state, omit(getDefaultState(), 'scale'), {
+      components: components || [],
+      page: page || cloneDeep(boardSetting['Page']),
+    });
   },
   /**
    * 组件列表添加
