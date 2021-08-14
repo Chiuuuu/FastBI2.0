@@ -115,6 +115,19 @@
                     <!-- 边框设置 end -->
                   </div>
                 </CollapsePanel>
+                <CollapsePanel class="content-item" panel="chartStyle" header="图形属性">
+                  <!-- 图形属性 start -->
+                  <div class="setting-unit-content">
+                    <!-- 边距 start -->
+                    <UnitGridMargin
+                      label="边距"
+                      :grid="currentCom.setting.style.echart.grid"
+                      @change="(key, value) => handleChange(key, value)"
+                    ></UnitGridMargin>
+                    <!-- 边距 end -->
+                  </div>
+                  <!-- 图形属性 end -->
+                </CollapsePanel>
                 <CollapsePanel class="content-item" panel="drawing" header="绘图区">
                   <UnitDrawing
                     :grid="currentCom.setting.style.echart.grid"
@@ -180,11 +193,13 @@
                       </a-col>
                       <!-- 内容显示 end -->
                     </a-row>
+                    <!-- 展示数值 start -->
                     <UnitLabel
-                      :label="currentCom.setting.style.echart.customSeries.label"
-                      :labelLayout="currentCom.setting.style.echart.customLabelLayout"
+                      label="数值"
+                      :seriesLabel="currentCom.setting.style.echart.customSeries.label"
                       @change="(key, value) => doWithSeries(key, value)"
                     ></UnitLabel>
+                    <!-- 展示数值 end -->
                   </div>
                 </CollapsePanel>
                 <CollapsePanel class="content-item" panel="reset" :isTogger="false">

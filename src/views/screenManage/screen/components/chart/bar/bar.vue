@@ -72,11 +72,16 @@ export default {
       return series.map(item => item.name);
     },
     /**
-     * @description 处理柱状条宽度（百分比）
+     * @description 处理柱状条宽度（数值/百分比）
      */
-    doWithBarWidth(item, customBarWidth, length) {
-      item['barWidth'] = `${customBarWidth / length}%`;
-    },
+    // doWithBarWidth(barWidth, length) {
+    //   if (typeof barWidth === 'number') {
+    //     return barWidth / length;
+    //   } else {
+    //     let num = Number(barWidth);
+    //     return `${num / length}%`;
+    //   }
+    // },
     /**
      * @description 根据key处理value值
      * @param {object} item 数据
@@ -92,6 +97,7 @@ export default {
       } = this.options;
 
       const shape = this.doWithShape(echart, fetchData.categoryData);
+      // echart.customSeries.barWidth = this.doWithBarWidth(echart.customSeries.barWidth, fetchData.series.length);
       fetchData.series.forEach(item => {
         this.doWithBarGap(item);
         this.doWithStack(item, echart.customStack);
@@ -99,7 +105,6 @@ export default {
         for (let i in echart.customSeries) {
           this.doWithKeyValue(item, i, echart.customSeries[i]);
         }
-        this.doWithBarWidth(item, echart.customBarWidth, fetchData.series.length);
       });
       const legend = this.doWithlegend(fetchData.series);
 
