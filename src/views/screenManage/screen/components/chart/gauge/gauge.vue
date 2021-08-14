@@ -58,16 +58,36 @@ export default {
      * @description 处理仪表盘
      */
     doWithGauge(cur, min, max) {
-      const { customOptions } = this.options.style.echart;
+      const { customOptions, customValue, customFixed } = this.options.style.echart;
 
       // 如果没有最大值，则设置为2倍的进度值
-      max = max || 2 * cur.value;
+      if (customValue === 'percentage') {
+        // 开启百分比显示, 最大值恒为100
+        max = 100;
+      } else {
+        max = max || 2 * cur.value;
+      }
 
       const options = merge({}, customOptions, {
         name: GAUGE,
         radius: this.doWithRadius(GAUGE),
         min: min,
         max: max,
+        detail: {
+          formatter(value = 0) {
+            // 保留小数位
+            return value.toFixed(customFixed);
+          },
+        },
+        axisLabel: {
+          formatter(value = 0) {
+            // 百分比显示
+            if (customValue === 'percentage') {
+              value = Math.round((value / max) * 100);
+            }
+            return value;
+          },
+        },
       });
 
       options.data = [cur];
