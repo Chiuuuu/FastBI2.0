@@ -69,17 +69,6 @@ export default {
       }
     },
     /**
-     * @description 处理 图表样式 是否显示标记点
-     */
-    doWithShowSymbol(item, customShowSymbol) {
-      const SYMOLSIZE = 'symbolSize';
-      if (customShowSymbol) {
-        item[SYMOLSIZE] = 4;
-      } else {
-        item[SYMOLSIZE] = 0;
-      }
-    },
-    /**
      * @description 根据key处理value值
      * @param {object} item 数据
      * @param {string} key 字段
@@ -104,8 +93,7 @@ export default {
 
       fetchData.series.forEach(item => {
         this.doWithSmooth(item, echart.customLinear);
-        this.doWithShowSymbol(item, echart.customShowSymbol);
-        // 系列
+        // 系列配置
         for (let i in echart.customSeries) {
           this.doWithKeyValue(item, i, echart.customSeries[i]);
         }

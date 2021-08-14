@@ -141,14 +141,14 @@
                     </a-row>
                     <!-- 标记点 开启 start -->
                     <a-row>
-                      <a-col :span="6" class="unit-show-block position">
+                      <a-col :span="6" class="unit-show-block position mt-4 mb-4">
                         <div class="unit-block-title">标记点</div>
                       </a-col>
                       <a-col :span="18">
                         <UnitCheckbox
                           class="show-btn"
                           label="显示"
-                          style="top: -4px"
+                          style="top: -0px"
                           :value="currentCom.setting.style.echart.customShowSymbol"
                           @change="value => doWithShowSymbol(value)"
                         ></UnitCheckbox>
@@ -156,22 +156,51 @@
                     </a-row>
                     <!-- 标记点 开启 end -->
                     <!-- 标记点大小 start -->
-                    <a-row>
-                      <a-col :span="6" class="unit-show-block position">
-                        <div class="unit-block-title">标记点</div>
+                    <a-row v-if="currentCom.setting.style.echart.customShowSymbol">
+                      <a-col :span="13" class="unit-show-block position">
+                        <div class="unit-block-title">标记点大小</div>
                       </a-col>
-                      <a-col :span="18">
-                        <UnitCheckbox
-                          class="show-btn"
-                          label="显示"
-                          style="top: -4px"
-                          :value="currentCom.setting.style.echart.customShowSymbol"
-                          @change="value => doWithShowSymbol(value)"
-                        ></UnitCheckbox>
+                      <a-col :span="11">
+                        <a-input-number
+                          :value="currentCom.setting.style.echart.customSeries.symbolSize"
+                          :min="0"
+                          @change="symbolSize => doWithSeries('symbolSize', symbolSize)"
+                        />
                       </a-col>
                     </a-row>
                     <!-- 标记点大小 end -->
-                    <!-- 区域透明度 -->
+                    <!-- 区域透明度 start -->
+                    <a-row class="mt-8">
+                      <a-col :span="13" class="unit-show-block position">
+                        <div class="unit-block-title">区域透明度</div>
+                      </a-col>
+                      <a-col :span="11">
+                        <a-input-number
+                          v-model="currentCom.setting.style.echart.customSeries.areaStyle.opacity"
+                          size="small"
+                          :max="1"
+                          :min="0"
+                          :step="0.1"
+                          @change="opacity => doWithSeries('areaStyle', { opacity })"
+                        ></a-input-number>
+                      </a-col>
+                    </a-row>
+                    <!-- 区域透明度 end -->
+                    <!-- 线宽 start -->
+                    <a-row class="mt-8">
+                      <a-col :span="13" class="unit-show-block position">
+                        <div class="unit-block-title">线宽</div>
+                      </a-col>
+                      <a-col :span="11">
+                        <a-input-number
+                          v-model="currentCom.setting.style.echart.customSeries.lineStyle.width"
+                          size="small"
+                          :min="0"
+                          @change="width => doWithSeries('lineStyle', { width })"
+                        ></a-input-number>
+                      </a-col>
+                    </a-row>
+                    <!-- 线宽 end -->
                   </div>
                   <!-- 图表样式 end -->
                 </CollapsePanel>
@@ -308,6 +337,9 @@ export default {
     doWithShowSymbol(customShowSymbol) {
       this.handleChange('echart', {
         customShowSymbol,
+        customSeries: {
+          symbolSize: customShowSymbol ? 4 : 0,
+        },
       });
     },
   },
