@@ -50,6 +50,7 @@ export default merge(cloneDeep(BASE), {
           },
         },
         customFixed: 0, // 小数位
+        customCenter: [50, 50], // 坐标中心点
         customInRadius: 60, // 内半径
         customOutRadius: 70, // 外半径
         customColors: ['#0185fe', '#9ed1ef'], // 颜色

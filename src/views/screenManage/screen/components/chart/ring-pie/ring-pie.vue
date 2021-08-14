@@ -47,6 +47,12 @@ export default {
       });
     },
     /**
+     * @description 处理中心点
+     */
+    doWithCenter(customCenter) {
+      return [`${customCenter[0]}%`, `${customCenter[1]}%`];
+    },
+    /**
      * @description 处理半径
      */
     doWithRadius(inRadius, outRadius) {
@@ -85,13 +91,21 @@ export default {
       return formatter;
     },
     doWithOptions(data) {
-      const { customInRadius, customOutRadius, customColors, customFixed, customFormatterWay, customTarge } =
-        this.options.style.echart;
+      const {
+        customCenter,
+        customInRadius,
+        customOutRadius,
+        customColors,
+        customFixed,
+        customFormatterWay,
+        customTarge,
+      } = this.options.style.echart;
       let { label } = this.options.style.echart.customSeries;
       label = this.doWithLabel(label);
       data = [].concat(data);
       const radius = this.doWithRadius(customInRadius, customOutRadius);
       const formatter = this.doWithFormatter(data, customFormatterWay, customFixed);
+      const center = this.doWithCenter(customCenter);
 
       if (customTarge) {
         // 1.开启目标值需要处理数据
@@ -108,6 +122,7 @@ export default {
       const series = [
         {
           type: 'pie',
+          center,
           radius,
           label: Object.assign({}, label, {
             formatter: `${formatter}`,
