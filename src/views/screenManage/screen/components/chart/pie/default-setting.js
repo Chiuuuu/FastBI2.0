@@ -44,16 +44,20 @@ export default merge(cloneDeep(BASE), {
         },
         customLimit: 5,
         customFormatterWay: 'nv',
-        customLabel: {
-          show: true,
-          alignTo: 'edge',
-          color: '#fff',
-          position: 'outside', // outside || inside
-          formatter: '{b}\n{c}',
-          fontSize,
-          minMargin: fontSize,
-          edgeDistance: 1.5 * fontSize,
-          lineHeight: 1.5 * fontSize,
+        // 系列
+        customSeries: {
+          // 标签
+          label: {
+            show: true,
+            alignTo: 'edge',
+            color: '#fff',
+            position: 'outside', // outside || inside
+            formatter: '{b}\n{c}',
+            fontSize,
+            minMargin: fontSize,
+            edgeDistance: 1.5 * fontSize,
+            lineHeight: 1.5 * fontSize,
+          },
         },
         customRoseType: {
           show: false,

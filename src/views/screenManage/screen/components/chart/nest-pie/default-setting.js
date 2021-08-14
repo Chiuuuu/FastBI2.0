@@ -43,23 +43,26 @@ export default merge(cloneDeep(BASE), {
           left: 'left',
           top: 'top',
         },
+        // 系列
+        customSeries: {
+          label: {
+            show: true,
+            alignTo: 'edge',
+            color: '#fff',
+            position: 'outside', // outside || inside
+            formatter: '{b}\n{c}',
+            fontSize,
+            minMargin: fontSize,
+            edgeDistance: 1.5 * fontSize,
+            lineHeight: 1.5 * fontSize,
+          },
+          labelLayout: {
+            // 标签是否允许重叠
+            hideOverlap: false,
+          },
+        },
         customRadius: 90, // 整体半径
         customFormatterWay: 'nv',
-        customLabel: {
-          show: true,
-          alignTo: 'edge',
-          color: '#fff',
-          position: 'outside', // outside || inside
-          formatter: '{b}\n{c}',
-          fontSize,
-          minMargin: fontSize,
-          edgeDistance: 1.5 * fontSize,
-          lineHeight: 1.5 * fontSize,
-        },
-        customLabelLayout: {
-          // 标签是否允许重叠
-          hideOverlap: false,
-        },
         customCenter: [50, 50], // 坐标中心点
       },
     },

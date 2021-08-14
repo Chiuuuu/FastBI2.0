@@ -105,8 +105,10 @@ export default {
       fetchData.series.forEach(item => {
         this.doWithSmooth(item, echart.customLinear);
         this.doWithShowSymbol(item, echart.customShowSymbol);
-        this.doWithKeyValue(item, 'label', echart.customLabel);
-        this.doWithKeyValue(item, 'labelLayout', echart.customLabelLayout);
+        // 系列
+        for (let i in echart.customSeries) {
+          this.doWithKeyValue(item, i, echart.customSeries[i]);
+        }
       });
 
       const legend = this.doWithlegend(fetchData.series);

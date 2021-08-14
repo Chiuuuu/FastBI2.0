@@ -139,12 +139,39 @@
                         </a-radio-group>
                       </a-col>
                     </a-row>
-                    <UnitCheckbox
-                      class="show-btn strict"
-                      label="是否显示标记点"
-                      :value="currentCom.setting.style.echart.customShowSymbol"
-                      @change="value => doWithShowSymbol(value)"
-                    ></UnitCheckbox>
+                    <!-- 标记点 开启 start -->
+                    <a-row>
+                      <a-col :span="6" class="unit-show-block position">
+                        <div class="unit-block-title">标记点</div>
+                      </a-col>
+                      <a-col :span="18">
+                        <UnitCheckbox
+                          class="show-btn"
+                          label="显示"
+                          style="top: -4px"
+                          :value="currentCom.setting.style.echart.customShowSymbol"
+                          @change="value => doWithShowSymbol(value)"
+                        ></UnitCheckbox>
+                      </a-col>
+                    </a-row>
+                    <!-- 标记点 开启 end -->
+                    <!-- 标记点大小 start -->
+                    <a-row>
+                      <a-col :span="6" class="unit-show-block position">
+                        <div class="unit-block-title">标记点</div>
+                      </a-col>
+                      <a-col :span="18">
+                        <UnitCheckbox
+                          class="show-btn"
+                          label="显示"
+                          style="top: -4px"
+                          :value="currentCom.setting.style.echart.customShowSymbol"
+                          @change="value => doWithShowSymbol(value)"
+                        ></UnitCheckbox>
+                      </a-col>
+                    </a-row>
+                    <!-- 标记点大小 end -->
+                    <!-- 区域透明度 -->
                   </div>
                   <!-- 图表样式 end -->
                 </CollapsePanel>
@@ -195,16 +222,16 @@
                 <CollapsePanel class="content-item" panel="legend" header="标签">
                   <div class="setting-unit-content">
                     <UnitLabel
-                      :label="currentCom.setting.style.echart.customLabel"
-                      @change="(key, value) => doWithLabel(key, value)"
+                      :label="currentCom.setting.style.echart.customSeries.label"
+                      @change="(key, value) => doWithSeries(key, value)"
                     ></UnitLabel>
                     <UnitCheckbox
                       class="show-btn strict"
                       label="是否允许标签重叠"
-                      :value="!currentCom.setting.style.echart.customLabelLayout.hideOverlap"
+                      :value="!currentCom.setting.style.echart.customSeries.labelLayout.hideOverlap"
                       @change="
                         hideOverlap =>
-                          doWithLabel('customLabelLayout', {
+                          doWithSeries('labelLayout', {
                             hideOverlap: !hideOverlap,
                           })
                       "
@@ -281,11 +308,6 @@ export default {
     doWithShowSymbol(customShowSymbol) {
       this.handleChange('echart', {
         customShowSymbol,
-      });
-    },
-    doWithLabel(key, value) {
-      this.handleChange('echart', {
-        [key]: value,
       });
     },
   },

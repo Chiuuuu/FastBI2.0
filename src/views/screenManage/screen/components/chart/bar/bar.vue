@@ -95,8 +95,10 @@ export default {
       fetchData.series.forEach(item => {
         this.doWithBarGap(item);
         this.doWithStack(item, echart.customStack);
-        this.doWithKeyValue(item, 'label', echart.customLabel);
-        this.doWithKeyValue(item, 'itemStyle', echart.customItemStyle);
+        // 系列
+        for (let i in echart.customSeries) {
+          this.doWithKeyValue(item, i, echart.customSeries[i]);
+        }
         this.doWithBarWidth(item, echart.customBarWidth, fetchData.series.length);
       });
       const legend = this.doWithlegend(fetchData.series);

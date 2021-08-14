@@ -104,7 +104,7 @@ export default {
           {
             type: 'heatmap',
             data,
-            label: echart.customLabel,
+            label: echart.customSeries.label,
           },
         ],
       });

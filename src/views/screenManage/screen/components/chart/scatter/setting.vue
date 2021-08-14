@@ -181,9 +181,9 @@
                       <!-- 内容显示 end -->
                     </a-row>
                     <UnitLabel
-                      :label="currentCom.setting.style.echart.customLabel"
+                      :label="currentCom.setting.style.echart.customSeries.label"
                       :labelLayout="currentCom.setting.style.echart.customLabelLayout"
-                      @change="(key, value) => doWithLabel(key, value)"
+                      @change="(key, value) => doWithSeries(key, value)"
                     ></UnitLabel>
                   </div>
                 </CollapsePanel>

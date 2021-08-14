@@ -172,10 +172,10 @@ export default {
           },
           center, // 中心位置
           radius, // 内外半径
-          label: Object.assign({}, echart.customLabel, {
+          label: Object.assign({}, echart.customSeries.label, {
             formatter: `${formatter}`,
           }),
-          labelLayout: echart.customLabelLayout,
+          labelLayout: echart.customSeries.labelLayout,
           itemStyle: {
             //  区块设置
             borderColor: '#fff',

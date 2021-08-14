@@ -29,9 +29,9 @@ export default {
     /**
      * @description 处理标签字体等
      */
-    doWithLabel(customLabel) {
-      const { fontSize } = customLabel;
-      return Object.assign({}, customLabel, {
+    doWithLabel(label) {
+      const { fontSize } = label;
+      return Object.assign({}, label, {
         rich: {
           title: {
             fontSize: 2.5 * fontSize,
@@ -81,9 +81,9 @@ export default {
       return formatter;
     },
     doWithOptions(data) {
-      const { customLabel, customInRadius, customOutRadius, customColors, customFormatterWay, customTarge } =
+      const { customInRadius, customOutRadius, customColors, customFormatterWay, customTarge } =
         this.options.style.echart;
-
+      const { label } = this.options.style.echart.customSeries;
       data = [].concat(data);
       const radius = this.doWithRadius(customInRadius, customOutRadius);
       const formatter = this.doWithFormatter(data, customFormatterWay);
@@ -104,7 +104,7 @@ export default {
         {
           type: 'pie',
           radius,
-          label: Object.assign({}, customLabel, {
+          label: Object.assign({}, label, {
             formatter: `${formatter}`,
           }),
           color: customColors,

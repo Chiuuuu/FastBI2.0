@@ -107,7 +107,7 @@ export default {
       return {
         name,
         type: 'scatter',
-        label: Object.assign({}, echart.customLabel, {
+        label: Object.assign({}, echart.customSeries.label, {
           formatter: `${formatter}`,
         }),
         data: data,

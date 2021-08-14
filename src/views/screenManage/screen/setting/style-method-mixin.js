@@ -55,6 +55,18 @@ const StyleMethodMixin = {
         afterExecute: afterExecute ? afterExecute : () => {},
       });
     },
+    /**
+     * @description series处理
+     * @param {String} key 字段属性
+     * @param value 字段值
+     */
+    doWithSeries(key, value) {
+      this.handleChange('echart', {
+        customSeries: {
+          [key]: value,
+        },
+      });
+    },
   },
 };
 

@@ -31,18 +31,21 @@ export default merge(cloneDeep(BASE), {
           show: true,
         },
         customFormatterWay: 'nv',
-        customLabel: {
-          // 标签
-          show: true,
-          color: '#fff',
-          fontSize: 16,
-          position: 'inside',
-          formatter: '{a}\n({c})',
-          rotate: 'radial', // 'radial' 表示径向旋转、'tangential' 表示切向旋转
-        },
-        customLabelLayout: {
-          // 标签是否允许重叠
-          hideOverlap: true,
+        // 系列
+        customSeries: {
+          label: {
+            // 标签
+            show: true,
+            color: '#fff',
+            fontSize: 16,
+            position: 'inside',
+            formatter: '{a}\n({c})',
+            rotate: 'radial', // 'radial' 表示径向旋转、'tangential' 表示切向旋转
+          },
+          labelLayout: {
+            // 标签是否允许重叠
+            hideOverlap: true,
+          },
         },
         customMax: 100, // 最大值
         customMin: 0, // 最小值

@@ -216,10 +216,9 @@ export default {
      * 3. 如果不进行以上两项，会报错
      */
     doWithLabel(echart) {
-      const label = Object.assign({}, echart.customLabel, {
+      const label = Object.assign({}, echart.customSeries.label, {
         formatter: this.doWithFormatter(echart),
       });
-
       this.chartInstane.setOption({
         series: [
           {

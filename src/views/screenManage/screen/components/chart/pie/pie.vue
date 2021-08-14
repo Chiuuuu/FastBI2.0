@@ -22,7 +22,7 @@ export default {
      * @description 处理标签对齐
      */
     doWithLabelLayout(chartInstaneWidth, params) {
-      if (this.options.style.echart.customLabel.position !== 'outside') return;
+      if (this.options.style.echart.customSeries.label.position !== 'outside') return;
 
       const isLeft = params.labelRect.x < chartInstaneWidth / 2;
       const points = params.labelLinePoints;
@@ -48,9 +48,9 @@ export default {
     /**
      * @description 处理标签字体等
      */
-    doWithLabel(customLabel) {
-      const { fontSize } = customLabel;
-      return Object.assign(customLabel, {
+    doWithLabel(label) {
+      const { fontSize } = label;
+      return Object.assign(label, {
         minMargin: fontSize,
         edgeDistance: 1.5 * fontSize,
         lineHeight: 1.5 * fontSize,
@@ -98,7 +98,7 @@ export default {
       const legend = this.doWithlegend(data);
       const roseType = this.doWithRoseType(echart.customRoseType);
 
-      const label = this.doWithLabel(echart.customLabel);
+      const label = this.doWithLabel(echart.customSeries.label);
       const center = this.doWithCenter(echart.customCenter);
 
       const options = merge({}, echart, {

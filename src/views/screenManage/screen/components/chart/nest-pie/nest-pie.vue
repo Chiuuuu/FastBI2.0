@@ -20,8 +20,8 @@ export default {
     /**
      * @description 处理标签对齐
      */
-    doWithLabelLayout(customLabelLayout, chartInstaneWidth, params) {
-      if (this.options.style.echart.customLabel.position !== 'outside') return;
+    doWithLabelLayout(labelLayout, chartInstaneWidth, params) {
+      if (this.options.style.echart.customSeries.label.position !== 'outside') return;
 
       const isLeft = params.labelRect.x < chartInstaneWidth / 2;
       const points = params.labelLinePoints;
@@ -30,7 +30,7 @@ export default {
 
       // 更新节点.
       points[2][0] = isLeft ? params.labelRect.x : params.labelRect.x + params.labelRect.width;
-      return Object.assign({}, customLabelLayout, {
+      return Object.assign({}, labelLayout, {
         labelLinePoints: points,
       });
     },
@@ -47,9 +47,9 @@ export default {
     /**
      * @description 处理标签字体等
      */
-    doWithLabel(customLabel) {
-      const { fontSize } = customLabel;
-      return Object.assign(customLabel, {
+    doWithLabel(label) {
+      const { fontSize } = label;
+      return Object.assign(label, {
         minMargin: fontSize,
         edgeDistance: 1.5 * fontSize,
         lineHeight: 1.5 * fontSize,
@@ -107,8 +107,8 @@ export default {
         type: 'pie',
         center: this.doWithCenter(echart.customCenter),
         radius: radius,
-        label: this.doWithLabel(echart.customLabel),
-        labelLayout: this.doWithLabelLayout.bind(this, echart.customLabelLayout, this.chartInstane.getWidth()),
+        label: this.doWithLabel(echart.customSeries.label),
+        labelLayout: this.doWithLabelLayout.bind(this, echart.customSeries.labelLayout, this.chartInstane.getWidth()),
         labelLine: this.doWithLabelLine(),
         data: data,
       };

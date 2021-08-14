@@ -370,7 +370,7 @@ export default {
                   },
                   nameShow: true,
                   nameTextStyle: {
-                    color: 'yellow',
+                    color: '#fff',
                     fontSize: '12',
                     align: 'center',
                     padding: [30, 0, 0, 0],

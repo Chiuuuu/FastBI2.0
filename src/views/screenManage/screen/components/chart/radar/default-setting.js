@@ -78,12 +78,8 @@ export default merge(cloneDeep(BASE), {
             },
           },
         },
-        customLabel: {
-          show: false,
-          color: '#fff',
-          fontSize: 16,
-          position: 'inside', // 可选inside
-        },
+        // 系列
+        customSeries: {},
         customOpacity: 0, // 透明度
       },
     },

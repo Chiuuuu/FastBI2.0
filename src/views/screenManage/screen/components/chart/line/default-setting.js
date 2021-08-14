@@ -55,7 +55,7 @@ export default merge(cloneDeep(BASE), {
           },
           nameShow: true,
           nameTextStyle: {
-            color: 'yellow',
+            color: '#fff',
             fontSize: '12',
             align: 'center',
             padding: [30, 0, 0, 0],
@@ -134,16 +134,19 @@ export default merge(cloneDeep(BASE), {
             show: true,
           },
         },
-        customLabel: {
-          // 标签
-          show: true,
-          color: '#fff',
-          fontSize: 16,
-          position: 'top',
-        },
-        customLabelLayout: {
-          // 标签是否允许重叠
-          hideOverlap: true,
+        // 系列
+        customSeries: {
+          label: {
+            // 标签
+            show: true,
+            color: '#fff',
+            fontSize: 16,
+            position: 'top',
+          },
+          labelLayout: {
+            // 标签是否允许重叠
+            hideOverlap: true,
+          },
         },
         customShowSymbol: true, // 是否显示标记点,
         customLinear: 'line', // 线形 line || curve || trapezoidal
