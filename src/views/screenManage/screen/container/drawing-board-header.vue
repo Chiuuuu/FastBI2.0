@@ -7,9 +7,8 @@
 
     <!-- 大屏名称 start -->
     <div class="drawing-board-title">
-      <span class="board-name-box" title="未命名大屏">
-        <input type="text" placeholder="请输入大屏标题" :value="screenName" @blur="handleChangeScreenName" />
-        <!-- <span>未命名大屏</span> -->
+      <span class="board-name-box" :title="screenInfo.name">
+        <input type="text" placeholder="请输入大屏标题" :value="screenInfo.name" @blur="handleChangeScreenName" />
       </span>
     </div>
     <!-- 大屏名称 end -->
@@ -20,7 +19,7 @@
         <ul class="btns-box clearfix">
           <!-- 保存按钮 start -->
           <li class="btn-item">
-            <div class="tool-icon">
+            <div class="tool-icon" @click="handleSave">
               <i class="bi-data bi-data-save"></i>
             </div>
           </li>
@@ -68,7 +67,7 @@
                   @click.stop="handleAddChart(chart.type)"
                 >
                   {{ chart.name }}
-                  <div class="sub-chart-wrap">
+                  <div class="sub-chart-wrap" v-if="chart.sub && chart.sub.length">
                     <ul class="sub-chart-list">
                       <li
                         v-for="subchart in chart.sub"
@@ -175,7 +174,6 @@
 <script>
 import cloneDeep from 'lodash/cloneDeep';
 import merge from 'lodash/merge';
-import generateID from '@/utils/generateID';
 import chartList from '@/config/chart-list';
 import shapeList from '@/config/shape-list';
 import BoardType from '@/views/screenManage/screen/setting/default-type';
@@ -186,19 +184,24 @@ import { mapState } from 'vuex';
 import ScreenSourceModal from '../components/screen-source/modal';
 import Vue from 'vue';
 import MapSelectView from '../mapSelectView';
-
+import omit from 'lodash/omit';
 /**
  * @description 编辑大屏菜单工具栏
  */
 export default {
   name: 'DrawingBoardHeader',
+  props: {
+    screenInfo: {
+      type: Object,
+      required: true,
+    },
+  },
   data() {
     return {
       parameter,
       chartList, // 图表列表
       shapeList, // 形状列表
       BoardType, // 图表类型
-      screenName: '未命名大屏',
       sourceModalVisible: false, // 素材库模态框
     };
   },
@@ -208,6 +211,9 @@ export default {
   computed: {
     ...mapState({
       model: state => state.board.model,
+      // 组件列表
+      components: state => state.board.components,
+      page: state => state.board.page,
     }),
     undoDisable() {
       // 是否可用撤销
@@ -229,7 +235,6 @@ export default {
      * @description 获取选中的素材库
      */
     getSelectedSource(data) {
-      console.log(data);
       const mergeObj = {
         setting: {
           data: {
@@ -247,13 +252,9 @@ export default {
       this.sourceModalVisible = false;
     },
     /**
-     * @description 获取形状列表
-     */
-    getShapList() {},
-    /**
      * @description 添加图表
      */
-    handleAddChart(type, mergeObj = {}, mapOkRegion = '') {
+    async handleAddChart(type, mergeObj = {}, mapOkRegion = '') {
       // 新建地图选择区域
       if (type === 'ChartMap' && !mapOkRegion) {
         this.showMapSelectView();
@@ -263,25 +264,32 @@ export default {
       if (mapOkRegion) {
         setting.setting.style.echart.geo.map = mapOkRegion;
       }
-      const id = generateID();
-      const component = merge(
-        setting,
-        {
-          id,
-          setting: {
-            style: {
-              title: {
-                text: `未命名图表${id}`,
+
+      const result = await this.$server.screenManage.addToGetChartId();
+      if (result && result.code === 200) {
+        const len = this.components.length;
+        const component = merge(
+          setting,
+          {
+            id: result.data.id,
+            setting: {
+              style: {
+                title: {
+                  text: `未命名图表${len}`,
+                },
               },
             },
           },
-        },
-        mergeObj,
-      );
-      this.$store.commit(boardMutaion.ADD_COM, {
-        component,
-      });
+          mergeObj,
+        );
+        this.$store.commit(boardMutaion.ADD_COM, {
+          component,
+        });
+      } else {
+        this.$message(result.msg || '添加图表失败');
+      }
     },
+    // TODO: 改成a-modal
     /**
      * @description 地图选择区域弹窗
      */
@@ -320,8 +328,8 @@ export default {
      */
     handleChangeScreenName(event) {
       const value = event.target.value;
-      if (!value) return (event.target.value = this.screenName);
-      this.screenName = value;
+      if (!value) return (event.target.value = this.screenInfo.name);
+      this.$emit('changeName', value);
     },
     /**
      * @description 大屏预览
@@ -332,11 +340,34 @@ export default {
       });
     },
     /**
+     * @description 保存数据
+     */
+    async handleSave() {
+      const { tabId, id } = this.$route.query;
+      const param = {
+        name: this.screenInfo.name,
+        screenId: id,
+        id: tabId,
+        graphs: this.components,
+        setting: this.page,
+      };
+      const result = await this.$server.screenManage.saveScreenTab(param);
+      if (result && result.code === 200) {
+        this.$message.success(result.msg);
+      } else {
+        this.$message.error(result.msg);
+      }
+    },
+    /**
      * @description 大屏退出
      */
     handleOutEdit() {
+      const query = this.$route.query;
       this.$router.push({
         name: 'catalog',
+        query: {
+          ...omit(query, ['model']),
+        },
       });
     },
   },

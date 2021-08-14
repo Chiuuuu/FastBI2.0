@@ -13,7 +13,7 @@ export default {
     data: {
       // 数据
       expands: [],
-      dataModelId: '11', // 数据模型id
+      dataModelId: '', // 数据模型id
       filter: {}, // 数据筛选
       options: {
         //数据筛选、排序
