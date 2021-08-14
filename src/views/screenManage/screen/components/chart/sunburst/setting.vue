@@ -194,7 +194,7 @@
                     <UnitCheckbox
                       class="show-btn"
                       label="显示"
-                      :value="currentCom.setting.style.echart.customLabel.show"
+                      :value="currentCom.setting.style.echart.customSeries.label.show"
                       @change="show => handleLabel('show', show)"
                     ></UnitCheckbox>
                     <!-- 标签是否显示 end -->
@@ -228,7 +228,7 @@
                       <a-col :span="4">
                         <div class="font-color">
                           <ColorPicker
-                            :value="currentCom.setting.style.echart.customLabel.color"
+                            :value="currentCom.setting.style.echart.customSeries.label.color"
                             @change="color => handleLabel('color', color)"
                           ></ColorPicker>
                         </div>
@@ -238,7 +238,7 @@
                       <!-- 标签 字体 大小 start -->
                       <a-col :span="16">
                         <a-input-number
-                          :value="currentCom.setting.style.echart.customLabel.fontSize"
+                          :value="currentCom.setting.style.echart.customSeries.label.fontSize"
                           :min="0"
                           @change="fontSize => handleLabel('fontSize', fontSize)"
                         />
@@ -253,7 +253,7 @@
                       <!-- 标签 位置 start -->
                       <a-radio-group
                         name="radioGroup"
-                        :value="currentCom.setting.style.echart.customLabel.position"
+                        :value="currentCom.setting.style.echart.customSeries.label.position"
                         @change="event => handleLabel('position', event.target.value)"
                       >
                         <a-radio value="inside">内部</a-radio>
@@ -269,7 +269,7 @@
                       <!-- 标签 位置 start -->
                       <a-radio-group
                         name="rotateGroup"
-                        :value="currentCom.setting.style.echart.customLabel.rotate"
+                        :value="currentCom.setting.style.echart.customSeries.label.rotate"
                         @change="event => handleLabel('rotate', event.target.value)"
                       >
                         <a-radio value="radial">径向</a-radio>
@@ -280,13 +280,11 @@
                     <UnitCheckbox
                       class="show-btn strict"
                       label="是否允许标签重叠"
-                      :value="!currentCom.setting.style.echart.customLabelLayout.hideOverlap"
+                      :value="!currentCom.setting.style.echart.customSeries.labelLayout.hideOverlap"
                       @change="
                         hideOverlap =>
-                          handleChange('echart', {
-                            customLabelLayout: {
-                              hideOverlap: !hideOverlap,
-                            },
+                          doWithSeries('labelLayout', {
+                            hideOverlap: !hideOverlap,
                           })
                       "
                     ></UnitCheckbox>
@@ -343,10 +341,8 @@ export default {
      * @description 标签设置
      */
     handleLabel(key, value) {
-      this.handleChange('echart', {
-        customLabel: {
-          [key]: value,
-        },
+      this.doWithSeries('label', {
+        [key]: value,
       });
     },
     /**

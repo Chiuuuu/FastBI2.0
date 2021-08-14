@@ -29,10 +29,13 @@ export default merge(cloneDeep(BASE), {
           left: 'left',
           top: 'top',
         },
-        customLabel: {
-          show: true,
-          color: '#fff',
-          fontSize: 16,
+        // 系列
+        customSeries: {
+          label: {
+            show: true,
+            color: '#fff',
+            fontSize: 16,
+          },
         },
       },
     },

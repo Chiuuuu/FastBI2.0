@@ -54,7 +54,7 @@ export default merge(cloneDeep(BASE), {
           },
           nameShow: true,
           nameTextStyle: {
-            color: 'yellow',
+            color: '#fff',
             fontSize: '12',
             align: 'right',
             padding: [30, 0, 0, 0],
@@ -132,31 +132,23 @@ export default merge(cloneDeep(BASE), {
             show: false,
           },
         },
-        customLabel: {
-          // 标签
-          show: true,
-          color: '#fff',
-          fontSize: 16,
-          position: 'outside',
-        },
-        customItemStyle: {
-          // 图形样式
-          borderRadius: 0, //圆角半径
+        // 系列
+        customSeries: {
+          label: {
+            // 标签
+            show: true,
+            color: '#fff',
+            fontSize: 16,
+            position: 'outside',
+          },
+          itemStyle: {
+            // 图形样式
+            borderRadius: 0, //圆角半径
+          },
         },
         customShape: 'vertical', // vertical(垂直) || horizontal(水平)
         customBarWidth: 60,
         customStack: false, // 是否开启堆叠
-        customBarColors: [
-          '#5470c6',
-          '#91cc75',
-          '#fac858',
-          '#ee6666',
-          '#73c0de',
-          '#3ba272',
-          '#fc8452',
-          '#9a60b4',
-          '#ea7ccc',
-        ], // 柱状条颜色
         customIsOpenDataLink: false, // 是否开启图表联动
       },
     },

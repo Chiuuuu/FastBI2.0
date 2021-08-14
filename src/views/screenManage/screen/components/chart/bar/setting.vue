@@ -160,50 +160,11 @@
                       <!-- 方向 end -->
                     </a-row>
                     <a-row class="unit-show-block mb-8">
-                      <a-col :span="6" class="unit-show-block position">
-                        <div class="unit-block-title">圆角</div>
+                      <a-col :span="15" class="unit-show-block">
+                        <div class="unit-block-title">柱条宽度(%)</div>
                       </a-col>
-                      <!-- 圆角 start -->
-                      <a-col :span="18">
-                        <!-- 圆角是否启用 start -->
-                        <UnitCheckbox
-                          class="show-btn"
-                          label="启用"
-                          style="top: -8px"
-                          :value="currentCom.setting.style.echart.customItemStyle.borderRadius ? true : false"
-                          @change="value => handleItemStyle('borderRadius', value)"
-                        ></UnitCheckbox>
-                        <!-- 圆角是否启用 end -->
-                      </a-col>
-                      <!-- 圆角 end -->
-                    </a-row>
-                  </div>
-                </CollapsePanel>
-                <CollapsePanel class="content-item" panel="setStyle" header="样式设置">
-                  <div class="setting-unit-content">
-                    <UnitBackgroundColor
-                      class="mb-8"
-                      v-if="currentCom.setting.data.measures.length <= 1"
-                      :color="currentCom.setting.style.echart.customBarColors[0]"
-                      label="颜色"
-                      @change="color => handleBarColor(color)"
-                    ></UnitBackgroundColor>
-                    <a-row v-else class="unit-show-block mb-8">
-                      <a-col :span="8" class="unit-show-block">
-                        <div class="unit-block-title">逐条颜色</div>
-                      </a-col>
-                      <!-- 柱状条 颜色 start -->
-                      <a-col :span="16">
-                        <div class="color-select-box" @click="handleOpenColorModal">颜色选择</div>
-                      </a-col>
-                      <!-- 柱状条 颜色 end -->
-                    </a-row>
-                    <a-row class="unit-show-block">
-                      <a-col :span="8" class="unit-show-block">
-                        <div class="unit-block-title">尺寸(%)</div>
-                      </a-col>
-                      <!-- 柱状条 颜色 start -->
-                      <a-col :span="16">
+                      <!-- 柱条宽度 start -->
+                      <a-col :span="9">
                         <a-input-number
                           :min="0"
                           :max="100"
@@ -211,6 +172,25 @@
                           @change="val => handleBarWidthChange(val)"
                         ></a-input-number>
                       </a-col>
+                      <!-- 柱条宽度 end -->
+                    </a-row>
+                    <a-row class="unit-show-block mb-8">
+                      <a-col :span="6" class="unit-show-block position">
+                        <div class="unit-block-title">柱形圆角</div>
+                      </a-col>
+                      <!-- 圆角 start -->
+                      <a-col :span="18">
+                        <!-- 圆角是否启用 start -->
+                        <UnitCheckbox
+                          class="show-btn"
+                          label="启用"
+                          style="top: -6px"
+                          :value="currentCom.setting.style.echart.customSeries.itemStyle.borderRadius ? true : false"
+                          @change="value => handleItemStyle('borderRadius', value)"
+                        ></UnitCheckbox>
+                        <!-- 圆角是否启用 end -->
+                      </a-col>
+                      <!-- 圆角 end -->
                     </a-row>
                   </div>
                 </CollapsePanel>
@@ -240,13 +220,22 @@
                   ></UnitYaxis>
                   <!-- Y轴 end -->
                 </CollapsePanel>
+                <CollapsePanel class="content-item" panel="yaxis" header="颜色">
+                  <!-- 颜色 start -->
+                  <UnitChartColor
+                    :color="currentCom.setting.style.echart.color"
+                    type="color"
+                    @change="(key, value) => handleChange(key, value)"
+                  ></UnitChartColor>
+                  <!-- 颜色 end -->
+                </CollapsePanel>
                 <CollapsePanel class="content-item" panel="legend" header="标签">
                   <div class="setting-unit-content">
                     <!-- 标签是否显示 start -->
                     <UnitCheckbox
                       class="show-btn"
                       label="显示"
-                      :value="currentCom.setting.style.echart.customLabel.show"
+                      :value="currentCom.setting.style.echart.customSeries.label.show"
                       @change="show => handleLabel('show', show)"
                     ></UnitCheckbox>
                     <!-- 标签是否显示 end -->
@@ -260,7 +249,7 @@
                       <a-col :span="4">
                         <div class="font-color">
                           <ColorPicker
-                            :value="currentCom.setting.style.echart.customLabel.color"
+                            :value="currentCom.setting.style.echart.customSeries.label.color"
                             @change="color => handleLabel('color', color)"
                           ></ColorPicker>
                         </div>
@@ -270,7 +259,7 @@
                       <!-- 标签 字体 大小 start -->
                       <a-col :span="16">
                         <a-input-number
-                          :value="currentCom.setting.style.echart.customLabel.fontSize"
+                          :value="currentCom.setting.style.echart.customSeries.label.fontSize"
                           :min="0"
                           @change="fontSize => handleLabel('fontSize', fontSize)"
                         />
@@ -285,7 +274,7 @@
                       <!-- 标签 位置 start -->
                       <a-radio-group
                         name="radioGroup"
-                        :value="currentCom.setting.style.echart.customLabel.position"
+                        :value="currentCom.setting.style.echart.customSeries.label.position"
                         @change="event => handleLabel('position', event.target.value)"
                       >
                         <a-radio value="inside">内部</a-radio>
@@ -338,27 +327,6 @@
         <!-- Tab切换栏 end -->
       </div>
     </div>
-    <a-modal
-      v-model="colorModal"
-      title="编辑离散颜色"
-      cancelText="取消"
-      okText="确定"
-      wrapClassName="color-modal-wrap"
-      @ok="handleColorModalSubmit"
-      @cancel="handleCloseColorModal"
-    >
-      <div class="color-modal-body reset-scrollbar">
-        <template v-for="(item, index) in currentCom.setting.data.measures">
-          <UnitBackgroundColor
-            class="mb-5"
-            :key="item.id"
-            :color="cacheBarColors[index]"
-            :label="item.name"
-            @change="color => handleModalBarColor(color, index)"
-          ></UnitBackgroundColor>
-        </template>
-      </div>
-    </a-modal>
   </div>
 </template>
 <script>
@@ -378,8 +346,6 @@ export default {
       tabAcitve: 'style', // tab选项栏活动目标
       dataCollapseActive: ['dimension', 'measure', 'dataFilter', 'dataSort', 'reset'], // 折叠打开选项
       styleCollapseActive: [],
-      colorModal: false,
-      cacheBarColors: [].concat(this.currentCom.setting.style.echart.customBarColors),
     };
   },
   methods: {
@@ -390,45 +356,6 @@ export default {
       this.handleChange('echart', {
         [key]: value,
       });
-    },
-    /**
-     * @description 只有一条数据的时候，直接更改
-     */
-    handleBarColor(value) {
-      this.cacheBarColors.splice(0, 1, value);
-      this.handleChange('echart', {
-        customBarColors: this.cacheBarColors,
-      });
-    },
-    /**
-     * @description 打开颜色弹窗
-     */
-    handleOpenColorModal() {
-      this.cacheBarColors = JSON.parse(JSON.stringify(this.currentCom.setting.style.echart.customBarColors));
-      this.$nextTick(() => {
-        this.colorModal = true;
-      });
-    },
-    /**
-     * @description 模态窗更改颜色
-     */
-    handleModalBarColor(value, index) {
-      this.cacheBarColors.splice(index, 1, value);
-    },
-    /**
-     * @description 模态窗确定
-     */
-    handleColorModalSubmit() {
-      this.handleChange('echart', {
-        customBarColors: this.cacheBarColors,
-      });
-      this.handleCloseColorModal();
-    },
-    /**
-     * @description 关闭模态窗
-     */
-    handleCloseColorModal() {
-      this.colorModal = false;
     },
     /**
      * @description 更改柱状条宽度
@@ -442,10 +369,8 @@ export default {
      * @description 标签设置
      */
     handleLabel(key, value) {
-      this.handleChange('echart', {
-        customLabel: {
-          [key]: value,
-        },
+      this.doWithSeries('label', {
+        [key]: value,
       });
     },
     /**
@@ -456,10 +381,8 @@ export default {
       if (key === 'borderRadius') {
         value = value === true ? [50, 50, 0, 0] : 0;
       }
-      this.handleChange('echart', {
-        customItemStyle: {
-          [key]: value,
-        },
+      this.doWithSeries('itemStyle', {
+        [key]: value,
       });
     },
   },

@@ -91,6 +91,8 @@ export default merge(cloneDeep(BASE), {
             offsetCenter: ['0%', '20%'],
           },
         },
+        // 系列
+        customSeries: {},
         customGap: 0, // 目标值距仪表盘的间隙
         customRadius: 100, // 半径
         customTarget: {

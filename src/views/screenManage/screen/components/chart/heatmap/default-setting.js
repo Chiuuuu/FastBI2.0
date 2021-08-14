@@ -58,7 +58,7 @@ export default merge(cloneDeep(BASE), {
           },
           nameShow: true,
           nameTextStyle: {
-            color: 'yellow',
+            color: '#fff',
             fontSize: '12',
             align: 'center',
             padding: [30, 0, 0, 0],
@@ -139,12 +139,15 @@ export default merge(cloneDeep(BASE), {
             show: true,
           },
         },
-        customLabel: {
-          // 标签
-          show: true,
-          color: '#fff',
-          fontSize: 16,
-          position: 'inside',
+        // 系列
+        customSeries: {
+          label: {
+            // 标签
+            show: true,
+            color: '#fff',
+            fontSize: 16,
+            position: 'inside',
+          },
         },
       },
     },

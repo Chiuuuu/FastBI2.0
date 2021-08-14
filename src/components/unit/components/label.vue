@@ -68,7 +68,7 @@ export default {
      * @description 设置标签
      */
     handleLabel(key, value) {
-      this.handleChange('customLabel', {
+      this.handleChange('label', {
         [key]: value,
       });
     },

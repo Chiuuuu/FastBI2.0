@@ -27,17 +27,21 @@ export default merge(cloneDeep(BASE), {
         },
         customTarge: true, // 是否启用目标值配置
         customFormatterWay: 'np',
-        customLabel: {
-          show: true,
-          color: '#fff',
-          position: 'center', // outside || inside
-          fontSize,
-          rich: {
-            sub: {
-              fontSize: 0.8 * fontSize,
+        // 系列
+        customSeries: {
+          // 标签
+          label: {
+            show: true,
+            color: '#fff',
+            position: 'center', // outside || inside
+            fontSize,
+            rich: {
+              sub: {
+                fontSize: 0.8 * fontSize,
+              },
             },
+            formatter: '',
           },
-          formatter: '',
         },
         customInRadius: 60, // 内半径
         customOutRadius: 70, // 外半径
