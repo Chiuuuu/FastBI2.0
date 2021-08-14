@@ -73,7 +73,9 @@ export default merge(cloneDeep(BASE), {
             show: true,
             distance: 45, // 标签与刻度线的距离
             color: '#fff',
-            fontSize: 20,
+            fontSize: 16,
+            fontFamily: 'sans-serif',
+            fontWeight: 'normal',
           },
           detail: {
             // 数据
@@ -95,6 +97,8 @@ export default merge(cloneDeep(BASE), {
         customSeries: {},
         customGap: 0, // 目标值距仪表盘的间隙
         customRadius: 100, // 半径
+        customFixed: 0,
+        customValue: 'percentage', // 显示百分比(percentageor)数值(normal)
         customTarget: {
           color: 'yellow',
           backgroundColor: 'red',
