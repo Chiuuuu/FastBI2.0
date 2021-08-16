@@ -120,45 +120,59 @@
                     <!-- 边框设置 end -->
                   </div>
                 </CollapsePanel>
-                <CollapsePanel class="content-item" panel="yaxis" header="颜色">
-                  <!-- 颜色 start -->
-                  <UnitChartColor
-                    :color="currentCom.setting.style.echart.color"
-                    type="color"
-                    @change="(key, value) => handleChange(key, value)"
-                  ></UnitChartColor>
-                  <!-- 颜色 end -->
-                </CollapsePanel>
-                <CollapsePanel class="content-item" panel="legend" header="样式设置">
+                <CollapsePanel class="content-item" panel="chartStyle" header="图形属性">
+                  <!-- 图形属性 start -->
                   <div class="setting-unit-content">
                     <a-row class="unit-show-block mb-8">
                       <a-col :span="7">
-                        <div class="unit-block-title">中心点(%)</div>
+                        <div class="unit-block-title">中心坐标</div>
                       </a-col>
 
                       <!-- 中心点 X坐标 start -->
                       <a-col :span="8" class="col-offset">
                         <div class="unit-block-title">X</div>
-                        <a-input-number
-                          :min="0"
-                          :max="100"
-                          :value="currentCom.setting.style.echart.customCenter[0]"
-                          @change="value => handleCenter(value, 0)"
-                        ></a-input-number>
+                        <a-input
+                          :value="currentCom.setting.style.echart.customSeries.center[0]"
+                          @change="e => handleCenter(e.target.value, 0)"
+                        ></a-input>
                       </a-col>
                       <!-- 中心点 X坐标 end -->
                       <!-- 中心点 Y坐标 start -->
                       <a-col :span="8" class="col-offset">
                         <div class="unit-block-title">Y</div>
-                        <a-input-number
-                          :min="0"
-                          :max="100"
-                          :value="currentCom.setting.style.echart.customCenter[1]"
-                          @change="value => handleCenter(value, 1)"
-                        ></a-input-number>
+                        <a-input
+                          :value="currentCom.setting.style.echart.customSeries.center[1]"
+                          @change="e => handleCenter(e.target.value, 1)"
+                        ></a-input>
                       </a-col>
                       <!-- 中心点 Y坐标 end -->
                     </a-row>
+                    <!-- 内环大小 start -->
+                    <a-row class="unit-show-block mb-8">
+                      <a-col :span="8" class="unit-show-block">
+                        <div class="unit-block-title">内环半径</div>
+                      </a-col>
+                      <a-col :span="16">
+                        <a-input
+                          :value="currentCom.setting.style.echart.customSeries.radius[0]"
+                          @change="e => handleRadius(e.target.value, 0)"
+                        ></a-input>
+                      </a-col>
+                    </a-row>
+                    <!-- 内环大小 end -->
+                    <!-- 外环大小 start -->
+                    <a-row class="unit-show-block mb-8">
+                      <a-col :span="8" class="unit-show-block">
+                        <div class="unit-block-title">外环半径</div>
+                      </a-col>
+                      <a-col :span="16">
+                        <a-input
+                          :value="currentCom.setting.style.echart.customSeries.radius[1]"
+                          @change="e => handleRadius(e.target.value, 1)"
+                        ></a-input>
+                      </a-col>
+                    </a-row>
+                    <!-- 外环大小 end -->
                     <a-row class="unit-show-block mb-8">
                       <a-col :span="8" class="unit-show-block">
                         <div class="unit-block-title">扇形个数</div>
@@ -181,7 +195,6 @@
                       <a-col :span="6" class="unit-show-block position">
                         <div class="unit-block-title">展示</div>
                       </a-col>
-
                       <!-- 形状 方式 start -->
                       <a-col :span="18">
                         <a-radio-group
@@ -197,43 +210,7 @@
                     </a-row>
                   </div>
                 </CollapsePanel>
-                <CollapsePanel class="content-item" panel="radius" header="半径">
-                  <div class="setting-unit-content">
-                    <a-row class="unit-show-block mb-8">
-                      <a-col :span="8">
-                        <div class="unit-block-title">内半径(%)</div>
-                      </a-col>
-
-                      <!-- 内半径 start -->
-                      <a-col :span="16">
-                        <a-input-number
-                          :min="0"
-                          :max="100"
-                          :value="currentCom.setting.style.echart.customInRadius"
-                          @change="customInRadius => handleRadius('customInRadius', customInRadius)"
-                        ></a-input-number>
-                      </a-col>
-                      <!-- 内半径 end -->
-                    </a-row>
-                    <a-row class="unit-show-block mb-8">
-                      <a-col :span="8">
-                        <div class="unit-block-title">外半径(%)</div>
-                      </a-col>
-
-                      <!-- 外半径 start -->
-                      <a-col :span="16">
-                        <a-input-number
-                          :min="0"
-                          :max="100"
-                          :value="currentCom.setting.style.echart.customOutRadius"
-                          @change="customOutRadius => handleRadius('customOutRadius', customOutRadius)"
-                        ></a-input-number>
-                      </a-col>
-                      <!-- 外半径 end -->
-                    </a-row>
-                  </div>
-                </CollapsePanel>
-                <CollapsePanel class="content-item" panel="label" header="标签">
+                <CollapsePanel class="content-item" panel="label" header="指标设置">
                   <div class="setting-unit-content">
                     <!-- 标签是否显示 start -->
                     <UnitCheckbox
@@ -311,6 +288,15 @@
                       <!-- 标签 位置 end -->
                     </a-row>
                   </div>
+                </CollapsePanel>
+                <CollapsePanel class="content-item" panel="yaxis" header="颜色">
+                  <!-- 颜色 start -->
+                  <UnitChartColor
+                    :color="currentCom.setting.style.echart.color"
+                    type="color"
+                    @change="(key, value) => handleChange(key, value)"
+                  ></UnitChartColor>
+                  <!-- 颜色 end -->
                 </CollapsePanel>
                 <CollapsePanel class="content-item" panel="legend" header="图例">
                   <UnitLegend
@@ -410,10 +396,10 @@ export default {
     /**
      * @description 处理半径
      */
-    handleRadius(key, value) {
-      this.handleChange('echart', {
-        [key]: value,
-      });
+    handleRadius(value, index) {
+      const radius = [].concat(this.currentCom.setting.style.echart.customSeries.radius);
+      radius.splice(index, 1, value);
+      this.doWithSeries('radius', radius);
     },
     /**
      * @description 处理中心点
@@ -421,9 +407,7 @@ export default {
     handleCenter(value, index) {
       const center = [].concat(this.currentCom.setting.style.echart.customCenter);
       center.splice(index, 1, value);
-      this.handleChange('echart', {
-        customCenter: center,
-      });
+      this.doWithSeries('center', center);
     },
     handleRose(key, value) {
       this.handleChange('echart', {

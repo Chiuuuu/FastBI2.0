@@ -78,8 +78,19 @@ export default merge(cloneDeep(BASE), {
             },
           },
         },
-        // 系列
-        customSeries: {},
+        // 系列配置
+        customSeries: {
+          label: {
+            // 标签
+            show: false,
+            color: '#fff',
+            fontSize: 16,
+            position: 'top',
+          },
+          areaStyle: {
+            opacity: 0,
+          },
+        },
         customOpacity: 0, // 透明度
         customIsOpenDataLink: false, // 是否开启图表联动
         customInteractive: {}, // 保存联动数据
