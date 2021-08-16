@@ -139,15 +139,17 @@
                     ></UnitLabel>
                     <!-- 展示数值 end -->
                     <a-row class="unit-show-block mb-8">
-                      <a-col :span="8" class="unit-show-block">
-                        <div class="unit-block-title">柱条宽度</div>
+                      <a-col :span="10" class="unit-show-block">
+                        <div class="unit-block-title">柱条宽度(%)</div>
                       </a-col>
                       <!-- 柱条宽度 start -->
-                      <a-col :span="16">
-                        <a-input
-                          :value="currentCom.setting.style.echart.customSeries.barWidth"
-                          @change="e => doWithSeries('barWidth', e.target.value)"
-                        ></a-input>
+                      <a-col :span="14">
+                        <a-input-number
+                          :min="0"
+                          :max="100"
+                          :value="currentCom.setting.style.echart.customBarWidth"
+                          @change="value => handleChange('echart', { customBarWidth: value })"
+                        ></a-input-number>
                       </a-col>
                       <!-- 柱条宽度 end -->
                     </a-row>

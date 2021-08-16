@@ -3,8 +3,9 @@ import BoardType from '@/views/screenManage/screen/setting/default-type';
 import BaseChart from '../base';
 import defaultData from './default-data';
 import merge from 'lodash/merge';
+import omit from 'lodash/omit';
 /**
- * @description 饼图
+ * @description 嵌套饼图
  */
 export default {
   name: `${BoardType.ChartNestPie}View`,
@@ -103,14 +104,16 @@ export default {
       return options;
     },
     createSeriesUnit(data, radius, echart) {
+      const seriesData = { ...omit(echart.customSeries, ['label', 'labelLayout']) };
       return {
         type: 'pie',
-        center: this.doWithCenter(echart.customCenter),
+        // center: this.doWithCenter(echart.customCenter),
         radius: radius,
         label: this.doWithLabel(echart.customSeries.label),
         labelLayout: this.doWithLabelLayout.bind(this, echart.customSeries.labelLayout, this.chartInstane.getWidth()),
         labelLine: this.doWithLabelLine(),
         data: data,
+        ...seriesData,
       };
     },
     /*

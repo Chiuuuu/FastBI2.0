@@ -139,33 +139,29 @@
                   ></UnitChartColor>
                   <!-- 颜色 end -->
                 </CollapsePanel>
-                <CollapsePanel class="content-item" panel="legend" header="样式设置">
+                <CollapsePanel class="content-item" panel="legend" header="图形属性">
                   <div class="setting-unit-content">
                     <a-row class="unit-show-block mb-8">
                       <a-col :span="7">
-                        <div class="unit-block-title">中心点(%)</div>
+                        <div class="unit-block-title">中心坐标</div>
                       </a-col>
 
                       <!-- 中心点 X坐标 start -->
                       <a-col :span="8" class="col-offset">
                         <div class="unit-block-title">X</div>
-                        <a-input-number
-                          :min="0"
-                          :max="100"
-                          :value="currentCom.setting.style.echart.customCenter[0]"
-                          @change="value => handleCenter(value, 0)"
-                        ></a-input-number>
+                        <a-input
+                          :value="currentCom.setting.style.echart.customSeries.center[0]"
+                          @change="e => handleCenter(e.target.value, 0)"
+                        ></a-input>
                       </a-col>
                       <!-- 中心点 X坐标 end -->
                       <!-- 中心点 Y坐标 start -->
                       <a-col :span="8" class="col-offset">
                         <div class="unit-block-title">Y</div>
-                        <a-input-number
-                          :min="0"
-                          :max="100"
-                          :value="currentCom.setting.style.echart.customCenter[1]"
-                          @change="value => handleCenter(value, 1)"
-                        ></a-input-number>
+                        <a-input
+                          :value="currentCom.setting.style.echart.customSeries.center[1]"
+                          @change="e => handleCenter(e.target.value, 1)"
+                        ></a-input>
                       </a-col>
                       <!-- 中心点 Y坐标 end -->
                     </a-row>
@@ -176,6 +172,7 @@
                       <a-col :span="16">
                         <a-input-number
                           :min="0"
+                          :max="100"
                           :value="currentCom.setting.style.echart.customRadius"
                           @change="customRadius => handleChange('echart', { customRadius })"
                         ></a-input-number>
@@ -183,7 +180,7 @@
                     </a-row>
                   </div>
                 </CollapsePanel>
-                <CollapsePanel class="content-item" panel="label" header="标签">
+                <CollapsePanel class="content-item" panel="label" header="指标设置">
                   <div class="setting-unit-content">
                     <!-- 标签是否显示 start -->
                     <UnitCheckbox
@@ -365,9 +362,7 @@ export default {
     handleCenter(value, index) {
       const center = [].concat(this.currentCom.setting.style.echart.customCenter);
       center.splice(index, 1, value);
-      this.handleChange('echart', {
-        customCenter: center,
-      });
+      this.doWithSeries('center', center);
     },
     handleRose(key, value) {
       this.handleChange('echart', {

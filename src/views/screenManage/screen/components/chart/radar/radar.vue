@@ -3,6 +3,7 @@ import BoardType from '@/views/screenManage/screen/setting/default-type';
 import BaseChart from '../base';
 import defaultData from './default-data';
 import merge from 'lodash/merge';
+import omit from 'lodash/omit';
 import { setLinkageData, resetOriginData } from '@/utils/setDataLink';
 // TODO:优化逻辑和代码
 /**
@@ -47,12 +48,11 @@ export default {
       const legend = this.doWithlegend(data);
       const radius = this.doWithRadius(echart.customInRadius, echart.customOutRadius);
       const center = this.doWithCenter(echart.customCenter);
+      const seriesData = { ...omit(echart.customSeries, []) };
       const series = [
         {
           type: 'radar',
-          areaStyle: {
-            opacity: echart.customOpacity,
-          },
+          ...seriesData,
           data,
         },
       ];
