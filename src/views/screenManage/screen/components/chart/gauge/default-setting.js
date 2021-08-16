@@ -81,6 +81,8 @@ export default merge(cloneDeep(BASE), {
             // 数据
             show: true,
             fontSize: 30,
+            fontFamily: 'sans-serif',
+            fontWeight: 'normal',
             color: 'rgb(73,146,255)',
             valueAnimation: true,
             formatter: '{value}',
@@ -90,6 +92,8 @@ export default merge(cloneDeep(BASE), {
             show: true,
             color: 'rgb(73,146,255)',
             fontSize: 16,
+            fontFamily: 'sans-serif',
+            fontWeight: 'normal',
             offsetCenter: ['0%', '20%'],
           },
         },

@@ -295,7 +295,7 @@
                     </a-row>
                   </div>
                 </CollapsePanel>
-                <CollapsePanel class="content-item" panel="label" header="指标">
+                <CollapsePanel class="content-item" panel="label" header="指标设置">
                   <div class="setting-unit-content">
                     <UnitCheckbox
                       class="show-btn"

@@ -91,7 +91,6 @@ export default {
       });
 
       options.data = [cur];
-
       return options;
     },
     /**
