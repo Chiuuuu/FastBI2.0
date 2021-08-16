@@ -110,230 +110,9 @@
                   <!-- 标题 end -->
                 </CollapsePanel>
 
-                <CollapsePanel class="content-item" panel="bgAndBorder" header="背景和边框">
+                <CollapsePanel class="content-item" panel="style" header="图形属性">
                   <div class="setting-unit-content">
-                    <!-- 背景图片 start -->
-                    <UnitBackgroundImage
-                      class="mb-8"
-                      :background="currentCom.setting.style.background"
-                      @change="value => handleChange('background', value)"
-                    ></UnitBackgroundImage>
-                    <!-- 背景图片 end -->
-                    <!-- 背景颜色 start -->
-                    <UnitBackgroundColor
-                      class="mb-8"
-                      :color="currentCom.setting.style.background.color"
-                      @change="color => handleChange('background', { color })"
-                    ></UnitBackgroundColor>
-                    <!-- 背景颜色 end -->
-                    <!-- 边框设置 start -->
-                    <UnitBorder
-                      :border="currentCom.setting.style.border"
-                      @change="(key, value) => handleChange(key, value)"
-                    ></UnitBorder>
-                    <!-- 边框设置 end -->
-                  </div>
-                </CollapsePanel>
-
-                <CollapsePanel class="content-item" panel="label" header="标签">
-                  <div class="setting-unit-content">
-                    <a-row class="unit-show-block mb-8">
-                      <a-col :span="4">
-                        <div class="unit-block-title">字体</div>
-                      </a-col>
-
-                      <!-- 字体 颜色 start -->
-                      <a-col :span="4">
-                        <div class="font-color">
-                          <ColorPicker
-                            :value="gauge.title.color"
-                            @change="color => handleTarget('title', { color })"
-                          ></ColorPicker>
-                        </div>
-                      </a-col>
-                      <!-- 字体 颜色 end -->
-
-                      <a-col :span="16">
-                        <a-row>
-                          <!-- 字体 大小 start -->
-                          <a-col :span="14">
-                            <a-input-number
-                              :value="gauge.title.fontSize"
-                              :min="0"
-                              @change="fontSize => handleTarget('title', { fontSize })"
-                            />
-                          </a-col>
-                          <!-- 字体 大小 end -->
-
-                          <a-col :span="10">
-                            <UnitCheckbox
-                              class="show-btn block-checkbox"
-                              label="显示"
-                              :value="gauge.title.show"
-                              @change="show => handleTarget('title', { show })"
-                            ></UnitCheckbox>
-                          </a-col>
-                        </a-row>
-                      </a-col>
-                    </a-row>
-                    <a-row class="unit-show-block mb-8">
-                      <a-col :span="7">
-                        <div class="unit-block-title">中心点(%)</div>
-                      </a-col>
-
-                      <!-- 中心点 X坐标 start -->
-                      <a-col :span="8" class="col-offset">
-                        <div class="unit-block-title">X</div>
-                        <a-input-number
-                          :min="0"
-                          :max="100"
-                          :value="handleSplitPercent(gauge.title.offsetCenter[0])"
-                          @change="value => handleCenter('title', value, gauge.title.offsetCenter, 0)"
-                        ></a-input-number>
-                      </a-col>
-                      <!-- 中心点 X坐标 end -->
-                      <!-- 中心点 Y坐标 start -->
-                      <a-col :span="8" class="col-offset">
-                        <div class="unit-block-title">Y</div>
-                        <a-input-number
-                          :min="0"
-                          :max="100"
-                          :value="handleSplitPercent(gauge.title.offsetCenter[1])"
-                          @change="value => handleCenter('title', value, gauge.title.offsetCenter, 1)"
-                        ></a-input-number>
-                      </a-col>
-                      <!-- 中心点 Y坐标 end -->
-                    </a-row>
-                  </div>
-                </CollapsePanel>
-                <CollapsePanel class="content-item" panel="current" header="进度值设置">
-                  <div class="setting-unit-content">
-                    <UnitCheckbox
-                      class="show-btn"
-                      label="显示"
-                      :value="gauge.progress.show"
-                      @change="value => handleTargetShow(value)"
-                    ></UnitCheckbox>
-
-                    <a-row class="unit-show-block mb-8">
-                      <!-- 进度值 颜色 start -->
-                      <UnitBackgroundColor
-                        class="mb-8"
-                        label="进度颜色"
-                        :color="gauge.progress.itemStyle.color"
-                        @change="color => handleTarget('progress', { itemStyle: { color } })"
-                      ></UnitBackgroundColor>
-                      <!-- 进度值 颜色 end -->
-                    </a-row>
-
-                    <a-row class="unit-show-block mb-8">
-                      <a-col :span="7">
-                        <div class="unit-block-title">中心点(%)</div>
-                      </a-col>
-
-                      <!-- 中心点 X坐标 start -->
-                      <a-col :span="8" class="col-offset">
-                        <div class="unit-block-title">X</div>
-                        <a-input-number
-                          :min="0"
-                          :max="100"
-                          :value="handleSplitPercent(gauge.detail.offsetCenter[0])"
-                          @change="value => handleCenter('detail', value, gauge.detail.offsetCenter, 0)"
-                        ></a-input-number>
-                      </a-col>
-                      <!-- 中心点 X坐标 end -->
-                      <!-- 中心点 Y坐标 start -->
-                      <a-col :span="8" class="col-offset">
-                        <div class="unit-block-title">Y</div>
-                        <a-input-number
-                          :min="0"
-                          :max="100"
-                          :value="handleSplitPercent(gauge.detail.offsetCenter[1])"
-                          @change="value => handleCenter('detail', value, gauge.detail.offsetCenter, 1)"
-                        ></a-input-number>
-                      </a-col>
-                      <!-- 中心点 Y坐标 end -->
-                    </a-row>
-                  </div>
-                </CollapsePanel>
-
-                <CollapsePanel class="content-item" panel="target" header="目标值设置">
-                  <div class="setting-unit-content">
-                    <!-- 进度颜色 start -->
-                    <UnitBackgroundColor
-                      class="mb-8"
-                      label="进度颜色"
-                      :color="currentCom.setting.style.echart.customTarget.color"
-                      @change="color => handleTargetColor('color', color)"
-                    ></UnitBackgroundColor>
-                    <!-- 进度颜色 end -->
-
-                    <!-- 背景颜色 start -->
-                    <UnitBackgroundColor
-                      class="mb-8"
-                      label="背景颜色"
-                      :color="currentCom.setting.style.echart.customTarget.backgroundColor"
-                      @change="color => handleTargetColor('backgroundColor', color)"
-                    ></UnitBackgroundColor>
-                    <!-- 背景颜色 end -->
-                  </div>
-                </CollapsePanel>
-                <CollapsePanel class="content-item" panel="pointer" header="指针设置">
-                  <div class="setting-unit-content">
-                    <UnitCheckbox
-                      class="show-btn block-checkbox"
-                      label="显示"
-                      :value="gauge.pointer.show"
-                      @change="show => handleTarget('pointer', { show })"
-                    ></UnitCheckbox>
-
-                    <a-row class="unit-show-block mb-8">
-                      <!-- 指针颜色 start -->
-                      <UnitBackgroundColor
-                        label="颜色"
-                        :color="gauge.pointer.itemStyle.color"
-                        @change="
-                          color =>
-                            handleTarget('pointer', {
-                              itemStyle: { color },
-                            })
-                        "
-                      ></UnitBackgroundColor>
-                      <!-- 指针颜色 end -->
-                    </a-row>
-                    <a-row class="unit-show-block mb-8">
-                      <!-- 指针宽度 start -->
-                      <a-col :span="8">
-                        <div class="unit-block-title">宽度</div>
-                      </a-col>
-                      <a-col :span="16">
-                        <a-input-number
-                          :min="0"
-                          :value="gauge.pointer.width"
-                          @change="width => handleTarget('pointer', { width })"
-                        ></a-input-number>
-                      </a-col>
-                      <!-- 指针宽度 end -->
-                    </a-row>
-
-                    <a-row class="unit-show-block mb-8">
-                      <!-- 指针高度 start -->
-                      <a-col :span="8">
-                        <div class="unit-block-title">长度(%)</div>
-                      </a-col>
-
-                      <!-- 中心点 X坐标 start -->
-                      <a-col :span="16">
-                        <a-input-number
-                          :min="0"
-                          :max="100"
-                          :value="handleSplitPercent(gauge.pointer.length)"
-                          @change="value => handleTarget('pointer', { length: `${value}%` })"
-                        ></a-input-number>
-                      </a-col>
-                      <!-- 指针高度 end -->
-                    </a-row>
-
+                    <!-- 表盘中心 -->
                     <a-row class="unit-show-block mb-8">
                       <a-col :span="7">
                         <div class="unit-block-title">中心点(%)</div>
@@ -345,8 +124,8 @@
                         <a-input-number
                           :min="-100"
                           :max="100"
-                          :value="handleSplitPercent(gauge.pointer.offsetCenter[0])"
-                          @change="value => handleCenter('pointer', value, gauge.pointer.offsetCenter, 0)"
+                          :value="handleSplitPercent(gauge.center[0])"
+                          @change="value => handleStoreCenter(value, 0)"
                         ></a-input-number>
                       </a-col>
                       <!-- 中心点 X坐标 end -->
@@ -356,13 +135,14 @@
                         <a-input-number
                           :min="-100"
                           :max="100"
-                          :value="handleSplitPercent(gauge.pointer.offsetCenter[1])"
-                          @change="value => handleCenter('pointer', value, gauge.pointer.offsetCenter, 1)"
+                          :value="handleSplitPercent(gauge.center[1])"
+                          @change="value => handleStoreCenter(value, 1)"
                         ></a-input-number>
                       </a-col>
                       <!-- 中心点 Y坐标 end -->
                     </a-row>
 
+                    <!-- 表盘角度 -->
                     <a-row class="unit-show-block mb-8">
                       <a-col :span="7">
                         <div class="unit-block-title">表盘角度</div>
@@ -391,10 +171,155 @@
                       </a-col>
                       <!-- 表盘角度 终点 end -->
                     </a-row>
-                  </div>
-                </CollapsePanel>
-                <CollapsePanel class="content-item" panel="style" header="样式设置">
-                  <div class="setting-unit-content">
+
+                    <!-- 目标颜色 start -->
+                    <UnitBackgroundColor
+                      class="mb-8"
+                      label="目标颜色"
+                      :color="currentCom.setting.style.echart.customTarget.color"
+                      @change="color => handleTargetColor('color', color)"
+                    ></UnitBackgroundColor>
+                    <!-- 目标颜色 end -->
+
+                    <!-- 预警颜色 start -->
+                    <UnitBackgroundColor
+                      class="mb-8"
+                      label="预警颜色"
+                      :color="currentCom.setting.style.echart.customTarget.backgroundColor"
+                      @change="color => handleTargetColor('backgroundColor', color)"
+                    ></UnitBackgroundColor>
+                    <!-- 预警颜色 end -->
+
+                    <a-row class="unit-show-block mb-8">
+                      <a-col :span="4">
+                        <div class="unit-block-title">进度条</div>
+                      </a-col>
+                      <a-col :span="10" :offset="10">
+                        <UnitCheckbox
+                          class="show-btn block-checkbox"
+                          label="显示"
+                          :value="gauge.progress.show"
+                          @change="value => handleTargetShow(value)"
+                        ></UnitCheckbox>
+                      </a-col>
+                    </a-row>
+
+                    <!-- 进度条相关配置 start -->
+                    <template v-if="gauge.progress.show">
+                      <a-row class="unit-show-block">
+                        <!-- 进度值 颜色 start -->
+                        <UnitBackgroundColor
+                          class="mb-8"
+                          label="进度颜色"
+                          :color="gauge.progress.itemStyle.color"
+                          @change="color => handleTarget('progress', { itemStyle: { color } })"
+                        ></UnitBackgroundColor>
+                        <!-- 进度值 颜色 end -->
+                      </a-row>
+                    </template>
+                    <!-- 进度条相关配置 end -->
+
+                    <!-- 指针显示 start -->
+                    <a-row class="unit-show-block mb-8">
+                      <a-col :span="4">
+                        <div class="unit-block-title">指针</div>
+                      </a-col>
+                      <a-col :span="10" :offset="10">
+                        <UnitCheckbox
+                          class="show-btn block-checkbox"
+                          label="显示"
+                          :value="gauge.pointer.show"
+                          @change="show => handleTarget('pointer', { show })"
+                        ></UnitCheckbox>
+                      </a-col>
+                    </a-row>
+                    <!-- 指针显示 end -->
+
+                    <!-- 指针相关配置 start -->
+                    <template v-if="gauge.pointer.show">
+                      <a-row class="unit-show-block mb-8">
+                        <!-- 指针颜色 start -->
+                        <UnitBackgroundColor
+                          label="颜色"
+                          :color="gauge.pointer.itemStyle.color"
+                          @change="
+                            color =>
+                              handleTarget('pointer', {
+                                itemStyle: { color },
+                              })
+                          "
+                        ></UnitBackgroundColor>
+                        <!-- 指针颜色 end -->
+                      </a-row>
+                      <a-row class="unit-show-block mb-8">
+                        <!-- 指针宽度 start -->
+                        <a-col :span="8">
+                          <div class="unit-block-title">宽度</div>
+                        </a-col>
+                        <a-col :span="16">
+                          <a-input-number
+                            :min="0"
+                            :value="gauge.pointer.width"
+                            @change="width => handleTarget('pointer', { width })"
+                          ></a-input-number>
+                        </a-col>
+                        <!-- 指针宽度 end -->
+                      </a-row>
+
+                      <a-row class="unit-show-block mb-8">
+                        <!-- 指针高度 start -->
+                        <a-col :span="8">
+                          <div class="unit-block-title">长度(%)</div>
+                        </a-col>
+
+                        <!-- 中心点 X坐标 start -->
+                        <a-col :span="16">
+                          <a-input-number
+                            :min="0"
+                            :max="100"
+                            :value="handleSplitPercent(gauge.pointer.length)"
+                            @change="value => handleTarget('pointer', { length: `${value}%` })"
+                          ></a-input-number>
+                        </a-col>
+                        <!-- 指针高度 end -->
+                      </a-row>
+
+                      <a-row class="unit-show-block mb-8">
+                        <a-col :span="7">
+                          <div class="unit-block-title">中心点(%)</div>
+                        </a-col>
+
+                        <!-- 中心点 X坐标 start -->
+                        <a-col :span="8" class="col-offset">
+                          <div class="unit-block-title">X</div>
+                          <a-input-number
+                            :min="-100"
+                            :max="100"
+                            :value="handleSplitPercent(gauge.pointer.offsetCenter[0])"
+                            @change="value => handleCenter('pointer', value, gauge.pointer.offsetCenter, 0)"
+                          ></a-input-number>
+                        </a-col>
+                        <!-- 中心点 X坐标 end -->
+                        <!-- 中心点 Y坐标 start -->
+                        <a-col :span="8" class="col-offset">
+                          <div class="unit-block-title">Y</div>
+                          <a-input-number
+                            :min="-100"
+                            :max="100"
+                            :value="handleSplitPercent(gauge.pointer.offsetCenter[1])"
+                            @change="value => handleCenter('pointer', value, gauge.pointer.offsetCenter, 1)"
+                          ></a-input-number>
+                        </a-col>
+                        <!-- 中心点 Y坐标 end -->
+                      </a-row>
+                    </template>
+                    <!-- 指针相关配置 end -->
+
+                    <a-row class="unit-show-block mb-8">
+                      <a-col :span="4">
+                        <div class="unit-block-title">刻度</div>
+                      </a-col>
+                    </a-row>
                     <!-- 背景颜色 start -->
                     <UnitBackgroundColor
                       class="mb-8"
@@ -433,46 +358,6 @@
                         />
                       </a-col>
                     </a-row>
-
-                    <a-row class="unit-show-block mb-8">
-                      <a-col :span="7">
-                        <div class="unit-block-title">中心点(%)</div>
-                      </a-col>
-
-                      <!-- 中心点 X坐标 start -->
-                      <a-col :span="8" class="col-offset">
-                        <div class="unit-block-title">X</div>
-                        <a-input-number
-                          :min="-100"
-                          :max="100"
-                          :value="handleSplitPercent(gauge.center[0])"
-                          @change="value => handleStoreCenter(value, 0)"
-                        ></a-input-number>
-                      </a-col>
-                      <!-- 中心点 X坐标 end -->
-                      <!-- 中心点 Y坐标 start -->
-                      <a-col :span="8" class="col-offset">
-                        <div class="unit-block-title">Y</div>
-                        <a-input-number
-                          :min="-100"
-                          :max="100"
-                          :value="handleSplitPercent(gauge.center[1])"
-                          @change="value => handleStoreCenter(value, 1)"
-                        ></a-input-number>
-                      </a-col>
-                      <!-- 中心点 Y坐标 end -->
-                    </a-row>
-                  </div>
-                </CollapsePanel>
-                <CollapsePanel class="content-item" panel="style" header="数值设置">
-                  <!-- 数值字体 start -->
-                  <div class="setting-unit-content">
-                    <UnitCheckbox
-                      class="show-btn block-checkbox"
-                      label="展示数值"
-                      :value="gauge.detail.show"
-                      @change="show => handleTarget('detail', { show })"
-                    ></UnitCheckbox>
                     <!-- 文本 start -->
                     <a-row class="unit-show-block mb-8">
                       <a-col :span="4">
@@ -540,42 +425,309 @@
                       </a-col>
                     </a-row>
                     <!-- 粗细 end -->
+                  </div>
+                </CollapsePanel>
 
-                    <!-- 数据格式 start -->
+                <CollapsePanel class="content-item" panel="label" header="指标设置">
+                  <div class="setting-unit-content">
                     <a-row class="unit-show-block mb-8">
-                      <a-col :span="6">
-                        <div class="unit-block-title">数据格式</div>
+                      <a-col :span="4">
+                        <div class="unit-block-title">名称</div>
                       </a-col>
-                      <a-col :span="16" :offset="2">
-                        <a-select
-                          style="width: 100%"
-                          :value="currentCom.setting.style.echart.customValue"
-                          @change="customValue => this.handleTargetValue('customValue', customValue)"
-                        >
-                          <a-select-option value="percentage">百分比</a-select-option>
-                          <a-select-option value="normal">数值</a-select-option>
-                        </a-select>
+                      <a-col :span="10" :offset="10">
+                        <UnitCheckbox
+                          class="show-btn block-checkbox"
+                          label="显示"
+                          :value="gauge.title.show"
+                          @change="show => handleTarget('title', { show })"
+                        ></UnitCheckbox>
                       </a-col>
                     </a-row>
-                    <!-- 数据格式 end -->
 
-                    <!-- 小数位数 start -->
+                    <!-- 名称相关配置 start -->
+                    <template v-if="gauge.title.show">
+                      <!-- 指标名称 中心点 start -->
+                      <a-row class="unit-show-block mb-8">
+                        <a-col :span="7">
+                          <div class="unit-block-title">中心点(%)</div>
+                        </a-col>
+
+                        <!-- 中心点 X坐标 start -->
+                        <a-col :span="8" class="col-offset">
+                          <div class="unit-block-title">X</div>
+                          <a-input-number
+                            :min="0"
+                            :max="100"
+                            :value="handleSplitPercent(gauge.title.offsetCenter[0])"
+                            @change="value => handleLabelCenter('title', value, 0)"
+                          ></a-input-number>
+                        </a-col>
+                        <!-- 中心点 X坐标 end -->
+                        <!-- 中心点 Y坐标 start -->
+                        <a-col :span="8" class="col-offset">
+                          <div class="unit-block-title">Y</div>
+                          <a-input-number
+                            :min="0"
+                            :max="100"
+                            :value="handleSplitPercent(gauge.title.offsetCenter[1])"
+                            @change="value => handleLabelCenter('title', value, 1)"
+                          ></a-input-number>
+                        </a-col>
+                        <!-- 中心点 Y坐标 end -->
+                      </a-row>
+                      <!-- 指标名称 中心点 end -->
+
+                      <!-- 文本 start -->
+                      <a-row class="unit-show-block mb-8">
+                        <a-col :span="4">
+                          <div class="unit-block-title">文本</div>
+                        </a-col>
+
+                        <!-- 字体 颜色 start -->
+                        <a-col :span="4">
+                          <div class="font-color">
+                            <ColorPicker
+                              :value="gauge.title.color"
+                              @change="color => handleTarget('title', { color })"
+                            ></ColorPicker>
+                          </div>
+                        </a-col>
+                        <!-- 字体 颜色 end -->
+
+                        <a-col :span="16">
+                          <a-input-number
+                            :value="gauge.title.fontSize"
+                            :min="0"
+                            @change="fontSize => handleTarget('title', { fontSize })"
+                          />
+                        </a-col>
+                      </a-row>
+                      <!-- 文本 end -->
+
+                      <!-- 字体 start -->
+                      <a-row class="unit-show-block mb-8">
+                        <a-col :span="6">
+                          <div class="unit-block-title">字体</div>
+                        </a-col>
+                        <a-col :span="16" :offset="2">
+                          <a-select
+                            style="width: 100%"
+                            :value="gauge.title.fontFamily"
+                            @change="fontFamily => this.handleTarget('title', { fontFamily })"
+                          >
+                            <a-select-option value="sans-serif">默认</a-select-option>
+                            <a-select-option value="simfang">simfang</a-select-option>
+                            <a-select-option value="fangsong">仿宋_GB2312</a-select-option>
+                            <a-select-option value="times">times</a-select-option>
+                            <a-select-option value="msyh">微软雅黑</a-select-option>
+                            <a-select-option value="simkai">simkai</a-select-option>
+                            <a-select-option value="pangmenzhengdao">庞门正道标题体</a-select-option>
+                            <a-select-option value="HuXiaoBoNanShenTi">HuXiaoBoNanShenTi</a-select-option>
+                            <a-select-option value="youshe">优设标题黑</a-select-option>
+                            <a-select-option value="digital-7-4">digital-7-4</a-select-option>
+                          </a-select>
+                        </a-col>
+                      </a-row>
+                      <!-- 字体 end -->
+
+                      <!-- 粗细 start -->
+                      <a-row class="unit-show-block mb-8">
+                        <a-col :span="6">
+                          <div class="unit-block-title">粗细</div>
+                        </a-col>
+                        <a-col :span="16" :offset="2">
+                          <a-select
+                            style="width: 100%"
+                            :value="gauge.title.fontWeight"
+                            @change="fontWeight => this.handleTarget('title', { fontWeight })"
+                          >
+                            <a-select-option value="normal">正常</a-select-option>
+                            <a-select-option value="bolder">加粗</a-select-option>
+                            <a-select-option value="lighter">更细</a-select-option>
+                          </a-select>
+                        </a-col>
+                      </a-row>
+                      <!-- 粗细 end -->
+                    </template>
+                    <!-- 名称相关配置 end -->
+
+                    <!-- 展示数值 -->
                     <a-row class="unit-show-block mb-8">
-                      <a-col :span="6">
-                        <div class="unit-block-title">小数位数</div>
+                      <a-col :span="5">
+                        <div class="unit-block-title">展示数值</div>
                       </a-col>
-                      <a-col :span="16" :offset="2">
-                        <a-input-number
-                          :value="currentCom.setting.style.echart.customFixed"
-                          :min="0"
-                          :max="5"
-                          @change="customFixed => this.handleTargetValue('customFixed', customFixed)"
-                        />
+                      <a-col :span="10" :offset="9">
+                        <UnitCheckbox
+                          class="show-btn block-checkbox"
+                          label="显示"
+                          :value="gauge.detail.show"
+                          @change="show => handleTarget('detail', { show })"
+                        ></UnitCheckbox>
                       </a-col>
                     </a-row>
-                    <!-- 小数位数 end -->
+                    <!-- 数值相关配置 start -->
+                    <template v-if="gauge.detail.show">
+                      <!-- 数值 中心点 start -->
+                      <a-row class="unit-show-block mb-8">
+                        <a-col :span="7">
+                          <div class="unit-block-title">中心点(%)</div>
+                        </a-col>
+
+                        <!-- 中心点 X坐标 start -->
+                        <a-col :span="8" class="col-offset">
+                          <div class="unit-block-title">X</div>
+                          <a-input-number
+                            :min="0"
+                            :max="100"
+                            :value="handleSplitPercent(gauge.detail.offsetCenter[0])"
+                            @change="value => handleLabelCenter('detail', value, 0)"
+                          ></a-input-number>
+                        </a-col>
+                        <!-- 中心点 X坐标 end -->
+                        <!-- 中心点 Y坐标 start -->
+                        <a-col :span="8" class="col-offset">
+                          <div class="unit-block-title">Y</div>
+                          <a-input-number
+                            :min="0"
+                            :max="100"
+                            :value="handleSplitPercent(gauge.detail.offsetCenter[1])"
+                            @change="value => handleLabelCenter('detail', value, 1)"
+                          ></a-input-number>
+                        </a-col>
+                        <!-- 中心点 Y坐标 end -->
+                      </a-row>
+                      <!-- 数值 中心点 end -->
+
+                      <!-- 文本 start -->
+                      <a-row class="unit-show-block mb-8">
+                        <a-col :span="4">
+                          <div class="unit-block-title">文本</div>
+                        </a-col>
+                        <a-col :span="4">
+                          <div class="font-color">
+                            <ColorPicker
+                              :value="gauge.detail.color"
+                              @change="color => this.handleTarget('detail', { color })"
+                            ></ColorPicker>
+                          </div>
+                        </a-col>
+                        <a-col :span="16">
+                          <a-input-number
+                            :value="gauge.detail.fontSize"
+                            :min="0"
+                            @change="fontSize => this.handleTarget('detail', { fontSize })"
+                          />
+                        </a-col>
+                      </a-row>
+                      <!-- 文本 end -->
+
+                      <!-- 字体 start -->
+                      <a-row class="unit-show-block mb-8">
+                        <a-col :span="6">
+                          <div class="unit-block-title">字体</div>
+                        </a-col>
+                        <a-col :span="16" :offset="2">
+                          <a-select
+                            style="width: 100%"
+                            :value="gauge.detail.fontFamily"
+                            @change="fontFamily => this.handleTarget('detail', { fontFamily })"
+                          >
+                            <a-select-option value="sans-serif">默认</a-select-option>
+                            <a-select-option value="simfang">simfang</a-select-option>
+                            <a-select-option value="fangsong">仿宋_GB2312</a-select-option>
+                            <a-select-option value="times">times</a-select-option>
+                            <a-select-option value="msyh">微软雅黑</a-select-option>
+                            <a-select-option value="simkai">simkai</a-select-option>
+                            <a-select-option value="pangmenzhengdao">庞门正道标题体</a-select-option>
+                            <a-select-option value="HuXiaoBoNanShenTi">HuXiaoBoNanShenTi</a-select-option>
+                            <a-select-option value="youshe">优设标题黑</a-select-option>
+                            <a-select-option value="digital-7-4">digital-7-4</a-select-option>
+                          </a-select>
+                        </a-col>
+                      </a-row>
+                      <!-- 字体 end -->
+
+                      <!-- 粗细 start -->
+                      <a-row class="unit-show-block mb-8">
+                        <a-col :span="6">
+                          <div class="unit-block-title">粗细</div>
+                        </a-col>
+                        <a-col :span="16" :offset="2">
+                          <a-select
+                            style="width: 100%"
+                            :value="gauge.detail.fontWeight"
+                            @change="fontWeight => this.handleTarget('detail', { fontWeight })"
+                          >
+                            <a-select-option value="normal">正常</a-select-option>
+                            <a-select-option value="bolder">加粗</a-select-option>
+                            <a-select-option value="lighter">更细</a-select-option>
+                          </a-select>
+                        </a-col>
+                      </a-row>
+                      <!-- 粗细 end -->
+
+                      <!-- 数据格式 start -->
+                      <a-row class="unit-show-block mb-8">
+                        <a-col :span="6">
+                          <div class="unit-block-title">数据格式</div>
+                        </a-col>
+                        <a-col :span="16" :offset="2">
+                          <a-select
+                            style="width: 100%"
+                            :value="currentCom.setting.style.echart.customValue"
+                            @change="customValue => this.handleTargetValue('customValue', customValue)"
+                          >
+                            <a-select-option value="percentage">百分比</a-select-option>
+                            <a-select-option value="normal">数值</a-select-option>
+                          </a-select>
+                        </a-col>
+                      </a-row>
+                      <!-- 数据格式 end -->
+
+                      <!-- 小数位数 start -->
+                      <a-row class="unit-show-block mb-8">
+                        <a-col :span="6">
+                          <div class="unit-block-title">小数位数</div>
+                        </a-col>
+                        <a-col :span="16" :offset="2">
+                          <a-input-number
+                            :value="currentCom.setting.style.echart.customFixed"
+                            :min="0"
+                            :max="5"
+                            @change="customFixed => this.handleTargetValue('customFixed', customFixed)"
+                          />
+                        </a-col>
+                      </a-row>
+                      <!-- 小数位数 end -->
+                    </template>
+                    <!-- 数值相关配置 end -->
                   </div>
                   <!-- 数值字体 end -->
+                </CollapsePanel>
+
+                <CollapsePanel class="content-item" panel="bgAndBorder" header="背景和边框">
+                  <div class="setting-unit-content">
+                    <!-- 背景图片 start -->
+                    <UnitBackgroundImage
+                      class="mb-8"
+                      :background="currentCom.setting.style.background"
+                      @change="value => handleChange('background', value)"
+                    ></UnitBackgroundImage>
+                    <!-- 背景图片 end -->
+                    <!-- 背景颜色 start -->
+                    <UnitBackgroundColor
+                      class="mb-8"
+                      :color="currentCom.setting.style.background.color"
+                      @change="color => handleChange('background', { color })"
+                    ></UnitBackgroundColor>
+                    <!-- 背景颜色 end -->
+                    <!-- 边框设置 start -->
+                    <UnitBorder
+                      :border="currentCom.setting.style.border"
+                      @change="(key, value) => handleChange(key, value)"
+                    ></UnitBorder>
+                    <!-- 边框设置 end -->
+                  </div>
                 </CollapsePanel>
                 <CollapsePanel class="content-item" panel="reset" :isTogger="false">
                   <!-- 恢复默认配置 start -->
@@ -634,6 +786,12 @@ export default {
         [key]: value,
       });
     },
+    // 指标字体设置
+    handleLabelFont(type, font, value) {
+      this.handleTarget(type, {
+        [font]: value,
+      });
+    },
     // 表盘刻度字体设置
     handleTargetAxisLabelFont(type, value) {
       this.handleTarget('axisLabel', {
@@ -658,7 +816,19 @@ export default {
     handleSplitPercent(value) {
       return value.split('%').shift();
     },
-    // 中心
+    // 指标中心偏移
+    handleLabelCenter(key, value, index) {
+      const offsetCenter = [].concat(this.gauge[key].offsetCenter);
+      offsetCenter.splice(index, 1, `${value}%`);
+      this.handleChange('echart', {
+        customOptions: {
+          [key]: {
+            offsetCenter,
+          },
+        },
+      });
+    },
+    // 指针中心偏移
     handleCenter(key, value, ary, index) {
       ary = [].concat(ary);
       ary.splice(index, 1, `${value}%`);
@@ -666,6 +836,7 @@ export default {
         offsetCenter: ary,
       });
     },
+    // 表盘中心偏移
     handleStoreCenter(value, index) {
       const ary = [].concat(this.gauge.center);
       ary.splice(index, 1, `${value}%`);

@@ -48,7 +48,7 @@ export default {
   },
   computed: {
     showImage() {
-      return this.background.size !== 0;
+      return this.background.image !== '';
     },
   },
   methods: {
@@ -57,8 +57,8 @@ export default {
     },
     // 是否显示背景图片
     handleShowImage(value) {
-      let size = value ? 'auto' : 0;
-      this.handleChange({ size });
+      let image = value ? this.background.customImgUrl : '';
+      this.handleChange({ image });
     },
     // 上传图片
     handleSelectPhoto(e) {
@@ -76,7 +76,7 @@ export default {
         .then(res => {
           if (res.code === 200) {
             let imageUrl = `url("${process.env.VUE_APP_SERVICE_URL}${res.imgUrl}")`;
-            this.handleChange({ image: imageUrl });
+            this.handleChange({ image: imageUrl, customImgUrl: imageUrl });
           } else {
             this.$message.error(res.msg);
           }

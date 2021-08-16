@@ -129,42 +129,6 @@
                   ></UnitChartColor>
                   <!-- 颜色 end -->
                 </CollapsePanel>
-                <CollapsePanel class="content-item" panel="legend" header="半径">
-                  <div class="setting-unit-content">
-                    <a-row class="unit-show-block mb-8">
-                      <a-col :span="8">
-                        <div class="unit-block-title">内半径(%)</div>
-                      </a-col>
-
-                      <!-- 内容显示 start -->
-                      <a-col :span="16">
-                        <a-input-number
-                          :min="0"
-                          :max="100"
-                          :value="currentCom.setting.style.echart.customInRadius"
-                          @change="customInRadius => handleRadius('customInRadius', customInRadius)"
-                        ></a-input-number>
-                      </a-col>
-                      <!-- 内容显示 end -->
-                    </a-row>
-                    <a-row class="unit-show-block mb-8">
-                      <a-col :span="8">
-                        <div class="unit-block-title">外半径(%)</div>
-                      </a-col>
-
-                      <!-- 内容显示 start -->
-                      <a-col :span="16">
-                        <a-input-number
-                          :min="0"
-                          :max="100"
-                          :value="currentCom.setting.style.echart.customOutRadius"
-                          @change="customOutRadius => handleRadius('customOutRadius', customOutRadius)"
-                        ></a-input-number>
-                      </a-col>
-                      <!-- 内容显示 end -->
-                    </a-row>
-                  </div>
-                </CollapsePanel>
                 <CollapsePanel class="content-item" panel="split" header="分割设置">
                   <div class="setting-unit-content">
                     <a-row class="unit-show-block mb-8">
@@ -364,7 +328,7 @@
                     </a-row>
                   </div>
                 </CollapsePanel>
-                <CollapsePanel class="content-item" panel="chartStyle" header="样式设置">
+                <CollapsePanel class="content-item" panel="chartStyle" header="图形属性">
                   <div class="setting-unit-content">
                     <a-row class="unit-show-block mb-8">
                       <a-col :span="7">
@@ -395,16 +359,48 @@
                       <!-- 中心点 Y坐标 end -->
                     </a-row>
                     <a-row class="unit-show-block mb-8">
+                      <a-col :span="8">
+                        <div class="unit-block-title">内半径(%)</div>
+                      </a-col>
+
+                      <!-- 内半径 start -->
+                      <a-col :span="16">
+                        <a-input-number
+                          :min="0"
+                          :max="100"
+                          :value="currentCom.setting.style.echart.customInRadius"
+                          @change="customInRadius => handleRadius('customInRadius', customInRadius)"
+                        ></a-input-number>
+                      </a-col>
+                      <!-- 内半径 end -->
+                    </a-row>
+                    <a-row class="unit-show-block mb-8">
+                      <a-col :span="8">
+                        <div class="unit-block-title">外半径(%)</div>
+                      </a-col>
+
+                      <!-- 外半径 start -->
+                      <a-col :span="16">
+                        <a-input-number
+                          :min="0"
+                          :max="100"
+                          :value="currentCom.setting.style.echart.customOutRadius"
+                          @change="customOutRadius => handleRadius('customOutRadius', customOutRadius)"
+                        ></a-input-number>
+                      </a-col>
+                      <!-- 外半径 end -->
+                    </a-row>
+                    <a-row class="unit-show-block mb-8">
                       <a-col :span="10" class="unit-show-block">
-                        <div class="unit-block-title">面积透明度</div>
+                        <div class="unit-block-title">区域透明度</div>
                       </a-col>
                       <a-col :span="14">
                         <a-input-number
                           :min="0"
                           :max="1"
                           :step="0.1"
-                          :value="currentCom.setting.style.echart.customOpacity"
-                          @change="handleOpacity"
+                          :value="currentCom.setting.style.echart.customSeries.areaStyle.opacity"
+                          @change="opacity => doWithSeries('areaStyle', { opacity })"
                         />
                       </a-col>
                     </a-row>
@@ -451,6 +447,14 @@
                       </a-col>
                       <!-- 外圈字体 大小 end -->
                     </a-row>
+                    <!-- 指标 start -->
+                    <UnitLabel
+                      label="指标"
+                      :seriesLabel="currentCom.setting.style.echart.customSeries.label"
+                      :labelPositionList="labelPositionList"
+                      @change="(key, value) => doWithSeries(key, value)"
+                    ></UnitLabel>
+                    <!-- 指标 end -->
                   </div>
                 </CollapsePanel>
                 <CollapsePanel class="content-item" panel="legend" header="图例">
@@ -514,6 +518,11 @@ export default {
       tabAcitve: 'style', // tab选项栏活动目标
       dataCollapseActive: ['dimension', 'measure', 'reset', 'dataFilter', 'dataSort'], // 折叠打开选项
       styleCollapseActive: [],
+      labelPositionList: [
+        //标签位置
+        { name: '内部', value: 'inside' },
+        { name: '顶部', value: 'top' },
+      ],
     };
   },
   methods: {
@@ -542,11 +551,6 @@ export default {
         areaStyle: {
           color: colors,
         },
-      });
-    },
-    handleOpacity(value) {
-      this.handleChange('echart', {
-        customOpacity: value,
       });
     },
     handleRadar(key, value) {

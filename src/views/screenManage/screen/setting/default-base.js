@@ -45,9 +45,10 @@ export default {
       },
       background: {
         // 背景
-        size: 0,
         color: 'black',
         image: '',
+        // 记录背景图url, 之前用background-size: 0px控制, 但是重绘有问题导致背景颜色没渲染
+        customImgUrl: '',
       },
       title: {
         // 标题

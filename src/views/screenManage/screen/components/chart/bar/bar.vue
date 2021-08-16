@@ -76,14 +76,9 @@ export default {
     /**
      * @description 处理柱状条宽度（数值/百分比）
      */
-    // doWithBarWidth(barWidth, length) {
-    //   if (typeof barWidth === 'number') {
-    //     return barWidth / length;
-    //   } else {
-    //     let num = Number(barWidth);
-    //     return `${num / length}%`;
-    //   }
-    // },
+    doWithBarWidth(barWidth, length) {
+      return `${barWidth / length}%`;
+    },
     /**
      * @description 根据key处理value值
      * @param {object} item 数据
@@ -99,7 +94,7 @@ export default {
       } = this.options;
 
       const shape = this.doWithShape(echart, fetchData.categoryData);
-      // echart.customSeries.barWidth = this.doWithBarWidth(echart.customSeries.barWidth, fetchData.series.length);
+      echart.customSeries.barWidth = this.doWithBarWidth(echart.customBarWidth, fetchData.series.length);
       fetchData.series.forEach(item => {
         this.doWithBarGap(item);
         this.doWithStack(item, echart.customStack);

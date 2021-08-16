@@ -101,52 +101,36 @@
                   ></UnitTitle>
                   <!-- 标题 end -->
                 </CollapsePanel>
-                <CollapsePanel class="content-item" panel="bgAndBorder" header="背景和边框">
+                <CollapsePanel class="content-item" panel="legend" header="图形属性">
                   <div class="setting-unit-content">
-                    <!-- 背景图片 start -->
-                    <UnitBackgroundImage
-                      class="mb-8"
-                      :background="currentCom.setting.style.background"
-                      @change="value => handleChange('background', value)"
-                    ></UnitBackgroundImage>
-                    <!-- 背景图片 end -->
-                    <!-- 背景颜色 start -->
-                    <UnitBackgroundColor
-                      class="mb-8"
-                      :color="currentCom.setting.style.background.color"
-                      @change="color => handleChange('background', { color })"
-                    ></UnitBackgroundColor>
-                    <!-- 背景颜色 end -->
-                    <!-- 边框设置 start -->
-                    <UnitBorder
-                      :border="currentCom.setting.style.border"
-                      @change="(key, value) => handleChange(key, value)"
-                    ></UnitBorder>
-                    <!-- 边框设置 end -->
-                  </div>
-                </CollapsePanel>
-                <CollapsePanel class="content-item" panel="legend" header="样式设置">
-                  <div class="setting-unit-content">
-                    <!-- 数值 颜色 start -->
-                    <UnitBackgroundColor
-                      class="mb-8"
-                      label="数值颜色"
-                      :color="currentCom.setting.style.echart.customColors[0]"
-                      @change="color => handleColorChange(color, 0)"
-                    ></UnitBackgroundColor>
-                    <!-- 数值 颜色 end -->
+                    <a-row class="unit-show-block mb-8">
+                      <a-col :span="7">
+                        <div class="unit-block-title">中心点(%)</div>
+                      </a-col>
 
-                    <!-- 背景 颜色 start -->
-                    <UnitBackgroundColor
-                      class="mb-8"
-                      :color="currentCom.setting.style.echart.customColors[1]"
-                      @change="color => handleColorChange(color, 1)"
-                    ></UnitBackgroundColor>
-                    <!-- 背景 颜色 end -->
-                  </div>
-                </CollapsePanel>
-                <CollapsePanel class="content-item" panel="legend" header="半径">
-                  <div class="setting-unit-content">
+                      <!-- 中心点 X坐标 start -->
+                      <a-col :span="8" class="col-offset">
+                        <div class="unit-block-title">X</div>
+                        <a-input-number
+                          :min="0"
+                          :max="100"
+                          :value="currentCom.setting.style.echart.customCenter[0]"
+                          @change="value => handleCenter(value, 0)"
+                        ></a-input-number>
+                      </a-col>
+                      <!-- 中心点 X坐标 end -->
+                      <!-- 中心点 Y坐标 start -->
+                      <a-col :span="8" class="col-offset">
+                        <div class="unit-block-title">Y</div>
+                        <a-input-number
+                          :min="0"
+                          :max="100"
+                          :value="currentCom.setting.style.echart.customCenter[1]"
+                          @change="value => handleCenter(value, 1)"
+                        ></a-input-number>
+                      </a-col>
+                      <!-- 中心点 Y坐标 end -->
+                    </a-row>
                     <a-row class="unit-show-block mb-8">
                       <a-col :span="8">
                         <div class="unit-block-title">内半径(%)</div>
@@ -181,16 +165,36 @@
                     </a-row>
                   </div>
                 </CollapsePanel>
-                <CollapsePanel class="content-item" panel="legend" header="标签">
+                <CollapsePanel class="content-item" panel="legend" header="颜色设置">
                   <div class="setting-unit-content">
-                    <!-- 标签是否显示 start -->
+                    <!-- 数值 颜色 start -->
+                    <UnitBackgroundColor
+                      class="mb-8"
+                      label="数值颜色"
+                      :color="currentCom.setting.style.echart.customColors[0]"
+                      @change="color => handleColorChange(color, 0)"
+                    ></UnitBackgroundColor>
+                    <!-- 数值 颜色 end -->
+
+                    <!-- 背景 颜色 start -->
+                    <UnitBackgroundColor
+                      class="mb-8"
+                      :color="currentCom.setting.style.echart.customColors[1]"
+                      @change="color => handleColorChange(color, 1)"
+                    ></UnitBackgroundColor>
+                    <!-- 背景 颜色 end -->
+                  </div>
+                </CollapsePanel>
+                <CollapsePanel class="content-item" panel="legend" header="指标设置">
+                  <div class="setting-unit-content">
+                    <!-- 指标是否显示 start -->
                     <UnitCheckbox
                       class="show-btn"
                       label="显示"
                       :value="currentCom.setting.style.echart.customSeries.label.show"
                       @change="show => handleLabel('show', show)"
                     ></UnitCheckbox>
-                    <!-- 标签是否显示 end -->
+                    <!-- 指标是否显示 end -->
 
                     <a-row class="unit-show-block mb-8">
                       <a-col :span="8">
@@ -231,7 +235,7 @@
                     </a-row>
                     <!-- 小数位数 end -->
 
-                    <!-- 标签相关设置 start -->
+                    <!-- 指标相关设置 start -->
                     <!-- 文本 start -->
                     <a-row class="unit-show-block mb-8">
                       <a-col :span="4">
@@ -320,6 +324,30 @@
                     <!-- 显示位置 end -->
                   </div>
                 </CollapsePanel>
+                <CollapsePanel class="content-item" panel="bgAndBorder" header="背景和边框">
+                  <div class="setting-unit-content">
+                    <!-- 背景图片 start -->
+                    <UnitBackgroundImage
+                      class="mb-8"
+                      :background="currentCom.setting.style.background"
+                      @change="value => handleChange('background', value)"
+                    ></UnitBackgroundImage>
+                    <!-- 背景图片 end -->
+                    <!-- 背景颜色 start -->
+                    <UnitBackgroundColor
+                      class="mb-8"
+                      :color="currentCom.setting.style.background.color"
+                      @change="color => handleChange('background', { color })"
+                    ></UnitBackgroundColor>
+                    <!-- 背景颜色 end -->
+                    <!-- 边框设置 start -->
+                    <UnitBorder
+                      :border="currentCom.setting.style.border"
+                      @change="(key, value) => handleChange(key, value)"
+                    ></UnitBorder>
+                    <!-- 边框设置 end -->
+                  </div>
+                </CollapsePanel>
                 <CollapsePanel class="content-item" panel="reset" :isTogger="false">
                   <!-- 恢复默认配置 start -->
                   <div class="setting-unit-content">
@@ -359,7 +387,7 @@ export default {
   },
   methods: {
     /**
-     * @description 标签设置
+     * @description 指标设置
      */
     handleLabel(key, value) {
       this.doWithSeries('label', {
@@ -388,6 +416,16 @@ export default {
     handleRadius(key, value) {
       this.handleChange('echart', {
         [key]: value,
+      });
+    },
+    /**
+     * @description 处理中心点
+     */
+    handleCenter(value, index) {
+      const center = [].concat(this.currentCom.setting.style.echart.customCenter);
+      center.splice(index, 1, value);
+      this.handleChange('echart', {
+        customCenter: center,
       });
     },
     /**

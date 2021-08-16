@@ -4,6 +4,7 @@ import BaseChart from '../base';
 import defaultData from './default-data';
 import { mutationTypes as boardMutation } from '@/store/modules/board';
 import merge from 'lodash/merge';
+import omit from 'lodash/omit';
 import { setLinkageData, resetOriginData } from '@/utils/setDataLink';
 /**
  * @description 饼图
@@ -62,18 +63,6 @@ export default {
         lineHeight: 1.5 * fontSize,
       });
     },
-    /**
-     * @description 处理半径
-     */
-    doWithRadius(inRadius, outRadius) {
-      return [`${inRadius}%`, `${outRadius}%`];
-    },
-    /**
-     * @description 处理中心点
-     */
-    doWithCenter(customCenter) {
-      return [`${customCenter[0]}%`, `${customCenter[1]}%`];
-    },
     doWithRoseType(customRoseType) {
       const { show, type } = customRoseType;
       return {
@@ -98,14 +87,13 @@ export default {
         style: { echart },
       } = this.options;
 
-      const radius = this.doWithRadius(echart.customInRadius, echart.customOutRadius);
-
       const data = this.doWithLimit(fetchData.data, echart.customLimit);
       const legend = this.doWithlegend(data);
       const roseType = this.doWithRoseType(echart.customRoseType);
 
       const label = this.doWithLabel(echart.customSeries.label);
-      const center = this.doWithCenter(echart.customCenter);
+
+      const seriesData = { ...omit(echart.customSeries, ['label']) };
 
       const options = merge({}, echart, {
         legend: {
@@ -114,13 +102,12 @@ export default {
         series: [
           {
             type: 'pie',
-            center,
             roseType: roseType.show ? roseType.type : false,
-            radius,
             label: label,
             labelLine: this.doWithLabelLine(),
             labelLayout: this.doWithLabelLayout.bind(this, this.chartInstane.getWidth()),
             data: data,
+            ...seriesData,
           },
         ],
       });

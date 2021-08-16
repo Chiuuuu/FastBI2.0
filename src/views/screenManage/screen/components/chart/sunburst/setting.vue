@@ -120,7 +120,7 @@
                     <!-- 边框设置 end -->
                   </div>
                 </CollapsePanel>
-                <CollapsePanel class="content-item" panel="legend" header="样式设置">
+                <CollapsePanel class="content-item" panel="legend" header="图形属性">
                   <div class="setting-unit-content">
                     <a-row class="unit-show-block mb-8">
                       <a-col :span="7">
@@ -150,10 +150,6 @@
                       </a-col>
                       <!-- 中心点 Y坐标 end -->
                     </a-row>
-                  </div>
-                </CollapsePanel>
-                <CollapsePanel class="content-item" panel="radius" header="半径">
-                  <div class="setting-unit-content">
                     <a-row class="unit-show-block mb-8">
                       <a-col :span="8">
                         <div class="unit-block-title">内半径(%)</div>
