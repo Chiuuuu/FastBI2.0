@@ -14,7 +14,7 @@
                   <a-radio-group
                     class="datatype-box"
                     name="radioGroup"
-                    :value="currentCom.setting.style.echart.customFillDataType"
+                    :value="currentCom.setting.data.customFillDataType"
                     @change="event => handleDataType('customFillDataType', event.target.value)"
                   >
                     <a-radio value="area">地区</a-radio>
@@ -24,7 +24,7 @@
                   <CollapsePanel class="content-item" panel="mapSeriesDimension" header="维度">
                     <!-- 维度 start -->
                     <UnitField
-                      v-if="currentCom.setting.style.echart.customFillDataType === 'area'"
+                      v-if="currentCom.setting.data.customFillDataType === 'area'"
                       class="setting-unit-content"
                       receive="dimension"
                       type="dimension"
@@ -82,7 +82,7 @@
                   <a-radio-group
                     class="datatype-box"
                     name="radioGroup"
-                    :value="currentCom.setting.style.echart.customLabelDataType"
+                    :value="currentCom.setting.data.customLabelDataType"
                     @change="event => handleDataType('customLabelDataType', event.target.value)"
                   >
                     <a-radio value="area">地区</a-radio>
@@ -92,14 +92,14 @@
                   <CollapsePanel class="content-item" panel="scatterSeriesDimension" header="维度">
                     <!-- 维度 start -->
                     <UnitField
-                      v-if="currentCom.setting.style.echart.customLabelDataType === 'area'"
+                      v-if="currentCom.setting.data.customLabelDataType === 'area'"
                       class="setting-unit-content"
                       receive="dimension"
                       type="labelDimension"
                       label="拖入维度"
                       backgroundColor="#4a90e2"
                       limit
-                      :list="currentCom.setting.data.labelDimension"
+                      :list="currentCom.setting.data.labelDimensions"
                     ></UnitField>
                     <div v-else>
                       <!-- 拖入经度 start -->
@@ -131,7 +131,7 @@
                     <UnitField
                       class="setting-unit-content"
                       receive="measure"
-                      type="labelMeasures"
+                      type="labelMeasure"
                       label="拖入度量"
                       backgroundColor="#40c0a8"
                       openAggre
@@ -503,10 +503,14 @@
                         mode="multiple"
                         placeholder="选择显示内容"
                         style="width: 100%"
-                        :value="currentCom.setting.style.echart.mapStyle.customPointShowList"
+                        v-model="currentCom.setting.style.echart.mapStyle.customPointShowList"
                         @change="value => handleSelect('mapStyle', 'customPointShowList', value)"
                       >
-                        <a-select-option v-for="i in mapFillPointSelectList" :key="i.alias" :value="i.alias">
+                        <a-select-option
+                          v-for="i in currentCom.setting.style.echart.mapStyle.pointSelectList"
+                          :key="i.alias"
+                          :value="i.alias"
+                        >
                           {{ i.alias }}
                         </a-select-option>
                       </a-select>
@@ -568,10 +572,14 @@
                         mode="multiple"
                         placeholder="选择显示内容"
                         style="width: 100%"
-                        :value="currentCom.setting.style.echart.mapStyle.customTooltipShowList"
+                        v-model="currentCom.setting.style.echart.mapStyle.customTooltipShowList"
                         @change="value => handleSelect('mapStyle', 'customTooltipShowList', value)"
                       >
-                        <a-select-option v-for="i in mapFillTooltipSelectList" :key="i.alias" :value="i.alias">
+                        <a-select-option
+                          v-for="i in currentCom.setting.style.echart.mapStyle.tooltipSelectList"
+                          :key="i.alias"
+                          :value="i.alias"
+                        >
                           {{ i.alias }}
                         </a-select-option>
                       </a-select>
@@ -644,10 +652,14 @@
                         mode="multiple"
                         placeholder="选择显示内容"
                         style="width: 100%"
-                        :value="currentCom.setting.style.echart.scatterStyle.customPointShowList"
+                        v-model="currentCom.setting.style.echart.scatterStyle.customPointShowList"
                         @change="value => handleSelect('scatterStyle', 'customPointShowList', value)"
                       >
-                        <a-select-option v-for="i in mapFillPointSelectList" :key="i.alias" :value="i.alias">
+                        <a-select-option
+                          v-for="i in currentCom.setting.style.echart.scatterStyle.pointSelectList"
+                          :key="i.alias"
+                          :value="i.alias"
+                        >
                           {{ i.alias }}
                         </a-select-option>
                       </a-select>
@@ -732,10 +744,14 @@
                         mode="multiple"
                         placeholder="选择显示内容"
                         style="width: 100%"
-                        :value="currentCom.setting.style.echart.scatterStyle.customTooltipShowList"
+                        v-model="currentCom.setting.style.echart.scatterStyle.customTooltipShowList"
                         @change="value => handleSelect('scatterStyle', 'customTooltipShowList', value)"
                       >
-                        <a-select-option v-for="i in mapFillTooltipSelectList" :key="i.alias" :value="i.alias">
+                        <a-select-option
+                          v-for="i in currentCom.setting.style.echart.scatterStyle.tooltipSelectList"
+                          :key="i.alias"
+                          :value="i.alias"
+                        >
                           {{ i.alias }}
                         </a-select-option>
                       </a-select>
@@ -789,6 +805,7 @@
 <script>
 import BoardType from '@/views/screenManage/screen/setting/default-type';
 import StyleMethodMixin from '@/views/screenManage/screen/setting/style-method-mixin';
+import { mutationTypes as historyMutation } from '@/store/modules/history';
 const themeColorNMap = {
   yellow: ['rgb(249,217,96)', 'rgb(249,159,61)', 'rgb(247,107,28)'],
   blue: ['rgb(79,174,255)', 'rgb(55,115,205)', 'rgb(32,56,156)'],
@@ -818,10 +835,6 @@ export default {
       mapLabelTooltipSelectList: [], // 地图标记层提示框内容选择列表
     };
   },
-  mounted() {
-    // 构造显示内容可选列表
-    this.handleMapFormatterSelect();
-  },
   methods: {
     /**
      * @description 处理图例样式
@@ -832,6 +845,7 @@ export default {
           [key]: value,
         },
       });
+      console.log('new', this.currentCom);
     },
     /**
      * @description 处理位置
@@ -897,36 +911,24 @@ export default {
      * @description 处理类型切换
      */
     handleDataType(key, value) {
-      this.handleChange('echart', {
-        [key]: value,
+      // 清空数据
+      const dataMap = {
+        customFillDataType: { latitude: [], longitude: [], dimensions: [], measures: [], [key]: value },
+        customLabelDataType: {
+          labelLatitude: [],
+          labelLongitude: [],
+          labelDimensions: [],
+          labelMeasures: [],
+          [key]: value,
+        },
+      };
+      this.$store.commit(historyMutation.COMMAND, {
+        commandType: 'Data',
+        target: this.currentCom,
+        store: this.$store,
+        eventBus: this.$EventBus,
+        data: dataMap[key],
       });
-    },
-    /**
-     * @description 初始化地图指标显示内容列表
-     */
-    handleMapFormatterSelect() {
-      // 填充
-      let { dimensions, measures } = this.currentCom.setting.data;
-      if (this.currentCom.setting.style.echart.customFillDataType === 'area') {
-        // 地区添加地区名/维度
-        let di = dimensions[0] ? dimensions[0].alias : '';
-        this.mapFillPointSelectList = [{ alias: di ? `地区名/${di}` : '' }].concat(measures);
-        this.mapFillTooltipSelectList = [{ alias: di }].concat(measures);
-      } else {
-        this.mapFillTooltipSelectList = dimensions.concat(measures);
-        this.mapFillPointSelectList = [{ alias: '地区名' }].concat(this.mapFillTooltipSelectList);
-      }
-      // 散点
-      let { labelDimensions, labelMeasures } = this.currentCom.setting.data;
-      if (this.currentCom.setting.style.echart.customLabelDataType === 'area') {
-        // 标记点添加维度
-        let labelDi = labelDimensions[0] ? labelDimensions[0].alias : '';
-        this.mapLabelPointSelectList = [{ alias: labelDi ? `地区名/${labelDi}` : '' }].concat(labelMeasures);
-        this.mapLabelTooltipSelectList = [{ alias: labelDi }].concat(labelMeasures);
-      } else {
-        this.mapLabelTooltipSelectList = labelDimensions.concat(labelMeasures);
-        this.mapLabelPointSelectList = [{ alias: '地区名' }].concat(this.mapLabelTooltipSelectList);
-      }
     },
   },
 };

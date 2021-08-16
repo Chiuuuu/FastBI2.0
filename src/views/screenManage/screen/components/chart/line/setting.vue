@@ -120,9 +120,36 @@
                     <!-- 边框设置 end -->
                   </div>
                 </CollapsePanel>
-                <CollapsePanel class="content-item" panel="chartStyle" header="图表样式">
-                  <!-- 图表样式 start -->
+                <CollapsePanel class="content-item" panel="chartStyle" header="图形属性">
+                  <!-- 图形属性 start -->
                   <div class="setting-unit-content">
+                    <!-- 边距 start -->
+                    <UnitGridMargin
+                      label="边距"
+                      :grid="currentCom.setting.style.echart.grid"
+                      @change="(key, value) => handleChange(key, value)"
+                    ></UnitGridMargin>
+                    <!-- 边距 end -->
+                    <!-- 展示数值 start -->
+                    <UnitLabel
+                      label="数值"
+                      :seriesLabel="currentCom.setting.style.echart.customSeries.label"
+                      @change="(key, value) => doWithSeries(key, value)"
+                    ></UnitLabel>
+                    <!-- 展示数值 end -->
+                    <!-- 数值重叠 start -->
+                    <UnitCheckbox
+                      class="show-btn strict mb-3"
+                      label="是否允许数值重叠"
+                      :value="!currentCom.setting.style.echart.customSeries.labelLayout.hideOverlap"
+                      @change="
+                        hideOverlap =>
+                          doWithSeries('labelLayout', {
+                            hideOverlap: !hideOverlap,
+                          })
+                      "
+                    ></UnitCheckbox>
+                    <!-- 数值重叠 end -->
                     <a-row>
                       <a-col :span="6" class="unit-show-block position">
                         <div class="unit-block-title">线形</div>
@@ -139,16 +166,31 @@
                         </a-radio-group>
                       </a-col>
                     </a-row>
+                    <!-- 线宽 start -->
+                    <a-row class="mt-8">
+                      <a-col :span="13" class="unit-show-block position">
+                        <div class="unit-block-title">线宽</div>
+                      </a-col>
+                      <a-col :span="11">
+                        <a-input-number
+                          v-model="currentCom.setting.style.echart.customSeries.lineStyle.width"
+                          size="small"
+                          :min="0"
+                          @change="width => doWithSeries('lineStyle', { width })"
+                        ></a-input-number>
+                      </a-col>
+                    </a-row>
+                    <!-- 线宽 end -->
                     <!-- 标记点 开启 start -->
                     <a-row>
-                      <a-col :span="6" class="unit-show-block position">
+                      <a-col :span="6" class="unit-show-block position mt-4 mb-4">
                         <div class="unit-block-title">标记点</div>
                       </a-col>
                       <a-col :span="18">
                         <UnitCheckbox
                           class="show-btn"
                           label="显示"
-                          style="top: -4px"
+                          style="top: -0px"
                           :value="currentCom.setting.style.echart.customShowSymbol"
                           @change="value => doWithShowSymbol(value)"
                         ></UnitCheckbox>
@@ -157,21 +199,35 @@
                     <!-- 标记点 开启 end -->
                     <!-- 标记点大小 start -->
                     <a-row>
-                      <a-col :span="6" class="unit-show-block position">
-                        <div class="unit-block-title">标记点</div>
+                      <a-col :span="13" class="unit-show-block position">
+                        <div class="unit-block-title">标记点大小</div>
                       </a-col>
-                      <a-col :span="18">
-                        <UnitCheckbox
-                          class="show-btn"
-                          label="显示"
-                          style="top: -4px"
-                          :value="currentCom.setting.style.echart.customShowSymbol"
-                          @change="value => doWithShowSymbol(value)"
-                        ></UnitCheckbox>
+                      <a-col :span="11">
+                        <a-input-number
+                          :value="currentCom.setting.style.echart.customSeries.symbolSize"
+                          :min="0"
+                          @change="symbolSize => doWithSeries('symbolSize', symbolSize)"
+                        />
                       </a-col>
                     </a-row>
                     <!-- 标记点大小 end -->
-                    <!-- 区域透明度 -->
+                    <!-- 区域透明度 start -->
+                    <a-row class="mt-8">
+                      <a-col :span="13" class="unit-show-block position">
+                        <div class="unit-block-title">区域透明度</div>
+                      </a-col>
+                      <a-col :span="11">
+                        <a-input-number
+                          v-model="currentCom.setting.style.echart.customSeries.areaStyle.opacity"
+                          size="small"
+                          :max="1"
+                          :min="0"
+                          :step="0.1"
+                          @change="opacity => doWithSeries('areaStyle', { opacity })"
+                        ></a-input-number>
+                      </a-col>
+                    </a-row>
+                    <!-- 区域透明度 end -->
                   </div>
                   <!-- 图表样式 end -->
                 </CollapsePanel>
@@ -219,25 +275,11 @@
                     "
                   ></UnitLegend>
                 </CollapsePanel>
-                <CollapsePanel class="content-item" panel="legend" header="标签">
+                <!-- <CollapsePanel class="content-item" panel="legend" header="标签">
                   <div class="setting-unit-content">
-                    <UnitLabel
-                      :label="currentCom.setting.style.echart.customSeries.label"
-                      @change="(key, value) => doWithSeries(key, value)"
-                    ></UnitLabel>
-                    <UnitCheckbox
-                      class="show-btn strict"
-                      label="是否允许标签重叠"
-                      :value="!currentCom.setting.style.echart.customSeries.labelLayout.hideOverlap"
-                      @change="
-                        hideOverlap =>
-                          doWithSeries('labelLayout', {
-                            hideOverlap: !hideOverlap,
-                          })
-                      "
-                    ></UnitCheckbox>
+                    
                   </div>
-                </CollapsePanel>
+                </CollapsePanel> -->
                 <CollapsePanel class="content-item" panel="reset" :isTogger="false">
                   <!-- 恢复默认配置 start -->
                   <div class="setting-unit-content">
@@ -255,7 +297,6 @@
                   <!-- 图表联动 start -->
                   <UnitConnect
                     class="setting-unit-content"
-                    :dataLinkState="currentCom.setting.style.echart.customIsOpenDataLink"
                     @change="
                       value =>
                         handleChange('echart', {
@@ -308,6 +349,9 @@ export default {
     doWithShowSymbol(customShowSymbol) {
       this.handleChange('echart', {
         customShowSymbol,
+        customSeries: {
+          symbolSize: customShowSymbol ? 4 : 0,
+        },
       });
     },
   },

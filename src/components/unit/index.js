@@ -18,6 +18,7 @@ import UnitLegend from './components/legend.vue';
 import UnitLabel from './components/label.vue';
 import UnitDrawing from './components/drawing.vue';
 import UnitInputField from './components/input-field.vue';
+import UnitGridMargin from './components/grid-margin.vue';
 
 const UnitList = [
   UnitBackgroundColor,
@@ -39,6 +40,7 @@ const UnitList = [
   UnitLabel,
   UnitDrawing,
   UnitInputField,
+  UnitGridMargin,
 ];
 
 UnitList.forEach(Component => {

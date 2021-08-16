@@ -120,14 +120,72 @@
                     <!-- 边框设置 end -->
                   </div>
                 </CollapsePanel>
-                <CollapsePanel class="content-item" panel="chartStyle" header="图表样式">
-                  <!-- 图表样式 start -->
+                <CollapsePanel class="content-item" panel="chartStyle" header="图形属性">
+                  <!-- 图形属性 start -->
                   <div class="setting-unit-content">
+                    <!-- 边距 start -->
+                    <UnitGridMargin
+                      label="边距"
+                      :grid="currentCom.setting.style.echart.grid"
+                      @change="(key, value) => handleChange(key, value)"
+                    ></UnitGridMargin>
+                    <!-- 边距 end -->
+                    <!-- 展示数值 start -->
+                    <UnitLabel
+                      label="数值"
+                      :seriesLabel="currentCom.setting.style.echart.customSeries.label"
+                      :labelPositionList="labelPositionList"
+                      @change="(key, value) => doWithSeries(key, value)"
+                    ></UnitLabel>
+                    <!-- 展示数值 end -->
                     <a-row class="unit-show-block mb-8">
+                      <a-col :span="8" class="unit-show-block">
+                        <div class="unit-block-title">柱条宽度</div>
+                      </a-col>
+                      <!-- 柱条宽度 start -->
+                      <a-col :span="16">
+                        <a-input
+                          :value="currentCom.setting.style.echart.customSeries.barWidth"
+                          @change="e => doWithSeries('barWidth', e.target.value)"
+                        ></a-input>
+                      </a-col>
+                      <!-- 柱条宽度 end -->
+                    </a-row>
+                    <a-row class="unit-show-block mb-8">
+                      <a-col :span="6" class="unit-show-block position">
+                        <div class="unit-block-title">柱形圆角</div>
+                      </a-col>
+                      <!-- 圆角 start -->
+                      <a-col :span="18">
+                        <!-- 圆角是否启用 start -->
+                        <UnitCheckbox
+                          class="show-btn"
+                          label="启用"
+                          style="top: -6px"
+                          :value="currentCom.setting.style.echart.customSeries.itemStyle.borderRadius ? true : false"
+                          @change="value => handleItemStyle('borderRadius', value)"
+                        ></UnitCheckbox>
+                        <!-- 圆角是否启用 end -->
+                      </a-col>
+                      <!-- 圆角 end -->
+                    </a-row>
+                    <a-row class="unit-show-block mb-8">
+                      <a-col :span="8" class="unit-show-block">
+                        <div class="unit-block-title">柱条间隔</div>
+                      </a-col>
+                      <!-- 柱条间隔 start -->
+                      <a-col :span="16">
+                        <a-input
+                          :value="currentCom.setting.style.echart.customSeries.barGap"
+                          @change="e => doWithSeries('barGap', e.target.value)"
+                        ></a-input>
+                      </a-col>
+                      <!-- 柱条间隔 end -->
+                    </a-row>
+                    <a-row class="unit-show-block mb-8 mt-8">
                       <a-col :span="6" class="unit-show-block position">
                         <div class="unit-block-title">形状</div>
                       </a-col>
-
                       <!-- 形状 方式 start -->
                       <a-col :span="18">
                         <a-radio-group
@@ -158,39 +216,6 @@
                         </a-radio-group>
                       </a-col>
                       <!-- 方向 end -->
-                    </a-row>
-                    <a-row class="unit-show-block mb-8">
-                      <a-col :span="15" class="unit-show-block">
-                        <div class="unit-block-title">柱条宽度(%)</div>
-                      </a-col>
-                      <!-- 柱条宽度 start -->
-                      <a-col :span="9">
-                        <a-input-number
-                          :min="0"
-                          :max="100"
-                          :value="currentCom.setting.style.echart.customBarWidth"
-                          @change="val => handleBarWidthChange(val)"
-                        ></a-input-number>
-                      </a-col>
-                      <!-- 柱条宽度 end -->
-                    </a-row>
-                    <a-row class="unit-show-block mb-8">
-                      <a-col :span="6" class="unit-show-block position">
-                        <div class="unit-block-title">柱形圆角</div>
-                      </a-col>
-                      <!-- 圆角 start -->
-                      <a-col :span="18">
-                        <!-- 圆角是否启用 start -->
-                        <UnitCheckbox
-                          class="show-btn"
-                          label="启用"
-                          style="top: -6px"
-                          :value="currentCom.setting.style.echart.customSeries.itemStyle.borderRadius ? true : false"
-                          @change="value => handleItemStyle('borderRadius', value)"
-                        ></UnitCheckbox>
-                        <!-- 圆角是否启用 end -->
-                      </a-col>
-                      <!-- 圆角 end -->
                     </a-row>
                   </div>
                 </CollapsePanel>
@@ -229,61 +254,6 @@
                   ></UnitChartColor>
                   <!-- 颜色 end -->
                 </CollapsePanel>
-                <CollapsePanel class="content-item" panel="legend" header="标签">
-                  <div class="setting-unit-content">
-                    <!-- 标签是否显示 start -->
-                    <UnitCheckbox
-                      class="show-btn"
-                      label="显示"
-                      :value="currentCom.setting.style.echart.customSeries.label.show"
-                      @change="show => handleLabel('show', show)"
-                    ></UnitCheckbox>
-                    <!-- 标签是否显示 end -->
-
-                    <a-row class="unit-show-block mb-8">
-                      <a-col :span="4">
-                        <div class="unit-block-title">字体</div>
-                      </a-col>
-
-                      <!-- 标签 字体 颜色 start -->
-                      <a-col :span="4">
-                        <div class="font-color">
-                          <ColorPicker
-                            :value="currentCom.setting.style.echart.customSeries.label.color"
-                            @change="color => handleLabel('color', color)"
-                          ></ColorPicker>
-                        </div>
-                      </a-col>
-                      <!-- 标签 字体 颜色 end -->
-
-                      <!-- 标签 字体 大小 start -->
-                      <a-col :span="16">
-                        <a-input-number
-                          :value="currentCom.setting.style.echart.customSeries.label.fontSize"
-                          :min="0"
-                          @change="fontSize => handleLabel('fontSize', fontSize)"
-                        />
-                      </a-col>
-                      <!-- 标签 字体 大小 end -->
-                    </a-row>
-                    <a-row class="unit-show-block mb-8">
-                      <a-col :span="6" class="unit-show-block position">
-                        <div class="unit-block-title">位置</div>
-                      </a-col>
-
-                      <!-- 标签 位置 start -->
-                      <a-radio-group
-                        name="radioGroup"
-                        :value="currentCom.setting.style.echart.customSeries.label.position"
-                        @change="event => handleLabel('position', event.target.value)"
-                      >
-                        <a-radio value="inside">内部</a-radio>
-                        <a-radio value="outside">外部</a-radio>
-                      </a-radio-group>
-                      <!-- 标签 位置 end -->
-                    </a-row>
-                  </div>
-                </CollapsePanel>
                 <CollapsePanel class="content-item" panel="legend" header="图例">
                   <UnitLegend
                     :legend="currentCom.setting.style.echart.legend"
@@ -310,7 +280,6 @@
                   <!-- 图表联动 start -->
                   <UnitConnect
                     class="setting-unit-content"
-                    :dataLinkState="currentCom.setting.style.echart.customIsOpenDataLink"
                     @change="
                       value =>
                         handleChange('echart', {
@@ -346,6 +315,11 @@ export default {
       tabAcitve: 'style', // tab选项栏活动目标
       dataCollapseActive: ['dimension', 'measure', 'dataFilter', 'dataSort', 'reset'], // 折叠打开选项
       styleCollapseActive: [],
+      labelPositionList: [
+        //标签位置
+        { name: '内部', value: 'inside' },
+        { name: '外部', value: 'outside' },
+      ],
     };
   },
   methods: {

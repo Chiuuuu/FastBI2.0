@@ -3,12 +3,19 @@ import BoardType from '@/views/screenManage/screen/setting/default-type';
 import BaseChart from '../base';
 import defaultData from './default-data';
 import merge from 'lodash/merge';
+import { setLinkageData, resetOriginData } from '@/utils/setDataLink';
 /**
  * @description 折线图
  */
 export default {
   name: `${BoardType.ChartLine}View`,
   extends: BaseChart,
+  data() {
+    return {
+      currentSeriesIndex: null, // 图表联动选中的下标
+      currentDataIndex: null, // 图表联动选中的下标
+    };
+  },
   methods: {
     /**
      * @description 判断是否获取服务端数据
@@ -69,17 +76,6 @@ export default {
       }
     },
     /**
-     * @description 处理 图表样式 是否显示标记点
-     */
-    doWithShowSymbol(item, customShowSymbol) {
-      const SYMOLSIZE = 'symbolSize';
-      if (customShowSymbol) {
-        item[SYMOLSIZE] = 4;
-      } else {
-        item[SYMOLSIZE] = 0;
-      }
-    },
-    /**
      * @description 根据key处理value值
      * @param {object} item 数据
      * @param {string} key 字段
@@ -104,8 +100,7 @@ export default {
 
       fetchData.series.forEach(item => {
         this.doWithSmooth(item, echart.customLinear);
-        this.doWithShowSymbol(item, echart.customShowSymbol);
-        // 系列
+        // 系列配置
         for (let i in echart.customSeries) {
           this.doWithKeyValue(item, i, echart.customSeries[i]);
         }
@@ -153,23 +148,25 @@ export default {
           return;
         }
         // 重复点击选中项
-        if (e.dataIndex === self.currentIndex) {
+        if (e.dataIndex === self.currentDataIndex && e.seriesIndex === self.currentSeriesIndex) {
           // 重置图表
           self.resetChart(options);
           return;
         }
-        // series添加颜色回调函数控制，选中
-        const formatterFn = function (params) {
-          return params.dataIndex === e.dataIndex
-            ? options.color[params.seriesIndex]
-            : self.hexToRgba(options.color[params.seriesIndex], 0.4);
+        // series添加标记点回调函数控制，选中
+        const formatterSybolSizeFn = function (value, params) {
+          return params.dataIndex === e.dataIndex && params.seriesIndex === e.seriesIndex ? 10 : 1;
         };
-        options.series.forEach(item => {
-          item.itemStyle = Object.assign(item.itemStyle, { color: formatterFn });
+        options.series.forEach((item, index) => {
+          item.symbolSize = formatterSybolSizeFn;
+          const color = index === e.seriesIndex ? options.color[index] : self.hexToRgba(options.color[index], 0.4);
+          item.lineStyle = Object.assign(item.lineStyle, { color });
         });
         self.chartInstane.setOption(options);
         // 记录当前选择数据的index
-        self.currentIndex = e.dataIndex;
+        self.currentDataIndex = e.dataIndex;
+        self.currentSeriesIndex = e.seriesIndex;
+        setLinkageData([e.name]);
         // 设置点击空白重置联动
         self.handleChartClick(options);
       });
@@ -181,10 +178,8 @@ export default {
       let self = this;
       this.chartInstane.getZr().on('click', function (params) {
         // 没有选中数据不需要执行重置
-        if (!self.currentIndex) {
-          return;
-        }
-        if (typeof params.target === 'undefined') {
+        let hasSelected = self.currentDataIndex || self.currentDataIndex === 0;
+        if (typeof params.target === 'undefined' && hasSelected) {
           // 重置图表
           self.resetChart(options);
         }
@@ -195,13 +190,14 @@ export default {
      */
     resetChart(options) {
       options.series.forEach(item => {
-        item.itemStyle.color && delete item.itemStyle.color;
+        item.lineStyle.color && delete item.lineStyle.color;
+        item.symbolSize = this.options.style.echart.customShowSymbol ? 4 : 0;
       });
       // 还原数据
-      //   resetOriginData(self.chartId, self.canvasMap);
+      resetOriginData();
       this.chartInstane.clear();
       this.chartInstane.setOption(options);
-      this.currentIndex = '';
+      this.currentDataIndex = this.currentSeriesIndex = '';
     },
   },
 };

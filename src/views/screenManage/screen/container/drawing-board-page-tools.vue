@@ -31,14 +31,24 @@
       <!-- 中间tab页 -->
       <div class="pagebar-middle clearfix" ref="tabArea">
         <div class="pagebar-center">
-          <ul ref="tabList" class="page-list" :style="{ left: tabAreaPositionLeft + 'px' }">
+          <ul
+            v-if="pages && pages.length"
+            ref="tabList"
+            class="page-list"
+            :style="{ left: tabAreaPositionLeft + 'px' }"
+          >
             <li
-              v-for="(page, index) in pages"
+              class="page-item"
+              v-for="page in pages"
               :key="page.id"
-              @click="toOtherPage(page.id)"
-              :class="['page-item', { active: currentPageId === page.id }]"
+              :class="page.id === value ? 'active' : ''"
+              @click="handleChange(page)"
             >
-              <a-dropdown
+              <div class="page-item-box page-name">
+                {{ page.name }}
+              </div>
+
+              <!-- <a-dropdown
                 v-if="!page.isFocus"
                 :trigger="['contextmenu']"
                 v-model="page.showDropDown"
@@ -60,19 +70,19 @@
                   <a-menu-item key="2" @click="renameTab(page, index)">重命名</a-menu-item>
                   <a-menu-item key="3" @click="deleteTab(page, index)" :disabled="pages.length === 1">删除</a-menu-item>
                 </a-menu>
-              </a-dropdown>
-              <input v-else ref="input" @blur="onBlur(page)" v-model="page.name" />
+              </a-dropdown> -->
+              <!-- <input v-else ref="input" @blur="onBlur(page)" v-model="page.name" /> -->
             </li>
           </ul>
         </div>
-        <div class="page-add" @click="addPage">+</div>
+        <div v-if="handleIsShowButtonAdd()" class="page-add" @click="handleAddPage">+</div>
       </div>
     </div>
   </div>
 </template>
 <script>
 import { mapState, mapGetters, mapActions } from 'vuex';
-import { mutationTypes as boardMutaion } from '@/store/modules/board';
+import { parameter, mutationTypes as boardMutaion } from '@/store/modules/board';
 import { Loading } from 'element-ui';
 import Slider from '@/components/slider/slider';
 
@@ -87,9 +97,22 @@ export default {
       type: Array,
       required: true,
     },
+    limit: {
+      type: Number,
+      default: 10,
+    },
     value: {
       type: [String, Number],
       default: '',
+    },
+    type: {
+      // 编辑区类型
+      type: String,
+      required: true,
+      validator: function (value) {
+        // 这个值必须匹配下列字符串中的一个
+        return [parameter.PREVIEW, parameter.EDIT].indexOf(value) !== -1;
+      },
     },
   },
   model: {
@@ -114,14 +137,6 @@ export default {
       'orginPageSettings',
       'screenId',
     ]),
-    pages: {
-      get() {
-        return this.pageList;
-      },
-      set(value) {
-        this.$store.dispatch('SetPageList', value);
-      },
-    },
   },
   mounted() {
     this.$nextTick(() => {
@@ -134,6 +149,8 @@ export default {
   },
   data() {
     return {
+      parameter,
+      pages: this.tabs || [],
       showName: '',
       dragItem: null,
       rightBtnDisabled: true, // 控制tab翻页按钮
@@ -141,8 +158,24 @@ export default {
       tabAreaPositionLeft: 0, // tab列表偏移量
     };
   },
+  watch: {
+    tabs: {
+      immediate: false,
+      handler(val) {
+        if (val) {
+          this.pages = [].concat(val);
+        }
+      },
+    },
+  },
   methods: {
     ...mapActions(['SetCanvasRange', 'SetPageId', 'getScreenDetail']),
+    /**
+     * @description 判断是否显示添加按钮
+     */
+    handleIsShowButtonAdd() {
+      return this.type === this.parameter.EDIT && this.pages && this.pages.length <= this.limit;
+    },
     /**
      * @description 监听窗口变动
      */
@@ -328,7 +361,7 @@ export default {
     /**
      * @description 添加tab
      */
-    addPage() {
+    handleAddPage() {
       // 页面最多10个
       if (this.pages.length < 10) {
         // 获取页面上是页面X的格式的序号

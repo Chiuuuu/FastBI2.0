@@ -61,6 +61,45 @@
 
     <!-- 标题 粗细 start -->
     <a-row class="unit-show-block mb-8">
+      <a-col :span="4">
+        <div class="unit-block-title">字体</div>
+      </a-col>
+      <a-col :span="16" :offset="2">
+        <a-select
+          style="width: 100%"
+          :value="title.font.family"
+          @change="family => handleTitleFontChange('family', family)"
+        >
+          <a-select-option value="sans-serif">默认</a-select-option>
+          <a-select-option value="simfang">simfang</a-select-option>
+          <a-select-option value="fangsong">仿宋_GB2312</a-select-option>
+          <a-select-option value="times">times</a-select-option>
+          <a-select-option value="msyh">微软雅黑</a-select-option>
+          <a-select-option value="simkai">simkai</a-select-option>
+          <a-select-option value="pangmenzhengdao">庞门正道标题体</a-select-option>
+          <a-select-option value="HuXiaoBoNanShenTi">HuXiaoBoNanShenTi</a-select-option>
+          <a-select-option value="youshe">优设标题黑</a-select-option>
+          <a-select-option value="digital-7-4">digital-7-4</a-select-option>
+        </a-select>
+      </a-col>
+    </a-row>
+    <a-row class="unit-show-block mb-8">
+      <a-col :span="4">
+        <div class="unit-block-title">粗细</div>
+      </a-col>
+      <a-col :span="16" :offset="2">
+        <a-select
+          style="width: 100%"
+          :value="title.font.weight"
+          @change="weight => handleTitleFontChange('weight', weight)"
+        >
+          <a-select-option value="normal">正常</a-select-option>
+          <a-select-option value="bolder">加粗</a-select-option>
+          <a-select-option value="lighter">更细</a-select-option>
+        </a-select>
+      </a-col>
+    </a-row>
+    <a-row class="unit-show-block mb-8">
       <a-col :span="6">
         <div class="unit-block-title">粗细</div>
       </a-col>

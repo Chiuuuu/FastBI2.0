@@ -145,6 +145,8 @@ export default merge(cloneDeep(BASE), {
             formatter: '{a}\n({c})',
           },
         },
+        customIsOpenDataLink: false, // 是否开启图表联动
+        customInteractive: {}, // 保存联动数据
       },
     },
   },

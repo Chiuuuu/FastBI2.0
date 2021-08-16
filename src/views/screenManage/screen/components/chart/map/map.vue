@@ -4,7 +4,7 @@ import BaseChart from '../base';
 import defaultData from './default-data';
 import merge from 'lodash/merge';
 import registerMap from './registerMap';
-// import { mutationTypes as boardMutation } from '@/store/modules/board';
+import omit from 'lodash/omit';
 const mapSeries = 0;
 const scatterSeries = 1;
 
@@ -28,7 +28,10 @@ export default {
     /**
      * @description 视觉映射范围根据数据变化
      */
-    doWithViualMap() {},
+    doWithViualMap(visualMap, data) {
+      const valueList = data.map(item => item.value);
+      visualMap = Object.assign({}, visualMap, { max: Math.max(...valueList), min: Math.min(...valueList) });
+    },
     /**
      * @description 处理图例
      */
@@ -48,6 +51,7 @@ export default {
       const {
         style: { echart },
       } = this.options;
+      //   this.handleMapFormatterSelect(echart, fetchData.series);
       this.doWithViualMap(echart.visualMap, fetchData.series[mapSeries].data);
       this.doWithMap(fetchData.series[mapSeries], echart.mapStyle, echart.geo.itemStyle.emphasis.areaColor);
       this.doWithScatter(fetchData.series[scatterSeries], echart.scatterStyle);
@@ -163,64 +167,76 @@ export default {
     async getServerData() {
       console.log('从这里获取服务端数据');
       let data = defaultData.series;
+      let returnData = {
+        fillList:
+          this.options.data.dimensions.length && this.options.data.measures.length
+            ? [
+                {
+                  '地区名/diqu': '海珠区',
+                  diqu: '海珠区',
+                  name: '海珠区',
+                  renkoushuliang: 456,
+                  value: 456,
+                },
+                {
+                  '地区名/diqu': '花都区',
+                  diqu: '花都区',
+                  name: '花都区',
+                  renkoushuliang: 111,
+                  value: 111,
+                },
+              ]
+            : [],
+        labelList:
+          this.options.data.labelDimensions.length && this.options.data.labelMeasures.length
+            ? [
+                {
+                  '地区名/diqu': '花都区',
+                  diqu: '花都区',
+                  name: '花都区',
+                  renkoushuliang: 111,
+                  value: [
+                    113.211184, // 经度
+                    23.39205, // 纬度度
+                    111, // 值
+                  ],
+                },
+                {
+                  '地区名/diqu': '增城区',
+                  diqu: '增城区',
+                  name: '增城区',
+                  renkoushuliang: 3456,
+                  value: [113.829579, 23.290497, 3456],
+                },
+              ]
+            : [],
+      };
       this.serverData = {
         series: [
           Object.assign({}, data[0], {
-            data: [
-              {
-                '地区名/diqu': '海珠区',
-                diqu: '海珠区',
-                name: '海珠区',
-                renkoushuliang: 456,
-                value: 456,
-              },
-              {
-                '地区名/diqu': '花都区',
-                diqu: '花都区',
-                name: '花都区',
-                renkoushuliang: 111,
-                value: 111,
-              },
-            ],
+            data: returnData.fillList,
           }),
           Object.assign({}, data[1], {
             name: 'test',
-            data: [
-              {
-                '地区名/diqu': '花都区',
-                diqu: '花都区',
-                name: '花都区',
-                renkoushuliang: 111,
-                value: [
-                  113.211184, // 经度
-                  23.39205, // 纬度度
-                  111, // 值
-                ],
-              },
-              {
-                '地区名/diqu': '增城区',
-                diqu: '增城区',
-                name: '增城区',
-                renkoushuliang: 3456,
-                value: [113.829579, 23.290497, 3456],
-              },
-            ],
+            data: returnData.labelList,
           }),
         ],
       };
       const options = this.doWithOptions(this.serverData);
       this.updateSaveChart(options);
-      // 获取数据之后需要重置显示内容列表
-      //   this.$store.commit(boardMutation.SET_STYLE, {
-      //     style: {
-      //       echart: {
-      //         customPointShowList,
-      //         customShowTooltip,
-      //         customPointShowListForLabel,
-      //         customShowTooltipForLabel,
-      //       },
-      //     },
-      //   });
+    },
+    /**
+     * @description 初始化地图指标显示内容列表
+     */
+    handleMapFormatterSelect(echart, series) {
+      // 填充
+      let mapData = series[mapSeries].data;
+      echart.mapStyle.pointSelectList = Object.keys(omit(mapData, ['name', 'value']));
+      echart.mapStyle.mapFillTooltipSelectList = echart.mapStyle.tooltipSelectList.concat().shift();
+      // 散点
+      let scatterData = series[scatterSeries].data;
+      echart.scatterStyle.pointSelectList = Object.keys(omit(scatterData, ['name', 'value']));
+      echart.scatterStyle.mapLabelTooltipSelectList = echart.scatterStyle.tooltipSelectList.concat().shift();
     },
     /*
      * 处理默认数据

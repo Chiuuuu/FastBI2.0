@@ -24,7 +24,7 @@ const screenManage = {
    * @returns
    */
   getScreenTabs(id) {
-    return $axios.get(`/screen/bigscreen/screenTabList/${id}`);
+    return $axios.get(`/v2/screen/bigscreen/screenTabList/${id}`);
   },
   /**
    * @description 重命名大屏tab页签
@@ -104,7 +104,7 @@ const screenManage = {
    * @returns
    */
   addScreen(params) {
-    return $axios.post('/screen/bigscreen/addScreen', params);
+    return $axios.post('/v2/screen/bigscreen/addScreen', params);
   },
   /**
    * @description 复制大屏
@@ -169,7 +169,7 @@ const screenManage = {
    * @returns
    */
   getScreenDetailById(id, tabId) {
-    return $axios.get(`/screen/bigscreen/${id}/${tabId}`);
+    return $axios.get(`/v2/screen/bigscreen/${id}/${tabId}`);
     // return $axios.get(`/screen/data/${id}`)
   },
   /**
@@ -280,6 +280,18 @@ const screenManage = {
    */
   getMaterials(params) {
     return $axios.post('/screen/material/picList', params);
+  },
+  /**
+   * @description 保存tab页面的信息
+   */
+  saveScreenTab(params) {
+    return $axios.post('/v2/screen/bigscreen/saveTabDetail', params);
+  },
+  /**
+   * @description 添加图表获取图表id
+   */
+  addToGetChartId() {
+    return $axios.get('/screen/graph/genGraphId');
   },
 };
 

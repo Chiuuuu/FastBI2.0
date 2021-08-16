@@ -134,6 +134,8 @@ export default merge(cloneDeep(BASE), {
         },
         // 系列
         customSeries: {
+          barGap: '30%',
+          barWidth: '20%',
           label: {
             // 标签
             show: true,
@@ -147,9 +149,9 @@ export default merge(cloneDeep(BASE), {
           },
         },
         customShape: 'vertical', // vertical(垂直) || horizontal(水平)
-        customBarWidth: 60,
         customStack: false, // 是否开启堆叠
         customIsOpenDataLink: false, // 是否开启图表联动
+        customInteractive: {}, // 保存联动数据
       },
     },
   },

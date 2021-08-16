@@ -4,12 +4,18 @@ import BaseChart from '../base';
 import defaultData from './default-data';
 import { mutationTypes as boardMutation } from '@/store/modules/board';
 import merge from 'lodash/merge';
+import { setLinkageData, resetOriginData } from '@/utils/setDataLink';
 /**
  * @description 饼图
  */
 export default {
   name: `${BoardType.ChartPie}View`,
   extends: BaseChart,
+  data() {
+    return {
+      currentIndex: null, // 图表联动选中的下标
+    };
+  },
   methods: {
     /**
      * @description 判断是否获取服务端数据
@@ -203,6 +209,7 @@ export default {
         self.chartInstane.setOption(options);
         // 记录当前选择数据的index
         self.currentIndex = e.dataIndex;
+        setLinkageData([e.name]);
         // 设置点击空白重置联动
         self.handleChartClick(options);
       });
@@ -214,10 +221,8 @@ export default {
       let self = this;
       this.chartInstane.getZr().on('click', function (params) {
         // 没有选中数据不需要执行重置
-        if (!self.currentIndex) {
-          return;
-        }
-        if (typeof params.target === 'undefined') {
+        let hasSelected = self.currentIndex || self.currentIndex === 0;
+        if (typeof params.target === 'undefined' && hasSelected) {
           // 重置图表
           self.resetChart(options);
         }
@@ -231,7 +236,7 @@ export default {
         item.itemStyle.color && delete item.itemStyle.color;
       });
       // 还原数据
-      //   resetOriginData(self.chartId, self.canvasMap);
+      resetOriginData();
       this.chartInstane.clear();
       this.chartInstane.setOption(options);
       this.currentIndex = '';

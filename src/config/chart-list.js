@@ -3,26 +3,10 @@ const chartList = [
   {
     name: '折线图',
     type: BoardType.ChartLine,
-    sub: [
-      {
-        name: '普通折线图',
-        type: BoardType.ChartLine,
-      },
-    ],
   },
   {
     name: '柱状图',
     type: BoardType.ChartBar,
-    sub: [
-      {
-        name: '普通柱状图',
-        type: BoardType.ChartBar,
-      },
-      {
-        name: '3D柱状图',
-        type: BoardType.ChartBar,
-      },
-    ],
   },
   {
     name: '饼图',

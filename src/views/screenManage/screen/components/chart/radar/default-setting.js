@@ -81,6 +81,8 @@ export default merge(cloneDeep(BASE), {
         // 系列
         customSeries: {},
         customOpacity: 0, // 透明度
+        customIsOpenDataLink: false, // 是否开启图表联动
+        customInteractive: {}, // 保存联动数据
       },
     },
   },

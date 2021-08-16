@@ -5,34 +5,13 @@
 @import url("../fonts/bi-data.css");
 @deep: ~">>>";
 
-#app {
-  height: 100%;
-  .ant-layout-content {
-    overflow: hidden;
-  }
-  .drawing-board-preview {
-    .preview-board-app {
-      height: 100%;
-      position: relative;
-      .@{board}-content,
-      .@{board}-page-tools {
-        position: absolute;
-        right: 0;
-        left: 0;
-      }
-      .@{board}-content {
-        top: 0;
-      }
-    }
-  }
-  .model-field-search,
-  .model-search {
-    .ant-input-affix-wrapper {
-      height: 100%;
-      width: 100%;
-      .ant-input {
-        height: 28px;
-      }
+.model-field-search,
+.model-search {
+  .ant-input-affix-wrapper {
+    height: 100%;
+    width: 100%;
+    .ant-input {
+      height: 28px;
     }
   }
 }

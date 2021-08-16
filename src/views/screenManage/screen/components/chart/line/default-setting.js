@@ -147,10 +147,20 @@ export default merge(cloneDeep(BASE), {
             // 标签是否允许重叠
             hideOverlap: true,
           },
+          symbolSize: 4, //标记点大小
+          //区域填充样式设置
+          areaStyle: {
+            opacity: 0, //图形透明度
+          },
+          lineStyle: {
+            width: 2,
+          },
+          // smooth: false,
         },
         customShowSymbol: true, // 是否显示标记点,
         customLinear: 'line', // 线形 line || curve || trapezoidal
         customIsOpenDataLink: false, // 是否开启图表联动
+        customInteractive: {}, // 保存联动数据
       },
     },
   },
