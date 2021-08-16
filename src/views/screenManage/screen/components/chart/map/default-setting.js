@@ -12,14 +12,14 @@ export default merge(cloneDeep(BASE), {
       longitude: [], // 经度
       latitude: [], // 纬度
       labelDimensions: [], // 散点维度
-      labelMmeasures: [], // 散点填充度量
+      labelMeasures: [], // 散点填充度量
       labelLongitude: [], // 散点经度
       labelLatitude: [], // 散点纬度
+      customFillDataType: 'area', // 类型（地区:area | 经纬度:dot）
+      customLabelDataType: 'area', // 类型（地区:area | 经纬度:dot）
     },
     style: {
       echart: {
-        customFillDataType: 'area', // 类型（地区:area | 经纬度:dot）
-        customLabelDataType: 'area', // 类型（地区:area | 经纬度:dot）
         legend: {
           show: false,
           textStyle: {
@@ -96,6 +96,8 @@ export default merge(cloneDeep(BASE), {
           customOrient: 'vertical',
           customShowTooltip: false,
           customTooltipShowList: [], // 提示框显示
+          pointSelectList: [],
+          tooltipSelectList: [],
         },
         scatterStyle: {
           customShowItem: true, // 展示标记点
@@ -110,6 +112,8 @@ export default merge(cloneDeep(BASE), {
           customTextSize: 12,
           customTextColor: '#fff',
           customTextPosition: 'bottom',
+          pointSelectList: [],
+          tooltipSelectList: [],
         },
       },
     },

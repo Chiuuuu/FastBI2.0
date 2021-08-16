@@ -67,6 +67,7 @@ export default merge(cloneDeep(BASE), {
         customOutRadius: 65, // 外半径
         customCenter: [50, 50], // 坐标中心点
         customIsOpenDataLink: false, // 是否开启图表联动
+        customInteractive: {}, // 保存联动数据
       },
     },
   },

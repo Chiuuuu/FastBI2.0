@@ -297,7 +297,6 @@
                   <!-- 图表联动 start -->
                   <UnitConnect
                     class="setting-unit-content"
-                    :dataLinkState="currentCom.setting.style.echart.customIsOpenDataLink"
                     @change="
                       value =>
                         handleChange('echart', {

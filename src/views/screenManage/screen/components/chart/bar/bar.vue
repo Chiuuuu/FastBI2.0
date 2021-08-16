@@ -3,6 +3,7 @@ import BoardType from '@/views/screenManage/screen/setting/default-type';
 import BaseChart from '../base';
 import defaultData from './default-data';
 import merge from 'lodash/merge';
+import { setLinkageData, resetOriginData } from '@/utils/setDataLink';
 /**
  * @description 柱状图
  */
@@ -11,7 +12,8 @@ export default {
   extends: BaseChart,
   data() {
     return {
-      currentIndex: null, // 图表联动选中的下标
+      currentSeriesIndex: null, // 图表联动选中的下标
+      currentDataIndex: null, // 图表联动选中的下标
     };
   },
   methods: {
@@ -190,14 +192,14 @@ export default {
           return;
         }
         // 重复点击选中项
-        if (e.dataIndex === self.currentIndex) {
+        if (e.dataIndex === self.currentDataIndex && e.seriesIndex === self.currentSeriesIndex) {
           // 重置图表
           self.resetChart(options);
           return;
         }
         // series添加颜色回调函数控制，选中
         const formatterFn = function (params) {
-          return params.dataIndex === e.dataIndex
+          return params.dataIndex === e.dataIndex && params.seriesIndex === e.seriesIndex
             ? options.color[params.seriesIndex]
             : self.hexToRgba(options.color[params.seriesIndex], 0.4);
         };
@@ -206,7 +208,9 @@ export default {
         });
         self.chartInstane.setOption(options);
         // 记录当前选择数据的index
-        self.currentIndex = e.dataIndex;
+        self.currentDataIndex = e.dataIndex;
+        self.currentSeriesIndex = e.seriesIndex;
+        setLinkageData([e.name]);
       });
     },
     /**
@@ -215,7 +219,7 @@ export default {
     handleChartClick() {
       let self = this;
       this.chartInstane.getZr().on('click', function (params) {
-        let hasSelected = self.currentIndex || self.currentIndex === 0;
+        let hasSelected = self.currentDataIndex || self.currentDataIndex === 0;
         // 没有选中数据不需要执行重置
         if (typeof params.target === 'undefined' && hasSelected) {
           // 重置图表
@@ -233,10 +237,10 @@ export default {
         item.itemStyle.color && delete item.itemStyle.color;
       });
       // 还原数据
-      //   resetOriginData(self.chartId, self.canvasMap);
+      resetOriginData();
       this.chartInstane.clear();
       this.chartInstane.setOption(options);
-      this.currentIndex = '';
+      this.currentDataIndex = this.currentSeriesIndex = '';
     },
   },
 };

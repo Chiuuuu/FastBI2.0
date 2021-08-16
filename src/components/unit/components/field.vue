@@ -228,7 +228,8 @@ export default {
         [DROG_TYPE.FIELD]: this.handleField,
         [DROG_TYPE.LATITUDE]: this.handleLatitude,
         [DROG_TYPE.LABELDIMENSION]: this.handleLabelDimension,
-        [DROG_TYPE.LABELMEASURE]: this.handleLabelLongitude,
+        [DROG_TYPE.LABELMEASURE]: this.handleLabelMeasure,
+        [DROG_TYPE.LABELLONGITUDE]: this.handleLabelLongitude,
         [DROG_TYPE.LABELLATITUDE]: this.handleLabelLatitude,
       };
 
@@ -336,15 +337,23 @@ export default {
       };
     },
     /**
-     * @description 当放置到纬度
+     * @description 当放置到散点纬度
      */
     handleLabelDimension(data, method = 'add') {
       return {
-        labelDimension: this.conversionArry('labelDimension', data, method),
+        labelDimensions: this.conversionArry('labelDimensions', data, method),
       };
     },
     /**
-     * @description 当放置到纬度
+     * @description 当放置到散点度量
+     */
+    handleLabelMeasure(data, method = 'add') {
+      return {
+        labelMeasures: this.conversionArry('labelMeasures', data, method),
+      };
+    },
+    /**
+     * @description 当放置到散点纬度
      */
     handleLabelLongitude(data, method = 'add') {
       return {
@@ -353,7 +362,7 @@ export default {
       };
     },
     /**
-     * @description 当放置到纬度
+     * @description 当放置到散点经度
      */
     handleLabelLatitude(data, method = 'add') {
       return {
