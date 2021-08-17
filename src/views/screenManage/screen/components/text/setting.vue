@@ -45,6 +45,106 @@
                   ></UnitSize>
                   <!-- 尺寸 end -->
                 </CollapsePanel>
+                <CollapsePanel class="content-item" panel="title" header="标题">
+                  <div class="setting-unit-content">
+                    <!-- 标题 内容 start -->
+                    <div class="mb-8">
+                      <a-input
+                        :value="currentCom.setting.style.title.text"
+                        :maxLength="20"
+                        @blur="event => handleTitleChange('text', event.target.value)"
+                      ></a-input>
+                    </div>
+                  </div>
+                </CollapsePanel>
+                <CollapsePanel class="content-item" panel="content" header="文本">
+                  <div class="setting-unit-content">
+                    <!-- 标题 文本 start -->
+                    <a-row class="unit-show-block mb-8">
+                      <a-col :span="4">
+                        <div class="unit-block-title">文本</div>
+                      </a-col>
+                      <a-col :span="4">
+                        <div class="font-color">
+                          <ColorPicker
+                            :value="currentCom.setting.style.echart.text.fontColor"
+                            @change="color => handleSelect('fontColor', color)"
+                          ></ColorPicker>
+                        </div>
+                      </a-col>
+                      <a-col :span="16">
+                        <a-input-number
+                          :value="currentCom.setting.style.echart.text.fontSize"
+                          :min="0"
+                          @change="size => handleSelect('fontSize', size)"
+                        />
+                      </a-col>
+                    </a-row>
+                    <!-- 标题 文本 end -->
+
+                    <!-- 标题 字体 start -->
+                    <a-row class="unit-show-block mb-8">
+                      <a-col :span="6">
+                        <div class="unit-block-title">字体</div>
+                      </a-col>
+                      <a-col :span="16" :offset="2">
+                        <a-select
+                          style="width: 100%"
+                          :value="currentCom.setting.style.echart.text.fonFamily"
+                          @change="family => handleSelect('fonFamily', family)"
+                        >
+                          <a-select-option value="sans-serif">默认</a-select-option>
+                          <a-select-option value="simfang">simfang</a-select-option>
+                          <a-select-option value="fangsong">仿宋_GB2312</a-select-option>
+                          <a-select-option value="times">times</a-select-option>
+                          <a-select-option value="msyh">微软雅黑</a-select-option>
+                          <a-select-option value="simkai">simkai</a-select-option>
+                          <a-select-option value="pangmenzhengdao">庞门正道标题体</a-select-option>
+                          <a-select-option value="HuXiaoBoNanShenTi">HuXiaoBoNanShenTi</a-select-option>
+                          <a-select-option value="youshe">优设标题黑</a-select-option>
+                          <a-select-option value="digital-7-4">digital-7-4</a-select-option>
+                        </a-select>
+                      </a-col>
+                    </a-row>
+                    <!-- 标题 字体 end -->
+                    <a-row class="unit-show-block mb-8">
+                      <a-col :span="6">
+                        <div class="unit-block-title">粗细</div>
+                      </a-col>
+                      <a-col :span="16" :offset="2">
+                        <a-select
+                          style="width: 100%"
+                          :value="currentCom.setting.style.echart.text.fontWeight"
+                          @change="weight => handleSelect('fontWeight', weight)"
+                        >
+                          <a-select-option value="normal">正常</a-select-option>
+                          <a-select-option value="bolder">加粗</a-select-option>
+                          <a-select-option value="lighter">更细</a-select-option>
+                        </a-select>
+                      </a-col>
+                    </a-row>
+                    <!-- 标题 粗细 end -->
+
+                    <!-- 标题 对齐 start -->
+                    <a-row class="unit-show-block mb-8">
+                      <a-col :span="12">
+                        <div class="unit-block-title">对齐</div>
+                      </a-col>
+                      <template v-for="item in align">
+                        <a-col :span="4" :key="item">
+                          <div
+                            class="font-align"
+                            :class="item === currentCom.setting.style.echart.text.fontAlign ? 'selected' : ''"
+                            @click="handleSelect('fontAlign', item)"
+                          >
+                            <a-icon :type="`align-${item}`" />
+                          </div>
+                        </a-col>
+                      </template>
+                    </a-row>
+                    <!-- 标题 对齐 end -->
+                  </div>
+                </CollapsePanel>
                 <CollapsePanel class="content-item" panel="bgAndBorder" header="背景和边框">
                   <div class="setting-unit-content">
                     <!-- 背景图片 start -->
@@ -102,8 +202,29 @@ export default {
   data() {
     return {
       tabAcitve: 'style', // tab选项栏活动目标
-      dataCollapseActive: ['dataFilter'], // 折叠打开选项
+      dataCollapseActive: ['dataFilter'], // 折叠打开选项data() {
+      align: ['left', 'center', 'right'], // 对齐方式
     };
+  },
+  methods: {
+    /**
+     * @description 处理图例样式
+     */
+    handleSelect(key, value) {
+      this.handleChange('echart', {
+        text: {
+          [key]: value,
+        },
+      });
+    },
+    /**
+     * @description 设置标题
+     */
+    handleTitleChange(key, value) {
+      this.handleChange('title', {
+        [key]: value,
+      });
+    },
   },
 };
 </script>

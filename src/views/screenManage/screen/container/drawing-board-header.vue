@@ -265,29 +265,29 @@ export default {
         setting.setting.style.echart.geo.map = mapOkRegion;
       }
 
-      const result = await this.$server.screenManage.addToGetChartId();
-      if (result && result.code === 200) {
-        const len = this.components.length;
-        const component = merge(
-          setting,
-          {
-            id: result.data.id,
-            setting: {
-              style: {
-                title: {
-                  text: `未命名图表${len}`,
-                },
+      //   const result = await this.$server.screenManage.addToGetChartId();
+      //   if (result && result.code === 200) {
+      const len = this.components.length;
+      const component = merge(
+        setting,
+        {
+          id: 0,
+          setting: {
+            style: {
+              title: {
+                text: `未命名图表${len}`,
               },
             },
           },
-          mergeObj,
-        );
-        this.$store.commit(boardMutaion.ADD_COM, {
-          component,
-        });
-      } else {
-        this.$message(result.msg || '添加图表失败');
-      }
+        },
+        mergeObj,
+      );
+      this.$store.commit(boardMutaion.ADD_COM, {
+        component,
+      });
+      //   } else {
+      //     this.$message(result.msg || '添加图表失败');
+      //   }
     },
     // TODO: 改成a-modal
     /**

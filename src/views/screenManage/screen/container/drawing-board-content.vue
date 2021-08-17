@@ -15,7 +15,7 @@
               :index="index"
               :component="item"
             >
-              <component :is="item.type" :options="item.setting"></component>
+              <component :is="item.type" :options="item.setting" :currentComponent="item"></component>
             </BoardShapeUnit>
           </div>
           <!-- 画板网格控制真实尺寸 end -->
