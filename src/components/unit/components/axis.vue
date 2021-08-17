@@ -78,6 +78,23 @@
         </a-col>
         <!-- 轴名称 字体 大小 start -->
       </a-row>
+      <!-- 轴名称位置 start -->
+      <a-row class="unit-show-block mb-8 mt-10">
+        <a-col :span="9">
+          <div class="unit-block-title">轴名称位置</div>
+        </a-col>
+        <a-col :span="15">
+          <a-radio-group
+            :value="axis.nameLocation"
+            class="float-right"
+            @change="e => handleNameLocation('nameLocation', e.target.value)"
+          >
+            <a-radio-button value="middle">中部</a-radio-button>
+            <a-radio-button value="end">末尾</a-radio-button>
+          </a-radio-group>
+        </a-col>
+      </a-row>
+      <!-- 轴名称位置 end -->
       <p>轴名称的内边距</p>
       <a-row class="unit-show-block mb-2" v-for="(row, index) in axisPosition" :key="index">
         <template v-for="col in row">
@@ -284,6 +301,28 @@ export default {
         [this.type]: {
           nameTextStyle: {
             [key]: value,
+          },
+        },
+      });
+    },
+    /**
+     * @description 坐标轴名称的位置
+     */
+    handleNameLocation(key, value) {
+      let padding = [];
+      // 设置轴名称内边距的默认值
+      if (this.type === 'xAxis') {
+        value == 'middle' && (padding = [30, 0, 0, 0]);
+        value == 'end' && (padding = [60, 0, 0, 0]);
+      } else {
+        value == 'middle' && (padding = [0, 0, 40, 0]);
+        value == 'end' && (padding = [0, 0, 0, 0]);
+      }
+      this.handleChange('echart', {
+        [this.type]: {
+          [key]: value,
+          nameTextStyle: {
+            padding,
           },
         },
       });
