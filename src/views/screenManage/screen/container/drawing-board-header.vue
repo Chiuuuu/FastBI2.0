@@ -280,7 +280,7 @@ export default {
         const component = merge(
           setting,
           {
-            id: 0,
+            id: result.data.id,
             setting: {
               style: {
                 title: {
