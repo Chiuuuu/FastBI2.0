@@ -5,12 +5,11 @@
       <h2 class="title">数据接入列表</h2>
       <div class="panel-body">
         <div class="model-list">
-          <div class="model-search">
+          <div class="model-search" v-if="!isEmpty">
             <a-input-search placeholder="搜索数据接入" @change="handleSearch" />
           </div>
-          <div class="list-content reset-scrollbar">
-            <a-empty description="没有符合数据" v-if="searchValue && searchList.length === 0"></a-empty>
-            <template v-else>
+          <div class="list-content reset-scrollbar" :class="isEmpty ? 'empty' : ''">
+            <template v-if="!isEmpty">
               <!-- 数据接入列表 start -->
               <!-- 气泡窗, 点击数据源时弹出继续选择库表 -->
               <a-popover v-model="showPopover" trigger="click" placement="leftTop">
@@ -109,7 +108,9 @@
               </a-popover>
               <!-- 数据接入列表 end -->
             </template>
+            <a-empty description="没有符合数据" v-else></a-empty>
           </div>
+          <div class="model-list-footer" @click="handleGoToCreateAccess">新建数据接入</div>
         </div>
       </div>
     </div>
@@ -144,6 +145,14 @@ export default {
   },
   mounted() {},
   methods: {
+    /**
+     * @description 跳转到创建数据接入
+     */
+    handleGoToCreateAccess() {
+      this.$router.push({
+        name: 'dataAccess',
+      });
+    },
     /**
      * @description 获取数据模型列表
      */

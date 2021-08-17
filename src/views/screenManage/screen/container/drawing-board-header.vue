@@ -7,8 +7,8 @@
 
     <!-- 大屏名称 start -->
     <div class="drawing-board-title">
-      <span class="board-name-box" :title="screenInfo.name">
-        <input type="text" placeholder="请输入大屏标题" :value="screenInfo.name" @blur="handleChangeScreenName" />
+      <span class="board-name-box" :title="screenInfo.screenName">
+        <input type="text" placeholder="请输入大屏标题" :value="screenInfo.screenName" @blur="handleChangeScreenName" />
       </span>
     </div>
     <!-- 大屏名称 end -->
@@ -315,7 +315,7 @@ export default {
      */
     handleChangeScreenName(event) {
       const value = event.target.value;
-      if (!value) return (event.target.value = this.screenInfo.name);
+      if (!value) return (event.target.value = this.screenInfo.screenName);
       this.$emit('changeName', value);
     },
     /**
@@ -332,7 +332,7 @@ export default {
     async handleSave() {
       const { tabId, id } = this.$route.query;
       const param = {
-        name: this.screenInfo.name,
+        name: this.screenInfo.screenName,
         screenId: id,
         id: tabId,
         graphs: this.components,
