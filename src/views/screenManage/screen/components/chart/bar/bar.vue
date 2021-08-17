@@ -24,8 +24,11 @@ export default {
       const { data } = this.options;
       return data.dataModelId && data.dimensions.length && data.measures.length;
     },
+    /**
+     * @description 柱条间隔
+     */
     doWithBarGap(item, barGap = 0) {
-      item['barGap'] = barGap;
+      item['barGap'] = barGap + '%';
     },
     /**
      * @description 处理方向
@@ -96,8 +99,9 @@ export default {
       const shape = this.doWithShape(echart, fetchData.categoryData);
       echart.customSeries.barWidth = this.doWithBarWidth(echart.customBarWidth, fetchData.series.length);
       fetchData.series.forEach(item => {
-        this.doWithBarGap(item);
+        this.doWithBarGap(item, echart.customBarGap);
         this.doWithStack(item, echart.customStack);
+
         // 系列
         for (let i in echart.customSeries) {
           this.doWithKeyValue(item, i, echart.customSeries[i]);

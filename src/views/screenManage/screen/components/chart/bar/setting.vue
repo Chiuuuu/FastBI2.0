@@ -172,15 +172,21 @@
                       <!-- 圆角 end -->
                     </a-row>
                     <a-row class="unit-show-block mb-8">
-                      <a-col :span="8" class="unit-show-block">
-                        <div class="unit-block-title">柱条间隔</div>
+                      <a-col :span="10" class="unit-show-block">
+                        <div class="unit-block-title">柱条间隔(%)</div>
                       </a-col>
                       <!-- 柱条间隔 start -->
-                      <a-col :span="16">
-                        <a-input
+                      <a-col :span="14">
+                        <!-- <a-input
                           :value="currentCom.setting.style.echart.customSeries.barGap"
                           @change="e => doWithSeries('barGap', e.target.value)"
-                        ></a-input>
+                        ></a-input> -->
+                        <a-input-number
+                          :min="0"
+                          :max="100"
+                          :value="currentCom.setting.style.echart.customBarGap"
+                          @change="value => handleChange('echart', { customBarGap: value })"
+                        ></a-input-number>
                       </a-col>
                       <!-- 柱条间隔 end -->
                     </a-row>
@@ -192,11 +198,12 @@
                       <a-col :span="18">
                         <a-radio-group
                           name="radioGroup"
+                          class="float-right"
                           :value="currentCom.setting.style.echart.customStack"
                           @change="event => handleShape('customStack', event.target.value)"
                         >
-                          <a-radio :value="false">分布</a-radio>
-                          <a-radio :value="true">堆叠</a-radio>
+                          <a-radio-button :value="false">分布</a-radio-button>
+                          <a-radio-button :value="true">堆叠</a-radio-button>
                         </a-radio-group>
                       </a-col>
                       <!-- 形状 方式 end -->
@@ -210,11 +217,12 @@
                       <a-col :span="18">
                         <a-radio-group
                           name="radioGroup"
+                          class="float-right"
                           :value="currentCom.setting.style.echart.customShape"
                           @change="event => handleShape('customShape', event.target.value)"
                         >
-                          <a-radio value="horizontal">水平</a-radio>
-                          <a-radio value="vertical">垂直</a-radio>
+                          <a-radio-button value="horizontal">水平</a-radio-button>
+                          <a-radio-button value="vertical">垂直</a-radio-button>
                         </a-radio-group>
                       </a-col>
                       <!-- 方向 end -->
