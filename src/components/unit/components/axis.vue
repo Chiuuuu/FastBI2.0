@@ -159,6 +159,51 @@
       ></UnitCheckbox>
     </div>
     <!-- 轴刻度是否显示 end -->
+    <!-- 网格线配置 start -->
+    <div class="axis-name-box">
+      <div>
+        <p>网格线</p>
+        <UnitCheckbox
+          class="show-btn"
+          label="显示"
+          :value="axis.splitLine.show"
+          @change="show => handleSplitLine('show', show)"
+        ></UnitCheckbox>
+      </div>
+      <!-- 网格线颜色 start -->
+      <a-row class="unit-show-block mb-8">
+        <a-col :span="8">
+          <div class="unit-block-title">网格线颜色</div>
+        </a-col>
+        <a-col :span="16">
+          <div class="font-color float-right">
+            <ColorPicker
+              :value="axis.splitLine.lineStyle.color"
+              @change="color => handleLineStyle('color', color)"
+            ></ColorPicker>
+          </div>
+        </a-col>
+      </a-row>
+      <!-- 网格线颜色 end -->
+      <!-- 网格线线型 start -->
+      <a-row class="unit-show-block">
+        <a-col :span="9">
+          <div class="unit-block-title">网格线线型</div>
+        </a-col>
+        <a-col :span="15">
+          <a-select
+            :value="axis.splitLine.lineStyle.type"
+            style="width: 100%"
+            @change="type => handleLineStyle('type', type)"
+          >
+            <a-select-option value="solid">实线</a-select-option>
+            <a-select-option value="dotted">点状</a-select-option>
+            <a-select-option value="dashed">虚线</a-select-option>
+          </a-select>
+        </a-col>
+      </a-row>
+      <!-- 网格线线型 end -->
+    </div>
   </div>
 </template>
 <script>
@@ -275,6 +320,32 @@ export default {
           name: event.target.value,
           cache: {
             name: event.target.value,
+          },
+        },
+      });
+    },
+    /**
+     * @description 网格线是否显示
+     */
+    handleSplitLine(key, value) {
+      this.handleChange('echart', {
+        [this.type]: {
+          splitLine: {
+            [key]: value,
+          },
+        },
+      });
+    },
+    /**
+     * @description 网格线配置
+     */
+    handleLineStyle(key, value) {
+      this.handleChange('echart', {
+        [this.type]: {
+          splitLine: {
+            lineStyle: {
+              [key]: value,
+            },
           },
         },
       });
