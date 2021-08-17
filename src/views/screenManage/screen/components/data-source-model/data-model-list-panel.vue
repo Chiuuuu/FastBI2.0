@@ -5,12 +5,11 @@
       <h2 class="title">数据模型列表</h2>
       <div class="panel-body">
         <div class="model-list">
-          <div class="model-search">
+          <div class="model-search" v-if="!isEmpty">
             <a-input-search placeholder="搜索数据接入" @change="handleSearch" />
           </div>
-          <div class="list-content reset-scrollbar">
-            <a-empty description="没有符合数据" v-if="searchValue && searchList.length === 0"></a-empty>
-            <template v-else>
+          <div class="list-content reset-scrollbar" :class="isEmpty ? 'empty' : ''">
+            <template v-if="!isEmpty">
               <!-- 数据模型列表 start -->
               <template v-for="item in modelList">
                 <!-- 文件夹类型 start -->
@@ -56,8 +55,9 @@
               </template>
               <!-- 数据模型列表 end -->
             </template>
+            <a-empty description="没有符合数据" v-else></a-empty>
           </div>
-          <!-- <div class="model-list-footer">新建数据模型</div> -->
+          <div class="model-list-footer" @click="handleGoToCreateModel">新建数据模型</div>
         </div>
       </div>
     </div>
@@ -106,9 +106,21 @@ export default {
       // 数据模型展示列表
       return this.searchValue ? this.searchList : this.list;
     },
+    isEmpty() {
+      // 列表是否为空
+      return this.list && this.list.length === 0;
+    },
   },
   mounted() {},
   methods: {
+    /**
+     * @description 跳转到创建数据建模
+     */
+    handleGoToCreateModel() {
+      this.$router.push({
+        name: 'modelShow',
+      });
+    },
     /**
      * @description 获取数据模型列表
      */
@@ -228,9 +240,12 @@ export default {
         height: 28px;
       }
       .list-content {
-        height: calc(100vh - 210px);
+        height: calc(100vh - 240px);
         position: relative;
         overflow-y: auto;
+        &.empty {
+          height: calc(100vh - 202px);
+        }
         .group {
           .title {
             height: 30px;

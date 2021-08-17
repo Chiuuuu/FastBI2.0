@@ -115,7 +115,12 @@
               <!-- 内容编辑区 end -->
 
               <!-- 内容编辑区工具栏 start -->
-              <DrawingBoardPageTools :tabs="tabs" v-model="tabActive" :type="parameter.PREVIEW"></DrawingBoardPageTools>
+              <DrawingBoardPageTools
+                :tabs="tabs"
+                :type="parameter.PREVIEW"
+                :value="tabActive"
+                @change="handleTabChange"
+              ></DrawingBoardPageTools>
             </div>
           </div>
           <div class="empty" v-else>
@@ -466,7 +471,6 @@ export default {
       if (result && result.code === 200) {
         // 标签页
         this.tabs = [].concat(result.data.screenTabList);
-        this.tabActive = tabId || this.tabs[0].id;
 
         // 发布信息
         this.release = {
@@ -482,7 +486,7 @@ export default {
             },
           });
         } else {
-          this.getScreenDetailByTabId(result.data.id, this.tabActive);
+          this.getScreenDetailByTabId(result.data.id, tabId || this.tabs[0].id);
         }
       } else {
         result.msg && this.$message.error(result.msg);
@@ -498,6 +502,8 @@ export default {
       };
       const result = await this.$store.dispatch('screen/getScreenDetailById', params);
       if (result) {
+        this.tabActive = result.tabId;
+
         this.fileSelect = {
           ...this.fileSelect,
           id: screenId,
@@ -517,7 +523,6 @@ export default {
         query: {
           id: this.fileSelect.id,
           tabId: this.fileSelect.tabId,
-          model: 'edit',
         },
       });
     },
@@ -876,7 +881,6 @@ export default {
           name: 'screenEdit',
           query: {
             ...result.data,
-            model: 'add',
           },
         });
       } else {
@@ -971,7 +975,6 @@ export default {
           query: {
             id: result.data.screenId,
             tabId: result.data.tabId,
-            model: 'add',
           },
         });
       } else {
@@ -1093,6 +1096,17 @@ export default {
             // 状态改为未发布
             this.release.status = 'ready';
           }
+        },
+      });
+    },
+    /**
+     * @description 切换tab页面
+     */
+    handleTabChange(params) {
+      this.$router.push({
+        query: {
+          id: params.screenId,
+          tabId: params.tabId,
         },
       });
     },

@@ -12,6 +12,7 @@ import BoardType from '@/views/screenManage/screen/setting/default-type';
 import MediumEditor from 'medium-editor';
 import { parameter } from '@/store/modules/board';
 import debounce from 'lodash/debounce';
+import { getStyle } from '@/utils';
 import { mutationTypes as historyMutation } from '@/store/modules/history';
 const reg = /<span data-id="(.*?)" contenteditable="false" class="anchor-measure">(.*?)<\/span>/g;
 const polymerizationData = {
@@ -61,17 +62,13 @@ export default {
       type: [Object, String],
       default: '',
     },
-    currentComponent: {
-      // 配置项信息
-      type: Object,
-      default: null,
-    },
   },
   data() {
     return {
       editor: '', // 记录编辑器
-      text: '', // 文本框内容
       menu: '', // 右键菜单
+      text: '', // 文本框内容
+      dataModelId: '', // 记录dataModelId
     };
   },
   mounted() {
@@ -82,16 +79,16 @@ export default {
       model: state => state.board.model,
     }),
     contentStyle() {
-      return {
-        color: this.options.style.echart.text.fontColor,
-        fontSize: this.options.style.echart.text.fontSize + 'px',
-        textAlign: this.options.style.echart.text.fontAlign,
-        fontFamily: this.options.style.echart.text.fontFamily,
-        fontWeight: this.options.style.echart.text.fontWeight,
-      };
+      const {
+        style: {
+          echart: { text },
+        },
+      } = this.options;
+
+      return getStyle({}, { text }, ['fontSize'], []);
     },
     modelMeasures() {
-      return [{ alias: '成本', name: '成本', id: '1', defaultAggregator: 'SUM', status: 0 }];
+      return [{ alias: '成本', name: '成本', id: '1', defaultAggregator: 'SUM', screenTableId: 1, status: 0 }];
     },
   },
   watch: {
@@ -111,6 +108,28 @@ export default {
       } else {
         this.editor.destroy();
       }
+    },
+    'options.data': {
+      deep: true,
+      immediate: false,
+      handler(val) {
+        if (!val) {
+          return;
+        }
+        this.dataModelId = val.dataModelId;
+        this.$refs['js-board-text-unit'].innerHTML = val.htmlText;
+        // 非聚焦(可拖)下还要做转换
+        if (this.shapeUnit.isShowShapMover) {
+          this.getContent(val.measures).then(resStr => {
+            this.$nextTick(() => {
+              this.$refs['js-board-text-unit'].innerHTML = resStr;
+              if (!val.htmlText) {
+                this.$refs['js-board-text-unit'].classList.add('medium-editor-placeholder');
+              }
+            });
+          });
+        }
+      },
     },
   },
   methods: {
@@ -189,7 +208,6 @@ export default {
             return {
               ...item,
               onClick: (event, item, vm) => {
-                // anchor.remove();
                 var range = document.createRange();
                 range.selectNode(anchor);
                 range.deleteContents();
@@ -199,7 +217,7 @@ export default {
                 span.setAttribute('class', 'anchor-measure');
                 span.innerHTML = `[${vm.formatAggregator(item)}&nbsp;&nbsp;&nbsp;]`;
                 span.oncontextmenu = span.onclick = that.clickMeasure;
-                // wrap.insertNode(span);
+                vm.dataModelId = item.screenTableId; // 记录使用的模型id
                 range.insertNode(span);
                 range.selectNode(span);
                 this.selectRange(range);
@@ -273,7 +291,7 @@ export default {
     onFocus() {
       // 获取
       const dom = this.$refs['js-board-text-unit'];
-      dom.innerHTML = this.text;
+      dom.innerHTML = this.shapeUnit.component.setting.data.htmlText;
       dom.setAttribute('contenteditable', true);
       setTimeout(() => {
         this.editor.selectElement(dom);
@@ -285,11 +303,13 @@ export default {
      */
     async removeFocus() {
       this.$refs['js-board-text-unit'].setAttribute('contenteditable', false);
-      this.text = this.$refs['js-board-text-unit'].innerHTML;
-      let replaceString = await this.getContent();
+      // 匹配度量数据
+      const measures = this.getMeasureDatas();
+      this.saveText(measures);
+      let replaceString = await this.getContent(measures);
       this.$nextTick(() => {
         this.$refs['js-board-text-unit'].innerHTML = replaceString;
-        if (this.text) {
+        if (replaceString) {
           this.$refs['js-board-text-unit'].classList.remove('medium-editor-placeholder');
         }
 
@@ -299,39 +319,48 @@ export default {
       });
     },
     /**
+     * @description 保存文本
+     */
+    saveText(measures) {
+      this.$store.commit(historyMutation.COMMAND, {
+        commandType: 'Data',
+        target: this.shapeUnit.component,
+        store: this.$store,
+        eventBus: this.$EventBus,
+        data: { dataModelId: this.dataModelId, htmlText: this.$refs['js-board-text-unit'].innerHTML, measures },
+      });
+    },
+    /**
      * @description 计算显示文本,模板替换去
      */
-    async getContent(isInit = false) {
-      if (!isInit) {
-        // 匹配度量，插入apiData
-        // this.getMeasureDatas();
+    async getContent(measures = []) {
+      let resultStr = this.$refs['js-board-text-unit'].innerHTML;
+      if (measures.length) {
+        //     let res = await this.$server.screenManage.getData(this.shapeUnit.component);
+        //     // 数据源被删掉
+        //     if (res.code === 500 && res.msg === 'IsChanged') {
+        //       return 'isChanged';
+        //     }
+        //     if (res.code === 500) {
+        //       return res.msg;
+        //     }
+        resultStr = resultStr.replace(reg, (match, string) => {
+          return `<span>${string}</span>`; // res.rows[0][alias]
+        });
       }
-      //   if (this.currentComponent.setting.data.measures.length) {
-      //     let res = await this.$server.screenManage.getData(this.currentComponent);
-      //     // 数据源被删掉
-      //     if (res.code === 500 && res.msg === 'IsChanged') {
-      //       return 'isChanged';
-      //     }
-      //     if (res.code === 500) {
-      //       return res.msg;
-      //     }
-      const replaceString = this.$refs['js-board-text-unit'].innerHTML.replace(reg, (match, string) => {
-        return `<span>${string}</span>`; // res.rows[0][alias]
-      });
-      return replaceString;
-      //   }
+      return resultStr;
     },
     /**
      * @description 度量数据添加进data
      */
     getMeasureDatas() {
       let measures = [];
-      const matchList = this.$refs['js-board-text-unit'].innerHTML.match(reg);
-      if (matchList) {
-        for (let matchStr of matchList) {
-          const [alias, aggregator] = matchStr.match(/>(.*?)\((.*?)\)(&nbsp;){3}</);
+      const measureList = document.querySelectorAll('.anchor-measure');
+      if (measureList.length) {
+        for (let measureEle of measureList) {
+          const [, alias, aggregator] = measureEle.innerHTML.match(/\[(.*?)\((.*?)\)(&nbsp;){3}]/);
           // 验重
-          if (!measures.some(item => item.alias === alias)) {
+          if (!measures.find(item => item.alias === alias)) {
             // 添加度量到图表数据
             let measure = this.modelMeasures.find(item => item.alias === alias);
             // 添加聚合方式值
@@ -340,7 +369,7 @@ export default {
           }
         }
       }
-      this.currentComponent.data.measures = measures;
+      return measures;
     },
     /**
      * @description 检查如果插入度量已经清空，清空datamoelId
@@ -349,13 +378,7 @@ export default {
       let matchList = this.$refs['js-board-text-unit'].innerHTML.match(reg);
       // 度量已经删完，清除图表datamodelId
       if (!matchList) {
-        this.$store.commit(historyMutation.COMMAND, {
-          commandType: 'Data',
-          target: this.currentComponent,
-          store: this.$store,
-          eventBus: this.$EventBus,
-          data: { dataModelId: 0, resourceType: '' },
-        });
+        this.dataModelId = '';
       }
     }, 400),
     /**
@@ -432,7 +455,7 @@ export default {
      * @description 聚合显示处理
      */
     formatAggregator(item) {
-      return `${item.alias} (${polymerizationMap[item.defaultAggregator]})`;
+      return `${item.alias}(${polymerizationMap[item.defaultAggregator]})`;
     },
   },
 };

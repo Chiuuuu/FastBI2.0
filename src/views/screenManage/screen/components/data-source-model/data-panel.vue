@@ -9,7 +9,7 @@
       <div class="body">
         <div class="schema-list-wrapper">
           <Collapse ref="dimensionList" class="schema-list reset-scrollbar js-schema-dimension-list">
-            <ul class="field-list">
+            <ul class="field-list" v-if="dimension && dimension.length">
               <template v-for="(item, index) in dimension">
                 <DataPanelItem
                   :key="item.id"
@@ -21,6 +21,7 @@
                 ></DataPanelItem>
               </template>
             </ul>
+            <a-empty description="请添加数据" v-else></a-empty>
           </Collapse>
         </div>
       </div>
@@ -36,7 +37,7 @@
       <div class="body">
         <div class="schema-list-wrapper">
           <Collapse ref="measureList" class="schema-list reset-scrollbar js-schema-measure-list">
-            <ul class="field-list">
+            <ul class="field-list" v-if="measure && measure.length">
               <template v-for="(item, index) in measure">
                 <DataPanelItem
                   :key="item.id"
@@ -48,6 +49,7 @@
                 ></DataPanelItem>
               </template>
             </ul>
+            <a-empty description="请添加数据" v-else></a-empty>
           </Collapse>
         </div>
       </div>

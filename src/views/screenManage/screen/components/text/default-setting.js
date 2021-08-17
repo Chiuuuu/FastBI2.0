@@ -8,14 +8,15 @@ export default merge(cloneDeep(BASE), {
   setting: {
     data: {
       measures: [],
+      htmlText: '',
     },
     style: {
       echart: {
         text: {
           fontSize: 16,
-          fontAlign: 'left',
+          textAlign: 'left',
           fontFamily: 'sans-serif',
-          fontColor: 'rgb(217, 217, 217)',
+          color: 'rgb(217, 217, 217)',
           fontWeight: 'normal',
         },
       },
