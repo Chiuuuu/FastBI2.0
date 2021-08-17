@@ -1,5 +1,5 @@
 <template>
-  <a-modal v-model="visible" title="选择地图" @ok="handleOk">
+  <a-modal v-model="visible" title="选择地图" @ok="handleOk" @cancel="close">
     <div class="type-line">
       <span class="label">地图类型：</span>
       <a-select v-model="mapType" class="select-box">
@@ -46,6 +46,12 @@ const regionList = [
   },
 ];
 export default {
+  props: {
+    visible: {
+      type: Boolean,
+      default: false,
+    },
+  },
   data() {
     return {
       mapTypeList: [
@@ -64,7 +70,6 @@ export default {
       mapType: 'city',
       province: 'guangdong',
       city: 'guangzhou',
-      visible: true,
     };
   },
   methods: {
@@ -76,6 +81,12 @@ export default {
       this.city = this.cityList[0].key;
     },
     /**
+     * @description 关闭弹窗
+     */
+    close() {
+      this.$emit('close');
+    },
+    /**
      * @description 确定，回传显示的区域
      */
     handleOk() {
@@ -84,6 +95,7 @@ export default {
         province: this.province,
         city: this.city,
       };
+      this.close();
       this.$emit('ok', resultRegion[this.mapType]);
     },
   },

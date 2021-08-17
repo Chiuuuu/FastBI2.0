@@ -167,6 +167,8 @@
         @close="sourceModalVisible = false"
         @sourceSelect="getSelectedSource"
       />
+      <!-- 地图选择框 -->
+      <MapSelectView :visible="mapSelectVisible" @close="mapSelectVisible = false" @ok="addMap" />
     </div>
   </header>
   <!-- 工具栏 end -->
@@ -182,7 +184,6 @@ import { mutationTypes as historyMutation } from '@/store/modules/history';
 import { parameter, mutationTypes as boardMutaion } from '@/store/modules/board';
 import { mapState } from 'vuex';
 import ScreenSourceModal from '../components/screen-source/modal';
-import Vue from 'vue';
 import MapSelectView from '../mapSelectView';
 import omit from 'lodash/omit';
 /**
@@ -203,10 +204,12 @@ export default {
       shapeList, // 形状列表
       BoardType, // 图表类型
       sourceModalVisible: false, // 素材库模态框
+      mapSelectVisible: false, // 地图选择框
     };
   },
   components: {
     ScreenSourceModal,
+    MapSelectView,
   },
   computed: {
     ...mapState({
@@ -252,12 +255,18 @@ export default {
       this.sourceModalVisible = false;
     },
     /**
+     * @description 添加地图
+     */
+    addMap(region) {
+      this.handleAddChart('ChartMap', {}, region);
+    },
+    /**
      * @description 添加图表
      */
     async handleAddChart(type, mergeObj = {}, mapOkRegion = '') {
       // 新建地图选择区域
       if (type === 'ChartMap' && !mapOkRegion) {
-        this.showMapSelectView();
+        this.mapSelectVisible = true;
         return;
       }
       let setting = cloneDeep(boardSetting[type]);
@@ -265,51 +274,29 @@ export default {
         setting.setting.style.echart.geo.map = mapOkRegion;
       }
 
-      //   const result = await this.$server.screenManage.addToGetChartId();
-      //   if (result && result.code === 200) {
-      const len = this.components.length;
-      const component = merge(
-        setting,
-        {
-          id: 0,
-          setting: {
-            style: {
-              title: {
-                text: `未命名图表${len}`,
+      const result = await this.$server.screenManage.addToGetChartId();
+      if (result && result.code === 200) {
+        const len = this.components.length;
+        const component = merge(
+          setting,
+          {
+            id: 0,
+            setting: {
+              style: {
+                title: {
+                  text: `未命名图表${len}`,
+                },
               },
             },
           },
-        },
-        mergeObj,
-      );
-      this.$store.commit(boardMutaion.ADD_COM, {
-        component,
-      });
-      //   } else {
-      //     this.$message(result.msg || '添加图表失败');
-      //   }
-    },
-    // TODO: 改成a-modal
-    /**
-     * @description 地图选择区域弹窗
-     */
-    showMapSelectView() {
-      const MapTypeView = Vue.extend(MapSelectView);
-      this.view = new MapTypeView({
-        propsData: {
-          visible: this.visible,
-        },
-      }).$mount();
-      this.view.$on('ok', region => {
-        this.view.remove();
-        this.handleAddChart('ChartMap', {}, region);
-      });
-      document.body.appendChild(this.view.$el);
-      this.view.remove = function () {
-        //  该方法用于销毁实例
-        this.$el.remove();
-        this.$destroy();
-      };
+          mergeObj,
+        );
+        this.$store.commit(boardMutaion.ADD_COM, {
+          component,
+        });
+      } else {
+        this.$message(result.msg || '添加图表失败');
+      }
     },
     /**
      * @description 撤销功能

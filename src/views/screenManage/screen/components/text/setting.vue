@@ -67,8 +67,8 @@
                       <a-col :span="4">
                         <div class="font-color">
                           <ColorPicker
-                            :value="currentCom.setting.style.echart.text.fontColor"
-                            @change="color => handleSelect('fontColor', color)"
+                            :value="currentCom.setting.style.echart.text.color"
+                            @change="color => handleSelect('color', color)"
                           ></ColorPicker>
                         </div>
                       </a-col>
@@ -134,8 +134,8 @@
                         <a-col :span="4" :key="item">
                           <div
                             class="font-align"
-                            :class="item === currentCom.setting.style.echart.text.fontAlign ? 'selected' : ''"
-                            @click="handleSelect('fontAlign', item)"
+                            :class="item === currentCom.setting.style.echart.text.textAlign ? 'selected' : ''"
+                            @click="handleSelect('textAlign', item)"
                           >
                             <a-icon :type="`align-${item}`" />
                           </div>
