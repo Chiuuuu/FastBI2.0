@@ -179,7 +179,7 @@ export default {
         });
         this.handleTabChange({
           screenId: params.screenId,
-          tabId: result.data,
+          tabId: result.data, // TODO:要修改成result.data.tabId
         });
       } else {
         this.$message.error(result.msg || '创建页面失败');
