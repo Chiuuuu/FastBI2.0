@@ -482,7 +482,7 @@ export default {
           this.$router.push({
             query: {
               id: screenId,
-              tabId: this.tabActive,
+              tabId: tabId || this.tabs[0].id,
             },
           });
         } else {
