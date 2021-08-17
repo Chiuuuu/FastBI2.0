@@ -14,6 +14,7 @@ export default {
     return {
       currentSeriesIndex: null, // 图表联动选中的下标
       currentDataIndex: null, // 图表联动选中的下标
+      componentData: null, // 记录当前图表信息
     };
   },
   methods: {
@@ -150,6 +151,21 @@ export default {
       const options = this.doWithOptions(defaultData);
       this.updateSaveChart(options);
     },
+    /*
+     * 处理图表联动数据
+     */
+    handleSelectData() {
+      //   let res = await screenManage.getDataLink(chart);
+      //   if (res.code === 200) {
+      // 构造联动选择的数据
+      // this.handleData(res.rows)
+      //   } else {
+      //     message.error(res.msg);
+      //   }
+      const data = [];
+      const options = this.doWithOptions(data);
+      this.updateSaveChart(options);
+    },
     /**
      * @description 更新图表样式
      */
@@ -164,34 +180,33 @@ export default {
 
       const newOptions = this.doWithOptions(data);
       this.chartInstane.setOption(newOptions);
-      this.addClick();
     },
     /**
      * @description 添加点击事件(图表联动)
      */
     addClick() {
-      const options = this.chartInstane.getOption();
-      this.chartInstane.off('click');
+      this.componentData = this.shapeUnit.component;
       // 设置点击数据进行联动
-      this.handleDataClick(options);
+      this.handleDataClick();
       // 设置点击空白重置联动
       this.handleChartClick();
     },
     /**
      * @description 处理点击数据显示选中效果
      */
-    handleDataClick(options) {
-      let self = this;
-      this.chartInstane.on('click', function (e) {
-        if (!self.options.style.echart.customIsOpenDataLink) {
+    handleDataClick() {
+      this.chartInstane.on('click', e => {
+        const options = this.chartInstane.getOption();
+        if (!this.options.style.echart.customIsOpenDataLink) {
           return;
         }
         // 重复点击选中项
-        if (e.dataIndex === self.currentDataIndex && e.seriesIndex === self.currentSeriesIndex) {
+        if (e.dataIndex === this.currentDataIndex && e.seriesIndex === this.currentSeriesIndex) {
           // 重置图表
-          self.resetChart(options);
+          this.resetChartSelect(options);
           return;
         }
+        let self = this;
         // series添加颜色回调函数控制，选中
         const formatterFn = function (params) {
           return params.dataIndex === e.dataIndex && params.seriesIndex === e.seriesIndex
@@ -201,38 +216,36 @@ export default {
         options.series.forEach(item => {
           item.itemStyle = Object.assign(item.itemStyle, { color: formatterFn });
         });
-        self.chartInstane.setOption(options);
+        this.chartInstane.setOption(options);
         // 记录当前选择数据的index
-        self.currentDataIndex = e.dataIndex;
-        self.currentSeriesIndex = e.seriesIndex;
-        setLinkageData([e.name]);
+        this.currentDataIndex = e.dataIndex;
+        this.currentSeriesIndex = e.seriesIndex;
+        setLinkageData([e.name], this.shapeUnit.component);
       });
     },
     /**
      * @description 处理图表点击事件(点击非数据区域重置)
      */
     handleChartClick() {
-      let self = this;
-      this.chartInstane.getZr().on('click', function (params) {
-        let hasSelected = self.currentDataIndex || self.currentDataIndex === 0;
+      this.chartInstane.getZr().on('click', params => {
+        let hasSelected = this.currentDataIndex || this.currentDataIndex === 0;
         // 没有选中数据不需要执行重置
         if (typeof params.target === 'undefined' && hasSelected) {
           // 重置图表
-          // 这里重新获取options，不然条形图设置改不到
-          const options = self.chartInstane.getOption();
-          self.resetChart(options);
+          const options = this.chartInstane.getOption();
+          this.resetChartSelect(options);
         }
       });
     },
     /**
      * @description 取消选中
      */
-    resetChart(options) {
+    resetChartSelect(options) {
       options.series.forEach(item => {
         item.itemStyle.color && delete item.itemStyle.color;
       });
       // 还原数据
-      resetOriginData();
+      resetOriginData(this.shapeUnit.component);
       this.chartInstane.clear();
       this.chartInstane.setOption(options);
       this.currentDataIndex = this.currentSeriesIndex = '';
