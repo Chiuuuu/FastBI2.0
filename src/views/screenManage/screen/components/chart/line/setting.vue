@@ -158,6 +158,7 @@
                         <a-radio-group
                           :value="currentCom.setting.style.echart.customLinear"
                           size="small"
+                          class="float-right"
                           @change="event => doWithSmooth(event.target.value)"
                         >
                           <a-radio-button value="line">直线</a-radio-button>

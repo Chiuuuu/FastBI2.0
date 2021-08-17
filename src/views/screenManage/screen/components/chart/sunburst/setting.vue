@@ -184,7 +184,7 @@
                     </a-row>
                   </div>
                 </CollapsePanel>
-                <CollapsePanel class="content-item" panel="label" header="标签">
+                <CollapsePanel class="content-item" panel="label" header="指标设置">
                   <div class="setting-unit-content">
                     <!-- 标签是否显示 start -->
                     <UnitCheckbox

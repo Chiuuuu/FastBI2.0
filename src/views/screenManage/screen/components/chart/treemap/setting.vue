@@ -108,29 +108,11 @@
                     <!-- 边框设置 end -->
                   </div>
                 </CollapsePanel>
-                <CollapsePanel class="content-item" panel="style" header="样式设置">
+                <CollapsePanel class="content-item" panel="style" header="图形属性">
                   <div class="setting-unit-content">
                     <a-row class="unit-show-block mb-8">
                       <a-col :span="8">
-                        <div class="unit-block-title">展示方式</div>
-                      </a-col>
-
-                      <!-- 内容显示 start -->
-                      <a-col :span="16">
-                        <a-select
-                          :value="currentCom.setting.style.echart.customShowWay"
-                          style="width: 100%"
-                          @change="customShowWay => handleChange('echart', { customShowWay })"
-                        >
-                          <a-select-option value="measure">按度量</a-select-option>
-                          <a-select-option value="average">按等比</a-select-option>
-                        </a-select>
-                      </a-col>
-                      <!-- 内容显示 end -->
-                    </a-row>
-                    <a-row class="unit-show-block mb-8">
-                      <a-col :span="8">
-                        <div class="unit-block-title">颜色分配</div>
+                        <div class="unit-block-title">矩形颜色</div>
                       </a-col>
 
                       <!-- 内容显示 start -->
@@ -155,39 +137,39 @@
                       </a-col>
                       <!-- 内容显示 end -->
                     </a-row>
-                  </div>
-                </CollapsePanel>
-                <CollapsePanel class="content-item" panel="label" header="标签">
-                  <div class="setting-unit-content">
-                    <!-- 标签是否显示 start -->
-                    <UnitCheckbox
-                      class="show-btn"
-                      label="显示"
-                      :value="currentCom.setting.style.echart.customSeries.label.show"
-                      @change="show => handleLabel('show', show)"
-                    ></UnitCheckbox>
-                    <!-- 标签是否显示 end -->
-
                     <a-row class="unit-show-block mb-8">
                       <a-col :span="8">
-                        <div class="unit-block-title">显示内容</div>
+                        <div class="unit-block-title">矩形大小</div>
                       </a-col>
 
                       <!-- 内容显示 start -->
                       <a-col :span="16">
                         <a-select
-                          :value="currentCom.setting.style.echart.customFormatterWay"
+                          :value="currentCom.setting.style.echart.customShowWay"
                           style="width: 100%"
-                          @change="handleFormatterWay"
+                          @change="customShowWay => handleChange('echart', { customShowWay })"
                         >
-                          <a-select-option value="name">维度</a-select-option>
-                          <a-select-option value="value">值</a-select-option>
-                          <a-select-option value="all">全部</a-select-option>
+                          <a-select-option value="measure">按度量</a-select-option>
+                          <a-select-option value="average">按等比</a-select-option>
                         </a-select>
                       </a-col>
                       <!-- 内容显示 end -->
                     </a-row>
-
+                    <a-row>
+                      <a-col :span="6" class="unit-show-block position mt-4 mb-4">
+                        <div class="unit-block-title">指标</div>
+                      </a-col>
+                      <a-col :span="18">
+                        <UnitCheckbox
+                          class="show-btn"
+                          label="显示"
+                          style="top: -0px"
+                          :value="currentCom.setting.style.echart.customSeries.label.show"
+                          @change="show => handleLabel('show', show)"
+                        ></UnitCheckbox>
+                      </a-col>
+                    </a-row>
+                    <!-- 标签是否显示 end -->
                     <a-row class="unit-show-block mb-8">
                       <a-col :span="4">
                         <div class="unit-block-title">字体</div>
@@ -213,6 +195,25 @@
                         />
                       </a-col>
                       <!-- 标签 字体 大小 end -->
+                    </a-row>
+                    <a-row class="unit-show-block mb-8">
+                      <a-col :span="24">
+                        <div class="unit-block-title">指标内容</div>
+                      </a-col>
+
+                      <!-- 内容显示 start -->
+                      <a-col :span="24">
+                        <a-select
+                          :value="currentCom.setting.style.echart.customFormatterWay"
+                          style="width: 100%"
+                          @change="handleFormatterWay"
+                        >
+                          <a-select-option value="name">维度</a-select-option>
+                          <a-select-option value="value">值</a-select-option>
+                          <a-select-option value="all">全部</a-select-option>
+                        </a-select>
+                      </a-col>
+                      <!-- 内容显示 end -->
                     </a-row>
                   </div>
                 </CollapsePanel>
