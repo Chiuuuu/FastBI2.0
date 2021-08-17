@@ -115,6 +115,38 @@
                     <!-- 边框设置 end -->
                   </div>
                 </CollapsePanel>
+                <CollapsePanel class="content-item" panel="style" header="图形属性">
+                  <div class="setting-unit-content">
+                    <!-- 边距 start -->
+                    <UnitGridMargin
+                      label="边距"
+                      :grid="currentCom.setting.style.echart.grid"
+                      @change="(key, value) => handleChange(key, value)"
+                    ></UnitGridMargin>
+                    <!-- 展示数值 start -->
+                    <UnitLabel
+                      label="指标"
+                      :seriesLabel="currentCom.setting.style.echart.customSeries.label"
+                      :labelPositionList="labelPositionList"
+                      @change="(key, value) => doWithSeries(key, value)"
+                    ></UnitLabel>
+                    <a-row class="unit-show-block mb-8">
+                      <a-col :span="24">
+                        <div class="unit-block-title">指标内容</div>
+                      </a-col>
+
+                      <!-- 内容显示 start -->
+                      <a-col :span="24">
+                        <a-select :value="currentCom.setting.style.echart.customFormatterWay" style="width: 100%">
+                          <!-- <a-select-option value="name">维度</a-select-option>
+                          <a-select-option value="value">值</a-select-option>
+                          <a-select-option value="all">全部</a-select-option> -->
+                        </a-select>
+                      </a-col>
+                      <!-- 内容显示 end -->
+                    </a-row>
+                  </div>
+                </CollapsePanel>
                 <CollapsePanel class="content-item" panel="drawing" header="绘图区">
                   <UnitDrawing
                     :grid="currentCom.setting.style.echart.grid"
@@ -140,61 +172,6 @@
                     @change="(key, value) => handleChange(key, value)"
                   ></UnitYaxis>
                   <!-- Y轴 end -->
-                </CollapsePanel>
-                <CollapsePanel class="content-item" panel="legend" header="标签">
-                  <div class="setting-unit-content">
-                    <!-- 标签是否显示 start -->
-                    <UnitCheckbox
-                      class="show-btn"
-                      label="显示"
-                      :value="currentCom.setting.style.echart.customSeries.label.show"
-                      @change="show => handleLabel('show', show)"
-                    ></UnitCheckbox>
-                    <!-- 标签是否显示 end -->
-
-                    <a-row class="unit-show-block mb-8">
-                      <a-col :span="4">
-                        <div class="unit-block-title">字体</div>
-                      </a-col>
-
-                      <!-- 标签 字体 颜色 start -->
-                      <a-col :span="4">
-                        <div class="font-color">
-                          <ColorPicker
-                            :value="currentCom.setting.style.echart.customSeries.label.color"
-                            @change="color => handleLabel('color', color)"
-                          ></ColorPicker>
-                        </div>
-                      </a-col>
-                      <!-- 标签 字体 颜色 end -->
-
-                      <!-- 标签 字体 大小 start -->
-                      <a-col :span="16">
-                        <a-input-number
-                          :value="currentCom.setting.style.echart.customSeries.label.fontSize"
-                          :min="0"
-                          @change="fontSize => handleLabel('fontSize', fontSize)"
-                        />
-                      </a-col>
-                      <!-- 标签 字体 大小 end -->
-                    </a-row>
-                    <a-row class="unit-show-block mb-8">
-                      <a-col :span="6" class="unit-show-block position">
-                        <div class="unit-block-title">位置</div>
-                      </a-col>
-
-                      <!-- 标签 位置 start -->
-                      <a-radio-group
-                        name="radioGroup"
-                        :value="currentCom.setting.style.echart.customSeries.label.position"
-                        @change="event => handleLabel('position', event.target.value)"
-                      >
-                        <a-radio value="inside">内部</a-radio>
-                        <a-radio value="outside">外部</a-radio>
-                      </a-radio-group>
-                      <!-- 标签 位置 end -->
-                    </a-row>
-                  </div>
                 </CollapsePanel>
                 <CollapsePanel class="content-item" panel="legend" header="图例">
                   <UnitLegend
@@ -237,6 +214,11 @@ export default {
       tabAcitve: 'style', // tab选项栏活动目标
       dataCollapseActive: ['dimension', 'measure', 'dataFilter'],
       styleCollapseActive: [],
+      labelPositionList: [
+        //标签位置
+        { name: '内部', value: 'inside' },
+        { name: '外部', value: 'outside' },
+      ],
     };
   },
   methods: {

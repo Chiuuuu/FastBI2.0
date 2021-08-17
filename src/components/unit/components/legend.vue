@@ -70,6 +70,7 @@
         <a-radio-group
           :value="handleCutting(legend.position).prefix"
           size="small"
+          class="float-right"
           @change="handleSwitchHorizontalPosition"
         >
           <a-radio-button value="left">左边</a-radio-button>
@@ -83,6 +84,7 @@
         <a-radio-group
           :value="handleCutting(legend.position).suffix"
           size="small"
+          class="float-right"
           @change="handleSwitchVerticalPosition"
         >
           <a-radio-button value="top">顶部</a-radio-button>
@@ -103,6 +105,7 @@
         <a-radio-group
           name="radioGroup"
           size="small"
+          class="float-right"
           :value="legend.align"
           @change="event => handleLegend('align', event.target.value)"
         >
@@ -123,6 +126,7 @@
         <a-radio-group
           name="radioGroup"
           size="small"
+          class="float-right"
           :value="legend.orient"
           @change="event => handleLegend('orient', event.target.value)"
         >

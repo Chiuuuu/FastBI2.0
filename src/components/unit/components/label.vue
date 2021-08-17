@@ -42,7 +42,7 @@
     </a-row>
     <a-row class="unit-show-block mb-3" v-if="labelPositionList.length">
       <a-col :span="6">
-        <div class="unit-block-title">位置</div>
+        <div class="unit-block-title">{{ label }}位置</div>
       </a-col>
 
       <!-- 标签 位置 start -->
