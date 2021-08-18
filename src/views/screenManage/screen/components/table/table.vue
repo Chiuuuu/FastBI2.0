@@ -4,7 +4,7 @@
       {{ options.style.title.text }}
     </div>
     <div class="board-chart-unit table-unit" :style="chartStyle" ref="js-board-chart-unit">
-      <div class="table-wrapper">
+      <div class="table-wrapper reset-scrollbar" @scroll="getScrollLeft">
         <Tcontainer
           ref="js-thead"
           :data="fields"
@@ -17,7 +17,7 @@
         <Tcontainer
           ref="js-tbody"
           class="reset-scrollbar"
-          :style="{ top: tbodyPositionTop }"
+          :style="{ top: tbodyPositionTop, right: bodyScrollRight }"
           :data="tbodyData"
           :cols="cols"
           :tableStyle="tableStyle"
@@ -72,6 +72,7 @@ export default {
       theadStyle: {}, // 表头样式
       tbodyStyle: {}, // 表格内容样式
       refreshCount: 0, // 用来重置组件 https://cn.vuejs.org/v2/api/#key => 完整地触发组件的生命周期钩子
+      bodyScrollRight: 0, // 计算滚动长度定位纵向滚动轴
     };
   },
   destroyed() {},
@@ -191,6 +192,12 @@ export default {
         even: tbody.even,
         odd: tbody.odd,
       });
+    },
+    /**
+     * @description 滚动时计算可视宽度
+     */
+    getScrollLeft(e) {
+      this.bodyScrollRight = -e.target.scrollLeft + 'px';
     },
     /**
      * @description 初始化Echart图表
@@ -320,6 +327,7 @@ export default {
     right: 0;
     top: 0;
     bottom: 0;
+    overflow-x: scroll;
     .thead,
     .tbody {
       position: absolute;
@@ -329,9 +337,9 @@ export default {
       top: 0;
     }
     .tbody {
-      right: 0;
+      //   right: 0;
       bottom: 0;
-      overflow: auto;
+      overflow-x: hidden;
       .content-wrap {
         display: inline-block;
       }
