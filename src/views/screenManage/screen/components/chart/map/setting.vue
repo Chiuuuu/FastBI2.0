@@ -507,7 +507,7 @@
                         @change="value => handleSelect('mapStyle', 'customPointShowList', value)"
                       >
                         <a-select-option
-                          v-for="i in currentCom.setting.style.echart.mapStyle.pointSelectList"
+                          v-for="i in currentCom.setting.style.echart.mapSelectList.customPointSelectList"
                           :key="i.alias"
                           :value="i.alias"
                         >
@@ -576,7 +576,7 @@
                         @change="value => handleSelect('mapStyle', 'customTooltipShowList', value)"
                       >
                         <a-select-option
-                          v-for="i in currentCom.setting.style.echart.mapStyle.tooltipSelectList"
+                          v-for="i in currentCom.setting.style.echart.mapSelectList.customTooltipSelectList"
                           :key="i.alias"
                           :value="i.alias"
                         >
@@ -656,7 +656,7 @@
                         @change="value => handleSelect('scatterStyle', 'customPointShowList', value)"
                       >
                         <a-select-option
-                          v-for="i in currentCom.setting.style.echart.scatterStyle.pointSelectList"
+                          v-for="i in currentCom.setting.style.echart.scatterSelectList.customPointSelectList"
                           :key="i.alias"
                           :value="i.alias"
                         >
@@ -748,7 +748,7 @@
                         @change="value => handleSelect('scatterStyle', 'customTooltipShowList', value)"
                       >
                         <a-select-option
-                          v-for="i in currentCom.setting.style.echart.scatterStyle.tooltipSelectList"
+                          v-for="i in currentCom.setting.style.echart.scatterSelectList.customTooltipSelectList"
                           :key="i.alias"
                           :value="i.alias"
                         >

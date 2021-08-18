@@ -125,6 +125,7 @@ export default {
             customLimit: defaultData.data.length,
           },
         },
+        updateCom: this.shapeUnit.component,
       });
       const options = this.doWithOptions(defaultData);
       this.updateSaveChart(options);
@@ -140,8 +141,8 @@ export default {
       //   } else {
       //     message.error(res.msg);
       //   }
-      const data = [];
-      const options = this.doWithOptions(data);
+      const data = defaultData.data.filter(item => item.name === this.options.data.dataLink[0].value[0]);
+      const options = this.doWithOptions({ data });
       this.updateSaveChart(options);
     },
     /**
@@ -167,6 +168,7 @@ export default {
             customLimit: this.serverData.data.length,
           },
         },
+        updateCom: this.shapeUnit.component,
       });
     },
     updateChartStyle() {
@@ -180,57 +182,53 @@ export default {
      * @description 添加点击事件(图表联动)
      */
     addClick() {
-      this.componentData = this.shapeUnit.component;
-      this.handleDataClick();
+      // 设置点击数据进行联动
+      this.chartInstane.on('click', this.handleDataClick);
       // 设置点击空白重置联动
-      this.handleChartClick();
+      this.chartInstane.getZr().on('click', this.handleChartClick);
     },
     /**
      * @description 处理点击数据显示选中效果
      */
-    handleDataClick() {
-      this.chartInstane.on('click', e => {
+    handleDataClick(e) {
+      // 重置图表
+      const options = this.chartInstane.getOption();
+      if (!this.options.style.echart.customIsOpenDataLink) {
+        return;
+      }
+      // 重复点击选中项
+      if (e.dataIndex === this.currentIndex) {
         // 重置图表
-        const options = this.chartInstane.getOption();
-        if (!this.options.style.echart.customIsOpenDataLink) {
-          return;
-        }
-        // 重复点击选中项
-        if (e.dataIndex === this.currentIndex) {
-          // 重置图表
-          this.resetChartSelect(options);
-          return;
-        }
-        let self = this;
-        // series添加颜色回调函数控制，选中
-        const formatterFn = function (params) {
-          return params.dataIndex === e.dataIndex
-            ? options.color[params.dataIndex]
-            : self.hexToRgba(options.color[params.dataIndex], 0.4);
-        };
-        options.series.forEach(item => {
-          item.itemStyle = Object.assign(item.itemStyle, { color: formatterFn });
-        });
-        this.chartInstane.setOption(options);
-        // 记录当前选择数据的index
-        this.currentIndex = e.dataIndex;
-        setLinkageData([e.name], this.shapeUnit.component);
+        this.resetChartSelect(options);
+        return;
+      }
+      let self = this;
+      // series添加颜色回调函数控制，选中
+      const formatterFn = function (params) {
+        return params.dataIndex === e.dataIndex
+          ? options.color[params.dataIndex]
+          : self.hexToRgba(options.color[params.dataIndex], 0.4);
+      };
+      options.series.forEach(item => {
+        item.itemStyle = Object.assign(item.itemStyle, { color: formatterFn });
       });
+      this.chartInstane.setOption(options);
+      // 记录当前选择数据的index
+      this.currentIndex = e.dataIndex;
+      setLinkageData([e.name], this.shapeUnit.component);
     },
     /**
      * @description 处理图表点击事件(点击非数据区域重置)
      */
-    handleChartClick() {
-      this.chartInstane.getZr().on('click', params => {
-        // 没有选中数据不需要执行重置
-        let hasSelected = this.currentIndex || this.currentIndex === 0;
-        if (typeof params.target === 'undefined' && hasSelected) {
-          // 重置图表
-          const options = this.chartInstane.getOption();
-          // 重置图表
-          this.resetChartSelect(options);
-        }
-      });
+    handleChartClick(params) {
+      // 没有选中数据不需要执行重置
+      let hasSelected = this.currentIndex || this.currentIndex === 0;
+      if (typeof params.target === 'undefined' && hasSelected) {
+        // 重置图表
+        const options = this.chartInstane.getOption();
+        // 重置图表
+        this.resetChartSelect(options);
+      }
     },
     /**
      * @description 取消选中

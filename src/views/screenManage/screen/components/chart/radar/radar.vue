@@ -12,6 +12,12 @@ import { setLinkageData, resetOriginData } from '@/utils/setDataLink';
 export default {
   name: `${BoardType.ChartRadar}View`,
   extends: BaseChart,
+  data() {
+    return {
+      currentSeriesIndex: null, // 图表联动选中的下标
+      currentDataIndex: null, // 图表联动选中的下标
+    };
+  },
   methods: {
     /**
      * @description 判断是否获取服务端数据
@@ -127,59 +133,55 @@ export default {
      * @description 添加点击事件(图表联动)
      */
     addClick() {
-      this.componentData = this.shapeUnit.component;
-      this.handleDataClick();
+      // 设置点击数据进行联动
+      this.chartInstane.on('click', this.handleDataClick);
       // 设置点击空白重置联动
-      this.handleChartClick();
+      this.chartInstane.getZr().on('click', this.handleChartClick);
     },
     /**
      * @description 处理点击数据显示选中效果
      */
-    handleDataClick() {
-      this.chartInstane.on('click', e => {
+    handleDataClick(e) {
+      // 重置图表
+      const options = this.chartInstane.getOption();
+      if (!this.options.style.echart.customIsOpenDataLink) {
+        return;
+      }
+      // 重复点击选中项
+      if (e.dataIndex === this.currentDataIndex && e.seriesIndex === this.currentSeriesIndex) {
         // 重置图表
-        const options = this.chartInstane.getOption();
-        if (!this.options.style.echart.customIsOpenDataLink) {
-          return;
-        }
-        // 重复点击选中项
-        if (e.dataIndex === this.currentDataIndex && e.seriesIndex === this.currentSeriesIndex) {
-          // 重置图表
-          this.resetChartSelect(options);
-          return;
-        }
-        // series添加标记点回调函数控制，选中
-        // const formatterSybolSizeFn = function (value, params) {
-        //   return params.dataIndex === e.dataIndex ? 10 : 1;
-        // };
-        options.series.forEach(item => {
-          item.data.forEach((dataItem, index) => {
-            // item.symbolSize = formatterSybolSizeFn;
-            const color = index === e.dataIndex ? options.color[index] : this.hexToRgba(options.color[index], 0.4);
-            dataItem.lineStyle = { color };
-          });
+        this.resetChartSelect(options);
+        return;
+      }
+      // series添加标记点回调函数控制，选中
+      // const formatterSybolSizeFn = function (value, params) {
+      //   return params.dataIndex === e.dataIndex ? 10 : 1;
+      // };
+      options.series.forEach(item => {
+        item.data.forEach((dataItem, index) => {
+          // item.symbolSize = formatterSybolSizeFn;
+          const color = index === e.dataIndex ? options.color[index] : this.hexToRgba(options.color[index], 0.4);
+          dataItem.lineStyle = { color };
         });
-        this.chartInstane.setOption(options);
-        // 记录当前选择数据的index
-        this.currentDataIndex = e.dataIndex;
-        this.currentSeriesIndex = e.seriesIndex;
-        setLinkageData([e.name], this.shapeUnit.component);
       });
+      this.chartInstane.setOption(options);
+      // 记录当前选择数据的index
+      this.currentDataIndex = e.dataIndex;
+      this.currentSeriesIndex = e.seriesIndex;
+      setLinkageData([e.name], this.shapeUnit.component);
     },
     /**
      * @description 处理图表点击事件(点击非数据区域重置)
      */
-    handleChartClick() {
-      this.chartInstane.getZr().on('click', params => {
-        // 没有选中数据不需要执行重置
-        let hasSelected = this.currentDataIndex || this.currentDataIndex === 0;
-        if (typeof params.target === 'undefined' && hasSelected) {
-          // 重置图表
-          const options = this.chartInstane.getOption();
-          // 重置图表
-          this.resetChartSelect(options);
-        }
-      });
+    handleChartClick(params) {
+      // 没有选中数据不需要执行重置
+      let hasSelected = this.currentDataIndex || this.currentDataIndex === 0;
+      if (typeof params.target === 'undefined' && hasSelected) {
+        // 重置图表
+        const options = this.chartInstane.getOption();
+        // 重置图表
+        this.resetChartSelect(options);
+      }
     },
     /**
      * @description 取消选中

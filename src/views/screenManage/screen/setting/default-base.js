@@ -70,6 +70,7 @@ export default {
     interaction: {
       // 交互
       expands: [],
+      bindedList: [], // 记录已绑定图表id
     },
   },
 };
