@@ -48,9 +48,10 @@ const state = getDefaultState();
  * @param {array} replaceMerge 替换合并的数组
  * @return {object}
  */
-const mergeStyle = function (state, style, replaceMerge) {
+const mergeStyle = function (state, style, replaceMerge, updateCom = null) {
   // https://www.lodashjs.com/docs/lodash.mergeWith
-  return mergeWith(state.currentCom.setting.style, style, function (objValue, srcValue) {
+  updateCom = updateCom || state.currentCom;
+  return mergeWith(updateCom.setting.style, style, function (objValue, srcValue) {
     if (replaceMerge && replaceMerge.length) {
       replaceMerge.forEach(key => {
         if (srcValue[key]) {
@@ -148,8 +149,9 @@ const mutations = {
    * 设置组件的样式
    * @param {object} Playload
    */
-  SET_STYLE(state, { style, replaceMerge = ['series'] }) {
-    state.currentCom.setting.style = cloneDeep(mergeStyle(state, style, replaceMerge));
+  SET_STYLE(state, { style, replaceMerge = ['series'], updateCom = null }) {
+    updateCom = updateCom || state.currentCom;
+    updateCom.setting.style = cloneDeep(mergeStyle(state, style, replaceMerge, updateCom));
   },
   /**
    * 设置屏幕比例

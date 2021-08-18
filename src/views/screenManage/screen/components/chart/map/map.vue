@@ -5,6 +5,7 @@ import defaultData from './default-data';
 import merge from 'lodash/merge';
 import registerMap from './registerMap';
 import omit from 'lodash/omit';
+import { mutationTypes as boardMutation } from '@/store/modules/board';
 const mapSeries = 0;
 const scatterSeries = 1;
 
@@ -26,13 +27,6 @@ export default {
       );
     },
     /**
-     * @description 视觉映射范围根据数据变化
-     */
-    doWithViualMap(visualMap, data) {
-      const valueList = data.map(item => item.value);
-      visualMap = Object.assign({}, visualMap, { max: Math.max(...valueList), min: Math.min(...valueList) });
-    },
-    /**
      * @description 处理图例
      */
     doWithlegend(series) {
@@ -51,8 +45,6 @@ export default {
       const {
         style: { echart },
       } = this.options;
-      //   this.handleMapFormatterSelect(echart, fetchData.series);
-      this.doWithViualMap(echart.visualMap, fetchData.series[mapSeries].data);
       this.doWithMap(fetchData.series[mapSeries], echart.mapStyle, echart.geo.itemStyle.emphasis.areaColor);
       this.doWithScatter(fetchData.series[scatterSeries], echart.scatterStyle);
       const legendData = this.doWithlegend(fetchData.series);
@@ -222,21 +214,39 @@ export default {
           }),
         ],
       };
+      // 获取数据之后需要更改visualMap范围
+      const valueList = returnData.fillList.map(item => item.value);
+      const selectListData = this.handleMapFormatterSelect({
+        mapData: returnData.fillList,
+        scatterData: returnData.labelList,
+      });
+      this.$store.commit(boardMutation.SET_STYLE, {
+        style: {
+          echart: {
+            visualMap: Object.assign({}, this.options.style.echart.visualMap, { max: Math.max(...valueList) }),
+            ...selectListData,
+          },
+        },
+      });
+
       const options = this.doWithOptions(this.serverData);
       this.updateSaveChart(options);
     },
     /**
      * @description 初始化地图指标显示内容列表
      */
-    handleMapFormatterSelect(echart, series) {
+    handleMapFormatterSelect({ mapData, scatterData }) {
       // 填充
-      let mapData = series[mapSeries].data;
-      echart.mapStyle.pointSelectList = Object.keys(omit(mapData, ['name', 'value']));
-      echart.mapStyle.mapFillTooltipSelectList = echart.mapStyle.tooltipSelectList.concat().shift();
+      const fillList = Object.keys(omit(mapData, ['name', 'value']));
+      const mapSelectList = { pointSelectList: fillList, tooltipSelectList: fillList.concat().shift() };
       // 散点
-      let scatterData = series[scatterSeries].data;
-      echart.scatterStyle.pointSelectList = Object.keys(omit(scatterData, ['name', 'value']));
-      echart.scatterStyle.mapLabelTooltipSelectList = echart.scatterStyle.tooltipSelectList.concat().shift();
+      const scatterList = Object.keys(omit(scatterData, ['name', 'value']));
+      const scatterSelectList = { pointSelectList: scatterList, tooltipSelectList: scatterList.concat().shift() };
+
+      return {
+        mapSelectList,
+        scatterSelectList,
+      };
     },
     /*
      * 处理默认数据

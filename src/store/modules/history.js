@@ -6,6 +6,7 @@ import {
   DataCommand,
   DataPanelCommand,
   PositionCommand,
+  InteractionCommand,
 } from '../../core/command';
 
 export const mutationTypes = {
@@ -22,6 +23,7 @@ const Commands = {
   Data: DataCommand,
   DatePanel: DataPanelCommand,
   Position: PositionCommand,
+  Interaction: InteractionCommand,
 };
 
 const state = {

@@ -1,6 +1,8 @@
 <template>
   <div class="unit-connect">
-    <div class="btn btn-ghost" @click="visible = true">创建图表联动</div>
+    <div class="btn btn-ghost" @click="openBindWindow">
+      {{ currentCom.setting.interaction.bindedList.length ? '编辑' : '创建' }}图表联动
+    </div>
     <UnitCheckbox
       label="点击时进行图表联动"
       :value="currentCom.setting.style.echart.customIsOpenDataLink"
@@ -23,7 +25,7 @@
                 :value="chart.id"
                 :disabled="checkHaveBind(chart) || checkBeBinded(chart) || chart.id === currentCom.id"
               >
-                {{ chart.setting.config.title.content || chart.setting.config.title.text }}
+                {{ chart.setting.style.title.text }}
                 <span v-if="chart.id === currentCom.id">(当前报表)</span>
                 <span v-else-if="checkBeBinded(chart)">已存在于联动路径中</span>
                 <span v-else-if="checkHaveBind(chart)">已被创建联动</span>
@@ -43,6 +45,7 @@
  * @description 联动设置
  */
 import { mapState } from 'vuex';
+import { mutationTypes as historyMutation } from '@/store/modules/history';
 export default {
   name: 'UnitConnect',
   data() {
@@ -53,8 +56,23 @@ export default {
       keyword: '', // 搜索关键字
       bindList: [], // 绑定列表
       chartList: [],
-      toBindList: [], // 联动选择列表
     };
+  },
+  watch: {
+    'currentCom.setting.interaction': {
+      deep: true,
+      immediate: false,
+      handler(val) {
+        for (let chartId of val.bindedList) {
+          const chart = this.components.find(item => item.id === chartId);
+          if (chart) {
+            let chartInteracitve = chart.setting.interaction;
+            // 选中的图标被当前图表绑定
+            chartInteracitve.beBinded = this.currentCom.id;
+          }
+        }
+      },
+    },
   },
   computed: {
     ...mapState({
@@ -74,23 +92,23 @@ export default {
         return '没有符合的结果';
       }
       // 找到当前使用的数据信息
-      let obj = this.selectedModelList.find(item => item.tableId === this.this.currentCom.setting.data.datamodelId);
+      let obj = this.selectedModelList.find(item => item.tableId === this.currentCom.setting.data.datamodelId);
       return obj.resourceName;
     },
-  },
-  mounted() {
-    this.toBindList = this.components.filter(
-      item => item.id !== this.currentCom.id && item.data.datamodelId === this.currentCom.setting.data.data.datamodelId,
-    );
+    // 显示的选择列表
+    toBindList() {
+      return this.components.filter(
+        item =>
+          item.id !== this.currentCom.id && item.setting.data.datamodelId === this.currentCom.setting.data.datamodelId,
+      );
+    },
   },
   methods: {
     openBindWindow() {
       // 获取可选列表
-      this.chartList = this.toBindList;
-      // 重置选中列表
-      this.bindList = [];
+      this.chartList = this.toBindList.concat();
       // 获取已选列表
-      this.bindList = this.currentCom.setting.style.echart.customInteractive.bindedList || [];
+      this.bindList = this.currentCom.setting.interaction.bindedList;
       // 检查全选
       this.checkSelectAll();
       this.visible = true;
@@ -120,7 +138,7 @@ export default {
     // 往上寻找有没有在绑定路径中
     checkUpperBind(upperChartId, targetChartId) {
       let upperChart = this.components.find(item => item.id === upperChartId);
-      let interactive = upperChart.setting.style.echart.customInteractive;
+      const interactive = upperChart.setting.interaction;
       // 没有被任何图表绑定
       if (!interactive.beBinded) {
         return false;
@@ -133,30 +151,19 @@ export default {
     },
     // 检查可选图表是否已经被其他图表绑定
     checkHaveBind(chart) {
-      let interactive = chart.setting.style.echart.customInteractive;
-      if (interactive.beBinded && interactive.beBinded !== this.currentCom.id) {
-        return true;
-      }
-      return false;
+      const interactive = chart.setting.interaction;
+      return interactive.beBinded && interactive.beBinded !== this.currentCom.id;
     },
     // 设置图表联动
     async setLinkage() {
       //  保存被选中图表的联动列表
-      this.currentCom.setting.style.echart.customInteractive.bindedList = this.bindList;
-      // 锁定被关联的列表
-      for (let chart of this.toBindList) {
-        // 是否被选中
-        let isInBindList = this.bindList.some(id => id === chart.id);
-        // 获取图表信息
-        let interactive = chart.setting.style.echart.customInteractive;
-        // 选中的图标被当前图表绑定
-        if (isInBindList) {
-          interactive.beBinded = this.currentCom.id;
-        } else if (interactive.beBinded === this.currentCom.id) {
-          // 取消绑定
-          interactive.beBinded = '';
-        }
-      }
+      this.$store.commit(historyMutation.COMMAND, {
+        commandType: 'Interaction',
+        target: this.currentCom,
+        store: this.$store,
+        eventBus: this.$EventBus,
+        interaction: { bindedList: this.bindList },
+      });
       this.visible = false;
     },
   },
