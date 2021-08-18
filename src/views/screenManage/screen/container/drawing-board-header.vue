@@ -20,28 +20,28 @@
           <!-- 保存按钮 start -->
           <li class="btn-item">
             <div class="tool-icon" @click="handleSave">
-              <i class="bi-data bi-data-save"></i>
+              <i class="bi-data bi-data-baocun"></i>
             </div>
           </li>
           <!-- 保存按钮 end -->
           <!-- 撤销按钮 start -->
           <li class="btn-item" :class="undoDisable ? 'disabled' : ''">
             <div class="tool-icon" @click="handleUndo">
-              <i class="bi-data bi-data-undo"></i>
+              <i class="bi-data bi-data-qianjin"></i>
             </div>
           </li>
           <!-- 撤销按钮 end -->
           <!-- 还原按钮 start -->
           <li class="btn-item" :class="redoDisable ? 'disabled' : ''">
             <div class="tool-icon" @click="handleRedo">
-              <i class="bi-data bi-data-redo"></i>
+              <i class="bi-data bi-data-houtui"></i>
             </div>
           </li>
           <!-- 还原按钮 end -->
           <!-- 刷新按钮 start -->
           <li class="btn-item">
             <div class="tool-icon">
-              <i class="bi-data bi-data-refresh"></i>
+              <i class="bi-data bi-data-shuaxin"></i>
             </div>
           </li>
           <!-- 刷新按钮 end -->
@@ -54,7 +54,7 @@
           <li class="btn-item">
             <div class="tool-btn">
               <div class="u-icon">
-                <i class="bi-data bi-data-line-chart"></i>
+                <i class="bi-data bi-data-tubiao"></i>
               </div>
               <span class="text">图表</span>
             </div>
@@ -87,7 +87,7 @@
           <li class="btn-item">
             <div class="tool-btn" @click="handleAddChart(BoardType.Text)">
               <div class="u-icon">
-                <i class="bi-data bi-data-line-chart"></i>
+                <i class="bi-data bi-data-text"></i>
               </div>
               <span class="text">文本框</span>
             </div>
@@ -97,7 +97,7 @@
           <li class="btn-item">
             <div class="tool-btn" @click="handleAddChart(BoardType.Image)">
               <div class="u-icon">
-                <i class="bi-data bi-data-line-chart"></i>
+                <i class="bi-data bi-data-img"></i>
               </div>
               <span class="text">图片</span>
             </div>
@@ -107,7 +107,7 @@
           <li class="btn-item">
             <div class="tool-btn">
               <div class="u-icon">
-                <i class="bi-data bi-data-line-chart"></i>
+                <i class="bi-data bi-data-xingzhuang"></i>
               </div>
               <span class="text">形状</span>
             </div>
@@ -129,7 +129,7 @@
           <li class="btn-item" @click="openSourceModal">
             <div class="tool-btn">
               <div class="u-icon">
-                <i class="bi-data bi-data-line-chart"></i>
+                <i class="bi-data bi-data-sucaiku"></i>
               </div>
               <span class="text">素材库</span>
             </div>
@@ -144,7 +144,7 @@
           <li class="btn-item">
             <div class="tool-btn" @click="handlePreview">
               <div class="u-icon">
-                <a-icon type="fullscreen" />
+                <i class="bi-data bi-data-quanping"></i>
               </div>
               <span class="text">预览</span>
             </div>
@@ -152,7 +152,7 @@
           <li class="btn-item">
             <div class="tool-btn" @click="handleOutEdit">
               <div class="u-icon">
-                <a-icon type="close" />
+                <i class="bi-data bi-data-tuichu"></i>
               </div>
               <span class="text">退出</span>
             </div>
@@ -463,7 +463,7 @@ export default {
         .bi-data {
           display: inline-block;
           margin: 0px auto 2px auto;
-          font-size: 21px;
+          font-size: 18px;
           color: #fff;
         }
       }
@@ -571,10 +571,12 @@ export default {
         text-align: center;
         padding-top: 1px;
         color: #f8f8f8;
+        width: 40px;
+        height: 52px;
+        cursor: pointer;
       }
       .u-icon {
         display: block;
-        width: 24px;
         height: 30px;
         margin: 0px auto 2px auto;
         color: #fff;
