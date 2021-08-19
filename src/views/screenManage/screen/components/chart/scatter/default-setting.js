@@ -136,15 +136,23 @@ export default merge(cloneDeep(BASE), {
         customFormatterWay: 'nv',
         // 系列
         customSeries: {
+          symbolSize: 15,
           label: {
             // 标签
             show: true,
             color: '#fff',
             fontSize: 16,
             position: 'top',
-            formatter: '{a}\n({c})',
+            formatter: '{@5}：{@2} ({@0},{@1})',
           },
         },
+        customScatterColor: '1', // 散点颜色 0单色 1按维度
+        customScatterSize: '', // 散点大小  0：按度量1  1：按度量2  默认空，为无
+        customScatterLabel: ['{@5}：{@2}', '({@0},{@1})'], // 指标-显示内容
+        customArrange: 'horizontal', // 指标-排列 horizontal水平  vertical垂直
+        customScatterTargetColor: '0', // 0使用图例 1：自定义
+        customXMax: 100, // 度量1 最大值
+        customYMax: 100, // 度量2 最大值
         customIsOpenDataLink: false, // 是否开启图表联动
         customInteractive: {}, // 保存联动数据
       },
