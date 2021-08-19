@@ -61,10 +61,10 @@
             <div class="chart-list-wrap">
               <ul class="chart-list">
                 <li
-                  class="chart-item"
                   v-for="chart in chartList"
+                  class="chart-item"
                   :key="chart.name"
-                  @click.stop="handleAddChart(chart.type)"
+                  @click.stop="handleParentAddChart(chart)"
                 >
                   {{ chart.name }}
                   <div class="sub-chart-wrap" v-if="chart.sub && chart.sub.length">
@@ -185,7 +185,6 @@ import { parameter, mutationTypes as boardMutaion } from '@/store/modules/board'
 import { mapState } from 'vuex';
 import ScreenSourceModal from '../components/screen-source/modal';
 import MapSelectView from '../mapSelectView';
-import omit from 'lodash/omit';
 /**
  * @description 编辑大屏菜单工具栏
  */
@@ -259,6 +258,13 @@ export default {
      */
     addMap(region) {
       this.handleAddChart('ChartMap', {}, region);
+    },
+    /**
+     * @description 父节点添加图表
+     */
+    handleParentAddChart(chart) {
+      if (chart && chart.sub && chart.sub.length) return;
+      this.handleAddChart(chart.type);
     },
     /**
      * @description 添加图表
@@ -353,7 +359,7 @@ export default {
       this.$router.push({
         name: 'catalog',
         query: {
-          ...omit(query, ['model']),
+          ...query,
         },
       });
     },

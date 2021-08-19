@@ -5,10 +5,10 @@
       <h2 class="title">数据接入列表</h2>
       <div class="panel-body">
         <div class="model-list">
-          <div class="model-search" v-if="!isEmpty">
-            <a-input-search placeholder="搜索数据接入" @change="handleSearch" />
+          <div class="model-search">
+            <a-input-search placeholder="搜索数据接入" :disabled="isEmpty" @change="handleSearch" />
           </div>
-          <div class="list-content reset-scrollbar" :class="isEmpty ? 'empty' : ''">
+          <div class="list-content reset-scrollbar">
             <template v-if="!isEmpty">
               <!-- 数据接入列表 start -->
               <!-- 气泡窗, 点击数据源时弹出继续选择库表 -->
@@ -24,7 +24,7 @@
                   <a-spin :spinning="loadingTable" class="scrollbar table-list">
                     <div
                       v-for="table in tableList"
-                      :class="['table-list-item', { added: judgeAdded(table) }]"
+                      :class="['table-list-item', { added: checkIsSelected(table) }]"
                       :key="table.id"
                       :title="table.name"
                       @click="handleSelectTable(table)"
@@ -80,7 +80,7 @@
                           <div class="scrollbar table-list">
                             <div
                               v-for="table in tableList"
-                              :class="['table-list-item', { added: judgeAdded(table) }]"
+                              :class="['table-list-item', { added: checkIsSelected(table) }]"
                               :key="table.id"
                               :title="table.name"
                               @click="handleSelectTable(table)"
@@ -213,16 +213,17 @@ export default {
       //   origin: 3,
       // };
       // await this.$server.screenManage.screenModuleSave(params);
-      item.resourceType = this.getResourceType();
-      item.resourceName = item.name;
-      this.$emit('update:currentSelected', item);
-      let list = this.selectedModelList.concat([item]);
-      this.$store.dispatch('dataModel/setSelectedModelList', list);
-      this.resourceId = item.id;
-      // 清空数据
-      this.showPopover = false;
-      this.databaseList = [];
-      this.tableList = [];
+      // item.resourceType = this.getResourceType();
+      // item.resourceName = item.name;
+      // this.$emit('update:currentSelected', item);
+      // let list = this.selectedModelList.concat([item]);
+      // this.$store.dispatch('dataModel/setSelectedModelList', list);
+      // this.resourceId = item.id;
+      // // 清空数据
+      // this.showPopover = false;
+      // this.databaseList = [];
+      // this.tableList = [];
+      this.$emit('select', item);
       this.handleClose();
     },
   },

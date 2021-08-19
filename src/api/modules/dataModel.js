@@ -242,12 +242,4 @@ export default {
   addDataModelTable(params) {
     return $axios.post(`/model/custom/createDataModelWideTable`, params);
   },
-  /**
-   *@description 大屏删除数据模型
-   * @param {String} screenId
-   * @param {String} tableId
-   */
-  delDataModel(screenId, tableId) {
-    return $axios.get(`/screen/pivotschema/del/${screenId}/${tableId}`);
-  },
 };

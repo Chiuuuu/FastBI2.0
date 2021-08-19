@@ -1,90 +1,89 @@
 <template>
   <div class="data-setting">
-    <Tabs v-model="tabAcitve" @change="handleChangeTab">
-      <TabPanel tab="showDataModel" label="数据模型" style="height: 100%">
-        <div class="setting-wrapper">
+    <div class="setting-wrapper">
+      <Tabs :value="tabAcitve" @change="handleChangeTab">
+        <TabPanel tab="model" label="数据模型">
           <!-- 数据模型菜单 start -->
           <DataModelMenu
-            @open="v => handleDataModel(v, 'showDataModel')"
-            :selected-list="savedModels"
-            :current-selected.sync="currentModel"
+            :list="modelList"
+            :selected="modelSelected"
             :dimension="dimension"
             :measure="measure"
+            @open="show => handleOpenListPanel(show, 'modelListPanelShow')"
+            @select="handleModelMenuSelected"
             @selectSearchFiled="handleSelectSearchFiled"
+            @delete="item => handleDeleteMenuItem(item, 'model')"
           ></DataModelMenu>
           <!-- 数据模型菜单 end -->
-
-          <!-- 数据总面板 start -->
-          <a-spin class="data-panel-box" :spinning="spinning">
-            <DataPanel :dimension="dimension" :measure="measure" :selectFiled="selectFiled"></DataPanel>
-          </a-spin>
-          <!-- 数据总面板 end -->
-        </div>
-        <!-- 数据模型列表 start -->
-        <DataModelListPanel
-          ref="showDataModel"
-          :selected-list="savedModels"
-          :current-selected.sync="currentModel"
-          :show="showDataModel"
-          @close="v => handleDataModel(v, 'showDataModel')"
-        ></DataModelListPanel>
-        <!-- 数据模型列表 end -->
-      </TabPanel>
-      <TabPanel tab="showDataSource" label="数据接入" style="height: 100%">
-        <div class="setting-wrapper">
-          <!-- 数据模型菜单 start -->
-          <DataSourceMenu
-            @open="v => handleDataModel(v, 'showDataSource')"
-            :selected-list="savedSources"
-            :current-selected.sync="currentSource"
+        </TabPanel>
+        <TabPanel tab="access" label="数据接入">
+          <!-- 数据接入菜单 start -->
+          <DataAccessMenu
+            :list="accessList"
+            :selected="accessSelected"
             :dimension="dimension"
             :measure="measure"
+            @open="show => handleOpenListPanel(show, 'accessListPanelShow')"
+            @select="handleAccessMenuSelected"
             @selectSearchFiled="handleSelectSearchFiled"
-          ></DataSourceMenu>
-          <!-- 数据模型菜单 end -->
+            @delete="item => handleDeleteMenuItem(item, 'access')"
+          ></DataAccessMenu>
+          <!-- 数据接入菜单 end -->
+        </TabPanel>
+      </Tabs>
 
-          <!-- 数据总面板 start -->
-          <a-spin class="data-panel-box" :spinning="spinning">
-            <DataPanel :dimension="dimension" :measure="measure" :selectFiled="selectFiled"></DataPanel>
-          </a-spin>
-          <!-- 数据总面板 end -->
-        </div>
-        <!-- 数据模型列表 start -->
-        <DataSourceListPanel
-          ref="showDataSource"
-          :selected-list="savedSources"
-          :current-selected.sync="currentSource"
-          :show="showDataSource"
-          @close="v => handleDataModel(v, 'showDataSource')"
-        ></DataSourceListPanel>
-        <!-- 数据模型列表 end -->
-      </TabPanel>
-    </Tabs>
+      <!-- 数据模型列表 start -->
+      <DataModelListPanel
+        :show="modelListPanelShow"
+        :selectedList="modelList"
+        @close="handleCloseListPanel"
+        @select="item => handleListSelect(item, 'model')"
+      ></DataModelListPanel>
+      <!-- 数据模型列表 end -->
+
+      <!-- 数据接入列表 start -->
+      <DataAccessListPanel
+        :show="accessListPanelShow"
+        :selectedList="accessList"
+        @close="handleCloseListPanel"
+        @select="item => handleListSelect(item, 'access')"
+      ></DataAccessListPanel>
+      <!-- 数据接入列表 end -->
+
+      <!-- 数据总面板 start -->
+      <a-spin class="data-panel-box" :spinning="spinning">
+        <DataPanel
+          :dimension="dimension"
+          :measure="measure"
+          :selectFiled="selectFiled"
+          @cancelSelect="handleCancelSelect"
+        ></DataPanel>
+      </a-spin>
+      <!-- 数据总面板 end -->
+    </div>
     <!-- <div class="toolbar-more">
       <a-icon type="more" />
     </div> -->
   </div>
 </template>
 <script>
-import DataPanel from './data-source-model/data-panel';
-import DataModelMenu from './data-source-model/data-model-menu';
-import DataModelListPanel from './data-source-model/data-model-list-panel';
-import DataSourceMenu from './data-source-model/data-source-menu';
-import DataSourceListPanel from './data-source-model/data-source-list-panel';
-
-import { mapGetters } from 'vuex';
-
+import DataPanel from './data-access-model/data-panel';
+import DataModelMenu from './data-access-model/data-model-menu';
+import DataAccessMenu from './data-access-model/data-access-menu';
+import DataModelListPanel from './data-access-model/data-model-list-panel';
+import DataAccessListPanel from './data-access-model/data-access-list-panel';
 /**
  * @description 编辑大屏配置区的最右侧数据模型
  */
 export default {
   name: 'BoardSettingRight',
+  inject: ['screenInstance'],
   components: {
     DataPanel,
     DataModelMenu,
+    DataAccessMenu,
     DataModelListPanel,
-    DataSourceMenu,
-    DataSourceListPanel,
+    DataAccessListPanel,
   },
   provide() {
     return {
@@ -93,93 +92,163 @@ export default {
   },
   data() {
     return {
-      showDataModel: false, // 是否显示数据模型列表
-      showDataSource: false, // 是否显示数据接入列表
-      resourceType: 8, // 8是模型, 3是接入(只用于传参时给后端判断, 不是数据库字段)
-      tabAcitve: 'showDataModel', //  选中的tabKey
-      selectFiled: {}, // 搜索字段选中的字段
-      currentModel: null, // 当前选中的模型
-      currentSource: null, // 当前选中的接入表格
+      tabAcitve: 'model', // tab栏活动页
+      modelSelected: null, // 模型菜单选中
+      accessSelected: null, // 接入菜单选中
+      modelListPanelShow: false, // 模型列表面板开启|关闭
+      accessListPanelShow: false, // 接入列表面板开启|关闭
       spinning: false, // 获取维度度量时的loading
-      modelDimension: [],
-      modelMeasure: [],
-      sourceDimension: [],
-      sourceMeasure: [],
+      selectFiled: {}, // 字段搜索选中值
+      dimension: [], // 维度列表
+      measure: [], // 度量列表
     };
   },
   computed: {
-    ...mapGetters([
-      'modelExpand',
-      'dataModel',
-      'screenId',
-      'selectedModelList',
-      'currentSelected',
-      'currSelected',
-      'canvasMap',
-    ]),
-    // 过滤模型列表
-    savedModels() {
-      return this.selectedModelList.filter(item => item.resourceType === 8);
+    modelList() {
+      // 模型列表
+      return this.screenInstance.screenInfo.modelList || [];
     },
-    // 过滤接入列表
-    savedSources() {
-      return this.selectedModelList.filter(item => item.resourceType === 3);
-    },
-    dimension() {
-      if (this.tabAcitve === 'showDataModel') {
-        return this.modelDimension;
-      } else if (this.tabAcitve === 'showDataSource') {
-        return this.sourceDimension;
-      } else {
-        return [];
-      }
-    },
-    measure() {
-      if (this.tabAcitve === 'showDataModel') {
-        return this.modelMeasure;
-      } else if (this.tabAcitve === 'showDataSource') {
-        return this.sourceMeasure;
-      } else {
-        return [];
-      }
+    accessList() {
+      // 接入列表
+      return this.screenInstance.screenInfo.accessList || [];
     },
   },
   watch: {
-    // 监听选中模型, 并获取维度度量
-    currentModel(newValue) {
-      if (newValue && 'id' in newValue) {
-        this.handleGetPivoSchemaList(newValue.id);
+    modelList(list) {
+      if (list && list.length) {
+        if (!this.modelSelected) {
+          // 如果模型菜单没有选中，初始化的时候默认选中第一个
+          this.modelSelected = list[0];
+          this.handleGetPivoSchemaList(this.modelSelected.tableId);
+        }
+      } else {
+        this.tabAcitve = 'access';
       }
     },
-    // 监听选中接入的表格, 并获取维度度量
-    currentSource(newValue) {
-      if (newValue && 'id' in newValue) {
-        this.handleGetPivoSchemaList(newValue.id);
+    accessList(list) {
+      if (list && list.length && this.tabAcitve === 'access') {
+        if (!this.accessSelected) {
+          // 如果模型菜单没有数据
+          // 并且接入菜单没有选中，初始化的时候默认选中第一个
+          this.accessSelected = list[0];
+          this.handleGetPivoSchemaList(this.accessSelected.tableId);
+        }
+      } else {
+        this.tabAcitve = 'model';
       }
     },
   },
   methods: {
     /**
-     * @description 切换tab栏
+     * @description tab栏切换
      */
-    handleChangeTab(key) {
-      // 切换时, 默认恢复成列表窗口
-      this[key] = false;
-      // 切换时, 维度度量也要相应切换(没有选中值时显示为空)
-      if (key === 'showDataModel') {
-        this.resourceType = 8;
-      } else if (key === 'showDataSource') {
-        this.resourceType = 3;
+    handleChangeTab(value) {
+      this.tabAcitve = value;
+      const list = this.tabAcitve === 'model' ? this.modelList : this.accessList;
+      let selected = this.tabAcitve === 'model' ? this.modelSelected : this.accessSelected;
+      if (!selected && list && list.length) {
+        selected = list[0];
+        this.tabAcitve === 'model' ? this.handleModeMenulSelected(selected) : this.handleAccessMenuSelected(selected);
+      } else {
+        this.handleGetPivoSchemaList(selected.tableId);
       }
     },
     /**
-     * @description 打开/关闭 数据模型列表
+     * @description 打开数据列表
      */
-    handleDataModel(val, type) {
-      if (val && this.$refs[type]) {
-        this.$refs[type].handleGetData();
+    handleOpenListPanel(show, type) {
+      ['modelListPanelShow', 'accessListPanelShow'].forEach(key => {
+        this[key] = key === type ? show : !show;
+      });
+    },
+    /**
+     * @description 打开数据模型/接入列表
+     */
+    handleCloseListPanel() {
+      this.modelListPanelShow = false;
+      this.accessListPanelShow = false;
+    },
+    /**
+     * @description 数据模型菜单选中
+     */
+    handleModelMenuSelected(selected) {
+      this.modelSelected = {
+        ...this.modelSelected,
+        ...selected,
+      };
+      this.handleGetPivoSchemaList(this.modelSelected.tableId);
+    },
+    /**
+     * @description 数据接入菜单选中
+     */
+    handleAccessMenuSelected(selected) {
+      this.accessSelected = {
+        ...this.accessSelected,
+        ...selected,
+      };
+      this.handleGetPivoSchemaList(this.accessSelected.tableId);
+    },
+    /**
+     * @description 数据模型/接入列表选中
+     */
+    handleListSelect(item, type) {
+      const isModel = type === 'model';
+      const list = isModel ? this.modelList : this.accessList;
+      const cacheList = [].concat(list);
+      cacheList.push(item);
+      this.screenInstance.handleUpdateScreenInfo({
+        [isModel ? 'modelList' : 'accessList']: cacheList,
+      });
+      isModel ? this.handleModelMenuSelected(item) : this.handleAccessMenuSelected(item);
+    },
+    /**
+     * @description 删除菜单选项
+     */
+    async handleDeleteMenuItem(item, type) {
+      const isModel = type === 'model';
+      const selected = isModel ? this.modelSelected : this.accessSelected;
+      let list = isModel ? this.modelList : this.accessList;
+      list = list.filter(n => n.id !== item.id);
+
+      const screenId = this.screenInstance.screenInfo.screenId;
+      const tableId = item.tableId;
+
+      const result = await this.$server.screenManage.deleteListDataByScreenIdAndTableId(screenId, tableId);
+      if (result && result.code === 200) {
+        if (item.id === selected.id) {
+          // 如果删除的是当前选中的，则清空选中
+          isModel ? (this.modelSelected = null) : (this.accessSelected = null);
+        }
+
+        if (list && list.length === 0) {
+          // 如果全部都删除了，则置空
+          this.dimension = [];
+          this.measure = [];
+        }
+
+        this.screenInstance.handleUpdateScreenInfo({
+          [isModel ? 'modelList' : 'accessList']: list,
+        });
+      } else {
+        this.$message.error(result.msg || '删除失败');
       }
-      this[type] = val;
+    },
+    /**
+     * @description 根据当前选中项获取维度度量
+     */
+    async handleGetPivoSchemaList(id) {
+      this.spinning = true;
+      const result = await this.$server.screenManage
+        .getPivoSchemaList(id, this.screenInstance.screenInfo.screenId)
+        .finally(() => {
+          this.spinning = false;
+        });
+      if (result && result.code === 200) {
+        this.dimension = [].concat(result.data.dimensions) || [];
+        this.measure = [].concat(result.data.measures) || [];
+      } else {
+        this.$message.error(result.msg || '获取维度度量失败');
+      }
     },
     /**
      * @description 设置搜索字段选中的字段
@@ -188,40 +257,23 @@ export default {
       this.selectFiled = Object.assign({}, value);
     },
     /**
-     * @description 根据当前选中项获取维度度量
+     * @description 取消选中搜索字段
      */
-    async handleGetPivoSchemaList(id) {
-      this.spinning = true;
-      const res = await this.$server.screenManage.getPivoSchemaList(id, this.screenId).finally(() => {
-        this.spinning = false;
-      });
-      let dimension = [];
-      let measure = [];
-      if (res && res.code === 200) {
-        dimension = res.data.dimensions || [];
-        measure = res.data.measures || [];
-      } else {
-        this.dimension = [];
-        this.measure = [];
-        this.$message.error(res.msg || res.message || '请求错误');
-      }
-      if (this.tabAcitve === 'showDataModel') {
-        this.modelDimension = dimension;
-        this.modelMeasure = measure;
-      } else if (this.tabAcitve === 'showDataSource') {
-        this.sourceDimension = dimension;
-        this.sourceMeasure = measure;
-      }
+    handleCancelSelect() {
+      this.selectFiled = {};
     },
   },
 };
 </script>
 <style lang="less" scoped>
 @deep: ~'>>>';
+@tabWrapperHeight: 125px;
 @{deep} .tabs-wrapper .tabs-content {
   overflow: hidden;
 }
 .data-panel-box {
   height: calc(100% - 88px);
+  position: absolute;
+  top: @tabWrapperHeight;
 }
 </style>

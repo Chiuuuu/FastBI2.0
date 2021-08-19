@@ -1,7 +1,7 @@
 <template>
   <div class="data-model-wrapper">
     <div class="menu-btn model-menu">
-      <p class="title">{{ currentSelected ? currentSelected.name : '请选择模型' }}</p>
+      <p class="title">{{ selected ? selected.resourceName : '请选择模型' }}</p>
       <div class="menu-list-wrapper">
         <div class="menu-model-add" @click="handleAddDataModel">
           <span class="symbol-add">+</span>
@@ -10,15 +10,15 @@
         <ul class="menu-list reset-scrollbar">
           <li
             class="menu-item"
-            :class="{ selected: currentSelected && currentSelected.id === item.id }"
-            v-for="(item, index) in selectedList"
+            :class="{ selected: selected && selected.id === item.id }"
+            v-for="(item, index) in list"
             :data-index="index"
             :key="item.id"
             @click="handleSelectDataModel(item)"
           >
-            {{ item.name }}
+            {{ item.resourceName }}
             <div class="u-icon">
-              <a-icon class="check-icon" v-if="currentSelected && currentSelected.id === item.id" type="check"></a-icon>
+              <a-icon class="check-icon" v-if="selected && selected.id === item.id" type="check"></a-icon>
               <a-icon class="delete-icon" type="delete" @click.stop="handleDelete(item)" />
             </div>
           </li>
@@ -26,12 +26,7 @@
       </div>
     </div>
     <div class="model-field-search">
-      <a-input-search
-        placeholder="搜索字段,回车确定"
-        @search="handleSearchFiled"
-        @change="handleSearch"
-        ref="js-filed-search"
-      />
+      <a-input-search :disabled="searchDisable" placeholder="搜索字段" @change="handleSearch" ref="js-filed-search" />
       <div class="menu-list-wrapper" v-if="searchResult.length">
         <ul class="menu-list reset-scrollbar">
           <li class="menu-item" v-for="item in searchResult" :key="item.id" @click="handleSelectResult(item)">
@@ -43,23 +38,21 @@
   </div>
 </template>
 <script>
+import debounce from 'lodash/debounce';
 /**
  * @description 数据模型区顶部区域
  */
 export default {
   name: 'DataModelMenu',
+  inject: ['screenInstance'],
   props: {
-    selectedList: {
+    list: {
       type: Array,
-      default() {
-        return [];
-      },
+      default: () => [],
     },
-    currentSelected: {
+    selected: {
       type: Object,
-      default() {
-        return null;
-      },
+      default: () => {},
     },
     dimension: {
       // 维度
@@ -77,10 +70,12 @@ export default {
       searchResult: [], // 搜索结果列表
     };
   },
-  methods: {
-    handleStringifyItem(item) {
-      return JSON.stringify(item);
+  computed: {
+    searchDisable() {
+      return !this.dimension.length && !this.measure.length;
     },
+  },
+  methods: {
     /**
      * @description 打开添加数据模型
      */
@@ -91,16 +86,19 @@ export default {
      * @description 选择数据模型
      */
     handleSelectDataModel(item) {
-      this.$emit('update:currentSelected', item);
+      this.$emit('select', item);
     },
     /**
      * @description 维度度量字段搜索
      */
-    handleSearch(event) {
-      if (!event.target.value) {
+    handleSearch: debounce(function (event) {
+      const value = event.target.value;
+      if (!value) {
         this.handleClearSearch();
+      } else {
+        this.handleSearchFiled(value);
       }
-    },
+    }, 400),
     /**
      * @description 维度度量字段搜索，回车或者点搜索执行
      */
@@ -137,8 +135,7 @@ export default {
      * @description 删除选中
      */
     handleDelete(item) {
-      const list = this.selectedList.filter(n => n.id !== item.id);
-      this.$store.dispatch('dataModel/setSelectedModelList', list);
+      this.$emit('delete', item);
     },
     /**
      * @description 清空搜索

@@ -5,10 +5,10 @@
       <h2 class="title">数据模型列表</h2>
       <div class="panel-body">
         <div class="model-list">
-          <div class="model-search" v-if="!isEmpty">
-            <a-input-search placeholder="搜索数据接入" @change="handleSearch" />
+          <div class="model-search">
+            <a-input-search placeholder="搜索数据模型" :disabled="isEmpty" @change="handleSearch" />
           </div>
-          <div class="list-content reset-scrollbar" :class="isEmpty ? 'empty' : ''">
+          <div class="list-content reset-scrollbar">
             <template v-if="!isEmpty">
               <!-- 数据模型列表 start -->
               <template v-for="item in modelList">
@@ -25,7 +25,7 @@
                   <ul class="items" v-if="item.children && item.children.length">
                     <li
                       class="item"
-                      :class="{ added: judgeAdded(child) }"
+                      :class="{ added: checkIsSelected(child) }"
                       v-for="child in item.children"
                       :key="child.id"
                       @click="handleSelectDataModel(child)"
@@ -42,7 +42,7 @@
                 <!-- 文件夹类型 end -->
                 <div class="group" :key="item.id" v-else>
                   <ul class="items">
-                    <li class="item" :class="{ added: judgeAdded(item) }" @click="handleSelectDataModel(item)">
+                    <li class="item" :class="{ added: checkIsSelected(item) }" @click="handleSelectDataModel(item)">
                       <div class="title">
                         <div class="u-icon-file">
                           <div class="file-icon icon-bg icon-model"></div>
@@ -66,26 +66,17 @@
 <script>
 import { menuSearchLoop } from '@/utils';
 import debounce from 'lodash/debounce';
-import { mapGetters } from 'vuex';
 
 /**
  * @description 数据模型
  */
 export default {
   name: 'DataModelListPanel',
-  inject: ['getResourceType'],
+  inject: ['screenInstance'],
   props: {
     selectedList: {
       type: Array,
-      default() {
-        return [];
-      },
-    },
-    currentSelected: {
-      type: Object,
-      default() {
-        return null;
-      },
+      default: () => [],
     },
     show: {
       // 是否显示
@@ -100,8 +91,14 @@ export default {
       list: [],
     };
   },
+  watch: {
+    show(val) {
+      if (val) {
+        this.handleGetData();
+      }
+    },
+  },
   computed: {
-    ...mapGetters(['modelExpand', 'dataModel', 'screenId', 'selectedModelList', 'currSelected', 'canvasMap']),
     modelList() {
       // 数据模型展示列表
       return this.searchValue ? this.searchList : this.list;
@@ -125,9 +122,9 @@ export default {
      * @description 获取数据模型列表
      */
     async handleGetData() {
-      const res = await this.$server.common.getMenuList('/model/catalog/list/2');
-      if (res && res.code === 200) {
-        this.list = res.data;
+      const result = await this.$server.common.getMenuList('/model/catalog/list/2');
+      if (result && result.code === 200) {
+        this.list = result.data;
       } else {
         this.list = [];
       }
@@ -136,21 +133,25 @@ export default {
      * @description 选择模型
      */
     async handleSelectDataModel(item) {
-      // let params = {
-      //   screenId: this.$store.getters.screenId,
-      //   resourceName: item.name,
-      //   datasourceId: '',
-      //   databaseId: '',
-      //   tableId: item.id,
-      //   origin: 8,
-      // };
-      // await this.$server.screenManage.screenModuleSave(params);
-      item.resourceType = this.getResourceType();
-      item.resourceName = item.name;
-      this.$emit('update:currentSelected', item);
-      let list = this.selectedModelList.concat([item]);
-      this.$store.dispatch('dataModel/setSelectedModelList', list);
-      this.handleClose();
+      if (this.checkIsSelected(item)) return;
+
+      let params = {
+        screenId: this.screenInstance.screenInfo.screenId,
+        resourceName: item.name,
+        tableId: item.id,
+      };
+      const result = await this.$server.screenManage.saveScreenSelectModel(params);
+      if (result && result.code === 200) {
+        item = {
+          ...item,
+          tableId: item.id,
+          resourceName: item.name,
+        };
+        this.$emit('select', item);
+        this.handleClose();
+      } else {
+        this.$message.error(result.msg || '选择模型失败');
+      }
     },
     /**
      * @description 关闭创建数据模型
@@ -161,8 +162,8 @@ export default {
     /**
      * @description 判断模型是否已选
      */
-    judgeAdded(item) {
-      return this.selectedList.some(n => n.id === item.id);
+    checkIsSelected(item) {
+      return this.selectedList.some(selected => selected.tableId === item.id);
     },
     /**
      * @description 数据模型搜索
@@ -240,12 +241,9 @@ export default {
         height: 28px;
       }
       .list-content {
-        height: calc(100vh - 240px);
+        height: calc(100vh - 220px);
         position: relative;
         overflow-y: auto;
-        &.empty {
-          height: calc(100vh - 202px);
-        }
         .group {
           .title {
             height: 30px;
