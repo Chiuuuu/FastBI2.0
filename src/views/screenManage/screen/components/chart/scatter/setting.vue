@@ -91,30 +91,6 @@
                   ></UnitTitle>
                   <!-- 标题 end -->
                 </CollapsePanel>
-                <CollapsePanel class="content-item" panel="bgAndBorder" header="背景和边框">
-                  <div class="setting-unit-content">
-                    <!-- 背景图片 start -->
-                    <UnitBackgroundImage
-                      class="mb-8"
-                      :background="currentCom.setting.style.background"
-                      @change="value => handleChange('background', value)"
-                    ></UnitBackgroundImage>
-                    <!-- 背景图片 end -->
-                    <!-- 背景颜色 start -->
-                    <UnitBackgroundColor
-                      class="mb-8"
-                      :color="currentCom.setting.style.background.color"
-                      @change="color => handleChange('background', { color })"
-                    ></UnitBackgroundColor>
-                    <!-- 背景颜色 end -->
-                    <!-- 边框设置 start -->
-                    <UnitBorder
-                      :border="currentCom.setting.style.border"
-                      @change="(key, value) => handleChange(key, value)"
-                    ></UnitBorder>
-                    <!-- 边框设置 end -->
-                  </div>
-                </CollapsePanel>
                 <CollapsePanel class="content-item" panel="chartStyle" header="图形属性">
                   <!-- 图形属性 start -->
                   <div class="setting-unit-content">
@@ -168,6 +144,24 @@
                 <CollapsePanel class="content-item" panel="legend" header="指标设置">
                   <div class="setting-unit-content">
                     <a-row class="unit-show-block mb-8">
+                      <a-col :span="24" class="unit-show-block position">
+                        <div class="unit-block-title">指标颜色</div>
+                      </a-col>
+                      <!-- 标签 位置 start -->
+                      <a-col :span="20" class="unit-show-block position">
+                        <a-radio-group
+                          name="radioGroup"
+                          class="float-right"
+                          :value="currentCom.setting.style.echart.customSeries.label.position"
+                          @change="event => handleLabel('position', event.target.value)"
+                        >
+                          <a-radio value="inside">使用图例</a-radio>
+                          <a-radio value="outside">自定义</a-radio>
+                        </a-radio-group>
+                      </a-col>
+                      <!-- 标签 位置 end -->
+                    </a-row>
+                    <a-row class="unit-show-block mb-8">
                       <a-col :span="24">
                         <div class="unit-block-title">显示内容</div>
                       </a-col>
@@ -187,22 +181,39 @@
                       </a-col>
                       <!-- 内容显示 end -->
                     </a-row>
+                    <a-row class="unit-show-block mb-8">
+                      <a-col :span="6" class="unit-show-block position">
+                        <div class="unit-block-title">位置</div>
+                      </a-col>
+                      <!-- 标签 位置 start -->
+                      <a-radio-group
+                        name="radioGroup"
+                        class="float-right"
+                        :value="currentCom.setting.style.echart.customSeries.label.position"
+                        @change="event => handleLabel('position', event.target.value)"
+                      >
+                        <a-radio-button value="inside">内部</a-radio-button>
+                        <a-radio-button value="outside">外部</a-radio-button>
+                      </a-radio-group>
+                      <!-- 标签 位置 end -->
+                    </a-row>
                     <!-- 展示数值 start -->
-                    <UnitLabel
+                    <!-- <UnitLabel
                       label="数值"
                       :seriesLabel="currentCom.setting.style.echart.customSeries.label"
                       @change="(key, value) => doWithSeries(key, value)"
-                    ></UnitLabel>
+                    ></UnitLabel> -->
                     <!-- 展示数值 end -->
                   </div>
                 </CollapsePanel>
-                <CollapsePanel class="content-item" panel="drawing" header="绘图区">
-                  <UnitDrawing
-                    :grid="currentCom.setting.style.echart.grid"
-                    :xAxis="currentCom.setting.style.echart.xAxis"
-                    :yAxis="currentCom.setting.style.echart.yAxis"
-                    @change="(key, value) => handleChange(key, value)"
-                  ></UnitDrawing>
+                <CollapsePanel class="content-item" panel="legend" header="图例设置">
+                  <UnitLegend
+                    :legend="currentCom.setting.style.echart.legend"
+                    @change="
+                      (key, value, isReset, beforeExecute, afterExecute) =>
+                        handleChange(key, value, isReset, beforeExecute, afterExecute)
+                    "
+                  ></UnitLegend>
                 </CollapsePanel>
                 <CollapsePanel class="content-item" panel="xaxis" header="X轴">
                   <!-- X轴 start -->
@@ -222,7 +233,7 @@
                   ></UnitYaxis>
                   <!-- Y轴 end -->
                 </CollapsePanel>
-                <CollapsePanel class="content-item" panel="yaxis" header="颜色">
+                <CollapsePanel class="content-item" panel="yaxis" header="颜色设置">
                   <!-- 颜色 start -->
                   <UnitChartColor
                     :color="currentCom.setting.style.echart.color"
@@ -231,14 +242,37 @@
                   ></UnitChartColor>
                   <!-- 颜色 end -->
                 </CollapsePanel>
-                <CollapsePanel class="content-item" panel="legend" header="图例">
-                  <UnitLegend
-                    :legend="currentCom.setting.style.echart.legend"
-                    @change="
-                      (key, value, isReset, beforeExecute, afterExecute) =>
-                        handleChange(key, value, isReset, beforeExecute, afterExecute)
-                    "
-                  ></UnitLegend>
+                <CollapsePanel class="content-item" panel="bgAndBorder" header="背景设置">
+                  <div class="setting-unit-content">
+                    <!-- 背景图片 start -->
+                    <UnitBackgroundImage
+                      class="mb-8"
+                      :background="currentCom.setting.style.background"
+                      @change="value => handleChange('background', value)"
+                    ></UnitBackgroundImage>
+                    <!-- 背景图片 end -->
+                    <!-- 背景颜色 start -->
+                    <UnitBackgroundColor
+                      class="mb-8"
+                      :color="currentCom.setting.style.background.color"
+                      @change="color => handleChange('background', { color })"
+                    ></UnitBackgroundColor>
+                    <!-- 背景颜色 end -->
+                    <!-- 边框设置 start -->
+                    <UnitBorder
+                      :border="currentCom.setting.style.border"
+                      @change="(key, value) => handleChange(key, value)"
+                    ></UnitBorder>
+                    <!-- 边框设置 end -->
+                  </div>
+                </CollapsePanel>
+                <CollapsePanel class="content-item" panel="drawing" header="绘图区">
+                  <UnitDrawing
+                    :grid="currentCom.setting.style.echart.grid"
+                    :xAxis="currentCom.setting.style.echart.xAxis"
+                    :yAxis="currentCom.setting.style.echart.yAxis"
+                    @change="(key, value) => handleChange(key, value)"
+                  ></UnitDrawing>
                 </CollapsePanel>
                 <CollapsePanel class="content-item" panel="reset" :isTogger="false">
                   <!-- 恢复默认配置 start -->

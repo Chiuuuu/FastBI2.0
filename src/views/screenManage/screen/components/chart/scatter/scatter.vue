@@ -124,6 +124,19 @@ export default {
         legend: {
           data: legend,
         },
+        tooltip: {
+          formatter: this.hanleTooltipFormatter(),
+        },
+        yAxis: {
+          max: function (val) {
+            return val.max + 2;
+          },
+        },
+        xAxis: {
+          max: function (val) {
+            return val.max + 2;
+          },
+        },
         series,
       });
       // 散点颜色设置
@@ -145,6 +158,22 @@ export default {
       if (!this.chartInstane) return;
       const newOptions = this.doWithOptions(this.serverData ? this.serverData : defaultData);
       this.updateSaveChart(newOptions);
+    },
+    /**
+     * @description 处理鼠标移入提示
+     */
+    hanleTooltipFormatter() {
+      return function (params) {
+        let val = params.value;
+        if (val.length < 6) {
+          return '';
+        }
+        return `${params.marker}<br/>
+                ${val[5]}：${val[2]}<br/>
+                ${val[3]}：${val[0]}<br/>
+                ${val[4]}：${val[1]}<br/>
+                `;
+      };
     },
     /**
      * @description 处理散点大小

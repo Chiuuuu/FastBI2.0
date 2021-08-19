@@ -27,6 +27,9 @@ export default merge(cloneDeep(BASE), {
         },
         tooltip: {
           trigger: 'item',
+          textStyle: {
+            fontSize: 18,
+          },
         },
         legend: {
           // 图例
