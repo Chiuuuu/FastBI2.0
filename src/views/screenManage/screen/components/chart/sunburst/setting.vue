@@ -249,11 +249,12 @@
                       <!-- 标签 位置 start -->
                       <a-radio-group
                         name="radioGroup"
+                        class="float-right"
                         :value="currentCom.setting.style.echart.customSeries.label.position"
                         @change="event => handleLabel('position', event.target.value)"
                       >
-                        <a-radio value="inside">内部</a-radio>
-                        <a-radio value="outside">外部</a-radio>
+                        <a-radio-button value="inside">内部</a-radio-button>
+                        <a-radio-button value="outside">外部</a-radio-button>
                       </a-radio-group>
                       <!-- 标签 位置 end -->
                     </a-row>
@@ -265,11 +266,12 @@
                       <!-- 标签 位置 start -->
                       <a-radio-group
                         name="rotateGroup"
+                        class="float-right"
                         :value="currentCom.setting.style.echart.customSeries.label.rotate"
                         @change="event => handleLabel('rotate', event.target.value)"
                       >
-                        <a-radio value="radial">径向</a-radio>
-                        <a-radio value="tangential">切向</a-radio>
+                        <a-radio-button value="radial">径向</a-radio-button>
+                        <a-radio-button value="tangential">切向</a-radio-button>
                       </a-radio-group>
                       <!-- 标签 位置 end -->
                     </a-row>

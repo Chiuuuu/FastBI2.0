@@ -173,7 +173,7 @@
                       </a-col>
                     </a-row>
                     <!-- 外环大小 end -->
-                    <a-row class="unit-show-block mb-8">
+                    <a-row class="unit-show-block mb-6">
                       <a-col :span="8" class="unit-show-block">
                         <div class="unit-block-title">扇形个数</div>
                       </a-col>
@@ -191,7 +191,7 @@
                       :value="currentCom.setting.style.echart.customRoseType.show"
                       @change="value => handleRose('show', value)"
                     ></UnitCheckbox>
-                    <a-row class="unit-show-block mb-8" v-if="currentCom.setting.style.echart.customRoseType.show">
+                    <a-row class="unit-show-block mb-8 mt-3" v-if="currentCom.setting.style.echart.customRoseType.show">
                       <a-col :span="6" class="unit-show-block position">
                         <div class="unit-block-title">展示</div>
                       </a-col>
@@ -199,11 +199,12 @@
                       <a-col :span="18">
                         <a-radio-group
                           name="radioGroup"
+                          class="float-right"
                           :value="currentCom.setting.style.echart.customRoseType.type"
                           @change="event => handleRose('type', event.target.value)"
                         >
-                          <a-radio value="radius">半径</a-radio>
-                          <a-radio value="area">面积</a-radio>
+                          <a-radio-button value="radius">半径</a-radio-button>
+                          <a-radio-button value="area">面积</a-radio-button>
                         </a-radio-group>
                       </a-col>
                       <!-- 形状 方式 end -->
@@ -275,15 +276,15 @@
                       <a-col :span="6" class="unit-show-block position">
                         <div class="unit-block-title">位置</div>
                       </a-col>
-
                       <!-- 标签 位置 start -->
                       <a-radio-group
                         name="radioGroup"
+                        class="float-right"
                         :value="currentCom.setting.style.echart.customSeries.label.position"
                         @change="event => handleLabel('position', event.target.value)"
                       >
-                        <a-radio value="inside">内部</a-radio>
-                        <a-radio value="outside">外部</a-radio>
+                        <a-radio-button value="inside">内部</a-radio-button>
+                        <a-radio-button value="outside">外部</a-radio-button>
                       </a-radio-group>
                       <!-- 标签 位置 end -->
                     </a-row>

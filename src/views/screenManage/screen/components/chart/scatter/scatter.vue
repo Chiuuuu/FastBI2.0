@@ -3,6 +3,7 @@ import BoardType from '@/views/screenManage/screen/setting/default-type';
 import BaseChart from '../base';
 import defaultData from './default-data';
 import merge from 'lodash/merge';
+import omit from 'lodash/omit';
 import { setLinkageData, resetOriginData } from '@/utils/setDataLink';
 /**
  * @description 散点图
@@ -30,21 +31,21 @@ export default {
     async getServerData() {
       console.log('从这里获取服务端数据');
       this.serverData = {
-        legend: ['可口可乐', '百事可乐', '雪碧', '健力宝', '康师傅', '星巴克', '统一'],
+        // legend: ['可口可乐', '百事可乐', '雪碧', '健力宝', '康师傅', '星巴克', '统一'],
         data: [
           {
-            man: 120,
-            women: 150,
+            man: 100,
+            women: 100,
             name: '产品部',
           },
           {
-            man: 130,
-            women: 160,
+            man: 76,
+            women: 95,
             name: '市场部',
           },
           {
-            man: 140,
-            women: 170,
+            man: 45,
+            women: 47,
             name: '销售部',
           },
         ],
@@ -109,8 +110,11 @@ export default {
 
       const series = [];
       fetchData.data.forEach(data => {
-        const ary = [data.man, data.women];
+        const ary = [data.man, data.women, data.name, 'man', 'women', 'name'];
         const item = this.createScatterUnit(data.name, [ary], echart);
+
+        // 处理散点大小
+        this.handleScatterSize(item, echart.customScatterSize, echart.customXMax, echart.customYMax);
         series.push(item);
       });
 
@@ -122,16 +126,18 @@ export default {
         },
         series,
       });
+      // 散点颜色设置
+      this.handleScatterColor(options, echart.customScatterColor);
       return options;
     },
     createScatterUnit(name, data, echart) {
-      const formatter = this.doWithFormatter(data, echart.customFormatterWay);
+      // const formatter = this.doWithFormatter(data, echart.customFormatterWay);
+      const seriesData = { ...omit(echart.customSeries, []) };
+
       return {
         name,
         type: 'scatter',
-        label: Object.assign({}, echart.customSeries.label, {
-          formatter: `${formatter}`,
-        }),
+        ...seriesData,
         data: data,
       };
     },
@@ -141,62 +147,84 @@ export default {
       this.updateSaveChart(newOptions);
     },
     /**
+     * @description 处理散点大小
+     * @param {Object} item 当前系列
+     * @param {String} customScatterSize 散点大小类型 0：按度量1  1：按度量2  默认空，为无
+     * @param {String} customXMax 度量1最大值
+     * @param {String} customYMax 度量2最大值
+     */
+    handleScatterSize(item, customScatterSize, customXMax, customYMax) {
+      // 散点图大小设置
+      if (customScatterSize) {
+        let max = customScatterSize === '0' ? customXMax : customYMax;
+        item.symbolSize = function (val) {
+          let num = val[customScatterSize];
+          return max === 0 ? 8 : (20 / max) * num + 8;
+        };
+      }
+    },
+    /**
+     * @description 处理散点颜色
+     * @param {Object} options
+     * @param {String} customScatterColor  散点颜色 0单色 1按维度
+     */
+    handleScatterColor(options, customScatterColor) {
+      if (customScatterColor === '0') {
+        options.color = options.color.length > 0 ? options.color[0] : '#68ABDA';
+      }
+    },
+    /**
      * @description 添加点击事件(图表联动)
      */
     addClick() {
-      this.componentData = this.shapeUnit.component;
       // 设置点击数据进行联动
-      this.handleDataClick();
+      this.chartInstane.on('click', this.handleDataClick);
       // 设置点击空白重置联动
-      this.handleChartClick();
+      this.chartInstane.getZr().on('click', this.handleChartClick);
     },
     /**
      * @description 处理点击数据显示选中效果
      */
-    handleDataClick() {
-      this.chartInstane.on('click', e => {
+    handleDataClick(e) {
+      // 重置图表
+      const options = this.chartInstane.getOption();
+      if (!this.options.style.echart.customIsOpenDataLink) {
+        return;
+      }
+      // 重复点击选中项
+      if (e.dataIndex === this.currentDataIndex && e.seriesIndex === this.currentSeriesIndex) {
         // 重置图表
-        const options = this.chartInstane.getOption();
-        if (!this.options.style.echart.customIsOpenDataLink) {
-          return;
-        }
-        // 重复点击选中项
-        if (e.dataIndex === this.currentDataIndex && e.seriesIndex === this.currentSeriesIndex) {
-          // 重置图表
-          this.resetChartSelect(options);
-          return;
-        }
-        let self = this;
-        // series添加颜色回调函数控制，选中
-        const formatterFn = function (params) {
-          return params.dataIndex === e.dataIndex && params.seriesIndex === e.seriesIndex
-            ? options.color[params.seriesIndex]
-            : self.hexToRgba(options.color[params.seriesIndex], 0.4);
-        };
-        options.series.forEach(item => {
-          item.itemStyle = Object.assign(item.itemStyle, { color: formatterFn });
-        });
-        this.chartInstane.setOption(options);
-        // 记录当前选择数据的index
-        this.currentDataIndex = e.dataIndex;
-        this.currentSeriesIndex = e.seriesIndex;
-        setLinkageData([e.seriesName], this.shapeUnit.component);
+        this.resetChartSelect(options);
+        return;
+      }
+      let self = this;
+      // series添加颜色回调函数控制，选中
+      const formatterFn = function (params) {
+        return params.dataIndex === e.dataIndex && params.seriesIndex === e.seriesIndex
+          ? options.color[params.seriesIndex]
+          : self.hexToRgba(options.color[params.seriesIndex], 0.4);
+      };
+      options.series.forEach(item => {
+        item.itemStyle = Object.assign(item.itemStyle, { color: formatterFn });
       });
+      this.chartInstane.setOption(options);
+      // 记录当前选择数据的index
+      this.currentDataIndex = e.dataIndex;
+      this.currentSeriesIndex = e.seriesIndex;
+      setLinkageData([e.seriesName], this.shapeUnit.component);
     },
     /**
      * @description 处理图表点击事件(点击非数据区域重置)
      */
-    handleChartClick() {
-      this.chartInstane.getZr().on('click', params => {
-        let hasSelected = this.currentDataIndex || this.currentDataIndex === 0;
-        // 没有选中数据不需要执行重置
-        if (typeof params.target === 'undefined' && hasSelected) {
-          // 重置图表
-          // 这里重新获取options，不然条形图设置改不到
-          const options = this.chartInstane.getOption();
-          this.resetChartSelect(options);
-        }
-      });
+    handleChartClick(params) {
+      let hasSelected = this.currentDataIndex || this.currentDataIndex === 0;
+      // 没有选中数据不需要执行重置
+      if (typeof params.target === 'undefined' && hasSelected) {
+        // 重置图表
+        // 这里重新获取options，不然条形图设置改不到
+        const options = this.chartInstane.getOption();
+        this.resetChartSelect(options);
+      }
     },
     /**
      * @description 取消选中

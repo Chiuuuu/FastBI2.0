@@ -16,7 +16,6 @@ export default merge(cloneDeep(BASE), {
           width: 1,
           style: 'solid',
           color: '#000',
-          radius: 0,
         },
         background: {
           color: '#fff',

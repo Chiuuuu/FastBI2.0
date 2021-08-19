@@ -63,7 +63,6 @@ export default {
     this.initChart();
     this.getChartData();
     window.addEventListener('resize', this.screenAdapter);
-    this.addClick();
   },
   destroyed() {
     window.removeEventListener('resize', this.screenAdapter);
@@ -117,6 +116,7 @@ export default {
       } = this.options;
       this.chartInstane.setOption(echart);
       this.screenAdapter();
+      this.addClick();
     },
     /**
      * @description 判断是否获取服务端数据
@@ -126,7 +126,7 @@ export default {
      * @description 图表获取数据
      */
     getChartData() {
-      if (this.options.data.selectData) {
+      if (this.options.data.dataLink) {
         this.handleSelectData();
         return;
       }
