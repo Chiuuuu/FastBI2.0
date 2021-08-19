@@ -45,20 +45,23 @@
                   ></UnitSize>
                   <!-- 尺寸 end -->
                 </CollapsePanel>
-                <CollapsePanel class="content-item" panel="title" header="标题">
-                  <div class="setting-unit-content">
-                    <!-- 标题 内容 start -->
-                    <div class="mb-8">
-                      <a-input
-                        :value="currentCom.setting.style.title.text"
-                        :maxLength="20"
-                        @blur="event => handleTitleChange('text', event.target.value)"
-                      ></a-input>
-                    </div>
-                  </div>
-                </CollapsePanel>
                 <CollapsePanel class="content-item" panel="content" header="文本">
                   <div class="setting-unit-content">
+                    <!-- 标题 字体 end -->
+                    <a-row class="unit-show-block mb-8">
+                      <a-col :span="6">
+                        <div class="unit-block-title">标题</div>
+                      </a-col>
+                      <a-col :span="16" :offset="2">
+                        <a-input
+                          :value="currentCom.setting.style.title.text"
+                          :maxLength="20"
+                          @blur="event => handleTitleChange('text', event.target.value)"
+                        ></a-input>
+                      </a-col>
+                    </a-row>
+                    <!-- 标题 粗细 end -->
+
                     <!-- 标题 文本 start -->
                     <a-row class="unit-show-block mb-8">
                       <a-col :span="4">
@@ -145,7 +148,7 @@
                     <!-- 标题 对齐 end -->
                   </div>
                 </CollapsePanel>
-                <CollapsePanel class="content-item" panel="bgAndBorder" header="背景和边框">
+                <CollapsePanel class="content-item" panel="bgAndBorder" header="背景设置">
                   <div class="setting-unit-content">
                     <!-- 背景图片 start -->
                     <UnitBackgroundImage

@@ -96,30 +96,6 @@
                   ></UnitTitle>
                   <!-- 标题 end -->
                 </CollapsePanel>
-                <CollapsePanel class="content-item" panel="bgAndBorder" header="背景和边框">
-                  <div class="setting-unit-content">
-                    <!-- 背景图片 start -->
-                    <UnitBackgroundImage
-                      class="mb-8"
-                      :background="currentCom.setting.style.background"
-                      @change="value => handleChange('background', value)"
-                    ></UnitBackgroundImage>
-                    <!-- 背景图片 end -->
-                    <!-- 背景颜色 start -->
-                    <UnitBackgroundColor
-                      class="mb-8"
-                      :color="currentCom.setting.style.background.color"
-                      @change="color => handleChange('background', { color })"
-                    ></UnitBackgroundColor>
-                    <!-- 背景颜色 end -->
-                    <!-- 边框设置 start -->
-                    <UnitBorder
-                      :border="currentCom.setting.style.border"
-                      @change="(key, value) => handleChange(key, value)"
-                    ></UnitBorder>
-                    <!-- 边框设置 end -->
-                  </div>
-                </CollapsePanel>
                 <CollapsePanel class="content-item" panel="chartStyle" header="图形属性">
                   <!-- 图形属性 start -->
                   <div class="setting-unit-content">
@@ -232,13 +208,14 @@
                   </div>
                   <!-- 图表样式 end -->
                 </CollapsePanel>
-                <CollapsePanel class="content-item" panel="drawing" header="绘图区">
-                  <UnitDrawing
-                    :grid="currentCom.setting.style.echart.grid"
-                    :xAxis="currentCom.setting.style.echart.xAxis"
-                    :yAxis="currentCom.setting.style.echart.yAxis"
-                    @change="(key, value) => handleChange(key, value)"
-                  ></UnitDrawing>
+                <CollapsePanel class="content-item" panel="legend" header="图例设置">
+                  <UnitLegend
+                    :legend="currentCom.setting.style.echart.legend"
+                    @change="
+                      (key, value, isReset, beforeExecute, afterExecute) =>
+                        handleChange(key, value, isReset, beforeExecute, afterExecute)
+                    "
+                  ></UnitLegend>
                 </CollapsePanel>
                 <CollapsePanel class="content-item" panel="xaxis" header="X轴">
                   <!-- X轴 start -->
@@ -258,7 +235,7 @@
                   ></UnitYaxis>
                   <!-- Y轴 end -->
                 </CollapsePanel>
-                <CollapsePanel class="content-item" panel="yaxis" header="颜色">
+                <CollapsePanel class="content-item" panel="yaxis" header="颜色设置">
                   <!-- 颜色 start -->
                   <UnitChartColor
                     :color="currentCom.setting.style.echart.color"
@@ -267,20 +244,38 @@
                   ></UnitChartColor>
                   <!-- 颜色 end -->
                 </CollapsePanel>
-                <CollapsePanel class="content-item" panel="legend" header="图例">
-                  <UnitLegend
-                    :legend="currentCom.setting.style.echart.legend"
-                    @change="
-                      (key, value, isReset, beforeExecute, afterExecute) =>
-                        handleChange(key, value, isReset, beforeExecute, afterExecute)
-                    "
-                  ></UnitLegend>
-                </CollapsePanel>
-                <!-- <CollapsePanel class="content-item" panel="legend" header="标签">
+                <CollapsePanel class="content-item" panel="bgAndBorder" header="背景设置">
                   <div class="setting-unit-content">
-                    
+                    <!-- 背景图片 start -->
+                    <UnitBackgroundImage
+                      class="mb-8"
+                      :background="currentCom.setting.style.background"
+                      @change="value => handleChange('background', value)"
+                    ></UnitBackgroundImage>
+                    <!-- 背景图片 end -->
+                    <!-- 背景颜色 start -->
+                    <UnitBackgroundColor
+                      class="mb-8"
+                      :color="currentCom.setting.style.background.color"
+                      @change="color => handleChange('background', { color })"
+                    ></UnitBackgroundColor>
+                    <!-- 背景颜色 end -->
+                    <!-- 边框设置 start -->
+                    <UnitBorder
+                      :border="currentCom.setting.style.border"
+                      @change="(key, value) => handleChange(key, value)"
+                    ></UnitBorder>
+                    <!-- 边框设置 end -->
                   </div>
-                </CollapsePanel> -->
+                </CollapsePanel>
+                <CollapsePanel class="content-item" panel="drawing" header="绘图区">
+                  <UnitDrawing
+                    :grid="currentCom.setting.style.echart.grid"
+                    :xAxis="currentCom.setting.style.echart.xAxis"
+                    :yAxis="currentCom.setting.style.echart.yAxis"
+                    @change="(key, value) => handleChange(key, value)"
+                  ></UnitDrawing>
+                </CollapsePanel>
                 <CollapsePanel class="content-item" panel="reset" :isTogger="false">
                   <!-- 恢复默认配置 start -->
                   <div class="setting-unit-content">

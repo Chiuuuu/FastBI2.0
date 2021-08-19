@@ -705,7 +705,7 @@
                   <!-- 数值字体 end -->
                 </CollapsePanel>
 
-                <CollapsePanel class="content-item" panel="bgAndBorder" header="背景和边框">
+                <CollapsePanel class="content-item" panel="bgAndBorder" header="背景设置">
                   <div class="setting-unit-content">
                     <!-- 背景图片 start -->
                     <UnitBackgroundImage

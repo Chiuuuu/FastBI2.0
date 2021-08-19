@@ -27,37 +27,20 @@
                   ></UnitSize>
                   <!-- 尺寸 end -->
                 </CollapsePanel>
-                <CollapsePanel class="content-item" panel="board" header="样式设置">
+                <CollapsePanel class="content-item" panel="board" header="图形属性">
                   <div class="setting-unit-content">
-                    <a-row class="unit-show-block mb-8">
-                      <a-col :span="6">
-                        <div class="unit-block-title">透明度</div>
-                      </a-col>
-                      <!-- 透明度 start -->
-                      <a-col :span="16" :offset="2">
-                        <a-input-number
-                          :value="currentCom.setting.style.echart.opacity"
-                          :min="0"
-                          :step="0.1"
-                          :max="1"
-                          @change="opacity => handleChange('echart', { opacity })"
-                        />
-                      </a-col>
-                      <!-- 透明度 end -->
-                    </a-row>
-
                     <div class="unit-border">
                       <UnitBackgroundColor
                         class="mb-8"
-                        label="背景颜色"
+                        label="线条颜色"
                         :color="currentCom.setting.style.echart.border.color"
                         @change="color => handleChange('echart', { border: { color } })"
                       ></UnitBackgroundColor>
                       <a-row class="unit-show-block mb-8">
                         <a-col :span="6">
-                          <div class="unit-block-title">边框类型</div>
+                          <div class="unit-block-title">线型</div>
                         </a-col>
-                        <!-- 边框 类型 start -->
+                        <!-- 线型 start -->
                         <a-col :span="16" :offset="2">
                           <a-select
                             style="width: 100%"
@@ -69,7 +52,22 @@
                             <a-select-option value="dotted">点线</a-select-option>
                           </a-select>
                         </a-col>
-                        <!-- 边框 类型 end -->
+                        <!-- 线型 end -->
+                      </a-row>
+                      <a-row class="unit-show-block mb-8">
+                        <a-col :span="6">
+                          <div class="unit-block-title">线宽</div>
+                        </a-col>
+                        <!-- 线型 start -->
+                        <a-col :span="16" :offset="2">
+                          <a-input-number
+                            :value="currentCom.setting.style.size.height"
+                            :min="0"
+                            :max="20"
+                            @change="height => handleChange('size', { height })"
+                          />
+                        </a-col>
+                        <!-- 线型 end -->
                       </a-row>
                     </div>
                     <!-- 线条阴影 -->
@@ -92,9 +90,9 @@
                       </a-row>
                       <a-row class="unit-show-block mb-8" v-if="currentCom.setting.style.echart.boxShadow">
                         <a-col :span="6">
-                          <div class="unit-block-title">线条颜色</div>
+                          <div class="unit-block-title">阴影颜色</div>
                         </a-col>
-                        <!-- 线条颜色 start -->
+                        <!-- 阴影颜色 start -->
                         <a-col :span="16" :offset="2">
                           <div class="shadow-color">
                             <ColorPicker
@@ -103,43 +101,40 @@
                             ></ColorPicker>
                           </div>
                         </a-col>
-                        <!-- 线条颜色 end -->
+                        <!-- 阴影颜色 end -->
                       </a-row>
                     </div>
-                  </div>
-                </CollapsePanel>
-                <CollapsePanel class="content-item" panel="rotate" header="角度设置">
-                  <div class="setting-unit-content">
-                    <a-input-number
-                      :value="currentCom.setting.style.echart.rotate"
-                      :min="0"
-                      :max="360"
-                      @change="rotate => handleRotate(rotate)"
-                    />
-                  </div>
-                </CollapsePanel>
-                <CollapsePanel class="content-item" panel="bgAndBorder" header="背景和边框">
-                  <div class="setting-unit-content">
-                    <!-- 背景图片 start -->
-                    <UnitBackgroundImage
-                      class="mb-8"
-                      :background="currentCom.setting.style.background"
-                      @change="value => handleChange('background', value)"
-                    ></UnitBackgroundImage>
-                    <!-- 背景图片 end -->
-                    <!-- 背景颜色 start -->
-                    <UnitBackgroundColor
-                      class="mb-8"
-                      :color="currentCom.setting.style.background.color"
-                      @change="color => handleChange('background', { color })"
-                    ></UnitBackgroundColor>
-                    <!-- 背景颜色 end -->
-                    <!-- 边框设置 start -->
-                    <UnitBorder
-                      :border="currentCom.setting.style.border"
-                      @change="(key, value) => handleChange(key, value)"
-                    ></UnitBorder>
-                    <!-- 边框设置 end -->
+                    <a-row class="unit-show-block mb-8">
+                      <a-col :span="6">
+                        <div class="unit-block-title">透明度</div>
+                      </a-col>
+                      <!-- 透明度 start -->
+                      <a-col :span="16" :offset="2">
+                        <a-input-number
+                          :value="currentCom.setting.style.echart.opacity"
+                          :min="0"
+                          :step="0.1"
+                          :max="1"
+                          @change="opacity => handleChange('echart', { opacity })"
+                        />
+                      </a-col>
+                      <!-- 透明度 end -->
+                    </a-row>
+                    <a-row class="unit-show-block mb-8">
+                      <a-col :span="6">
+                        <div class="unit-block-title">角度设置</div>
+                      </a-col>
+                      <!-- 角度设置 start -->
+                      <a-col :span="16" :offset="2">
+                        <a-input-number
+                          :value="currentCom.setting.style.echart.rotate"
+                          :min="0"
+                          :max="360"
+                          @change="rotate => handleRotate(rotate)"
+                        />
+                      </a-col>
+                      <!-- 角度设置 end -->
+                    </a-row>
                   </div>
                 </CollapsePanel>
                 <CollapsePanel class="content-item" panel="reset" :isTogger="false">

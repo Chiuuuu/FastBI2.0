@@ -11,6 +11,10 @@ export default merge(cloneDeep(BASE), {
         width: 400,
         height: 400,
       },
+      background: {
+        // 背景
+        color: 'transparent',
+      },
       echart: {
         border: {
           width: 1,

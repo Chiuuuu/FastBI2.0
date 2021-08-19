@@ -26,7 +26,7 @@
                   ></UnitSize>
                   <!-- 尺寸 end -->
                 </CollapsePanel>
-                <CollapsePanel class="content-item" panel="board" header="样式设置">
+                <CollapsePanel class="content-item" panel="board" header="图形属性">
                   <div class="setting-unit-content">
                     <!-- 背景颜色 start -->
                     <UnitBackgroundColor
@@ -59,30 +59,6 @@
                       :widthMax="20"
                       :radiusMax="70"
                       @change="handleBorderChange"
-                    ></UnitBorder>
-                    <!-- 边框设置 end -->
-                  </div>
-                </CollapsePanel>
-                <CollapsePanel class="content-item" panel="bgAndBorder" header="背景和边框">
-                  <div class="setting-unit-content">
-                    <!-- 背景图片 start -->
-                    <UnitBackgroundImage
-                      class="mb-8"
-                      :background="currentCom.setting.style.background"
-                      @change="value => handleChange('background', value)"
-                    ></UnitBackgroundImage>
-                    <!-- 背景图片 end -->
-                    <!-- 背景颜色 start -->
-                    <UnitBackgroundColor
-                      class="mb-8"
-                      :color="currentCom.setting.style.background.color"
-                      @change="color => handleChange('background', { color })"
-                    ></UnitBackgroundColor>
-                    <!-- 背景颜色 end -->
-                    <!-- 边框设置 start -->
-                    <UnitBorder
-                      :border="currentCom.setting.style.border"
-                      @change="(key, value) => handleChange(key, value)"
                     ></UnitBorder>
                     <!-- 边框设置 end -->
                   </div>

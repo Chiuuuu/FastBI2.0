@@ -165,26 +165,6 @@
                     </a-row>
                   </div>
                 </CollapsePanel>
-                <CollapsePanel class="content-item" panel="legend" header="颜色设置">
-                  <div class="setting-unit-content">
-                    <!-- 数值 颜色 start -->
-                    <UnitBackgroundColor
-                      class="mb-8"
-                      label="数值颜色"
-                      :color="currentCom.setting.style.echart.customColors[0]"
-                      @change="color => handleColorChange(color, 0)"
-                    ></UnitBackgroundColor>
-                    <!-- 数值 颜色 end -->
-
-                    <!-- 背景 颜色 start -->
-                    <UnitBackgroundColor
-                      class="mb-8"
-                      :color="currentCom.setting.style.echart.customColors[1]"
-                      @change="color => handleColorChange(color, 1)"
-                    ></UnitBackgroundColor>
-                    <!-- 背景 颜色 end -->
-                  </div>
-                </CollapsePanel>
                 <CollapsePanel class="content-item" panel="legend" header="指标设置">
                   <div class="setting-unit-content">
                     <!-- 指标是否显示 start -->
@@ -324,7 +304,27 @@
                     <!-- 显示位置 end -->
                   </div>
                 </CollapsePanel>
-                <CollapsePanel class="content-item" panel="bgAndBorder" header="背景和边框">
+                <CollapsePanel class="content-item" panel="legend" header="颜色设置">
+                  <div class="setting-unit-content">
+                    <!-- 数值 颜色 start -->
+                    <UnitBackgroundColor
+                      class="mb-8"
+                      label="数值颜色"
+                      :color="currentCom.setting.style.echart.customColors[0]"
+                      @change="color => handleColorChange(color, 0)"
+                    ></UnitBackgroundColor>
+                    <!-- 数值 颜色 end -->
+
+                    <!-- 背景 颜色 start -->
+                    <UnitBackgroundColor
+                      class="mb-8"
+                      :color="currentCom.setting.style.echart.customColors[1]"
+                      @change="color => handleColorChange(color, 1)"
+                    ></UnitBackgroundColor>
+                    <!-- 背景 颜色 end -->
+                  </div>
+                </CollapsePanel>
+                <CollapsePanel class="content-item" panel="bgAndBorder" header="背景设置">
                   <div class="setting-unit-content">
                     <!-- 背景图片 start -->
                     <UnitBackgroundImage
