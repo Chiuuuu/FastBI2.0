@@ -130,15 +130,6 @@
                     <!-- 边框设置 end -->
                   </div>
                 </CollapsePanel>
-                <CollapsePanel class="content-item" panel="yaxis" header="颜色">
-                  <!-- 颜色 start -->
-                  <UnitChartColor
-                    :color="currentCom.setting.style.echart.color"
-                    type="color"
-                    @change="(key, value) => handleChange(key, value)"
-                  ></UnitChartColor>
-                  <!-- 颜色 end -->
-                </CollapsePanel>
                 <CollapsePanel class="content-item" panel="legend" header="图形属性">
                   <div class="setting-unit-content">
                     <a-row class="unit-show-block mb-8">
@@ -249,11 +240,12 @@
                       <!-- 标签 位置 start -->
                       <a-radio-group
                         name="radioGroup"
+                        class="float-right"
                         :value="currentCom.setting.style.echart.customSeries.label.position"
                         @change="event => handleLabel('position', event.target.value)"
                       >
-                        <a-radio value="inside">内部</a-radio>
-                        <a-radio value="outside">外部</a-radio>
+                        <a-radio-button value="inside">内部</a-radio-button>
+                        <a-radio-button value="outside">外部</a-radio-button>
                       </a-radio-group>
                       <!-- 标签 位置 end -->
                     </a-row>
@@ -269,6 +261,15 @@
                       "
                     ></UnitCheckbox>
                   </div>
+                </CollapsePanel>
+                <CollapsePanel class="content-item" panel="yaxis" header="颜色">
+                  <!-- 颜色 start -->
+                  <UnitChartColor
+                    :color="currentCom.setting.style.echart.color"
+                    type="color"
+                    @change="(key, value) => handleChange(key, value)"
+                  ></UnitChartColor>
+                  <!-- 颜色 end -->
                 </CollapsePanel>
                 <CollapsePanel class="content-item" panel="legend" header="图例">
                   <UnitLegend

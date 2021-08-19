@@ -111,7 +111,6 @@ export default {
           },
         ],
       });
-      console.log(options);
       return options;
     },
     /*
