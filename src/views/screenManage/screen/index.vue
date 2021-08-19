@@ -60,9 +60,6 @@ export default {
   provide() {
     return {
       screenInstance: this,
-      handleCopy: this.handleCopyComponent,
-      handleDele: this.handleDeleComponent,
-      handleSetZIndex: this.handleSetZIndex,
     };
   },
   computed: {
