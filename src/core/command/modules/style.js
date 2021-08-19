@@ -1,6 +1,8 @@
 import cloneDeep from 'lodash/cloneDeep';
 import isFunction from 'lodash/isFunction';
 import merge from 'lodash/merge';
+import mergeWith from 'lodash/mergeWith';
+import isArray from 'lodash/isArray';
 import BaseCommand from './base';
 export default class StyleCommand extends BaseCommand {
   /**
@@ -18,13 +20,18 @@ export default class StyleCommand extends BaseCommand {
     this.oldStyle = this.isPage ? cloneDeep(this.receiver) : cloneDeep(this.receiver.setting.style);
     this.newStyle = style;
   }
+  customizer(objValue, srcValue) {
+    if (isArray(objValue)) {
+      return (objValue = srcValue);
+    }
+  }
   executeFun() {
     // 由于 JavaScript 的限制，Vue 不能检测数组和对象的变化，因此使用深拷贝
-    this.receiver.setting.style = cloneDeep(merge(this.receiver.setting.style, this.newStyle));
+    this.receiver.setting.style = cloneDeep(mergeWith({}, this.receiver.setting.style, this.newStyle, this.customizer));
     this.setCurCom();
   }
   undoFun() {
-    this.receiver.setting.style = cloneDeep(merge(this.receiver.setting.style, this.oldStyle));
+    this.receiver.setting.style = cloneDeep(mergeWith({}, this.receiver.setting.style, this.oldStyle, this.customizer));
     this.setCurCom();
   }
   execute() {
