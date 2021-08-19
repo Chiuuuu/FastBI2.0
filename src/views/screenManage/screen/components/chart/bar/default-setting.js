@@ -147,7 +147,7 @@ export default merge(cloneDeep(BASE), {
           },
         },
         customBarWidth: 40, //柱条宽度
-        customBarGap: 10, //柱条间隔
+        customBarGap: 40, //柱条间隔
         customShape: 'vertical', // vertical(垂直) || horizontal(水平)
         customStack: false, // 是否开启堆叠
         customIsOpenDataLink: false, // 是否开启图表联动
