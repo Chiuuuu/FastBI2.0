@@ -22,6 +22,9 @@
         @change="handleTabChange"
         @add="handleAddNewTab"
         @delete="handleDeleteTab"
+        @copy="handleCopyTab"
+        @rename="handleRenameTab"
+        @drag="handleTabDrag"
       ></DrawingBoardPageTools>
       <!-- 内容编辑区工具栏 end-->
 
@@ -165,7 +168,7 @@ export default {
     /**
      * @description 创建新tab页
      */
-    async handleAddNewTab(params) {
+    async handleAddNewTab(params, callback) {
       params = {
         ...params,
         screenId: this.screenInfo.screenId,
@@ -181,6 +184,7 @@ export default {
           screenId: params.screenId,
           tabId: result.data, // TODO:要修改成result.data.tabId
         });
+        if (callback && isFunction(callback)) callback();
       } else {
         this.$message.error(result.msg || '创建页面失败');
       }
@@ -209,9 +213,61 @@ export default {
       }
     },
     /**
+     * @description 拖动tab页面
+     */
+    async handleTabDrag(params) {
+      // 把拖拽的块挤进来
+      const newItems = [...this.tabs];
+      const src = newItems.indexOf(params.dragItem);
+      const dst = newItems.indexOf(params.currentItem);
+      newItems.splice(dst, 0, ...newItems.splice(src, 1));
+      const result = await this.$server.screenManage.orderScreenTab(newItems);
+      if (result && result.code === 200) {
+        this.tabs = newItems;
+      } else {
+        this.$message.error(result.msg || result.message || '拖动失败');
+      }
+    },
+    /**
+     * @description 复制tab页面
+     */
+    async handleCopyTab(params, callback) {
+      const result = await this.$server.screenManage.copyScreenTab({
+        ...params,
+        screenId: this.screenInfo.screenId,
+        id: this.screenInfo.tabId,
+        graphs: this.components,
+        setting: this.page,
+      });
+      if (result && result.code === 200) {
+        this.tabs.push({
+          id: result.data,
+          name: params.name,
+        });
+        this.handleTabChange({
+          screenId: params.screenId,
+          tabId: result.data, // TODO:要修改成result.data.tabId
+        });
+        if (callback && isFunction(callback)) callback();
+      }
+    },
+    /**
+     * @description 重命名tab页面
+     */
+    async handleRenameTab(params, callback) {
+      const result = await this.$server.screenManage.renameScreenTab({
+        ...params,
+        screenId: this.screenInfo.screenId,
+        id: this.screenInfo.tabId,
+      });
+      if (result && result.code === 200) {
+        if (callback && isFunction(callback)) callback();
+      }
+    },
+    /**
      * @description 删除tab页面
      */
-    async handleDeleteTab(params) {
+    async handleDeleteTab(params, callback) {
       const { data, index } = params;
       const result = await this.$server.screenManage.deleteScreenTab(data.id);
       if (result && result.code === 200) {
@@ -228,6 +284,7 @@ export default {
         }
         // 删除的不是选中的直接删除不跳转
         this.tabs.splice(index, 1);
+        if (callback && isFunction(callback)) callback();
       } else {
         result.msg && this.$message.error(result.msg);
       }
