@@ -4,8 +4,8 @@
       <!-- 页面tab切换 start -->
       <div class="pagebar-left">
         <div class="btns-box clearfix">
-          <div :class="['btn-left', { disabled: handleIsPrevDisable() }]" @click="handleTransitionTab('pre')">◀</div>
-          <div :class="['btn-right', { disabled: handleIsNextDisable() }]" @click="handleTransitionTab('next')">▶</div>
+          <div :class="['btn-left', { disabled: firstTabIndex < 1 }]" @click="handleTransitionTab('prev')">◀</div>
+          <div :class="['btn-right', { disabled: rightBtnDisabled }]" @click="handleTransitionTab('next')">▶</div>
         </div>
       </div>
       <!-- 页面tab切换 end -->
@@ -31,28 +31,31 @@
       <!-- 中间tab页 -->
       <div class="pagebar-middle clearfix" ref="tabArea">
         <div class="pagebar-center">
-          <ul v-if="tabs && tabs.length" ref="tabList" class="page-list">
-            <li
-              class="page-item"
-              v-for="(tab, index) in tabs"
-              :key="tab.id"
-              :class="tab.id === value ? 'active' : ''"
-              @click="handleTabChange(tab)"
-            >
-              <a-dropdown :trigger="['contextmenu']" placement="topCenter">
-                <div class="page-item-box page-name">
+          <ul v-if="tabs && tabs.length" ref="tabList" class="page-list" :style="{ left: tabAreaPositionLeft + 'px' }">
+            <li class="page-item" v-for="(tab, index) in tabs" :key="tab.id" :class="tab.id === value ? 'active' : ''">
+              <a-dropdown v-if="renameIndex !== index" :trigger="['contextmenu']" placement="topCenter">
+                <div
+                  class="page-item-box page-name"
+                  draggable
+                  @click="handleTabChange(tab)"
+                  @dblclick="handleRenameTab(tab, index)"
+                  @dragstart="handleDragStart($event, tab)"
+                  @dragover.prevent="handleDragOver($event, tab)"
+                  @dragend="handleDragEnd($event, tab)"
+                  @drop="handleDrop($event, tab)"
+                >
                   {{ tab.name }}
                 </div>
                 <a-menu slot="overlay">
                   <!-- TODO:复制和重命名功能 -->
-                  <a-menu-item key="copy">复制</a-menu-item>
-                  <a-menu-item key="reset">重命名</a-menu-item>
+                  <a-menu-item key="copy" @click="handleCopyTab(tab)">复制</a-menu-item>
+                  <a-menu-item key="reset" @click="handleRenameTab(tab, index)">重命名</a-menu-item>
                   <a-menu-item key="delete" @click="handleDeleteTab(tab, index)" :disabled="tabs.length === 1">
                     删除
                   </a-menu-item>
                 </a-menu>
               </a-dropdown>
-              <!-- <input v-else ref="input" @blur="onBlur(page)" v-model="page.name" /> -->
+              <input v-else ref="input" @blur="onBlur(tab)" v-model="renameValue" />
             </li>
           </ul>
         </div>
@@ -115,25 +118,32 @@ export default {
       return this.tabs.findIndex(tab => tab.id === this.value) || 0;
     },
   },
+  mounted() {
+    this.$nextTick(() => {
+      this.handleShowTableList('resize');
+      window.addEventListener('resize', this.handleResize);
+    });
+  },
+  beforeDestroy() {
+    window.removeEventListener('resize', this.handleResize);
+  },
   data() {
     return {
       parameter,
-      showName: '',
       dragItem: null,
+      rightBtnDisabled: true, // 控制tab翻页按钮
+      firstTabIndex: 0, // 记录当前列表显示的第一个tab位置
+      tabAreaPositionLeft: 0, // tab列表偏移量
+      renameIndex: -1, // 重命名tab的index
+      renameValue: '', // 重命名的值
     };
   },
   methods: {
     /**
-     * @description 上一页关闭
+     * @description 监听窗口变动
      */
-    handleIsPrevDisable() {
-      return this.tabs && this.tabs.length && this.value === this.tabs[0].id;
-    },
-    /**
-     * @description 下一页关闭
-     */
-    handleIsNextDisable() {
-      return this.tabs && this.tabs.length && this.value === this.tabs[this.tabs.length - 1].id;
+    handleResize() {
+      this.handleShowTableList('resize');
     },
     /**
      * @description 判断是否显示添加按钮
@@ -146,6 +156,32 @@ export default {
      */
     handleSliderChange(value) {
       this.$refs['js-slider-result'].innerHTML = value + '%';
+    },
+    /**
+     * @description 拖拽事件开始
+     */
+    handleDragStart(e, item) {
+      this.dragItem = item;
+    },
+    /**
+     * @description 拖拽事件结束, 清空数据
+     */
+    handleDragEnd() {
+      this.dragItem = null;
+    },
+    handleDragOver(e) {
+      e.dataTransfer.dropEffect = 'move';
+    },
+    handleDrop(e, item) {
+      // 为需要移动的元素设置dragstart事件
+      e.dataTransfer.effectAllowed = 'move';
+      if (item === this.dragItem) {
+        return;
+      }
+      this.$emit('drag', {
+        dragItem: this.dragItem,
+        currentItem: item,
+      });
     },
     /**
      * @description 比例设置
@@ -175,12 +211,79 @@ export default {
      * @description tab页面翻页
      */
     handleTransitionTab(type) {
-      const index = type === 'next' ? this.tabIndex + 1 : this.tabIndex - 1;
-      const page = this.tabs[index];
-      this.handleTabChange({
-        screenId: page.screenId,
-        id: page.id,
-      });
+      if (type === 'next') {
+        this.firstTabIndex++;
+        this.handleShowTableList(type);
+      } else if (type === 'prev') {
+        this.firstTabIndex--;
+        this.handleShowTableList(type);
+      }
+    },
+    /**
+     * @description 统一处理tab栏状态
+     */
+    handleShowTableList(type) {
+      const { disabled, offset } = this.handleTableListPosition(type);
+      this.rightBtnDisabled = disabled;
+      this.tabAreaPositionLeft += offset;
+    },
+    /**
+     * @description 重新计算tab页区域宽度, 并处理显示的tab
+     */
+    handleTableListPosition(type) {
+      // 避免递归的时候频繁触发Vue更新机制, 先用变量接收最终再return出去
+      let disabled = this.rightBtnDisabled;
+      let offset = 0;
+      if (this.tabs.length < 1) return { disabled, offset };
+      if (this.$refs.tabArea) {
+        const tabAreaWidth = this.$refs.tabArea.offsetWidth - 40; // -40的按钮宽度
+        // 计算当前显示的tab和宽度
+        const tabList = [].slice.call(this.$refs.tabList.children, this.firstTabIndex);
+        const width = [].reduce.call(tabList, (total, next) => total + next.offsetWidth, 0);
+        const offsetWidth = this.$refs.tabList.children[this.firstTabIndex].offsetWidth;
+        /**
+         * width > tabAreaWidth 用于判断当前总长度是否大于可视宽度(需要重新计算position)
+         * disabled判断下一页按钮是否可用
+         */
+        if (type === 'prev') {
+          // 上一页
+          offset += offsetWidth;
+          disabled = false;
+        } else if (type === 'next') {
+          // 下一页
+          offset -= offsetWidth;
+          disabled = width <= tabAreaWidth;
+        } else if (type === 'push') {
+          // 新增tab
+          if (width > tabAreaWidth) {
+            this.firstTabIndex++;
+            offset -= offsetWidth;
+            // 递归, 往左偏移, 将tab页推到最后一个位置
+            const result = this.handleTableListPosition('push');
+            offset += result.offset;
+            disabled = result.disabled;
+          } else {
+            disabled = true; // 关闭翻页按钮
+          }
+        } else if (type === 'resize') {
+          // 缩放窗口
+          if (width > tabAreaWidth) {
+            disabled = width <= tabAreaWidth;
+          } else {
+            if (this.firstTabIndex > 0) {
+              this.firstTabIndex--;
+              offset += offsetWidth;
+              // 递归, 往右偏移, 直到展示出所有tab为止
+              const result = this.handleTableListPosition('resize');
+              offset += result.offset;
+              disabled = result.disabled;
+            } else {
+              disabled = true;
+            }
+          }
+        }
+        return { disabled, offset };
+      }
     },
     /**
      * @description 页面tab切换
@@ -210,13 +313,86 @@ export default {
         });
         // 取页面x最大的数字作为新页面的名称
         let name = `页面${max + 1}`;
-        this.$emit('add', {
-          name: name,
-          orderNo: this.tabs.length + 1,
+        this.$emit(
+          'add',
+          {
+            name: name,
+            orderNo: this.tabs.length + 1,
+          },
+          () => {
+            this.$nextTick(() => {
+              this.handleShowTableList('push');
+            });
+          },
+        );
+      } else {
+        this.$message.error('最多只能添加10个页签');
+      }
+    },
+    /**
+     * @description 格式化复制页签名称
+     */
+    getCopyName(name, i) {
+      let copyName = `${name}(${i})`;
+      // 如果复制后缀出现重名，序号往上叠加
+      if (this.tabs.some(item => item.name === copyName)) {
+        return this.getCopyName(name, i + 1);
+      }
+      return copyName;
+    },
+    /**
+     * @description 复制tab
+     */
+    handleCopyTab(tab) {
+      // 页面最多10个
+      if (this.tabs.length < 10) {
+        let copyName = this.getCopyName(tab.name, 1);
+        const params = {
+          name: copyName,
+          orderNo: tab.orderNo,
+        };
+        this.$emit('copy', params, () => {
+          this.$nextTick(() => {
+            this.handleShowTableList('push');
+          });
         });
       } else {
         this.$message.error('最多只能添加10个页签');
       }
+    },
+    /**
+     * @description 重命名tab
+     */
+    handleRenameTab(tab, index) {
+      this.renameValue = tab.name;
+      this.renameIndex = index;
+      tab.isFocus = true;
+      this.$nextTick(() => {
+        this.$refs.input[index] && this.$refs.input[index].select();
+      });
+    },
+    /**
+     * @description 失去焦点的时候重命名
+     */
+    onBlur(tab) {
+      // 防止碰到透明input触发调接口
+      if (!this.renameIndex === this.tabIndex) {
+        return;
+      }
+      // 如果修改名称没有值，名称不变化
+      if (!this.renameValue || this.renameValue === tab.name) {
+        this.renameIndex = -1;
+        return;
+      }
+      let params = {
+        name: this.renameValue,
+        orderNo: tab.orderNo,
+      };
+      this.$emit('rename', params, () => {
+        tab.name = this.renameValue;
+        this.renameIndex = -1;
+        this.renameValue = '';
+      });
     },
     /**
      * @description 删除tab页面
@@ -226,10 +402,18 @@ export default {
         title: '确认提示',
         content: `是否确认删除页签${item.name}?`,
         onOk: () => {
-          this.$emit('delete', {
-            data: item,
-            index,
-          });
+          this.$emit(
+            'delete',
+            {
+              data: item,
+              index,
+            },
+            () => {
+              this.$nextTick(() => {
+                this.handleShowTableList('resize');
+              });
+            },
+          );
         },
       });
     },
