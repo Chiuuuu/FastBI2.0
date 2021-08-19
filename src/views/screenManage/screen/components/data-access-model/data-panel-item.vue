@@ -4,6 +4,7 @@
     ref="js-field-item"
     :data-index="fieldIndex"
     :class="selected ? 'selected' : ''"
+    @click="handleClick"
   >
     <div :class="['prefix-icon bi-data', icon]"></div>
     <p>{{ data.name }}</p>
@@ -53,12 +54,14 @@ export default {
   computed: {
     icon() {
       // 对应数据类型的图标
-      // TODO:这里应该根据data的类型判断
       const icons = {
-        dimension: 'bi-data-string',
-        measure: 'bi-data-float',
+        BIGINT: 'bi-data-int',
+        DOUBLE: 'bi-data-float',
+        VARCHAR: 'bi-data-string',
+        DATE: 'bi-data-date',
+        TIMESTAMP: 'bi-data-datetimepick',
       };
-      return icons[this.type] ? icons[this.type] : '';
+      return icons[this.data.dataType] || '';
     },
   },
   mounted() {
@@ -67,6 +70,12 @@ export default {
     });
   },
   methods: {
+    /**
+     * @description 点击取消选中状态
+     */
+    handleClick() {
+      this.$emit('cancelSelect');
+    },
     /**
      * @description 创建拖拽占位符
      */

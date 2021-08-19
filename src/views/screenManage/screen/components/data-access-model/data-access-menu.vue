@@ -1,24 +1,25 @@
 <template>
   <div class="data-model-wrapper">
     <div class="menu-btn model-menu">
-      <p class="title">{{ currentSelected ? currentSelected.name : '请选择数据表' }}</p>
+      <p class="title">{{ selected ? selected.name : '请选择数据表' }}</p>
       <div class="menu-list-wrapper">
         <div class="menu-model-add" @click="handleAddDataModel">
           <span class="symbol-add">+</span>
-          选择数据接入
+          添加数据接入
         </div>
         <ul class="menu-list reset-scrollbar">
           <li
             class="menu-item"
-            :class="{ selected: currentSelected && currentSelected.id === item.id }"
-            v-for="(item, index) in selectedList"
+            :class="{ selected: selected && selected.id === item.id }"
+            v-for="(item, index) in list"
             :data-index="index"
             :key="item.id"
+            @click="handleSelectDataModel(item)"
           >
             {{ item.name }}
             <div class="u-icon">
-              <a-icon v-if="currentSelected && currentSelected.id === item.id" type="check"></a-icon>
-              <a-icon v-else type="delete" @click="handleDelete(item)" />
+              <a-icon class="check-icon" v-if="selected && selected.id === item.id" type="check"></a-icon>
+              <a-icon class="delete-icon" type="delete" @click.stop="handleDelete(item)" />
             </div>
           </li>
         </ul>
@@ -26,6 +27,7 @@
     </div>
     <div class="model-field-search">
       <a-input-search
+        :disabled="searchDisable"
         placeholder="搜索字段,回车确定"
         @search="handleSearchFiled"
         @change="handleSearch"
@@ -49,10 +51,5 @@ import DataModelMenu from './data-model-menu';
 export default {
   name: 'DataSourceMenu',
   extends: DataModelMenu,
-  props: {},
-  data() {
-    return {};
-  },
-  methods: {},
 };
 </script>

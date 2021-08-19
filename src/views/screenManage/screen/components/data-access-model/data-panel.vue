@@ -17,11 +17,12 @@
                   :data="item"
                   :field-index="index"
                   :selected="isSelected(item)"
+                  @cancelSelect="handleCancelSelect"
                   @arrowClick="handleDimConextMenu"
                 ></DataPanelItem>
               </template>
             </ul>
-            <a-empty description="请添加数据" v-else></a-empty>
+            <a-empty description="暂无数据" v-else></a-empty>
           </Collapse>
         </div>
       </div>
@@ -45,11 +46,12 @@
                   :data="item"
                   :field-index="index"
                   :selected="isSelected(item)"
+                  @cancelSelect="handleCancelSelect"
                   @arrowClick="handleMeaConextMenu"
                 ></DataPanelItem>
               </template>
             </ul>
-            <a-empty description="请添加数据" v-else></a-empty>
+            <a-empty description="暂无数据" v-else></a-empty>
           </Collapse>
         </div>
       </div>
@@ -145,6 +147,12 @@ export default {
     contextmenuMea && contextmenuMea.$el.removeEventListener('contextmenu', this.handleMeaConextMenu);
   },
   methods: {
+    /**
+     * @description 取消搜索选中
+     */
+    handleCancelSelect() {
+      this.$emit('cancelSelect');
+    },
     handleSave() {},
     /**
      * @description 监听事件
@@ -255,20 +263,14 @@ export default {
       data.showMore = false;
     },
     /**
-     * @description 获取旋转div的样式
+     * @description 判断是否为选中
      */
-    getRotateStyle(type = 'left') {
-      const space = this.config.style.size.height > 10 ? this.config.style.size.height : 10;
-      return {
-        width: `${space}px`,
-        height: `${space}px`,
-        marginTop: `-${space / 2}px`,
-        [type === 'left' ? 'left' : 'right']: `-${space}px`,
-      };
-    },
     isSelected(item) {
       return item.id === this.selectFiled.id && item.name === this.selectFiled.name;
     },
+    /**
+     * @description 记录历史记录中
+     */
     recordHistory(target, data, action) {
       this.$store.commit(historyMutation.COMMAND, {
         commandType: 'DatePanel',
@@ -381,6 +383,7 @@ export default {
           display: block;
           float: left;
           width: 14px;
+          font-size: 18px;
           margin-top: 2px;
         }
         > p {

@@ -137,7 +137,6 @@ export default {
   .setting-wrapper {
     position: relative;
     background-color: #f5f5f5;
-    overflow-y: auto;
     width: 100%;
     height: 100%;
     .back {

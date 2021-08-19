@@ -56,6 +56,11 @@ export default {
     DrawingBoardPageTools,
     DrawingBoardSetting,
   },
+  provide() {
+    return {
+      screenInstance: this,
+    };
+  },
   computed: {
     ...mapState({
       // 组件列表
@@ -135,11 +140,13 @@ export default {
       const result = await this.$store.dispatch('screen/getScreenDetailById', { screenId, tabId });
       if (result) {
         this.tabActive = tabId || this.tabs[0].id;
-
-        this.screenInfo = {
-          ...this.screenInfo,
+        const modelList = result.modelList || [];
+        const accessList = result.accessList || [];
+        this.handleUpdateScreenInfo({
           ...result,
-        };
+          modelList,
+          accessList,
+        });
 
         this.$store.commit(boardMutaion.RESETSTATE, {
           components: result.screenGraphs,
@@ -177,12 +184,12 @@ export default {
       if (result && result.code === 200) {
         // 新增tab成功跳转到新tab
         this.tabs.push({
-          id: result.data,
+          id: result.data.tabId,
           name: params.name,
         });
         this.handleTabChange({
           screenId: params.screenId,
-          tabId: result.data, // TODO:要修改成result.data.tabId
+          tabId: result.data.tabId,
         });
         if (callback && isFunction(callback)) callback();
       } else {
@@ -288,6 +295,15 @@ export default {
       } else {
         result.msg && this.$message.error(result.msg);
       }
+    },
+    /**
+     * @description 更新大屏信息
+     */
+    handleUpdateScreenInfo(data) {
+      this.screenInfo = {
+        ...this.screenInfo,
+        ...data,
+      };
     },
   },
 };

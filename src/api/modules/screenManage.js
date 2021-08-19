@@ -16,7 +16,7 @@ const screenManage = {
    * @returns
    */
   addScreenTab(params) {
-    return $axios.post('/screen/bigscreen/addScreenTab', params);
+    return $axios.post('/v2/screen/bigscreen/addScreenTab', params);
   },
   /**
    * @description 查询大屏tab页签
@@ -292,6 +292,36 @@ const screenManage = {
    */
   addToGetChartId() {
     return $axios.get('/screen/graph/genGraphId');
+  },
+  /**
+   * @description 保存大屏选中模型
+   * @param {object} params
+   * @param {number|string} params.screenId 大屏id
+   * @param {string} params.resourceName 模型名称
+   * @param {number|string} params.tableId 模型id
+   */
+  saveScreenSelectModel(params) {
+    return $axios.post('/screen/pivotschema/saveModel', params);
+  },
+  /**
+   * @description 保存大屏选中接入表
+   * @param {object} params
+   * @param {number|string} params.screenId 大屏id
+   * @param {string} params.resourceName 模型名称
+   * @param {number|string} params.datasoureId 数据源id
+   * @param {number|string} params.databaseId 数据库id
+   * @param {number|string} params.tableId 表id
+   */
+  saveScreenSelectAccess(params) {
+    return $axios.post('/screen/pivotschema/saveAccess', params);
+  },
+  /**
+   *@description 大屏删除数据模型|数据接入
+   * @param {String} screenId 大屏id
+   * @param {String} tableId 删除的id
+   */
+  deleteListDataByScreenIdAndTableId(screenId, tableId) {
+    return $axios.get(`/screen/pivotschema/del/${screenId}/${tableId}`);
   },
 };
 
