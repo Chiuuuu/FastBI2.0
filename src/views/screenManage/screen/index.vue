@@ -310,13 +310,13 @@ export default {
      * @description 右键菜单——复制图表
      */
     async handleCopyComponent(e, item, component) {
-      let copyChart = cloneDeep(component); // 深拷贝一个对象并修改默认信息，
-      // 修改复制出来的位置信息
-      copyChart.setting.style.position.left += 20;
-      copyChart.setting.style.position.top += 20;
       // 新增图表
       const result = await this.$server.screenManage.addToGetChartId();
       if (result && result.code === 200) {
+        let copyChart = cloneDeep(component); // 深拷贝一个对象并修改默认信息，
+        // 修改复制出来的位置信息
+        copyChart.setting.style.position.left += 20;
+        copyChart.setting.style.position.top += 20;
         // 修改id
         copyChart.id = result.data.id;
         this.$store.commit(boardMutaion.ADD_COM, {
