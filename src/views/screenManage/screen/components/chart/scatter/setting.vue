@@ -125,8 +125,76 @@
                       @change="(key, value) => handleChange(key, value)"
                     ></UnitGridMargin>
                     <!-- 边距 end -->
+                    <a-row class="unit-show-block mb-8">
+                      <a-col :span="8">
+                        <div class="unit-block-title">散点颜色</div>
+                      </a-col>
+                      <!-- 散点颜色 start -->
+                      <a-col :span="16">
+                        <a-select
+                          :value="currentCom.setting.style.echart.customScatterColor"
+                          style="width: 100%"
+                          @change="customScatterColor => handleChange('echart', { customScatterColor })"
+                        >
+                          <a-select-option :value="item.value" v-for="(item, index) in scatterColorList" :key="index">
+                            {{ item.label }}
+                          </a-select-option>
+                        </a-select>
+                      </a-col>
+                      <!-- 散点颜色 end -->
+                    </a-row>
+                    <a-row class="unit-show-block mb-8">
+                      <a-col :span="8">
+                        <div class="unit-block-title">散点大小</div>
+                      </a-col>
+
+                      <!-- 散点大小 start -->
+                      <a-col :span="16">
+                        <a-select
+                          :value="currentCom.setting.style.echart.customScatterSize"
+                          style="width: 100%"
+                          @change="customScatterSize => handleChange('echart', { customScatterSize })"
+                        >
+                          <a-select-option :value="item.value" v-for="(item, index) in scatterSizeList_" :key="index">
+                            {{ item.label }}
+                          </a-select-option>
+                        </a-select>
+                      </a-col>
+                      <!-- 散点大小 end -->
+                    </a-row>
                   </div>
                   <!-- 图形属性 end -->
+                </CollapsePanel>
+                <CollapsePanel class="content-item" panel="legend" header="指标设置">
+                  <div class="setting-unit-content">
+                    <a-row class="unit-show-block mb-8">
+                      <a-col :span="24">
+                        <div class="unit-block-title">显示内容</div>
+                      </a-col>
+
+                      <!-- 内容显示 start -->
+                      <a-col :span="24">
+                        <a-select
+                          mode="multiple"
+                          :value="currentCom.setting.style.echart.customScatterLabel"
+                          style="width: 100%"
+                          @change="formatter => handleScatterLabel(formatter)"
+                        >
+                          <a-select-option v-for="(item, index) in scatterFormatList_" :value="item.value" :key="index">
+                            {{ item.label }}
+                          </a-select-option>
+                        </a-select>
+                      </a-col>
+                      <!-- 内容显示 end -->
+                    </a-row>
+                    <!-- 展示数值 start -->
+                    <UnitLabel
+                      label="数值"
+                      :seriesLabel="currentCom.setting.style.echart.customSeries.label"
+                      @change="(key, value) => doWithSeries(key, value)"
+                    ></UnitLabel>
+                    <!-- 展示数值 end -->
+                  </div>
                 </CollapsePanel>
                 <CollapsePanel class="content-item" panel="drawing" header="绘图区">
                   <UnitDrawing
@@ -172,36 +240,6 @@
                     "
                   ></UnitLegend>
                 </CollapsePanel>
-                <CollapsePanel class="content-item" panel="legend" header="标签">
-                  <div class="setting-unit-content">
-                    <a-row class="unit-show-block mb-8">
-                      <a-col :span="8">
-                        <div class="unit-block-title">显示内容</div>
-                      </a-col>
-
-                      <!-- 内容显示 start -->
-                      <a-col :span="16">
-                        <a-select
-                          :value="currentCom.setting.style.echart.customFormatterWay"
-                          style="width: 100%"
-                          @change="customFormatterWay => handleChange('echart', { customFormatterWay })"
-                        >
-                          <a-select-option value="name">维度</a-select-option>
-                          <a-select-option value="value">值</a-select-option>
-                          <a-select-option value="nv">维度+值</a-select-option>
-                        </a-select>
-                      </a-col>
-                      <!-- 内容显示 end -->
-                    </a-row>
-                    <!-- 展示数值 start -->
-                    <UnitLabel
-                      label="数值"
-                      :seriesLabel="currentCom.setting.style.echart.customSeries.label"
-                      @change="(key, value) => doWithSeries(key, value)"
-                    ></UnitLabel>
-                    <!-- 展示数值 end -->
-                  </div>
-                </CollapsePanel>
                 <CollapsePanel class="content-item" panel="reset" :isTogger="false">
                   <!-- 恢复默认配置 start -->
                   <div class="setting-unit-content">
@@ -240,6 +278,7 @@
 <script>
 import BoardType from '@/views/screenManage/screen/setting/default-type';
 import StyleMethodMixin from '@/views/screenManage/screen/setting/style-method-mixin';
+import cloneDeep from 'lodash/cloneDeep';
 export default {
   name: `${BoardType.ChartScatter}Setting`,
   mixins: [StyleMethodMixin],
@@ -254,7 +293,45 @@ export default {
       tabAcitve: 'style', // tab选项栏活动目标
       dataCollapseActive: ['dimension', 'measure', 'reset', 'dataFilter'], // 折叠打开选项
       styleCollapseActive: [],
+      scatterColorList: [
+        // 散点颜色
+        { label: '单色', value: '0' },
+        { label: '按维度', value: '1' },
+      ],
+      scatterSizeList: [
+        // 散点大小
+        { label: '无', value: '' },
+        { label: '按度量1', value: '0' },
+        { label: '按度量2', value: '1' },
+      ],
+      // 标签显示内容
+      scatterFormatList: [
+        { label: '无', value: '' },
+        { label: '维度1', value: '{@5}：{@2}' },
+        { label: '度量1', value: '{@3}：{@0}' },
+        { label: '度量2', value: '{@4}：{@1}' },
+        { label: '度量组', value: '({@0},{@1})' },
+      ],
     };
+  },
+  computed: {
+    scatterFormatList_() {
+      let scatterFormatList = cloneDeep(this.scatterFormatList);
+      if (this.currentCom.setting.data.dimensions.length === 1 && this.currentCom.setting.data.measures.length === 2) {
+        scatterFormatList[1].label = this.currentCom.setting.data.dimensions[0].alias; //维度1
+        scatterFormatList[2].label = this.currentCom.setting.data.measures[0].alias; //度量1
+        scatterFormatList[3].label = this.currentCom.setting.data.measures[1].alias; //度量2
+      }
+      return scatterFormatList;
+    },
+    scatterSizeList_() {
+      let scatterSizeList = cloneDeep(this.scatterSizeList);
+      if (this.currentCom.setting.data.dimensions.length === 1 && this.currentCom.setting.data.measures.length === 2) {
+        scatterSizeList[1].label = '按' + this.currentCom.setting.data.measures[0].alias; //度量1
+        scatterSizeList[2].label = '按' + this.currentCom.setting.data.measures[1].alias; //度量2
+      }
+      return scatterSizeList;
+    },
   },
   methods: {
     /**
@@ -280,6 +357,28 @@ export default {
       this.handleChange('echart', {
         [key]: value,
       });
+    },
+    /**
+     * @description 指标显示内容
+     */
+    handleScatterLabel(value) {
+      let formatter = '';
+      // 散点图
+      if (this.currentCom.setting.style.echart.customArrange === 'horizontal') {
+        formatter = value.join(' ');
+      } else {
+        formatter = value.join('\n\r');
+      }
+      console.log(value);
+      this.handleChange('echart', {
+        customScatterLabel: value,
+        customSeries: {
+          label: {
+            formatter,
+          },
+        },
+      });
+      console.log(this.currentCom.setting.style.echart.customScatterLabel);
     },
   },
 };

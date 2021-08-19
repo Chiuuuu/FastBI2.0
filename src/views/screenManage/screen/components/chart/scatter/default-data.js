@@ -1,18 +1,18 @@
 export default {
   data: [
     {
-      man: 20,
-      women: 50,
+      man: 100,
+      women: 100,
       name: '产品部',
     },
     {
-      man: 30,
-      women: 60,
+      man: 76,
+      women: 95,
       name: '市场部',
     },
     {
-      man: 40,
-      women: 70,
+      man: 60,
+      women: 60,
       name: '销售部',
     },
   ],
