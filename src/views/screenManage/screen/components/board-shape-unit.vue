@@ -63,30 +63,30 @@ export default {
         // 右键菜单
         {
           name: '复制',
-          onClick: this.handleCopy,
+          onClick: this.screenInstance.handleCopy,
         },
         {
           name: '删除',
-          onClick: this.handleDele,
+          onClick: this.screenInstance.handleDele,
         },
         {
           name: '排列',
           children: [
             {
               name: '置于顶层',
-              onClick: this.handleSetZIndex.bind(this, 'top'),
+              onClick: this.screenInstance.handleSetZIndex.bind(this, 'top'),
             },
             {
               name: '置于底层',
-              onClick: this.handleSetZIndex.bind(this, 'bottom'),
+              onClick: this.screenInstance.handleSetZIndex.bind(this, 'bottom'),
             },
             {
               name: '上移一层',
-              onClick: this.handleSetZIndex.bind(this, 'up'),
+              onClick: this.screenInstance.handleSetZIndex.bind(this, 'up'),
             },
             {
               name: '下移一层',
-              onClick: this.handleSetZIndex.bind(this, 'down'),
+              onClick: this.screenInstance.handleSetZIndex.bind(this, 'down'),
             },
           ],
         },
@@ -98,6 +98,7 @@ export default {
       shapeUnit: this,
     };
   },
+  inject: ['screenInstance'],
   props: {
     config: {
       // 配置项信息
@@ -150,29 +151,6 @@ export default {
   },
   methods: {
     /**
-     * @description 右键菜单——复制
-     */
-    handleCopy() {},
-    /**
-     * @description 右键菜单——删除
-     */
-    handleDele() {
-      this.$store.commit(boardMutaion.DELE_COM, {
-        component: this.component,
-        index: this.index,
-      });
-    },
-    /**
-     * @description 设置图表层级
-     * @param {string} pos 执行方法
-     */
-    handleSetZIndex(pos) {
-      this.$store.commit(boardMutaion.SET_POSITION, {
-        method: pos,
-        index: this.index,
-      });
-    },
-    /**
      * @description 初始化右键菜单
      */
     initContextMenu() {
@@ -201,7 +179,7 @@ export default {
       const that = this;
       function addEvent(target) {
         target.$$fun = function () {
-          Array.prototype.push.call(arguments, that);
+          Array.prototype.push.call(arguments, that.component, that.index);
           target.onClick.apply(this, arguments);
         };
       }
@@ -219,6 +197,7 @@ export default {
           return item;
         }),
         target: e,
+        subPosition: 'right',
         handleMarkCancel: function () {},
       });
     },

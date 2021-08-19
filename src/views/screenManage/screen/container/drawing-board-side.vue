@@ -12,18 +12,27 @@
       <div class="layer-list-wrapper">
         <ul class="layer-list reset-scrollbar">
           <li
-            v-for="com in components"
+            v-for="(com, index) in components"
             :key="com.id"
             class="layer-item"
             :class="com === currentCom ? 'layer-item-selected' : ''"
             :title="com.setting.style.title.text"
             @click="handleSideItemSelect(com)"
             :id="com.id"
+            @contextmenu="createContextMenu($event, com, index)"
           >
             <span class="u-icon">
               <i class="bi-data" :class="getChartTypeIcon(com.type)"></i>
             </span>
-            <span class="item-title" :title="com.setting.style.title.text">{{ com.setting.style.title.text }}</span>
+            <span class="item-title" :title="com.setting.style.title.text">
+              {{ com.setting.style.title.text }}
+            </span>
+            <a-icon
+              v-if="toggleOpen"
+              class="dropdown-icon"
+              type="caret-down"
+              @click="createContextMenu($event, com, index)"
+            />
           </li>
         </ul>
       </div>
@@ -34,6 +43,7 @@
 import { mapState } from 'vuex';
 import { mutationTypes as boardMutaion } from '@/store/modules/board';
 import BoardType from '@/views/screenManage/screen/setting/default-type';
+import ContextMenu from '@/components/contextmenu';
 
 /**
  * @description 编辑大屏左侧图表层级菜单
@@ -43,19 +53,54 @@ export default {
   data() {
     return {
       toggleOpen: false, // 控制展开
+      contenxtMenu: [
+        // 右键菜单
+        {
+          name: '复制',
+          onClick: this.screenInstance.handleCopy,
+        },
+        {
+          name: '删除',
+          onClick: this.screenInstance.handleDele,
+        },
+        {
+          name: '排列',
+          children: [
+            {
+              name: '置于顶层',
+              onClick: this.screenInstance.handleSetZIndex.bind(this, 'top'),
+            },
+            {
+              name: '置于底层',
+              onClick: this.screenInstance.handleSetZIndex.bind(this, 'bottom'),
+            },
+            {
+              name: '上移一层',
+              onClick: this.screenInstance.handleSetZIndex.bind(this, 'up'),
+            },
+            {
+              name: '下移一层',
+              onClick: this.screenInstance.handleSetZIndex.bind(this, 'down'),
+            },
+          ],
+        },
+      ],
+      menu: null, // 右键菜单
     };
   },
   computed: {
     ...mapState({
       // 当前组件
       currentCom: state => state.board.currentCom,
+      componentsOrigin: state => state.board.components,
     }),
     components() {
       // 组件列表
-      const components = [...this.$store.state.board.components];
+      const components = [...this.componentsOrigin];
       return components.reverse();
     },
   },
+  inject: ['screenInstance'],
   methods: {
     /**
      * @description 获取图表类型图标
@@ -99,6 +144,42 @@ export default {
       if (com === this.currentCom) return;
       this.$store.commit(boardMutaion.SET_CURCOM, {
         component: com,
+      });
+    },
+    /**
+     * @description 初始化右键菜单
+     */
+    createContextMenu(e, component, index) {
+      e.preventDefault();
+      // 获取反向index
+      const lastIndex = this.componentsOrigin.length - 1;
+      index = lastIndex - index;
+
+      const that = this;
+      function addEvent(target) {
+        target.$$fun = function () {
+          Array.prototype.push.call(arguments, component, index);
+          target.onClick.apply(this, arguments);
+        };
+      }
+      // eslint-disable-next-line no-new
+      this.nemu = new ContextMenu({
+        vm: that,
+        menus: that.contenxtMenu.map(item => {
+          if (item['children'] && item.children.length) {
+            item.children.forEach(subitem => {
+              addEvent(subitem);
+            });
+          } else {
+            addEvent(item);
+          }
+          return item;
+        }),
+        target: e,
+        subPosition: 'right',
+        handleMarkCancel: function () {
+          that.menu = null;
+        },
       });
     },
   },
@@ -205,12 +286,21 @@ export default {
             font-size: 12px;
             color: #333;
           }
+          .dropdown-icon {
+            display: none;
+          }
           &:hover,
           &-selected {
             background: #103ffa;
             .item-title,
             .bi-data {
               color: #fff;
+            }
+            .dropdown-icon {
+              float: right;
+              line-height: 30px;
+              color: #fff;
+              display: block;
             }
           }
         }
