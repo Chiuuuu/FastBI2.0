@@ -127,7 +127,32 @@
                   <UnitLegend
                     :legend="currentCom.setting.style.echart.visualMap"
                     @change="(key, value) => handleVisulMap(key, value)"
-                  ></UnitLegend>
+                  >
+                    <div slot="conTop">
+                      <a-row class="unit-show-block mb-8">
+                        <a-col :span="8" class="mb-4">
+                          <div class="unit-block-title">图例颜色</div>
+                        </a-col>
+
+                        <!-- 连续型 颜色设置 start -->
+                        <a-col :span="16">
+                          <div class="piecewise-colors float-right">
+                            <div
+                              class="font-color"
+                              v-for="(item, index) in currentCom.setting.style.echart.visualMap.inRange.color"
+                              :key="index"
+                            >
+                              <ColorPicker
+                                :value="item"
+                                @change="color => handleInRangeColor(color, index)"
+                              ></ColorPicker>
+                            </div>
+                          </div>
+                        </a-col>
+                        <!-- 连续型 颜色设置 end -->
+                      </a-row>
+                    </div>
+                  </UnitLegend>
                 </CollapsePanel>
                 <CollapsePanel class="content-item" panel="xaxis" header="X轴">
                   <!-- X轴 start -->
@@ -249,6 +274,28 @@ export default {
         },
       });
     },
+    /**
+     * @description 图例颜色
+     */
+    handleInRangeColor(value, index) {
+      let color = this.currentCom.setting.style.echart.visualMap.inRange.color;
+      color[index] = value;
+      this.handleChange('echart', {
+        visualMap: {
+          inRange: {
+            color: color,
+          },
+        },
+      });
+    },
   },
 };
 </script>
+<style lang="less" scoped>
+.piecewise-colors {
+  display: flex;
+  .font-color {
+    margin-left: 4px;
+  }
+}
+</style>

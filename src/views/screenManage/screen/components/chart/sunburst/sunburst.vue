@@ -4,7 +4,7 @@ import BaseChart from '../base';
 import defaultData from './default-data';
 import merge from 'lodash/merge';
 /**
- * @description 散点图
+ * @description 旭日图
  */
 export default {
   name: `${BoardType.ChartSunburst}View`,

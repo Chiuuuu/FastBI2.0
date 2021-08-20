@@ -197,7 +197,44 @@
                   <UnitLegend
                     :legend="currentCom.setting.style.echart.visualMap"
                     @change="(key, value) => handleVisulMap(key, value)"
-                  ></UnitLegend>
+                  >
+                    <div slot="conTop">
+                      <a-row class="unit-show-block mb-8">
+                        <a-col :span="24" class="mb-4">
+                          <div class="unit-block-title">图例颜色</div>
+                        </a-col>
+
+                        <!-- 连续型 颜色设置 start -->
+                        <a-col :span="24" class="piecewise-colors" v-if="isContinuous">
+                          <div
+                            class="font-color"
+                            v-for="(item, index) in currentCom.setting.style.echart.customContinuousColors"
+                            :key="index"
+                          >
+                            <ColorPicker
+                              :value="item"
+                              @change="color => handlePiecewiseColors(color, index, 'customContinuousColors')"
+                            ></ColorPicker>
+                          </div>
+                        </a-col>
+                        <!-- 连续型 颜色设置 end -->
+                        <!-- 分段型 颜色设置 start -->
+                        <a-col :span="24" class="piecewise-colors" v-else>
+                          <div
+                            class="font-color"
+                            v-for="(item, index) in currentCom.setting.style.echart.customPiecewiseColors"
+                            :key="index"
+                          >
+                            <ColorPicker
+                              :value="item"
+                              @change="color => handlePiecewiseColors(color, index, 'customPiecewiseColors')"
+                            ></ColorPicker>
+                          </div>
+                        </a-col>
+                        <!-- 分段型 颜色设置 end -->
+                      </a-row>
+                    </div>
+                  </UnitLegend>
                 </CollapsePanel>
                 <CollapsePanel class="content-item" panel="bgAndBorder" header="背景设置">
                   <div class="setting-unit-content">
@@ -273,6 +310,10 @@ export default {
         return [];
       }
     },
+    //视觉映射是否为连续型   continuous连续型 piecewise分段型
+    isContinuous() {
+      return this.currentCom.setting.style.echart.visualMap.type === 'continuous';
+    },
   },
   methods: {
     /**
@@ -302,6 +343,32 @@ export default {
         },
       });
     },
+    /**
+     * @description 图例颜色
+     * @param {string} value 值
+     * @param {string} index 值
+     * @param {string} key  属性 customContinuousColors连续型 customPiecewiseColors分段型
+     */
+    handlePiecewiseColors(value, index, key) {
+      let colors = this.currentCom.setting.style.echart[key];
+      colors[index] = value;
+      this.handleChange('echart', {
+        [key]: colors,
+        visualMap: {
+          inRange: {
+            color: colors,
+          },
+        },
+      });
+    },
   },
 };
 </script>
+<style lang="less" scoped>
+.piecewise-colors {
+  display: flex;
+  .font-color {
+    margin-right: 4px;
+  }
+}
+</style>

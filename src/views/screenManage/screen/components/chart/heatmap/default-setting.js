@@ -41,6 +41,9 @@ export default merge(cloneDeep(BASE), {
           position: 'left-top',
           left: 'left',
           top: 'top',
+          inRange: {
+            color: ['#F5AA9F', '#FFDA6A'],
+          },
         },
         xAxis: {
           // X轴

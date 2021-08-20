@@ -7,6 +7,8 @@
       @change="value => handleLegend('show', value)"
     ></UnitCheckbox>
 
+    <slot name="conTop"></slot>
+
     <!-- 图例 字体 start -->
     <a-row class="unit-show-block mb-8">
       <a-col :span="4">

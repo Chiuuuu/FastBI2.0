@@ -23,6 +23,9 @@ export default merge(cloneDeep(BASE), {
             color: '#ffffff',
             fontSize: 16,
           },
+          inRange: {
+            color: ['#f69f2e', '#0fabf1', '#ed8693', '#ffff0d', '#0d8686'],
+          },
           itemGap: 12,
           icon: 'circle',
           position: 'left-top',
@@ -37,6 +40,9 @@ export default merge(cloneDeep(BASE), {
             fontSize: 16,
           },
         },
+        // 由于visualMap数组中的颜色定义, 即使隐藏了也会优先取piecewise的颜色集, 所以这里才去分开记录重新赋值到visualMap的方式解决
+        customContinuousColors: ['#ffff0d', '#f69f2e'],
+        customPiecewiseColors: ['#f69f2e', '#0fabf1', '#ed8693', '#ffff0d', '#0d8686'],
       },
     },
   },
