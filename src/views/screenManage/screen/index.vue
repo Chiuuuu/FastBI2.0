@@ -16,6 +16,7 @@
 
       <!-- 内容编辑区工具栏 start -->
       <DrawingBoardPageTools
+        ref="pageTools"
         :tabs="tabs"
         :type="parameter.EDIT"
         :value="tabActive"
@@ -130,6 +131,9 @@ export default {
       if (result && result.code === 200) {
         this.tabs = [].concat(result.data.screenTabList);
         this.getScreenDetailByTabId(result.data.id, tabId || this.tabs[0].id);
+        this.$nextTick(() => {
+          this.$refs.pageTools && this.$refs.pageTools.handleResize();
+        });
       } else {
         result.msg && this.$message.error(result.msg);
       }
