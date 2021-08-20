@@ -143,10 +143,12 @@ export default merge(cloneDeep(BASE), {
           label: {
             // 标签
             show: true,
-            color: '#fff',
+            color: 'inherit',
             fontSize: 16,
             position: 'top',
+            fontFamily: 'sans-serif',
             formatter: '{@5}：{@2} ({@0},{@1})',
+            offset: [-10, 0],
           },
         },
         customScatterColor: '1', // 散点颜色 0单色 1按维度

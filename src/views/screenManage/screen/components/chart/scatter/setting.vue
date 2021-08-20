@@ -147,25 +147,98 @@
                       <a-col :span="24" class="unit-show-block position">
                         <div class="unit-block-title">指标颜色</div>
                       </a-col>
-                      <!-- 标签 位置 start -->
-                      <a-col :span="20" class="unit-show-block position">
+                      <!-- 指标颜色 start -->
+                      <a-col :span="22" class="unit-show-block">
                         <a-radio-group
                           name="radioGroup"
                           class="float-right"
-                          :value="currentCom.setting.style.echart.customSeries.label.position"
-                          @change="event => handleLabel('position', event.target.value)"
+                          :value="currentCom.setting.style.echart.customScatterTargetColor"
+                          @change="event => handleScatterTargetColor('customScatterTargetColor', event.target.value)"
                         >
-                          <a-radio value="inside">使用图例</a-radio>
-                          <a-radio value="outside">自定义</a-radio>
+                          <a-radio value="0">使用图例</a-radio>
+                          <a-radio value="1">自定义</a-radio>
                         </a-radio-group>
                       </a-col>
-                      <!-- 标签 位置 end -->
+                      <a-col
+                        :span="2"
+                        class="unit-show-block"
+                        v-if="currentCom.setting.style.echart.customScatterTargetColor === '1'"
+                      >
+                        <div class="font-color target-color">
+                          <ColorPicker
+                            :value="currentCom.setting.style.echart.customSeries.label.color"
+                            @change="color => doWithSeries('label', { color })"
+                          ></ColorPicker>
+                        </div>
+                      </a-col>
+                      <!-- 指标颜色 end -->
                     </a-row>
+                    <!-- 字号 start -->
                     <a-row class="unit-show-block mb-8">
+                      <a-col :span="5">
+                        <div class="unit-block-title">字号</div>
+                      </a-col>
+                      <a-col :span="19">
+                        <a-input-number
+                          :value="currentCom.setting.style.echart.customSeries.label.fontSize"
+                          :min="0"
+                          @change="fontSize => doWithSeries('label', { fontSize })"
+                        />
+                      </a-col>
+                    </a-row>
+                    <!-- 字号 end -->
+                    <!-- 字体 start -->
+                    <a-row class="unit-show-block mb-8">
+                      <a-col :span="5">
+                        <div class="unit-block-title">字体</div>
+                      </a-col>
+                      <a-col :span="19">
+                        <a-select
+                          style="width: 100%"
+                          :value="currentCom.setting.style.echart.customSeries.label.fontFamily"
+                          @change="fontFamily => doWithSeries('label', { fontFamily })"
+                        >
+                          <a-select-option value="sans-serif">默认</a-select-option>
+                          <a-select-option value="simfang">simfang</a-select-option>
+                          <a-select-option value="fangsong">仿宋_GB2312</a-select-option>
+                          <a-select-option value="times">times</a-select-option>
+                          <a-select-option value="msyh">微软雅黑</a-select-option>
+                          <a-select-option value="simkai">simkai</a-select-option>
+                          <a-select-option value="pangmenzhengdao">庞门正道标题体</a-select-option>
+                          <a-select-option value="HuXiaoBoNanShenTi">HuXiaoBoNanShenTi</a-select-option>
+                          <a-select-option value="youshe">优设标题黑</a-select-option>
+                          <a-select-option value="digital-7-4">digital-7-4</a-select-option>
+                        </a-select>
+                      </a-col>
+                    </a-row>
+                    <!-- 字体 end -->
+                    <!-- 指标偏移 start -->
+                    <a-row class="unit-show-block mb-2">
+                      <a-col :span="8">
+                        <div class="unit-block-title">指标偏移</div>
+                      </a-col>
+                      <a-col :span="15" class="float-right col-offset">
+                        <div class="unit-block-title">水平</div>
+                        <a-input-number
+                          :value="currentCom.setting.style.echart.customSeries.label.offset[0]"
+                          style="padding-left: 15px"
+                          @change="value => handleLabelOffset(value, 0)"
+                        />
+                      </a-col>
+                      <a-col :span="15" class="float-right col-offset mt-6">
+                        <div class="unit-block-title">垂直</div>
+                        <a-input-number
+                          :value="currentCom.setting.style.echart.customSeries.label.offset[1]"
+                          style="padding-left: 15px"
+                          @change="value => handleLabelOffset(value, 1)"
+                        />
+                      </a-col>
+                    </a-row>
+                    <!-- 指标偏移 start -->
+                    <a-row class="unit-show-block mb-10">
                       <a-col :span="24">
                         <div class="unit-block-title">显示内容</div>
                       </a-col>
-
                       <!-- 内容显示 start -->
                       <a-col :span="24">
                         <a-select
@@ -181,8 +254,8 @@
                       </a-col>
                       <!-- 内容显示 end -->
                     </a-row>
-                    <a-row class="unit-show-block mb-8">
-                      <a-col :span="6" class="unit-show-block position">
+                    <a-row class="unit-show-block mb-10">
+                      <a-col :span="5" class="unit-show-block position">
                         <div class="unit-block-title">位置</div>
                       </a-col>
                       <!-- 标签 位置 start -->
@@ -190,20 +263,30 @@
                         name="radioGroup"
                         class="float-right"
                         :value="currentCom.setting.style.echart.customSeries.label.position"
-                        @change="event => handleLabel('position', event.target.value)"
+                        @change="event => doWithSeries('label', { position: event.target.value })"
                       >
+                        <a-radio-button value="top">顶部</a-radio-button>
                         <a-radio-button value="inside">内部</a-radio-button>
-                        <a-radio-button value="outside">外部</a-radio-button>
+                        <a-radio-button value="bottom">底部</a-radio-button>
                       </a-radio-group>
                       <!-- 标签 位置 end -->
                     </a-row>
-                    <!-- 展示数值 start -->
-                    <!-- <UnitLabel
-                      label="数值"
-                      :seriesLabel="currentCom.setting.style.echart.customSeries.label"
-                      @change="(key, value) => doWithSeries(key, value)"
-                    ></UnitLabel> -->
-                    <!-- 展示数值 end -->
+                    <a-row class="unit-show-block mb-10">
+                      <a-col :span="5" class="unit-show-block position">
+                        <div class="unit-block-title">排列</div>
+                      </a-col>
+                      <!-- 排列 start -->
+                      <a-radio-group
+                        name="radioGroup"
+                        class="float-right"
+                        :value="currentCom.setting.style.echart.customArrange"
+                        @change="event => handleArrange('customArrange', event.target.value)"
+                      >
+                        <a-radio-button value="vertical">垂直</a-radio-button>
+                        <a-radio-button value="horizontal">水平</a-radio-button>
+                      </a-radio-group>
+                      <!-- 排列 end -->
+                    </a-row>
                   </div>
                 </CollapsePanel>
                 <CollapsePanel class="content-item" panel="legend" header="图例设置">
@@ -349,6 +432,7 @@ export default {
     };
   },
   computed: {
+    // 显示内容选择列表
     scatterFormatList_() {
       let scatterFormatList = cloneDeep(this.scatterFormatList);
       if (this.currentCom.setting.data.dimensions.length === 1 && this.currentCom.setting.data.measures.length === 2) {
@@ -358,6 +442,7 @@ export default {
       }
       return scatterFormatList;
     },
+    //  散点大小选择列表
     scatterSizeList_() {
       let scatterSizeList = cloneDeep(this.scatterSizeList);
       if (this.currentCom.setting.data.dimensions.length === 1 && this.currentCom.setting.data.measures.length === 2) {
@@ -397,13 +482,12 @@ export default {
      */
     handleScatterLabel(value) {
       let formatter = '';
-      // 散点图
+      // 指标显示
       if (this.currentCom.setting.style.echart.customArrange === 'horizontal') {
         formatter = value.join(' ');
       } else {
         formatter = value.join('\n\r');
       }
-      console.log(value);
       this.handleChange('echart', {
         customScatterLabel: value,
         customSeries: {
@@ -414,6 +498,56 @@ export default {
       });
       console.log(this.currentCom.setting.style.echart.customScatterLabel);
     },
+    /**
+     * @description 指标颜色
+     */
+    handleScatterTargetColor(key, value) {
+      this.handleChange('echart', {
+        [key]: value,
+        customSeries: {
+          label: {
+            color: value === '0' ? 'inherit' : '#fff',
+          },
+        },
+      });
+    },
+    /**
+     * @description 指标偏移
+     */
+    handleLabelOffset(value, index) {
+      let offset = this.currentCom.setting.style.echart.customSeries.label.offset;
+      offset[index] = value;
+      this.doWithSeries('label', {
+        offset,
+      });
+    },
+    /**
+     * @description 排列
+     */
+    handleArrange(key, value) {
+      // 指标显示
+      let formatter = '';
+      if (value === 'horizontal') {
+        formatter = this.currentCom.setting.style.echart.customScatterLabel.join(' ');
+      } else {
+        formatter = this.currentCom.setting.style.echart.customScatterLabel.join('\n\r');
+      }
+      this.handleChange('echart', {
+        [key]: value,
+        customSeries: {
+          label: {
+            formatter,
+          },
+        },
+      });
+    },
   },
 };
 </script>
+<style lang="less" scoped>
+.target-color {
+  position: relative;
+  left: -10px;
+  top: -4px;
+}
+</style>
