@@ -252,16 +252,9 @@ export default {
      * 处理默认数据
      */
     getDefaultData() {
-      this.registerMap();
       this.serverData = null;
       const options = this.doWithOptions(defaultData);
       this.updateSaveChart(options);
-    },
-    /*
-     * 地图注册
-     */
-    registerMap() {
-      registerMap(this.options.style.echart.geo.map);
     },
     /**
      * @description 更新图表样式
@@ -278,6 +271,21 @@ export default {
       this.chartInstane.setOption(newOptions, {
         replaceMerge: ['series'],
       });
+    },
+    /**
+     * @description 初始化Echart图表
+     */
+    initChart() {
+      const dom = this.$refs['js-board-chart-unit'];
+      this.chartInstane = this.$echarts.init(dom);
+      if (!this.chartInstane) return console.error(`echart init fail`);
+      // 改调接口拿数据
+      registerMap(this.options.style.echart.geo.map);
+      const {
+        style: { echart },
+      } = this.options;
+      this.chartInstane.setOption(echart);
+      this.screenAdapter();
     },
   },
 };

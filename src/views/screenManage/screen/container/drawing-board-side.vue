@@ -44,12 +44,14 @@ import { mapState } from 'vuex';
 import { mutationTypes as boardMutaion } from '@/store/modules/board';
 import BoardType from '@/views/screenManage/screen/setting/default-type';
 import ContextMenu from '@/components/contextmenu';
+import ContenxtmenuMethodMixin from '@/views/screenManage/screen/setting/contenxtmenu-method-mixin';
 
 /**
  * @description 编辑大屏左侧图表层级菜单
  */
 export default {
   name: 'DrawingBoardSide',
+  mixins: [ContenxtmenuMethodMixin],
   data() {
     return {
       toggleOpen: false, // 控制展开
@@ -57,30 +59,30 @@ export default {
         // 右键菜单
         {
           name: '复制',
-          onClick: this.screenInstance.handleCopy,
+          onClick: this.handleCopyComponent,
         },
         {
           name: '删除',
-          onClick: this.screenInstance.handleDele,
+          onClick: this.handleDeleComponent,
         },
         {
           name: '排列',
           children: [
             {
               name: '置于顶层',
-              onClick: this.screenInstance.handleSetZIndex.bind(this, 'top'),
+              onClick: this.handleSetZIndex.bind(this, 'top'),
             },
             {
               name: '置于底层',
-              onClick: this.screenInstance.handleSetZIndex.bind(this, 'bottom'),
+              onClick: this.handleSetZIndex.bind(this, 'bottom'),
             },
             {
               name: '上移一层',
-              onClick: this.screenInstance.handleSetZIndex.bind(this, 'up'),
+              onClick: this.handleSetZIndex.bind(this, 'up'),
             },
             {
               name: '下移一层',
-              onClick: this.screenInstance.handleSetZIndex.bind(this, 'down'),
+              onClick: this.handleSetZIndex.bind(this, 'down'),
             },
           ],
         },
@@ -100,7 +102,6 @@ export default {
       return components.reverse();
     },
   },
-  inject: ['screenInstance'],
   methods: {
     /**
      * @description 获取图表类型图标
