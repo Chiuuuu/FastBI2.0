@@ -181,11 +181,12 @@
                       <a-col :span="18">
                         <a-radio-group
                           name="radioGroup"
+                          class="float-right"
                           :value="currentCom.setting.style.echart.radar.shape"
                           @change="event => handleRadar('shape', event.target.value)"
                         >
-                          <a-radio value="polygon">多边</a-radio>
-                          <a-radio value="circle">圆形</a-radio>
+                          <a-radio-button value="polygon">多边</a-radio-button>
+                          <a-radio-button value="circle">圆形</a-radio-button>
                         </a-radio-group>
                       </a-col>
                       <!-- 展示类型 方式 end -->
@@ -195,7 +196,7 @@
                         <div class="unit-block-title">外圈字体</div>
                       </a-col>
                       <!-- 外圈字体 颜色 start -->
-                      <a-col :span="4" :offset="1">
+                      <a-col :span="4">
                         <div class="font-color">
                           <ColorPicker
                             :value="currentCom.setting.style.echart.radar.axisName.color"
@@ -206,7 +207,7 @@
                       <!-- 外圈字体 颜色 end -->
 
                       <!-- 外圈字体 大小 start -->
-                      <a-col :span="10" :offset="1">
+                      <a-col :span="12">
                         <a-input-number
                           :value="currentCom.setting.style.echart.radar.axisName.fontSize"
                           :min="0"

@@ -19,7 +19,7 @@
 
     <a-row class="unit-show-block mb-8">
       <a-col :span="4">
-        <div class="unit-block-title">字体</div>
+        <div class="unit-block-title">文本</div>
       </a-col>
 
       <!-- 标签 字体 颜色 start -->

@@ -145,10 +145,10 @@
                     </a-row>
                     <!-- 线宽 start -->
                     <a-row class="mt-8">
-                      <a-col :span="13" class="unit-show-block position">
+                      <a-col :span="6" class="unit-show-block position">
                         <div class="unit-block-title">线宽</div>
                       </a-col>
-                      <a-col :span="11">
+                      <a-col :span="18">
                         <a-input-number
                           v-model="currentCom.setting.style.echart.customSeries.lineStyle.width"
                           size="small"
@@ -176,10 +176,10 @@
                     <!-- 标记点 开启 end -->
                     <!-- 标记点大小 start -->
                     <a-row>
-                      <a-col :span="13" class="unit-show-block position">
+                      <a-col :span="10" class="unit-show-block position">
                         <div class="unit-block-title">标记点大小</div>
                       </a-col>
-                      <a-col :span="11">
+                      <a-col :span="14">
                         <a-input-number
                           :value="currentCom.setting.style.echart.customSeries.symbolSize"
                           :min="0"
@@ -190,10 +190,10 @@
                     <!-- 标记点大小 end -->
                     <!-- 区域透明度 start -->
                     <a-row class="mt-8">
-                      <a-col :span="13" class="unit-show-block position">
+                      <a-col :span="10" class="unit-show-block position">
                         <div class="unit-block-title">区域透明度</div>
                       </a-col>
-                      <a-col :span="11">
+                      <a-col :span="14">
                         <a-input-number
                           v-model="currentCom.setting.style.echart.customSeries.areaStyle.opacity"
                           size="small"

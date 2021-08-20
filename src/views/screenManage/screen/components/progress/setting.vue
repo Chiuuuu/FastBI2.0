@@ -94,7 +94,7 @@
                   ></UnitTitle>
                   <!-- 标题 end -->
                 </CollapsePanel>
-                <CollapsePanel class="content-item" panel="style" header="样式设置">
+                <CollapsePanel class="content-item" panel="style" header="进度条">
                   <!-- 样式设置 start -->
                   <div class="setting-unit-content">
                     <a-row class="unit-show-block mb-8">
@@ -255,45 +255,49 @@
                       ></UnitBackgroundColor>
                       <!-- 底部 颜色 end -->
                     </a-row>
+                    <!-- 圆角设置 -->
+                    <div>
+                      <p>圆角设置</p>
+                      <div class="unit-content-radius">
+                        <a-row v-for="item in radius" :key="item.prop" class="unit-show-block mb-4">
+                          <a-col :span="8" class="unit-show-block">
+                            <div class="unit-block-title">{{ item.name }}</div>
+                          </a-col>
+                          <!-- 圆角 start -->
+                          <a-col :span="16">
+                            <a-input-number
+                              :min="0"
+                              :max="100"
+                              :value="currentCom.setting.style.echart.radius[item.prop]"
+                              @change="value => handleRadius(item.prop, value)"
+                            ></a-input-number>
+                          </a-col>
+                          <!-- 圆角 end -->
+                        </a-row>
+                      </div>
+                    </div>
+                    <!-- 内边距设置 -->
+                    <div>
+                      <p class="mt-4">内边距设置</p>
+                      <div class="unit-content-radius">
+                        <a-row v-for="item in padding" :key="item.prop" class="unit-show-block mb-4">
+                          <a-col :span="8" class="unit-show-block">
+                            <div class="unit-block-title">{{ item.name }}</div>
+                          </a-col>
+                          <!-- 内边距 start -->
+                          <a-col :span="16">
+                            <a-input-number
+                              :min="0"
+                              :value="currentCom.setting.style.echart.padding[item.prop]"
+                              @change="value => handlePadding(item.prop, value)"
+                            ></a-input-number>
+                          </a-col>
+                          <!-- 内边距 end -->
+                        </a-row>
+                      </div>
+                    </div>
                   </div>
                   <!-- 样式设置 end -->
-                </CollapsePanel>
-                <CollapsePanel class="content-item" panel="radius" header="圆角设置">
-                  <div class="setting-unit-content">
-                    <a-row v-for="item in radius" :key="item.prop" class="unit-show-block mb-4">
-                      <a-col :span="8" class="unit-show-block">
-                        <div class="unit-block-title">{{ item.name }}</div>
-                      </a-col>
-                      <!-- 圆角 start -->
-                      <a-col :span="16">
-                        <a-input-number
-                          :min="0"
-                          :max="100"
-                          :value="currentCom.setting.style.echart.radius[item.prop]"
-                          @change="value => handleRadius(item.prop, value)"
-                        ></a-input-number>
-                      </a-col>
-                      <!-- 圆角 end -->
-                    </a-row>
-                  </div>
-                </CollapsePanel>
-                <CollapsePanel class="content-item" panel="padding" header="内边距设置">
-                  <div class="setting-unit-content">
-                    <a-row v-for="item in padding" :key="item.prop" class="unit-show-block mb-4">
-                      <a-col :span="8" class="unit-show-block">
-                        <div class="unit-block-title">{{ item.name }}边距</div>
-                      </a-col>
-                      <!-- 内边距 start -->
-                      <a-col :span="16">
-                        <a-input-number
-                          :min="0"
-                          :value="currentCom.setting.style.echart.padding[item.prop]"
-                          @change="value => handlePadding(item.prop, value)"
-                        ></a-input-number>
-                      </a-col>
-                      <!-- 内边距 end -->
-                    </a-row>
-                  </div>
                 </CollapsePanel>
                 <CollapsePanel class="content-item" panel="label" header="指标设置">
                   <div class="setting-unit-content">
@@ -582,3 +586,15 @@ export default {
   },
 };
 </script>
+<style lang="less" scoped>
+.unit-content-radius {
+  display: flex;
+  flex-wrap: wrap;
+  & > .unit-show-block {
+    width: 50%;
+    &:nth-of-type(2n) {
+      padding-left: 10px;
+    }
+  }
+}
+</style>

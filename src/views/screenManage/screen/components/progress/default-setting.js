@@ -13,10 +13,14 @@ export default merge(cloneDeep(BASE), {
     },
     style: {
       size: {
-        height: 60,
+        height: 100,
       },
       title: {
         marginBottom: 0,
+      },
+      background: {
+        // 背景
+        color: 'transparent',
       },
       echart: {
         // 图表配置
