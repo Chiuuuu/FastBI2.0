@@ -503,7 +503,7 @@
                         mode="multiple"
                         placeholder="选择显示内容"
                         style="width: 100%"
-                        v-model="currentCom.setting.style.echart.mapStyle.customPointShowList"
+                        :value="currentCom.setting.style.echart.mapStyle.customPointShowList"
                         @change="value => handleSelect('mapStyle', 'customPointShowList', value)"
                       >
                         <a-select-option
@@ -572,7 +572,7 @@
                         mode="multiple"
                         placeholder="选择显示内容"
                         style="width: 100%"
-                        v-model="currentCom.setting.style.echart.mapStyle.customTooltipShowList"
+                        :value="currentCom.setting.style.echart.mapStyle.customTooltipShowList"
                         @change="value => handleSelect('mapStyle', 'customTooltipShowList', value)"
                       >
                         <a-select-option
@@ -652,7 +652,7 @@
                         mode="multiple"
                         placeholder="选择显示内容"
                         style="width: 100%"
-                        v-model="currentCom.setting.style.echart.scatterStyle.customPointShowList"
+                        :value="currentCom.setting.style.echart.scatterStyle.customPointShowList"
                         @change="value => handleSelect('scatterStyle', 'customPointShowList', value)"
                       >
                         <a-select-option
@@ -744,7 +744,7 @@
                         mode="multiple"
                         placeholder="选择显示内容"
                         style="width: 100%"
-                        v-model="currentCom.setting.style.echart.scatterStyle.customTooltipShowList"
+                        :value="currentCom.setting.style.echart.scatterStyle.customTooltipShowList"
                         @change="value => handleSelect('scatterStyle', 'customTooltipShowList', value)"
                       >
                         <a-select-option

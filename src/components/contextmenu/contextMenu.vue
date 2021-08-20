@@ -7,7 +7,7 @@
             {{ item.name }}
             <a-icon type="right" class="icon-cart" v-if="hasChildren(item)" />
           </span>
-          <ul class="sub" v-if="hasChildren(item)">
+          <ul :class="['sub', { 'show-right': subPosition }]" v-if="hasChildren(item)">
             <li
               class="z-clickable"
               v-for="subitem in item.children"
@@ -50,6 +50,11 @@ export default {
     customStyle: {
       // 自定义样式
       type: Function,
+    },
+    subPosition: {
+      type: String,
+      required: false,
+      default: 'left',
     },
   },
   data() {
@@ -179,6 +184,9 @@ export default {
       top: 0;
       border: 1px solid #ccc;
       border-right: 0;
+      &.show-right {
+        left: 100%;
+      }
     }
   }
 }
