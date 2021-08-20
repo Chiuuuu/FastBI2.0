@@ -14,7 +14,7 @@
     <!-- 页面配置栏 end -->
 
     <!-- 图表数据栏 start -->
-    <BoardSettingRight></BoardSettingRight>
+    <BoardSettingRight ref="js-board-setting-right"></BoardSettingRight>
     <!-- 图表数据栏 end -->
   </div>
 </template>

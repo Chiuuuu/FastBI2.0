@@ -128,7 +128,10 @@ export default {
         return console.error(`There is no drag-in method: [${dropType}]`);
       }
 
-      const result = fun(data, method);
+      let result = fun(data, method);
+
+      result = this.handleSetDataModelId(result);
+
       if (result && typeof result.justSkip === 'undefined') {
         this.$store.commit(historyMutation.COMMAND, {
           commandType: 'Data',

@@ -230,6 +230,39 @@ export default {
       });
     },
     /**
+     *  @description 设置数据id
+     */
+    handleSetDataModelId(result) {
+      const dataModelId = this.currentCom.setting.data.dataModelId;
+
+      if (!this.boardSettingRightInstance) {
+        this.boardSettingRightInstance = this.boardSettingWrapper.$refs['js-board-setting-right'];
+      }
+
+      let selected = '';
+      if (this.boardSettingRightInstance.tabAcitve === 'model') {
+        if (this.boardSettingRightInstance.modelSelected) {
+          selected = this.boardSettingRightInstance.modelSelected;
+        }
+      } else if (this.boardSettingRightInstance.tabAcitve === 'access') {
+        if (this.boardSettingRightInstance.accessSelected) {
+          selected = this.boardSettingRightInstance.modelSelected;
+        }
+      }
+
+      if (!dataModelId && selected) {
+        // 如果图表模型id为空并且有数据，则添加
+        result.dataModelId = selected.tableId;
+      } else if (dataModelId && !selected) {
+        // 如果图表模型id有，但是没有数据，则清空
+        result.dataModelId = '';
+      } else if (dataModelId !== selected.tableId) {
+        this.$message.error('一个图表只能拖入一个数据模型的字段');
+        return;
+      }
+      return result;
+    },
+    /**
      * @description 字段放置之后执行
      * @param {object} options
      * @param {string} options.dropType 放置的类型
@@ -246,7 +279,10 @@ export default {
         return console.error(`There is no drag-in method: [${dropType}]`);
       }
 
-      const result = fun(data, method);
+      let result = fun(data, method);
+
+      result = this.handleSetDataModelId(result);
+
       if (result && typeof result.justSkip === 'undefined') {
         this.$store.commit(historyMutation.COMMAND, {
           commandType: 'Data',

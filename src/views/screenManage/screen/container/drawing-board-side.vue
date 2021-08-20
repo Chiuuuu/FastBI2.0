@@ -127,8 +127,8 @@ export default {
         [BoardType.ShapeRectangular]: 'bi-data-juxing',
         [BoardType.Text]: 'bi-data-text',
         [BoardType.Image]: 'bi-data-img',
-        [BoardType.ChartMap]: 'bi-data-text',
-        [BoardType.Source]: 'bi-data-text',
+        [BoardType.ChartMap]: 'bi-data-ditu',
+        [BoardType.Source]: 'bi-data-sucaiku-side',
       };
       return icon[type];
     },

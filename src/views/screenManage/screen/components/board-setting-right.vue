@@ -149,7 +149,7 @@ export default {
       if (!selected && list && list.length) {
         selected = list[0];
         this.tabAcitve === 'model' ? this.handleModeMenulSelected(selected) : this.handleAccessMenuSelected(selected);
-      } else {
+      } else if (selected) {
         this.handleGetPivoSchemaList(selected.tableId);
       }
     },
