@@ -47,12 +47,14 @@ import { getStyle } from '@/utils';
 import { parameter, mutationTypes as boardMutaion } from '@/store/modules/board';
 import { mutationTypes as historyMutation } from '@/store/modules/history';
 import { mapState } from 'vuex';
+import ContenxtmenuMethodMixin from '@/views/screenManage/screen/setting/contenxtmenu-method-mixin';
 
 /**
  * @description 图表外框区
  */
 export default {
   name: 'BoardShapeUnit',
+  mixins: [ContenxtmenuMethodMixin],
   data() {
     return {
       parameter,
@@ -63,30 +65,30 @@ export default {
         // 右键菜单
         {
           name: '复制',
-          onClick: this.screenInstance.handleCopy,
+          onClick: this.handleCopyComponent,
         },
         {
           name: '删除',
-          onClick: this.screenInstance.handleDele,
+          onClick: this.handleDeleComponent,
         },
         {
           name: '排列',
           children: [
             {
               name: '置于顶层',
-              onClick: this.screenInstance.handleSetZIndex.bind(this, 'top'),
+              onClick: this.handleSetZIndex.bind(this, 'top'),
             },
             {
               name: '置于底层',
-              onClick: this.screenInstance.handleSetZIndex.bind(this, 'bottom'),
+              onClick: this.handleSetZIndex.bind(this, 'bottom'),
             },
             {
               name: '上移一层',
-              onClick: this.screenInstance.handleSetZIndex.bind(this, 'up'),
+              onClick: this.handleSetZIndex.bind(this, 'up'),
             },
             {
               name: '下移一层',
-              onClick: this.screenInstance.handleSetZIndex.bind(this, 'down'),
+              onClick: this.handleSetZIndex.bind(this, 'down'),
             },
           ],
         },
@@ -98,7 +100,6 @@ export default {
       shapeUnit: this,
     };
   },
-  inject: ['screenInstance'],
   props: {
     config: {
       // 配置项信息
