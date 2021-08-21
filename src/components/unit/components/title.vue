@@ -59,7 +59,7 @@
     </a-row>
     <!-- 标题 字体 end -->
     <a-row class="unit-show-block mb-8">
-      <a-col :span="4">
+      <a-col :span="6">
         <div class="unit-block-title">粗细</div>
       </a-col>
       <a-col :span="16" :offset="2">

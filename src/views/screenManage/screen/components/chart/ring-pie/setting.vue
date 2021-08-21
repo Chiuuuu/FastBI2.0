@@ -285,21 +285,19 @@
                     <!-- 粗细 end -->
 
                     <!-- 显示位置 start -->
-                    <a-row class="mb-8">
-                      <a-col :span="6">
+                    <a-row class="unit-show-block mb-10">
+                      <a-col :span="5" class="unit-show-block position">
                         <div class="unit-block-title">位置</div>
                       </a-col>
-                      <a-col :span="18">
-                        <a-radio-group
-                          :value="currentCom.setting.style.echart.customSeries.label.position"
-                          size="small"
-                          @change="e => this.handleLabel('position', e.target.value)"
-                        >
-                          <a-radio-button value="center">中心</a-radio-button>
-                          <a-radio-button value="outside">外部</a-radio-button>
-                          <a-radio-button value="inside">内部</a-radio-button>
-                        </a-radio-group>
-                      </a-col>
+                      <a-radio-group
+                        class="float-right"
+                        :value="currentCom.setting.style.echart.customSeries.label.position"
+                        @change="e => this.handleLabel('position', e.target.value)"
+                      >
+                        <a-radio-button value="center">中心</a-radio-button>
+                        <a-radio-button value="outside">外部</a-radio-button>
+                        <a-radio-button value="inside">内部</a-radio-button>
+                      </a-radio-group>
                     </a-row>
                     <!-- 显示位置 end -->
                   </div>

@@ -26,6 +26,7 @@ export default merge(cloneDeep(BASE), {
           inRange: {
             color: ['#f69f2e', '#0fabf1', '#ed8693', '#ffff0d', '#0d8686'],
           },
+          align: 'left',
           itemGap: 12,
           icon: 'circle',
           position: 'left-top',
