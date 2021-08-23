@@ -150,16 +150,33 @@ export default {
      */
     async getServerData() {
       console.log('从这里获取服务端数据');
-      this.serverData = {
-        data: [
-          { value: 16237, name: '其它' },
-          { value: 3399, name: '西南' },
-          { value: 1796, name: '西北' },
-          { value: 5146, name: '华北' },
-          { value: 11115, name: '华东' },
-          { value: 10000, name: '华南' },
-        ],
-      };
+      const {
+        data: { dimensions, measures },
+      } = this.options;
+      const res = await this.$server.common.getData('/screen/getData', {
+        id: this.shapeUnit.component.id,
+        type: this.shapeUnit.component.type,
+        data: this.options.data,
+      });
+      if (res.code === 500) {
+        this.$message.error('isChange');
+        return;
+      }
+      const datas = res.rows;
+      const data = datas.map(row => {
+        return { name: row[dimensions[0].alias], value: row[measures[0].alias] };
+      });
+      this.serverData = { data };
+      //   this.serverData = {
+      //     data: [
+      //       { value: 16237, name: '其它' },
+      //       { value: 3399, name: '西南' },
+      //       { value: 1796, name: '西北' },
+      //       { value: 5146, name: '华北' },
+      //       { value: 11115, name: '华东' },
+      //       { value: 10000, name: '华南' },
+      //     ],
+      //   };
 
       // 获取数据之后需要更改限制
       this.$store.commit(boardMutation.SET_STYLE, {
