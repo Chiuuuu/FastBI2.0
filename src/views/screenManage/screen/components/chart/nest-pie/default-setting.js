@@ -37,6 +37,7 @@ export default merge(cloneDeep(BASE), {
             color: '#ffffff',
             fontSize: 16,
           },
+          align: 'left',
           itemGap: 12,
           icon: 'circle',
           position: 'left-top',
