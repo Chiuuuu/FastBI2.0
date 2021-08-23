@@ -1,8 +1,14 @@
 <template>
-  <div class="shape-line" :style="lineStyle" ref="js-shape-line"></div>
+  <div class="board-chart-unit-wrapper" ref="js-shape-line">
+    <div class="board-chart-unit-title" :style="titleStyle" v-if="options.style.title.show">
+      {{ options.style.title.text }}
+    </div>
+    <div class="shape-line" :style="lineStyle"></div>
+  </div>
 </template>
 <script>
 import BoardType from '@/views/screenManage/screen/setting/default-type';
+import BaseChart from '../../chart/base';
 import { getStyle } from '@/utils';
 import { mapState } from 'vuex';
 /**
@@ -10,6 +16,7 @@ import { mapState } from 'vuex';
  */
 export default {
   name: `${BoardType.ShapeLine}View`,
+  extends: BaseChart,
   props: {
     options: {
       // 配置项信息
@@ -57,7 +64,6 @@ export default {
     doWithOptions() {
       const {
         style: {
-          size,
           echart: { border, opacity, boxShadow },
         },
       } = this.options;
@@ -73,7 +79,7 @@ export default {
 
       style = getStyle(style, checkProps, [], ['border']);
 
-      style.borderWidth = `${size.height}px 0 0 0`;
+      style.borderWidth = `${border.width}px 0 0 0`;
       return style;
     },
     updateChartStyle() {
@@ -85,7 +91,7 @@ export default {
 </script>
 <style lang="less" scoped>
 .shape-line {
-  height: 100%;
+  // height: 100%;
   width: 100%;
 }
 </style>

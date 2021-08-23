@@ -22,10 +22,19 @@
                   <UnitSize
                     class="setting-unit-content"
                     :size="currentCom.setting.style.size"
-                    :heightMax="20"
+                    :heightMax="300"
                     @change="size => handleChange('size', size)"
                   ></UnitSize>
                   <!-- 尺寸 end -->
+                </CollapsePanel>
+                <CollapsePanel class="content-item" panel="title" header="标题">
+                  <!-- 标题 start -->
+                  <UnitTitle
+                    class="setting-unit-content"
+                    :title="currentCom.setting.style.title"
+                    @change="(key, value) => handleChange(key, value)"
+                  ></UnitTitle>
+                  <!-- 标题 end -->
                 </CollapsePanel>
                 <CollapsePanel class="content-item" panel="board" header="图形属性">
                   <div class="setting-unit-content">
@@ -37,11 +46,11 @@
                         @change="color => handleChange('echart', { border: { color } })"
                       ></UnitBackgroundColor>
                       <a-row class="unit-show-block mb-8">
-                        <a-col :span="6">
+                        <a-col :span="8">
                           <div class="unit-block-title">线型</div>
                         </a-col>
                         <!-- 线型 start -->
-                        <a-col :span="16" :offset="2">
+                        <a-col :span="16">
                           <a-select
                             style="width: 100%"
                             :value="currentCom.setting.style.echart.border.style"
@@ -55,16 +64,16 @@
                         <!-- 线型 end -->
                       </a-row>
                       <a-row class="unit-show-block mb-8">
-                        <a-col :span="6">
+                        <a-col :span="8">
                           <div class="unit-block-title">线宽</div>
                         </a-col>
                         <!-- 线型 start -->
-                        <a-col :span="16" :offset="2">
+                        <a-col :span="16">
                           <a-input-number
-                            :value="currentCom.setting.style.size.height"
+                            :value="currentCom.setting.style.echart.border.width"
                             :min="0"
                             :max="20"
-                            @change="height => handleChange('size', { height })"
+                            @change="width => handleChange('echart', { border: { width } })"
                           />
                         </a-col>
                         <!-- 线型 end -->
@@ -105,11 +114,11 @@
                       </a-row>
                     </div>
                     <a-row class="unit-show-block mb-8">
-                      <a-col :span="6">
+                      <a-col :span="8">
                         <div class="unit-block-title">透明度</div>
                       </a-col>
                       <!-- 透明度 start -->
-                      <a-col :span="16" :offset="2">
+                      <a-col :span="16">
                         <a-input-number
                           :value="currentCom.setting.style.echart.opacity"
                           :min="0"
@@ -121,11 +130,11 @@
                       <!-- 透明度 end -->
                     </a-row>
                     <a-row class="unit-show-block mb-8">
-                      <a-col :span="6">
+                      <a-col :span="8">
                         <div class="unit-block-title">角度设置</div>
                       </a-col>
                       <!-- 角度设置 start -->
-                      <a-col :span="16" :offset="2">
+                      <a-col :span="16">
                         <a-input-number
                           :value="currentCom.setting.style.echart.rotate"
                           :min="0"

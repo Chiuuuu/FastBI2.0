@@ -7,6 +7,10 @@ export default merge(cloneDeep(BASE), {
   type: BoardType.ShapeRectangular,
   setting: {
     style: {
+      background: {
+        // 背景
+        color: 'transparent',
+      },
       echart: {
         border: {
           width: 1,

@@ -8,7 +8,7 @@ export default merge(cloneDeep(BASE), {
   setting: {
     style: {
       size: {
-        height: 1,
+        height: 100,
         width: 400,
       },
       background: {
@@ -19,6 +19,7 @@ export default merge(cloneDeep(BASE), {
         border: {
           style: 'solid',
           color: '#fff',
+          width: 2,
         },
         opacity: 1,
         rotate: 0,

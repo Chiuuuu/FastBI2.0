@@ -26,6 +26,15 @@
                   ></UnitSize>
                   <!-- 尺寸 end -->
                 </CollapsePanel>
+                <CollapsePanel class="content-item" panel="title" header="标题">
+                  <!-- 标题 start -->
+                  <UnitTitle
+                    class="setting-unit-content"
+                    :title="currentCom.setting.style.title"
+                    @change="(key, value) => handleChange(key, value)"
+                  ></UnitTitle>
+                  <!-- 标题 end -->
+                </CollapsePanel>
                 <CollapsePanel class="content-item" panel="board" header="图形属性">
                   <div class="setting-unit-content">
                     <!-- 背景颜色 start -->

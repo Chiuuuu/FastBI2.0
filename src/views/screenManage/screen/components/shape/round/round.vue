@@ -1,8 +1,16 @@
 <template>
-  <div class="shape-round" :style="roundStyle"></div>
+  <div class="board-chart-unit-wrapper">
+    <div class="board-chart-unit-title" :style="titleStyle" v-if="options.style.title.show">
+      {{ options.style.title.text }}
+    </div>
+    <div class="board-chart-unit">
+      <div class="shape-round" :style="roundStyle"></div>
+    </div>
+  </div>
 </template>
 <script>
 import BoardType from '@/views/screenManage/screen/setting/default-type';
+import BaseChart from '../../chart/base';
 import { getStyle } from '@/utils';
 import { mapState } from 'vuex';
 
@@ -11,6 +19,7 @@ import { mapState } from 'vuex';
  */
 export default {
   name: `${BoardType.ShapeRound}View`,
+  extends: BaseChart,
   props: {
     options: {
       // 配置项信息

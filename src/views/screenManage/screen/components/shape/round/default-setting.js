@@ -9,7 +9,7 @@ export default merge(cloneDeep(BASE), {
     style: {
       size: {
         width: 400,
-        height: 400,
+        height: 450,
       },
       background: {
         // 背景

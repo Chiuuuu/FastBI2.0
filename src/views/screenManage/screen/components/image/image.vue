@@ -1,11 +1,17 @@
 <template>
-  <div class="board-image" :style="ImageStyle">
-    <!-- <img src="" alt="" /> -->
-    <a-icon type="file-image" />
+  <div class="board-chart-unit-wrapper">
+    <div class="board-chart-unit-title" :style="titleStyle" v-if="options.style.title.show">
+      {{ options.style.title.text }}
+    </div>
+    <div class="board-chart-unit board-image" :style="ImageStyle">
+      <!-- <img src="" alt="" /> -->
+      <a-icon type="file-image" />
+    </div>
   </div>
 </template>
 <script>
 import BoardType from '@/views/screenManage/screen/setting/default-type';
+import BaseChart from '../chart/base';
 import { getStyle } from '@/utils';
 import { mapState } from 'vuex';
 /**
@@ -13,6 +19,7 @@ import { mapState } from 'vuex';
  */
 export default {
   name: `${BoardType.Image}View`,
+  extends: BaseChart,
   props: {
     options: {
       // 配置项信息
