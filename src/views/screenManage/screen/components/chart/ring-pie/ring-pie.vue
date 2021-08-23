@@ -3,6 +3,7 @@ import BoardType from '@/views/screenManage/screen/setting/default-type';
 import BaseChart from '../base';
 import defaultData from './default-data';
 import merge from 'lodash/merge';
+import omit from 'lodash/omit';
 /**
  * @description 环形饼图
  */
@@ -67,17 +68,18 @@ export default {
         name: data[1].name,
       };
     },
-    doWithFormatter(data, way, customFixed) {
+    doWithFormatter(data, way, customFixed, dataIndex) {
+      // debugger
       let percent = 0;
 
       if (this.options.style.echart.customTarge && data.length > 1) {
-        percent = (+((data[0].value / data[1].value) * 100)).toFixed(customFixed);
+        percent = (+((data[dataIndex].value / (data[0].value + data[1].value)) * 100)).toFixed(customFixed);
       } else {
         // 如果不开启目标值设置，以1为基准
-        percent = (+((data[0].value / 1) * 100)).toFixed(customFixed);
+        percent = (+((1 / 1) * 100)).toFixed(customFixed);
       }
-      const name = data[0].name;
-      const value = data[0].value;
+      const name = data[dataIndex].name;
+      const value = data[dataIndex].value;
       const ways = {
         name: `${name}`,
         value: `${value}`,
@@ -99,13 +101,15 @@ export default {
         customFixed,
         customFormatterWay,
         customTarge,
+        customSeries,
       } = this.options.style.echart;
-      let { label } = this.options.style.echart.customSeries;
+      let { label } = customSeries;
       label = this.doWithLabel(label);
       data = [].concat(data);
       const radius = this.doWithRadius(customInRadius, customOutRadius);
-      const formatter = this.doWithFormatter(data, customFormatterWay, customFixed);
+      // const formatter = this.doWithFormatter(data, customFormatterWay, customFixed, 0);
       const center = this.doWithCenter(customCenter);
+      const seriesData = { ...omit(customSeries, ['label']) };
 
       if (customTarge) {
         // 1.开启目标值需要处理数据
@@ -125,12 +129,26 @@ export default {
           center,
           radius,
           label: Object.assign({}, label, {
-            formatter: `${formatter}`,
+            formatter: param => {
+              return `${this.doWithFormatter(data, customFormatterWay, customFixed, param.dataIndex)}`;
+            },
           }),
           color: customColors,
           data: data,
+          ...seriesData, // series其他配置
           emphasis: {
             scale: false,
+            label: {
+              show: true,
+              formatter: param => {
+                if (label.position === 'center') {
+                  // 固定中间显示为目标值 -- 目前数据长度等于2时，数组下标为0的暂定为目标值
+                  return `${this.doWithFormatter(data, customFormatterWay, customFixed, 0)}`;
+                } else {
+                  return `${this.doWithFormatter(data, customFormatterWay, customFixed, param.dataIndex)}`;
+                }
+              },
+            },
           },
         },
       ];
