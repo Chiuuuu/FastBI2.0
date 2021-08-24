@@ -26,12 +26,19 @@ const Commands = {
   Interaction: InteractionCommand,
 };
 
-const state = {
-  historyRecordList: [],
-  historyRecordIndex: -1,
+const getDefaultState = () => {
+  return {
+    historyRecordList: [],
+    historyRecordIndex: -1,
+  };
 };
 
+const state = getDefaultState();
+
 const mutations = {
+  RESETSTATE(state) {
+    Object.assign(state, getDefaultState());
+  },
   COMMAND(state, payload) {
     if (state.historyRecordIndex < state.historyRecordList.length) {
       state.historyRecordList = state.historyRecordList.slice(0, state.historyRecordIndex + 1);

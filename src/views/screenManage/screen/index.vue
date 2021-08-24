@@ -143,6 +143,8 @@ export default {
     async getScreenDetailByTabId(screenId, tabId) {
       const result = await this.$store.dispatch('screen/getScreenDetailById', { screenId, tabId });
       if (result) {
+        this.$store.commit('history/RESETSTATE');
+
         this.tabActive = tabId || this.tabs[0].id;
         const modelList = result.modelList || [];
         const accessList = result.accessList || [];
