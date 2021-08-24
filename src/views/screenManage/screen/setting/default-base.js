@@ -14,8 +14,7 @@ export default {
       // 数据
       expands: [],
       dataModelId: '', // 数据模型id
-      filter: {}, // 数据筛选
-      options: {
+      filter: {
         //数据筛选、排序
         dimensionsLimit: [], // 数据筛选 -- 拖入的维度
         measuresLimit: [], // 数据筛选 -- 拖入的度量

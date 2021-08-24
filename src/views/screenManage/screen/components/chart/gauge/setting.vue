@@ -69,7 +69,7 @@
                     type="dataFilter"
                     label="拖入字段"
                     limit
-                    :list="currentCom.setting.data.options.fileList"
+                    :list="currentCom.setting.data.filter.fileList"
                   >
                     <template #tip>
                       <UnitTip content="应用于当前图层"></UnitTip>

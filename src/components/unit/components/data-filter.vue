@@ -451,17 +451,17 @@ export default {
      * @description 当放置到数据筛选
      */
     handleSetDataFilter(data, method = 'add') {
-      let options = Object.assign({}, this.currentCom.setting.data.options);
-      options[this.currentType + 'Limit'] = this.conversionArry(this.currentType + 'Limit', data, method);
-      options['fileList'] = this.conversionArry('fileList', data, method);
+      let filter = Object.assign({}, this.currentCom.setting.data.filter);
+      filter[this.currentType + 'Limit'] = this.conversionArry(this.currentType + 'Limit', data, method);
+      filter['fileList'] = this.conversionArry('fileList', data, method);
 
-      return { options };
+      return { filter };
     },
     /**
      * @description 公共转换成数组
      */
     conversionArry(key, data, method) {
-      let arry = [].concat(this.currentCom.setting.data.options[key]);
+      let arry = [].concat(this.currentCom.setting.data.filter[key]);
       arry = this.handleList(arry, data, method);
       return arry;
     },
