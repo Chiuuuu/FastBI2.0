@@ -67,6 +67,7 @@
   </div>
 </template>
 <script>
+import groupBy from 'lodash/groupBy';
 import DataPanel from './data-access-model/data-panel';
 import DataModelMenu from './data-access-model/data-model-menu';
 import DataAccessMenu from './data-access-model/data-access-menu';
@@ -75,10 +76,6 @@ import DataAccessListPanel from './data-access-model/data-access-list-panel';
 /**
  * @description 编辑大屏配置区的最右侧数据模型
  */
-const resourceTypeMap = {
-  model: 8,
-  access: 3,
-};
 export default {
   name: 'BoardSettingRight',
   inject: ['screenInstance'],
@@ -91,7 +88,7 @@ export default {
   },
   provide() {
     return {
-      getResourceType: () => this.tabAcitve,
+      getResourceType: () => this.resourceType,
     };
   },
   data() {
@@ -259,12 +256,14 @@ export default {
       }
 
       if (result && result.code === 200) {
-        this.dimension = result.data.dimensions.map(item => {
-          return { ...item, resourceType: resourceTypeMap[this.tabAcitve] };
-        });
-        this.measure = result.data.measures.map(item => {
-          return { ...item, resourceType: resourceTypeMap[this.tabAcitve] };
-        });
+        this.searchList = [].concat(result.data.dimensions, result.data.measures);
+        if (this.tabAcitve === 'model') {
+          this.dimension = groupBy(result.data.dimensions, 'tableNo');
+          this.measure = groupBy(result.data.measures, 'tableNo');
+        } else {
+          this.dimension = [].concat(result.data.dimensions) || [];
+          this.measure = [].concat(result.data.measures) || [];
+        }
       } else {
         this.$message.error(result.msg || '获取维度度量失败');
       }

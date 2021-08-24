@@ -7,7 +7,7 @@
             {{ item.name }}
             <a-icon type="right" class="icon-cart" v-if="hasChildren(item)" />
           </span>
-          <ul :class="['sub', { 'show-right': subPosition }]" v-if="hasChildren(item)">
+          <ul :class="['sub', subPosition === 'right' ? 'show-right' : '']" v-if="hasChildren(item)">
             <li
               class="z-clickable"
               v-for="subitem in item.children"
