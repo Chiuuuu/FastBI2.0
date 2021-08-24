@@ -44,16 +44,9 @@
           :value="title.font.family"
           @change="family => handleTitleFontChange('family', family)"
         >
-          <a-select-option value="sans-serif">默认</a-select-option>
-          <a-select-option value="simfang">simfang</a-select-option>
-          <a-select-option value="fangsong">仿宋_GB2312</a-select-option>
-          <a-select-option value="times">times</a-select-option>
-          <a-select-option value="msyh">微软雅黑</a-select-option>
-          <a-select-option value="simkai">simkai</a-select-option>
-          <a-select-option value="pangmenzhengdao">庞门正道标题体</a-select-option>
-          <a-select-option value="HuXiaoBoNanShenTi">HuXiaoBoNanShenTi</a-select-option>
-          <a-select-option value="youshe">优设标题黑</a-select-option>
-          <a-select-option value="digital-7-4">digital-7-4</a-select-option>
+          <a-select-option :value="item.value" v-for="(item, index) in fontFamily" :key="index">
+            {{ item.label }}
+          </a-select-option>
         </a-select>
       </a-col>
     </a-row>
@@ -112,6 +105,7 @@
   </div>
 </template>
 <script>
+import fontFamily from '@/utils/fontFamily';
 /**
  * @description 标题设置
  */
@@ -127,6 +121,7 @@ export default {
   data() {
     return {
       align: ['left', 'center', 'right'], // 对齐方式
+      fontFamily, //字体
     };
   },
   methods: {

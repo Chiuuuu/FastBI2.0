@@ -19,7 +19,7 @@ export default merge(cloneDeep(BASE), {
         border: {
           style: 'solid',
           color: '#fff',
-          width: 2,
+          width: 1,
         },
         opacity: 1,
         rotate: 0,

@@ -18,8 +18,8 @@ export default merge(cloneDeep(BASE), {
           // 网格
           show: true,
           left: 50,
-          top: 60,
-          right: 50,
+          top: 70,
+          right: 60,
           bottom: 50,
           containLabel: true,
           backgroundColor: 'transparent',

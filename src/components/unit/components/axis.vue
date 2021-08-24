@@ -189,11 +189,11 @@
       </div>
       <!-- 网格线颜色 start -->
       <a-row class="unit-show-block mb-8">
-        <a-col :span="8">
+        <a-col :span="9">
           <div class="unit-block-title">网格线颜色</div>
         </a-col>
-        <a-col :span="16">
-          <div class="font-color float-right">
+        <a-col :span="15">
+          <div class="font-color float-right" style="width: 100%">
             <ColorPicker
               :value="axis.splitLine.lineStyle.color"
               @change="color => handleLineStyle('color', color)"
