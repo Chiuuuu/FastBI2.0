@@ -91,15 +91,6 @@ export default {
     doWithlegend(series) {
       return series.map(item => item.name);
     },
-    doWithFormatter(data, way) {
-      const ways = {
-        name: '{a}',
-        value: '{c}',
-        nv: '{a}\n({c})',
-      };
-      const formatter = ways[way] || ways.nv;
-      return formatter;
-    },
     /**
      * @description 处理图表配置项
      */
@@ -127,16 +118,6 @@ export default {
         tooltip: {
           formatter: this.hanleTooltipFormatter(),
         },
-        yAxis: {
-          max: function (val) {
-            return val.max + 2;
-          },
-        },
-        xAxis: {
-          max: function (val) {
-            return val.max + 2;
-          },
-        },
         series,
       });
       // 散点颜色设置
@@ -144,7 +125,6 @@ export default {
       return options;
     },
     createScatterUnit(name, data, echart) {
-      // const formatter = this.doWithFormatter(data, echart.customFormatterWay);
       const seriesData = { ...omit(echart.customSeries, []) };
 
       return {

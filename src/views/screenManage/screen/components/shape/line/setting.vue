@@ -28,13 +28,18 @@
                   <!-- 尺寸 end -->
                 </CollapsePanel>
                 <CollapsePanel class="content-item" panel="title" header="标题">
-                  <!-- 标题 start -->
-                  <UnitTitle
-                    class="setting-unit-content"
-                    :title="currentCom.setting.style.title"
-                    @change="(key, value) => handleChange(key, value)"
-                  ></UnitTitle>
-                  <!-- 标题 end -->
+                  <div class="setting-unit-content">
+                    <!-- 标题 end -->
+                    <a-row class="unit-show-block mb-8">
+                      <a-col :span="24">
+                        <a-input
+                          :value="currentCom.setting.style.title.text"
+                          :maxLength="20"
+                          @blur="event => handleTitleChange('text', event.target.value)"
+                        ></a-input>
+                      </a-col>
+                    </a-row>
+                  </div>
                 </CollapsePanel>
                 <CollapsePanel class="content-item" panel="board" header="图形属性">
                   <div class="setting-unit-content">
@@ -70,10 +75,10 @@
                         <!-- 线型 start -->
                         <a-col :span="16">
                           <a-input-number
-                            :value="currentCom.setting.style.echart.border.width"
+                            :value="currentCom.setting.style.size.height"
                             :min="0"
                             :max="20"
-                            @change="width => handleChange('echart', { border: { width } })"
+                            @change="height => handleChange('size', { height })"
                           />
                         </a-col>
                         <!-- 线型 end -->
@@ -256,6 +261,14 @@ export default {
         centerY,
         rotate,
       };
+    },
+    /**
+     * @description 设置标题
+     */
+    handleTitleChange(key, value) {
+      this.handleChange('title', {
+        [key]: value,
+      });
     },
   },
 };

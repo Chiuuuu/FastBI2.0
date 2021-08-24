@@ -27,13 +27,18 @@
                   <!-- 尺寸 end -->
                 </CollapsePanel>
                 <CollapsePanel class="content-item" panel="title" header="标题">
-                  <!-- 标题 start -->
-                  <UnitTitle
-                    class="setting-unit-content"
-                    :title="currentCom.setting.style.title"
-                    @change="(key, value) => handleChange(key, value)"
-                  ></UnitTitle>
-                  <!-- 标题 end -->
+                  <div class="setting-unit-content">
+                    <!-- 标题 end -->
+                    <a-row class="unit-show-block mb-8">
+                      <a-col :span="24">
+                        <a-input
+                          :value="currentCom.setting.style.title.text"
+                          :maxLength="20"
+                          @blur="event => handleTitleChange('text', event.target.value)"
+                        ></a-input>
+                      </a-col>
+                    </a-row>
+                  </div>
                 </CollapsePanel>
                 <CollapsePanel class="content-item" panel="imageFile" header="图片文件">
                   <div class="setting-unit-content">
@@ -133,6 +138,14 @@ export default {
         return;
       }
       this.fileName = e.target.files[0].name;
+    },
+    /**
+     * @description 设置标题
+     */
+    handleTitleChange(key, value) {
+      this.handleChange('title', {
+        [key]: value,
+      });
     },
   },
 };

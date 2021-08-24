@@ -392,16 +392,9 @@
                           :value="gauge.axisLabel.fontFamily"
                           @change="fontFamily => this.handleTargetAxisLabelFont('fontFamily', fontFamily)"
                         >
-                          <a-select-option value="sans-serif">默认</a-select-option>
-                          <a-select-option value="simfang">simfang</a-select-option>
-                          <a-select-option value="fangsong">仿宋_GB2312</a-select-option>
-                          <a-select-option value="times">times</a-select-option>
-                          <a-select-option value="msyh">微软雅黑</a-select-option>
-                          <a-select-option value="simkai">simkai</a-select-option>
-                          <a-select-option value="pangmenzhengdao">庞门正道标题体</a-select-option>
-                          <a-select-option value="HuXiaoBoNanShenTi">HuXiaoBoNanShenTi</a-select-option>
-                          <a-select-option value="youshe">优设标题黑</a-select-option>
-                          <a-select-option value="digital-7-4">digital-7-4</a-select-option>
+                          <a-select-option :value="item.value" v-for="(item, index) in fontFamily" :key="index">
+                            {{ item.label }}
+                          </a-select-option>
                         </a-select>
                       </a-col>
                     </a-row>
@@ -515,16 +508,9 @@
                             :value="gauge.title.fontFamily"
                             @change="fontFamily => this.handleTarget('title', { fontFamily })"
                           >
-                            <a-select-option value="sans-serif">默认</a-select-option>
-                            <a-select-option value="simfang">simfang</a-select-option>
-                            <a-select-option value="fangsong">仿宋_GB2312</a-select-option>
-                            <a-select-option value="times">times</a-select-option>
-                            <a-select-option value="msyh">微软雅黑</a-select-option>
-                            <a-select-option value="simkai">simkai</a-select-option>
-                            <a-select-option value="pangmenzhengdao">庞门正道标题体</a-select-option>
-                            <a-select-option value="HuXiaoBoNanShenTi">HuXiaoBoNanShenTi</a-select-option>
-                            <a-select-option value="youshe">优设标题黑</a-select-option>
-                            <a-select-option value="digital-7-4">digital-7-4</a-select-option>
+                            <a-select-option :value="item.value" v-for="(item, index) in fontFamily" :key="index">
+                              {{ item.label }}
+                            </a-select-option>
                           </a-select>
                         </a-col>
                       </a-row>
@@ -632,16 +618,9 @@
                             :value="gauge.detail.fontFamily"
                             @change="fontFamily => this.handleTarget('detail', { fontFamily })"
                           >
-                            <a-select-option value="sans-serif">默认</a-select-option>
-                            <a-select-option value="simfang">simfang</a-select-option>
-                            <a-select-option value="fangsong">仿宋_GB2312</a-select-option>
-                            <a-select-option value="times">times</a-select-option>
-                            <a-select-option value="msyh">微软雅黑</a-select-option>
-                            <a-select-option value="simkai">simkai</a-select-option>
-                            <a-select-option value="pangmenzhengdao">庞门正道标题体</a-select-option>
-                            <a-select-option value="HuXiaoBoNanShenTi">HuXiaoBoNanShenTi</a-select-option>
-                            <a-select-option value="youshe">优设标题黑</a-select-option>
-                            <a-select-option value="digital-7-4">digital-7-4</a-select-option>
+                            <a-select-option :value="item.value" v-for="(item, index) in fontFamily" :key="index">
+                              {{ item.label }}
+                            </a-select-option>
                           </a-select>
                         </a-col>
                       </a-row>
@@ -750,6 +729,7 @@
 <script>
 import BoardType from '@/views/screenManage/screen/setting/default-type';
 import StyleMethodMixin from '@/views/screenManage/screen/setting/style-method-mixin';
+import fontFamily from '@/utils/fontFamily';
 export default {
   name: `${BoardType.ChartGauge}Setting`,
   mixins: [StyleMethodMixin],
@@ -769,6 +749,7 @@ export default {
       tabAcitve: 'style', // tab选项栏活动目标
       dataCollapseActive: ['progress', 'range', 'targe', 'dataFilter'], // 折叠打开选项
       styleCollapseActive: [],
+      fontFamily, //字体
     };
   },
   methods: {
