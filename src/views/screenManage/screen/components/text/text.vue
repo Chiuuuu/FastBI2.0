@@ -29,12 +29,10 @@ const polymerizationData = {
 };
 const polymerizationMap = {
   求和: 'SUM',
-  SUM: '求和',
   平均: 'AVG',
   最大值: 'MAX',
   最小值: 'MIN',
   计数: 'CNT',
-  CNT: '计数',
   去重计数: 'DCNT',
 };
 const polymerizationList = [
@@ -88,7 +86,17 @@ export default {
       return getStyle({}, { text }, ['fontSize'], []);
     },
     modelMeasures() {
-      return [{ alias: '成本', name: '成本', id: '1', defaultAggregator: 'SUM', screenTableId: 1, status: 0 }];
+      return [
+        {
+          alias: '成本',
+          name: '成本',
+          id: '1',
+          defaultAggregator: 'SUM',
+          screenTableId: 1,
+          status: 0,
+          dataType: 'VARCHAR',
+        },
+      ];
     },
   },
   watch: {
@@ -455,7 +463,9 @@ export default {
      * @description 聚合显示处理
      */
     formatAggregator(item) {
-      return `${item.alias}(${polymerizationMap[item.defaultAggregator]})`;
+      const dataType = item.dataType;
+      const isNum = dataType === 'BIGINT' || dataType === 'DECIMAL' || dataType === 'DOUBLE';
+      return `${item.alias}(${isNum ? '求和' : '计数'})`;
     },
   },
 };

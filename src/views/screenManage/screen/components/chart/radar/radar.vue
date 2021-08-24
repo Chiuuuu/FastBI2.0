@@ -78,26 +78,45 @@ export default {
      */
     async getServerData() {
       console.log('从这里获取服务端数据');
-      this.serverData = {
-        indicator: [
-          { name: '销售（Sales）' },
-          { name: '管理（Administration）' },
-          { name: '信息技术（Information Technology）' },
-          { name: '客服（Customer Support）' },
-          { name: '研发（Development）' },
-          { name: '市场（Marketing）' },
-        ],
-        data: [
-          {
-            value: [4200, 3000, 20000, 35000, 50000, 18000],
-            name: '预算分配（Allocated Budget）',
-          },
-          {
-            value: [5000, 14000, 28000, 26000, 42000, 21000],
-            name: '实际开销（Actual Spending）',
-          },
-        ],
-      };
+      const {
+        data: { dimensions, measures },
+      } = this.options;
+      const res = await this.$server.common.getData('/screen/getData', {
+        id: this.shapeUnit.component.id,
+        type: this.shapeUnit.component.type,
+        data: this.options.data,
+      });
+      if (res.code === 500) {
+        this.$message.error('isChange');
+        return;
+      }
+      const datas = res.rows;
+      const indicator = datas.map(row => row[dimensions[0].alias]);
+      let data = [];
+      measures.forEach(measure => {
+        data.push({ name: measure, value: datas.map(row => row[measure.alias]) });
+      });
+      this.serverData = { indicator, data };
+      //   this.serverData = {
+      //     indicator: [
+      //       { name: '销售（Sales）' },
+      //       { name: '管理（Administration）' },
+      //       { name: '信息技术（Information Technology）' },
+      //       { name: '客服（Customer Support）' },
+      //       { name: '研发（Development）' },
+      //       { name: '市场（Marketing）' },
+      //     ],
+      //     data: [
+      //       {
+      //         value: [4200, 3000, 20000, 35000, 50000, 18000],
+      //         name: '预算分配（Allocated Budget）',
+      //       },
+      //       {
+      //         value: [5000, 14000, 28000, 26000, 42000, 21000],
+      //         name: '实际开销（Actual Spending）',
+      //       },
+      //     ],
+      //   };
       const options = this.doWithOptions(this.serverData);
       this.updateSaveChart(options, ['radar', 'series']);
     },

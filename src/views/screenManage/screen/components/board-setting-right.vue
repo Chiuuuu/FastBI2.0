@@ -75,6 +75,10 @@ import DataAccessListPanel from './data-access-model/data-access-list-panel';
 /**
  * @description 编辑大屏配置区的最右侧数据模型
  */
+const resourceTypeMap = {
+  model: 8,
+  access: 3,
+};
 export default {
   name: 'BoardSettingRight',
   inject: ['screenInstance'],
@@ -87,7 +91,7 @@ export default {
   },
   provide() {
     return {
-      getResourceType: () => this.resourceType,
+      getResourceType: () => this.tabAcitve,
     };
   },
   data() {
@@ -244,8 +248,12 @@ export default {
           this.spinning = false;
         });
       if (result && result.code === 200) {
-        this.dimension = [].concat(result.data.dimensions) || [];
-        this.measure = [].concat(result.data.measures) || [];
+        this.dimension = result.data.dimensions.map(item => {
+          return { ...item, resourceType: resourceTypeMap[this.tabAcitve] };
+        });
+        this.measure = result.data.measures.map(item => {
+          return { ...item, resourceType: resourceTypeMap[this.tabAcitve] };
+        });
       } else {
         this.$message.error(result.msg || '获取维度度量失败');
       }
