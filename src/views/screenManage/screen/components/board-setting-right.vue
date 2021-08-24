@@ -7,8 +7,7 @@
           <DataModelMenu
             :list="modelList"
             :selected="modelSelected"
-            :dimension="dimension"
-            :measure="measure"
+            :searchList="searchList"
             @open="show => handleOpenListPanel(show, 'modelListPanelShow')"
             @select="handleModelMenuSelected"
             @selectSearchFiled="handleSelectSearchFiled"
@@ -20,9 +19,8 @@
           <!-- 数据接入菜单 start -->
           <DataAccessMenu
             :list="accessList"
+            :searchList="searchList"
             :selected="accessSelected"
-            :dimension="dimension"
-            :measure="measure"
             @open="show => handleOpenListPanel(show, 'accessListPanelShow')"
             @select="handleAccessMenuSelected"
             @selectSearchFiled="handleSelectSearchFiled"
@@ -102,6 +100,7 @@ export default {
       selectFiled: {}, // 字段搜索选中值
       dimension: [], // 维度列表
       measure: [], // 度量列表
+      searchList: [],
     };
   },
   computed: {
@@ -159,7 +158,7 @@ export default {
      */
     handleOpenListPanel(show, type) {
       ['modelListPanelShow', 'accessListPanelShow'].forEach(key => {
-        this[key] = key === type ? show : !show;
+        this[key] = key === type;
       });
     },
     /**

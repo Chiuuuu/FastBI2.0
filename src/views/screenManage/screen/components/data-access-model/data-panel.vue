@@ -9,9 +9,35 @@
       <div class="body">
         <div class="schema-list-wrapper">
           <Collapse ref="dimensionList" class="schema-list reset-scrollbar js-schema-dimension-list">
-            <ul class="field-list" v-if="dimension && dimension.length">
-              <template v-for="(item, index) in dimension">
+            <template v-if="!handleIsArray(dimension)">
+              <template v-if="dimension">
+                <CollapsePanel
+                  v-for="(value, name) in dimension"
+                  :key="name"
+                  class="schema-item"
+                  :panel="name"
+                  :header="value[0].tableName"
+                >
+                  <ul class="field-list">
+                    <DataPanelItem
+                      v-for="(item, index) in value"
+                      :key="item.id"
+                      type="dimension"
+                      :data="item"
+                      :field-index="index"
+                      :selected="isSelected(item)"
+                      @cancelSelect="handleCancelSelect"
+                      @arrowClick="handleDimConextMenu"
+                    ></DataPanelItem>
+                  </ul>
+                </CollapsePanel>
+              </template>
+              <a-empty description="暂无数据" v-else></a-empty>
+            </template>
+            <template v-else>
+              <ul class="field-list" v-if="dimension && dimension.length">
                 <DataPanelItem
+                  v-for="(item, index) in dimension"
                   :key="item.id"
                   type="dimension"
                   :data="item"
@@ -20,9 +46,9 @@
                   @cancelSelect="handleCancelSelect"
                   @arrowClick="handleDimConextMenu"
                 ></DataPanelItem>
-              </template>
-            </ul>
-            <a-empty description="暂无数据" v-else></a-empty>
+              </ul>
+              <a-empty description="暂无数据" v-else></a-empty>
+            </template>
           </Collapse>
         </div>
       </div>
@@ -38,9 +64,35 @@
       <div class="body">
         <div class="schema-list-wrapper">
           <Collapse ref="measureList" class="schema-list reset-scrollbar js-schema-measure-list">
-            <ul class="field-list" v-if="measure && measure.length">
-              <template v-for="(item, index) in measure">
+            <template v-if="!handleIsArray(measure)">
+              <template v-if="measure">
+                <CollapsePanel
+                  v-for="(value, name) in measure"
+                  :key="name"
+                  class="schema-item"
+                  :panel="name"
+                  :header="value[0].tableName"
+                >
+                  <ul class="field-list">
+                    <DataPanelItem
+                      v-for="(item, index) in value"
+                      :key="item.id"
+                      type="measure"
+                      :data="item"
+                      :field-index="index"
+                      :selected="isSelected(item)"
+                      @cancelSelect="handleCancelSelect"
+                      @arrowClick="handleMeaConextMenu"
+                    ></DataPanelItem>
+                  </ul>
+                </CollapsePanel>
+              </template>
+              <a-empty description="暂无数据" v-else></a-empty>
+            </template>
+            <template v-else>
+              <ul class="field-list" v-if="measure && measure.length">
                 <DataPanelItem
+                  v-for="(item, index) in measure"
                   :key="item.id"
                   type="measure"
                   :data="item"
@@ -49,9 +101,9 @@
                   @cancelSelect="handleCancelSelect"
                   @arrowClick="handleMeaConextMenu"
                 ></DataPanelItem>
-              </template>
-            </ul>
-            <a-empty description="暂无数据" v-else></a-empty>
+              </ul>
+              <a-empty description="暂无数据" v-else></a-empty>
+            </template>
           </Collapse>
         </div>
       </div>
@@ -71,6 +123,7 @@
   </div>
 </template>
 <script>
+import isArray from 'lodash/isArray';
 import ContextMenu from '@/components/contextmenu';
 import DataPanelItem from './data-panel-item.vue';
 import { mutationTypes as historyMutation } from '@/store/modules/history';
@@ -84,11 +137,11 @@ export default {
   },
   props: {
     dimension: {
-      type: Array,
+      type: [Array, Object],
       required: true,
     },
     measure: {
-      type: Array,
+      type: [Array, Object],
       required: true,
     },
     selectFiled: {
@@ -147,6 +200,9 @@ export default {
     contextmenuMea && contextmenuMea.$el.removeEventListener('contextmenu', this.handleMeaConextMenu);
   },
   methods: {
+    handleIsArray(element) {
+      return isArray(element);
+    },
     /**
      * @description 取消搜索选中
      */
@@ -281,29 +337,37 @@ export default {
       });
     },
     dropDimensionList(item) {
+      // 修改维度度量类型为维度
       item.role = 1;
+
+      const addList = this.handleIsArray(this.dimension) ? this.dimension : this.dimension[item.tableNo];
+      const deleList = this.handleIsArray(this.measure) ? this.measure : this.measure[item.tableNo];
       const target = [
         {
           method: 'add',
-          list: this.dimension,
+          list: addList,
         },
         {
           method: 'dele',
-          list: this.measure,
+          list: deleList,
         },
       ];
       this.recordHistory(target, item, 'move');
     },
     dropMeasureList(item) {
+      // 修改维度度量类型为度量
       item.role = 2;
+
+      const addList = this.handleIsArray(this.measure) ? this.measure : this.measure[item.tableNo];
+      const deleList = this.handleIsArray(this.dimension) ? this.dimension : this.dimension[item.tableNo];
       const target = [
         {
           method: 'add',
-          list: this.measure,
+          list: addList,
         },
         {
           method: 'dele',
-          list: this.dimension,
+          list: deleList,
         },
       ];
       this.recordHistory(target, item, 'move');

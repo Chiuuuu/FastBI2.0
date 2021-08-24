@@ -60,15 +60,9 @@ export default {
       type: Object,
       default: () => {},
     },
-    dimension: {
-      // 维度
+    searchList: {
       type: Array,
-      required: true,
-    },
-    measure: {
-      // 度量
-      type: Array,
-      required: true,
+      default: () => [],
     },
   },
   data() {
@@ -78,7 +72,7 @@ export default {
   },
   computed: {
     searchDisable() {
-      return !this.dimension.length && !this.measure.length;
+      return !this.searchList.length;
     },
   },
   methods: {
@@ -112,12 +106,7 @@ export default {
       if (!value) return;
       this.searchResult = [];
       value = typeof value === 'string' ? value.trim() : value;
-      this.dimension.forEach(item => {
-        if (item.name.toLowerCase().indexOf(value.toLowerCase()) > -1) {
-          this.searchResult.push(item);
-        }
-      });
-      this.measure.forEach(item => {
+      this.searchList.forEach(item => {
         if (item.name.toLowerCase().indexOf(value.toLowerCase()) > -1) {
           this.searchResult.push(item);
         }
