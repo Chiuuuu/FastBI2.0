@@ -1,6 +1,6 @@
 <template>
   <li
-    class="field-item text-item clearfix"
+    class="js-field-item field-item text-item clearfix"
     ref="js-field-item"
     :data-index="fieldIndex"
     :class="selected ? 'selected' : ''"

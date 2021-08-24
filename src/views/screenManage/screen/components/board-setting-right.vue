@@ -86,7 +86,7 @@ export default {
   },
   provide() {
     return {
-      getResourceType: () => this.resourceType,
+      boardSettingRightInstance: this,
     };
   },
   data() {
