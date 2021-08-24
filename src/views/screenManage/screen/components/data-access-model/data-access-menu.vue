@@ -1,7 +1,7 @@
 <template>
   <div class="data-model-wrapper">
     <div class="menu-btn model-menu">
-      <p class="title">{{ selected ? selected.name : '请选择数据表' }}</p>
+      <p class="title">{{ selected ? selected.resourceName : '请选择数据表' }}</p>
       <div class="menu-list-wrapper">
         <div class="menu-model-add" @click="handleAddDataModel">
           <span class="symbol-add">+</span>
@@ -16,7 +16,7 @@
             :key="item.id"
             @click="handleSelectDataModel(item)"
           >
-            {{ item.name }}
+            {{ item.resourceName }}
             <div class="u-icon">
               <a-icon class="check-icon" v-if="selected && selected.id === item.id" type="check"></a-icon>
               <a-icon class="delete-icon" type="delete" @click.stop="handleDelete(item)" />
@@ -28,7 +28,7 @@
     <div class="model-field-search">
       <a-input-search
         :disabled="searchDisable"
-        placeholder="搜索字段,回车确定"
+        placeholder="搜索字段"
         @search="handleSearchFiled"
         @change="handleSearch"
         ref="js-filed-search"

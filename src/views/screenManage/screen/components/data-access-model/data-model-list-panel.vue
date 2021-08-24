@@ -137,6 +137,7 @@ export default {
 
       let params = {
         screenId: this.screenInstance.screenInfo.screenId,
+        tabId: this.screenInstance.screenInfo.tabId,
         resourceName: item.name,
         tableId: item.id,
       };

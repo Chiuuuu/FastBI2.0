@@ -214,10 +214,10 @@ export default {
       let list = isModel ? this.modelList : this.accessList;
       list = list.filter(n => n.id !== item.id);
 
-      const screenId = this.screenInstance.screenInfo.screenId;
+      const tabId = this.screenInstance.screenInfo.tabId;
       const tableId = item.tableId;
 
-      const result = await this.$server.screenManage.deleteListDataByScreenIdAndTableId(screenId, tableId);
+      const result = await this.$server.screenManage.deleteListDataByScreenIdAndTableId(tabId, tableId);
       if (result && result.code === 200) {
         if (item.id === selected.id) {
           // 如果删除的是当前选中的，则清空选中
@@ -242,11 +242,22 @@ export default {
      */
     async handleGetPivoSchemaList(id) {
       this.spinning = true;
-      const result = await this.$server.screenManage
-        .getPivoSchemaList(id, this.screenInstance.screenInfo.screenId)
-        .finally(() => {
-          this.spinning = false;
-        });
+      let result;
+
+      if (this.tabAcitve === 'model') {
+        result = await this.$server.screenManage
+          .getPivotschemaByModel(id, this.screenInstance.screenInfo.tabId)
+          .finally(() => {
+            this.spinning = false;
+          });
+      } else {
+        result = await this.$server.screenManage
+          .getPivotschemaByAccess(id, this.screenInstance.screenInfo.tabId)
+          .finally(() => {
+            this.spinning = false;
+          });
+      }
+
       if (result && result.code === 200) {
         this.dimension = result.data.dimensions.map(item => {
           return { ...item, resourceType: resourceTypeMap[this.tabAcitve] };

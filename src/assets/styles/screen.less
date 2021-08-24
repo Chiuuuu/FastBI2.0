@@ -1,9 +1,9 @@
-@import url("../less/common/variables.less");
-@import url("../less/mixins/unit.less");
-@import url("../less/mixins//margin.less");
-@import url("../less/mixins/reset-antd-select.less");
-@import url("../fonts/bi-data.css");
-@deep: ~">>>";
+@import url('../less/common/variables.less');
+@import url('../less/mixins/unit.less');
+@import url('../less/mixins//margin.less');
+@import url('../less/mixins/reset-antd-select.less');
+@import url('../fonts/bi-data.css');
+@deep: ~'>>>';
 
 .model-field-search,
 .model-search {
@@ -49,7 +49,7 @@
 .clearfix {
   &::before,
   &::after {
-    content: "";
+    content: '';
     display: table;
   }
   &::after {
@@ -168,8 +168,7 @@ ul {
     cursor: pointer;
     border: 0;
     background-color: #f9fafb;
-    box-shadow: 0 0 0 1px rgba(63, 63, 68, 0.07),
-      0 1px 3px 0 rgba(63, 63, 68, 0.12);
+    box-shadow: 0 0 0 1px rgba(63, 63, 68, 0.07), 0 1px 3px 0 rgba(63, 63, 68, 0.12);
     width: 100%;
     &:hover {
       background-color: #8f8f8f;
@@ -245,7 +244,7 @@ ul {
   }
 }
 
-@name: ~"board-chart-unit";
+@name: ~'board-chart-unit';
 .@{name}-wrapper {
   width: 100%;
   height: 100%;
@@ -254,7 +253,7 @@ ul {
   .@{name}-title {
     height: 40px;
     line-height: 40px;
-    font-family: avenir, "PingFang SC", "Microsoft YaHei", Arial, sans-serif;
+    font-family: avenir, 'PingFang SC', 'Microsoft YaHei', Arial, sans-serif;
     word-break: break-all;
   }
   .@{name} {
@@ -279,9 +278,110 @@ ul {
     font-size: 18px;
   }
 }
-.float-right{
-  float:right !important;
+.float-right {
+  float: right !important;
 }
-.float-left{
-  float:left !important;
+.float-left {
+  float: left !important;
+}
+
+.database-popover {
+  right: 200px;
+  top: 64px;
+  bottom: 0;
+  background-color: #fff;
+  .warpper {
+    .select-table {
+      height: 36px;
+      line-height: 36px;
+      text-align: center;
+      background-color: #fff;
+      border-bottom: 1px solid #ccc;
+      position: relative;
+      font-size: 14px;
+      color: #282828;
+      font-weight: 500;
+      margin-bottom: 0;
+      padding: 0 10px;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      white-space: nowrap;
+    }
+    .panel-body {
+      height: calc(100% - 36px);
+      .body {
+        background-color: #fff;
+        height: 100%;
+        padding-top: 10px;
+        -webkit-box-sizing: border-box;
+        box-sizing: border-box;
+        .search {
+          margin: 10px auto;
+          margin-top: 10px;
+          position: relative;
+          width: 93%;
+          height: 28px;
+        }
+        .ant-input-affix-wrapper {
+          height: 100%;
+          width: 100%;
+        }
+        .ant-input {
+          height: 28px;
+          font-size: 12px;
+          border-radius: 2px;
+        }
+        .change-table {
+          height: 28px;
+          text-align: center;
+          line-height: 28px;
+        }
+        .table-list {
+          width: 100%;
+          .ant-select-selection--single {
+            height: 28px;
+          }
+        }
+        .list-content {
+          height: calc(100vh - 190px);
+          position: relative;
+          overflow-y: auto;
+          > ul {
+            li.z-clickable {
+              height: 30px;
+              line-height: 30px;
+              padding: 0;
+              position: relative;
+              cursor: pointer;
+              &.disable {
+                pointer-events: none;
+                cursor: not-allowed;
+                .title {
+                  color: #999;
+                }
+              }
+              &:hover {
+                background: #627cff;
+                .title {
+                  color: #fff;
+                }
+              }
+              .title {
+                height: 30px;
+                line-height: 30px;
+                font-size: 12px;
+                font-weight: 400;
+                padding: 0 28px 0 22px;
+                color: #282828;
+                overflow: hidden;
+                word-wrap: normal;
+                white-space: nowrap;
+                text-overflow: ellipsis;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
 }

@@ -431,6 +431,7 @@ export default {
     }
   }
   .measure-area {
+    padding-bottom: 16px;
     .prefix-icon {
       color: #40c0a8;
     }

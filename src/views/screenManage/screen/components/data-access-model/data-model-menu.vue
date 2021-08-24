@@ -26,7 +26,13 @@
       </div>
     </div>
     <div class="model-field-search">
-      <a-input-search :disabled="searchDisable" placeholder="搜索字段" @change="handleSearch" ref="js-filed-search" />
+      <a-input-search
+        :disabled="searchDisable"
+        placeholder="搜索字段"
+        @search="handleSearchFiled"
+        @change="handleSearch"
+        ref="js-filed-search"
+      />
       <div class="menu-list-wrapper" v-if="searchResult.length">
         <ul class="menu-list reset-scrollbar">
           <li class="menu-item" v-for="item in searchResult" :key="item.id" @click="handleSelectResult(item)">

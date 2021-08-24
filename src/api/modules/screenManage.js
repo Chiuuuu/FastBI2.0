@@ -189,12 +189,13 @@ const screenManage = {
   },
   /**
    * @description 数据模型--维度、度量列表
-   * @param {*} id
+   * @param {number|string} tableId 表id
+   * @param {number|string} tabId tab页面id
    * @returns
    */
-  getPivoSchemaList(tableId, screenId) {
+  getPivoSchemaList(tableId, tabId) {
     // return $axios.get(`/model/pivotschema/selectModelPivotschemaListByRole/${id}`)
-    return $axios.get(`/screen/pivotschema/selectModelPivotschemaListByRole/${tableId}/${screenId}`);
+    return $axios.get(`/screen/pivotschema/selectModelPivotschemaListByRole/${tableId}/${tabId}`);
   },
   /**
    * @description 根据维度度量获取数据
@@ -297,6 +298,7 @@ const screenManage = {
    * @description 保存大屏选中模型
    * @param {object} params
    * @param {number|string} params.screenId 大屏id
+   * @param {number|string} params.tabId 大屏tab的id
    * @param {string} params.resourceName 模型名称
    * @param {number|string} params.tableId 模型id
    */
@@ -307,8 +309,9 @@ const screenManage = {
    * @description 保存大屏选中接入表
    * @param {object} params
    * @param {number|string} params.screenId 大屏id
+   * @param {number|string} params.tabId 大屏tab的id
    * @param {string} params.resourceName 模型名称
-   * @param {number|string} params.datasoureId 数据源id
+   * @param {number|string} params.datasourceId 数据源id
    * @param {number|string} params.databaseId 数据库id
    * @param {number|string} params.tableId 表id
    */
@@ -317,11 +320,27 @@ const screenManage = {
   },
   /**
    *@description 大屏删除数据模型|数据接入
-   * @param {String} screenId 大屏id
+   * @param {String} tabId id
    * @param {String} tableId 删除的id
    */
-  deleteListDataByScreenIdAndTableId(screenId, tableId) {
-    return $axios.get(`/screen/pivotschema/del/${screenId}/${tableId}`);
+  deleteListDataByScreenIdAndTableId(tabId, tableId) {
+    return $axios.get(`/screen/pivotschema/del/${tabId}/${tableId}`);
+  },
+  /**
+   *@description 获取数据模型——维度度量
+   * @param {String} tabId id
+   * @param {String} tableId 删除的id
+   */
+  getPivotschemaByModel(tableId, tabId) {
+    return $axios.get(`/screen/pivotschema/model/${tableId}/${tabId}`);
+  },
+  /**
+   *@description 获取数据接入——维度度量
+   * @param {String} tabId id
+   * @param {String} tableId 删除的id
+   */
+  getPivotschemaByAccess(tableId, tabId) {
+    return $axios.get(`/screen/pivotschema/access/${tableId}/${tabId}`);
   },
 };
 
