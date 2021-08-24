@@ -29,6 +29,7 @@ export default {
      * @description 图表获取服务端数据
      */
     async getServerData() {
+      console.log(this);
       console.log('从这里获取服务端数据');
       this.serverData = {
         // legend: ['可口可乐', '百事可乐', '雪碧', '健力宝', '康师傅', '星巴克', '统一'],

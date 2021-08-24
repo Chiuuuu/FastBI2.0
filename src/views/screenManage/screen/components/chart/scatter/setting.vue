@@ -430,19 +430,27 @@ export default {
     // 显示内容选择列表
     scatterFormatList_() {
       let scatterFormatList = cloneDeep(this.scatterFormatList);
-      if (this.currentCom.setting.data.dimensions.length === 1 && this.currentCom.setting.data.measures.length === 2) {
+      if (
+        this.currentCom.setting.data.dimensions.length === 1 &&
+        this.currentCom.setting.data.xaxis.length === 1 &&
+        this.currentCom.setting.data.yaxis.length === 1
+      ) {
         scatterFormatList[1].label = this.currentCom.setting.data.dimensions[0].alias; //维度1
-        scatterFormatList[2].label = this.currentCom.setting.data.measures[0].alias; //度量1
-        scatterFormatList[3].label = this.currentCom.setting.data.measures[1].alias; //度量2
+        scatterFormatList[2].label = this.currentCom.setting.data.xaxis[0].alias; //度量1
+        scatterFormatList[3].label = this.currentCom.setting.data.yaxis[0].alias; //度量2
       }
       return scatterFormatList;
     },
     //  散点大小选择列表
     scatterSizeList_() {
       let scatterSizeList = cloneDeep(this.scatterSizeList);
-      if (this.currentCom.setting.data.dimensions.length === 1 && this.currentCom.setting.data.measures.length === 2) {
-        scatterSizeList[1].label = '按' + this.currentCom.setting.data.measures[0].alias; //度量1
-        scatterSizeList[2].label = '按' + this.currentCom.setting.data.measures[1].alias; //度量2
+      if (
+        this.currentCom.setting.data.dimensions.length === 1 &&
+        this.currentCom.setting.data.xaxis.length === 1 &&
+        this.currentCom.setting.data.yaxis.length === 1
+      ) {
+        scatterSizeList[1].label = '按' + this.currentCom.setting.data.xaxis[0].alias; //度量1
+        scatterSizeList[2].label = '按' + this.currentCom.setting.data.yaxis[0].alias; //度量2
       }
       return scatterSizeList;
     },
