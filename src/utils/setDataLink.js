@@ -23,7 +23,7 @@ export async function setLinkageData(pickValue, selectedComponent) {
 async function getBindData(chart, dimensionData) {
   const data = chart.setting.data;
   // 进行过数据筛选的不再执行联动
-  if (data.options.fileList.length) {
+  if (data.filter.fileList.length) {
     return;
   }
   let { pivotschemaId, dataType, value, name } = dimensionData;

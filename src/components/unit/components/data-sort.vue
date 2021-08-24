@@ -314,16 +314,16 @@ export default {
      * @description 当放置到数据排序
      */
     handleSetDataSort(data, method = 'add') {
-      let options = Object.assign({}, this.currentCom.setting.data.options);
+      let filter = Object.assign({}, this.currentCom.setting.data.filter);
       data = Object.assign({}, data, { asc: 1 }); //初始拖入默认升序 asc=1
-      options['sort'] = this.conversionArry('sort', data, method);
-      return { options };
+      filter['sort'] = this.conversionArry('sort', data, method);
+      return { filter };
     },
     /**
      * @description 公共转换成数组
      */
     conversionArry(key, data, method) {
-      let arry = [].concat(this.currentCom.setting.data.options[key]);
+      let arry = [].concat(this.currentCom.setting.data.filter[key]);
       arry = this.handleList(arry, data, method);
       return arry;
     },
@@ -344,8 +344,8 @@ export default {
       if (handler.value === item.asc) {
         return;
       }
-      let options = Object.assign({}, this.currentCom.setting.data.options);
-      options['sort'].forEach(data => {
+      let filter = Object.assign({}, this.currentCom.setting.data.filter);
+      filter['sort'].forEach(data => {
         if (data.id == item.id) {
           data.asc = handler.value;
         }
@@ -355,7 +355,7 @@ export default {
         target: this.currentCom,
         store: this.$store,
         eventBus: this.$EventBus,
-        data: { options },
+        data: { filter },
       });
     },
     /**
@@ -365,8 +365,8 @@ export default {
       if (handler.value === item.defaultAggregator) {
         return;
       }
-      let options = Object.assign({}, this.currentCom.setting.data.options);
-      options['sort'].forEach(data => {
+      let filter = Object.assign({}, this.currentCom.setting.data.filter);
+      filter['sort'].forEach(data => {
         if (data.id == item.id) {
           data.defaultAggregator = handler.value;
         }
@@ -376,7 +376,7 @@ export default {
         target: this.currentCom,
         store: this.$store,
         eventBus: this.$EventBus,
-        data: { options },
+        data: { filter },
       });
     },
     /**

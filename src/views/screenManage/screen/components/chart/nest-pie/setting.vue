@@ -51,7 +51,7 @@
                     type="dataFilter"
                     label="拖入字段"
                     limit
-                    :list="currentCom.setting.data.options.fileList"
+                    :list="currentCom.setting.data.filter.fileList"
                   >
                     <template #tip>
                       <UnitTip content="应用于当前图层"></UnitTip>
@@ -67,7 +67,7 @@
                     label="拖入字段"
                     limit
                     :openAggre="true"
-                    :list="currentCom.setting.data.options.sort"
+                    :list="currentCom.setting.data.filter.sort"
                   >
                     <template #tip>
                       <UnitTip content="应用于当前图层"></UnitTip>
