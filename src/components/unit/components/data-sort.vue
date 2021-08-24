@@ -52,6 +52,7 @@ const IconFont = Icon.createFromIconfontCN({
  */
 export default {
   name: 'UnitDataSort',
+  inject: ['boardSettingWrapper'],
   components: {
     IconFont,
   },

@@ -153,6 +153,7 @@ import { DROG_TYPE } from '@/views/screenManage/screen/container/drawing-board-s
  */
 export default {
   name: 'UnitDataFilter',
+  inject: ['boardSettingWrapper'],
   props: {
     type: {
       // 类型
