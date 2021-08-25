@@ -138,6 +138,30 @@ export default {
         return;
       }
       this.fileName = e.target.files[0].name;
+
+      const file = e.target.files[0];
+      if (file.size / 1024 / 1024 > 2) {
+        return this.$message.error('只支持2M以内的jpg/png格式图片');
+      }
+      const form = new FormData();
+      form.append('avatarfile', file);
+      this.$server.screenManage
+        .actionUploadImage(form)
+        .then(res => {
+          if (res.code === 200) {
+            let imageUrl = `${process.env.VUE_APP_SERVICE_URL}${res.imgUrl}`;
+            this.handleChange('echart', { customImageUrl: imageUrl });
+          } else {
+            this.$message.error(res.msg);
+          }
+        })
+        .catch(err => {
+          console.log(err);
+        })
+        .finally(() => {
+          // 清空input
+          e.target.value = null;
+        });
     },
     /**
      * @description 设置标题

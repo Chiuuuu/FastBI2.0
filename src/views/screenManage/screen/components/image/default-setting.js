@@ -25,6 +25,7 @@ export default merge(cloneDeep(BASE), {
           color: 'transparent',
         },
         opacity: 1,
+        customImageUrl: '', //图片文件
       },
     },
   },

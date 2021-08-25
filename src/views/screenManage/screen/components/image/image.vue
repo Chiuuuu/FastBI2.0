@@ -1,7 +1,7 @@
 <template>
   <div class="board-image" :style="ImageStyle">
-    <!-- <img src="" alt="" /> -->
-    <a-icon type="file-image" />
+    <img :src="imageUrl" alt="" v-if="imageUrl" />
+    <a-icon type="file-image" v-else />
   </div>
 </template>
 <script>
@@ -23,6 +23,7 @@ export default {
   data() {
     return {
       ImageStyle: {},
+      imageUrl: '',
     };
   },
   computed: {
@@ -63,7 +64,7 @@ export default {
     doWithOptions() {
       const {
         style: {
-          echart: { background, border, opacity },
+          echart: { background, border, opacity, customImageUrl },
         },
       } = this.options;
 
@@ -77,6 +78,7 @@ export default {
       };
 
       style = getStyle(style, checkProps, ['width', 'radius'], ['background', 'border']);
+      this.imageUrl = customImageUrl;
 
       return style;
     },
