@@ -51,10 +51,11 @@
       <!-- 数据总面板 start -->
       <a-spin class="data-panel-box" :spinning="spinning">
         <DataPanel
-          :dimension="dimension"
-          :measure="measure"
+          :dimension="panelDimension"
+          :measure="panelMeasure"
           :selectFiled="selectFiled"
           @cancelSelect="handleCancelSelect"
+          @changeRole="handleChangeFieldRole"
         ></DataPanel>
       </a-spin>
       <!-- 数据总面板 end -->
@@ -111,6 +112,20 @@ export default {
     accessList() {
       // 接入列表
       return this.screenInstance.screenInfo.accessList || [];
+    },
+    panelDimension() {
+      if (this.tabAcitve === 'model') {
+        return groupBy(this.dimension, 'tableNo');
+      } else {
+        return [].concat(this.dimension) || [];
+      }
+    },
+    panelMeasure() {
+      if (this.tabAcitve === 'model') {
+        return groupBy(this.measure, 'tableNo');
+      } else {
+        return [].concat(this.measure) || [];
+      }
     },
   },
   watch: {
@@ -256,13 +271,8 @@ export default {
 
       if (result && result.code === 200) {
         this.searchList = [].concat(result.data.dimensions, result.data.measures);
-        if (this.tabAcitve === 'model') {
-          this.dimension = groupBy(result.data.dimensions, 'tableNo');
-          this.measure = groupBy(result.data.measures, 'tableNo');
-        } else {
-          this.dimension = [].concat(result.data.dimensions) || [];
-          this.measure = [].concat(result.data.measures) || [];
-        }
+        this.dimension = [].concat(result.data.dimensions) || [];
+        this.measure = [].concat(result.data.measures) || [];
       } else {
         this.$message.error(result.msg || '获取维度度量失败');
       }
@@ -278,6 +288,17 @@ export default {
      */
     handleCancelSelect() {
       this.selectFiled = {};
+    },
+    /**
+     * @description 转为维度或度量
+     */
+    handleChangeFieldRole(item, dele, add) {
+      const id = item.id;
+      const index = this[dele].findIndex(n => n.id === id);
+      if (index > -1) {
+        const target = this[dele].splice(index, 1)[0];
+        this[add].push(target);
+      }
     },
   },
 };
