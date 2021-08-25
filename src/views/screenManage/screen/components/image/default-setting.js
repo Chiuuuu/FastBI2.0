@@ -17,7 +17,7 @@ export default merge(cloneDeep(BASE), {
       },
       echart: {
         border: {
-          width: 1,
+          width: 0,
           style: 'solid',
           color: '#fff',
         },
