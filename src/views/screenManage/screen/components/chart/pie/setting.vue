@@ -57,7 +57,7 @@
                     label="拖入字段"
                     limit
                     :openAggre="true"
-                    :list="currentCom.setting.data.filter.sort"
+                    :list="currentCom.setting.data.sort"
                   >
                     <template #tip>
                       <UnitTip content="应用于当前图层"></UnitTip>

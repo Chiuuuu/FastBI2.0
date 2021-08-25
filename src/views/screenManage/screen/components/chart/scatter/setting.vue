@@ -418,7 +418,7 @@ export default {
       ],
       // 标签显示内容
       scatterFormatList: [
-        { label: '无', value: '' },
+        // { label: '无', value: '' },
         { label: '维度1', value: '{@5}：{@2}' },
         { label: '度量1', value: '{@3}：{@0}' },
         { label: '度量2', value: '{@4}：{@1}' },
@@ -435,9 +435,9 @@ export default {
         this.currentCom.setting.data.xaxis.length === 1 &&
         this.currentCom.setting.data.yaxis.length === 1
       ) {
-        scatterFormatList[1].label = this.currentCom.setting.data.dimensions[0].alias; //维度1
-        scatterFormatList[2].label = this.currentCom.setting.data.xaxis[0].alias; //度量1
-        scatterFormatList[3].label = this.currentCom.setting.data.yaxis[0].alias; //度量2
+        scatterFormatList[0].label = this.currentCom.setting.data.dimensions[0].alias; //维度1
+        scatterFormatList[1].label = this.currentCom.setting.data.xaxis[0].alias; //度量1
+        scatterFormatList[2].label = this.currentCom.setting.data.yaxis[0].alias; //度量2
       }
       return scatterFormatList;
     },
@@ -499,7 +499,6 @@ export default {
           },
         },
       });
-      console.log(this.currentCom.setting.style.echart.customScatterLabel);
     },
     /**
      * @description 指标颜色

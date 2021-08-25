@@ -420,7 +420,6 @@ export default {
       let result = fun(data, method);
 
       result = this.handleSetDataModelId(result);
-      debugger;
       if (result && typeof result.justSkip === 'undefined') {
         this.$store.commit(historyMutation.COMMAND, {
           commandType: 'Data',
@@ -453,7 +452,7 @@ export default {
      */
     handleSetDataFilter(data, method = 'add') {
       let filter = Object.assign({}, this.currentCom.setting.data.filter);
-      filter[this.currentType + 'Limit'] = this.conversionArry(this.currentType + 'Limit', data, method);
+      // filter[this.currentType + 'Limit'] = this.conversionArry(this.currentType + 'Limit', data, method);
       filter['fileList'] = this.conversionArry('fileList', data, method);
 
       return { filter };

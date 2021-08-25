@@ -133,7 +133,7 @@ export default {
       const res = await this.$server.common.getData('/screen/getData', {
         id: this.shapeUnit.component.id,
         type: this.shapeUnit.component.type,
-        data: this.options.data,
+        ...this.options.data,
       });
       if (res.code === 500) {
         this.$message.error('isChange');

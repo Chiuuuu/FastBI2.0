@@ -9,6 +9,7 @@ export default merge(cloneDeep(BASE), {
     data: {
       dimensions: [], // 维度
       measures: [], // 度量
+      resourceType: '',
     },
     style: {
       echart: {
