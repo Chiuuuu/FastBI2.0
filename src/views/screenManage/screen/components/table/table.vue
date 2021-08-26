@@ -44,6 +44,7 @@ import { getStyle } from '@/utils';
 export default {
   name: `${BoardType.ChartProgress}View`,
   extends: BaseChart,
+  inject: ['shapeUnit'],
   components: {
     Tcontainer,
   },

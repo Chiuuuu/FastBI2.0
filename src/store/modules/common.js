@@ -51,11 +51,11 @@ const actions = {
   destroy_context_menu() {
     const mark = document.querySelector('#js-context-menu-mark');
     if (mark) {
-      document.body.removeChild(mark);
+      mark.remove();
     }
     const contextmenu = document.querySelector('#js-context-menu');
     if (contextmenu) {
-      document.body.removeChild(contextmenu);
+      contextmenu.remove();
     }
   },
 };

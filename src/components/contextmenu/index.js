@@ -25,15 +25,23 @@ var ContextMenu = function (options) {
     if (isFunction(defaultOpitons['handleMarkCancel'])) {
       defaultOpitons.handleMarkCancel();
     }
-    document.body.removeChild(mark);
-    document.body.removeChild(instance.vm.$el);
+    mark.remove();
+    instance.vm.$el.remove();
   }
   mark.oncontextmenu = function (e) {
     e.preventDefault();
   };
-  document.body.appendChild(mark);
-  // append到body
-  document.body.appendChild(instance.vm.$el);
+  if (defaultOpitons.markDom) {
+    defaultOpitons.markDom.appendChild(mark);
+  } else {
+    document.body.appendChild(mark);
+  }
+  if (defaultOpitons.containerDom) {
+    defaultOpitons.containerDom.appendChild(instance.vm.$el);
+  } else {
+    // append到body
+    document.body.appendChild(instance.vm.$el);
+  }
   return instance.vm;
 };
 
