@@ -258,6 +258,9 @@ export default {
         },
       });
       const dom = this.$refs['js-board-text-unit'];
+      // 文本框 -- 初始化值
+      dom.innerHTML = this.options.data.htmlText;
+
       this.editor = new MediumEditor(dom, {
         extensions: {
           'context-menu': new ContextMenuExtension(),

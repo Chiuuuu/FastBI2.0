@@ -1,7 +1,7 @@
 <template>
   <div class="board-image" :style="ImageStyle">
-    <img v-if="isValidUrl" :src="handleImgUrl(result.imgUrl)" :alt="result.name" />
-    <a-icon v-else type="file-image" />
+    <img class="pic" v-if="isValidUrl" :src="handleImgUrl(result.imgUrl)" :alt="result.name" />
+    <img class="icon" src="@/assets/images/file-image.png" v-else />
   </div>
 </template>
 <script>
@@ -149,14 +149,15 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  img {
+  .pic {
     display: inline-block;
     width: 100%;
     height: 100%;
   }
-  /deep/ .anticon {
-    font-size: 65px;
-    color: #fff;
+  .icon {
+    display: inline-block;
+    width: 65px;
+    height: 65px;
   }
 }
 </style>

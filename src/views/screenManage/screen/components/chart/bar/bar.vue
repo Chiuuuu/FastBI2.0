@@ -3,6 +3,7 @@ import BoardType from '@/views/screenManage/screen/setting/default-type';
 import BaseChart from '../base';
 import defaultData from './default-data';
 import merge from 'lodash/merge';
+import omit from 'lodash/omit';
 import { setLinkageData, resetOriginData } from '@/utils/setDataLink';
 /**
  * @description 柱状图
@@ -133,7 +134,7 @@ export default {
       const res = await this.$server.common.getData('/screen/getData', {
         id: this.shapeUnit.component.id,
         type: this.shapeUnit.component.type,
-        ...this.options.data,
+        ...omit(this.options.data, ['expands']),
       });
       if (res.code === 500) {
         this.$message.error('isChange');
