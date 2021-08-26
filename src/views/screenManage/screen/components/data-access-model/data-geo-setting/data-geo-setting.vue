@@ -127,11 +127,11 @@ const areaData = {
 export default {
   components: { matchWindow },
   name: 'geoSetting',
+  inject: ['boardSettingRightInstance'],
   props: {
     isShow: Boolean,
     region: String,
     dimensionsData: Object,
-    type: Number,
   },
   data() {
     return {
@@ -175,6 +175,9 @@ export default {
       let umatcheds = this.datas.filter(item => !item.MathedVal);
       return umatcheds.length;
     },
+    resourceType() {
+      return this.boardSettingRightInstance.resourceType;
+    },
   },
   mounted() {
     this.drawMap();
@@ -192,7 +195,7 @@ export default {
     async getDimensionsDatas() {
       let params = {
         level: '3',
-        fieldId: this.type === 3 ? this.dimensionsData.pivotschemaId : this.dimensionsData.fieldId, // 接入类型fieldId和pivotschemaId都是pivotschemaId，数据模型fieldId取原fieldId
+        fieldId: this.resourceType === 3 ? this.dimensionsData.pivotschemaId : this.dimensionsData.fieldId, // 接入类型fieldId和pivotschemaId都是pivotschemaId，数据模型fieldId取原fieldId
         country: '中国',
         province: '广东省',
         city: '广州市',
@@ -264,7 +267,7 @@ export default {
       //   }
       let params = {
         level: '3',
-        fieldId: this.type === 3 ? this.dimensionsData.pivotschemaId : this.dimensionsData.fieldId, // 接入类型fieldId和pivotschemaId都是pivotschemaId，数据模型fieldId取原fieldId
+        fieldId: this.resourceType === 3 ? this.dimensionsData.pivotschemaId : this.dimensionsData.fieldId, // 接入类型fieldId和pivotschemaId都是pivotschemaId，数据模型fieldId取原fieldId
         country: '中国',
         province: '广东省',
         city: '广州市',

@@ -24,7 +24,7 @@
                       :key="item.id"
                       type="dimension"
                       :data="item"
-                      :field-index="index"
+                      :field-index="name + ',' + index"
                       :selected="isSelected(item)"
                       @cancelSelect="handleCancelSelect"
                       @arrowClick="handleDimConextMenu"
@@ -79,7 +79,7 @@
                       :key="item.id"
                       type="measure"
                       :data="item"
-                      :field-index="index"
+                      :field-index="name + ',' + index"
                       :selected="isSelected(item)"
                       @cancelSelect="handleCancelSelect"
                       @arrowClick="handleMeaConextMenu"
@@ -116,7 +116,6 @@
       region="城市"
       :is-show="createMapVisible"
       :dimensions-data="createdMapData"
-      :type="resourceType"
       @close="createMapVisible = false"
       @handleSave="handleSave"
     />
@@ -130,7 +129,6 @@ import { mutationTypes as historyMutation } from '@/store/modules/history';
 import GeoSetting from './data-geo-setting/data-geo-setting.vue';
 export default {
   name: 'DataPanel',
-  inject: ['getResourceType'],
   components: {
     DataPanelItem,
     GeoSetting,
@@ -178,11 +176,6 @@ export default {
       createMapVisible: false, // 控制地理字段设置modal
     };
   },
-  computed: {
-    resourceType() {
-      return this.getResourceType();
-    },
-  },
   mounted() {
     this.$EventBus.$on('drop:dimension-list', this.dropDimensionList);
     this.$EventBus.$on('drop:measure-list', this.dropMeasureList);
@@ -227,18 +220,24 @@ export default {
     judgeItemClick(e, type) {
       let flag = false;
       let target = e.target;
-      if (target.classList.contains('field-item')) {
+      if (target.classList.contains('js-field-item')) {
         flag = true;
       } else {
         target = target.parentNode;
-        flag = target.classList.contains('field-item');
+        flag = target.classList.contains('js-field-item');
       }
       if (!flag) return flag;
-      let index = target.dataset.index;
+      // 如果是嵌套数组, 则以','分隔索引值(逗号是特殊字符, 字段名不会包含)
+      let index = target.dataset.index || '';
+      index = index.split(',');
+      let len = index.length;
+      if (len < 1) return false;
       if (type === 'dimension') {
-        return this.dimension[index];
+        const data = len === 1 ? this.dimension[index[0]] : this.dimension[index[0]][index[1]];
+        return { data, index };
       } else if (type === 'measure') {
-        return this.measure[index];
+        const data = len === 1 ? this.measure[index[0]] : this.measure[index[0]][index[1]];
+        return { data, index };
       } else {
         return false;
       }
@@ -248,8 +247,8 @@ export default {
      */
     handleCreateMenu(e, type) {
       e.stopPropagation();
-      const data = this.judgeItemClick(e, type);
-      if (!data) return;
+      const res = this.judgeItemClick(e, type);
+      if (!res) return;
       let contextMenu = [];
       if (type === 'dimension') {
         contextMenu = this.contextMenuDim;
@@ -257,9 +256,10 @@ export default {
         contextMenu = this.contextMenuMea;
       }
       const that = this;
+      const { data, index } = res;
       function addEvent(target) {
         target.$$fun = function () {
-          Array.prototype.push.call(arguments, that, data);
+          Array.prototype.push.call(arguments, that, data, index);
           target.onClick.apply(this, arguments);
         };
       }
@@ -283,19 +283,20 @@ export default {
     /**
      * @description 转换维度度量
      */
-    handleChangeRole(e, item, vm, data) {
+    handleChangeRole(e, item, vm, data, index) {
       let addList = [],
         deleList = [];
+      const len = index.length;
       if (data.role === 1) {
         // 维度转度量
         data.role = 2;
-        addList = this.measure;
-        deleList = this.dimension;
+        addList = len === 1 ? this.measure : this.measure[data.tableNo];
+        deleList = len === 1 ? this.dimension : this.dimension[data.tableNo];
       } else if (data.role === 2) {
         // 度量转维度
         data.role = 1;
-        addList = this.dimension;
-        deleList = this.measure;
+        addList = len === 1 ? this.dimension : this.dimension[data.tableNo];
+        deleList = len === 1 ? this.measure : this.measure[data.tableNo];
       }
       const target = [
         {
