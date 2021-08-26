@@ -48,6 +48,7 @@ import { parameter, mutationTypes as boardMutaion } from '@/store/modules/board'
 import { mutationTypes as historyMutation } from '@/store/modules/history';
 import { mapState } from 'vuex';
 import ContenxtmenuMethodMixin from '@/views/screenManage/screen/setting/contenxtmenu-method-mixin';
+import { checkFullScreen } from '@/utils';
 
 /**
  * @description 图表外框区
@@ -62,17 +63,25 @@ export default {
       pointList: ['leftTop', 'top', 'rightTop', 'right', 'rightBottom', 'bottom', 'leftBottom', 'left'], // 八个方向
       dragging: false, // 是否正则拖拽
       contenxtMenu: [
+        {
+          name: '导出',
+          readonly: true,
+          children: [{ name: '导出图片', onClick: this.handleExportImg }],
+        },
         // 右键菜单
         {
           name: '复制',
+          readonly: false,
           onClick: this.handleCopyComponent,
         },
         {
           name: '删除',
+          readonly: false,
           onClick: this.handleDeleComponent,
         },
         {
           name: '排列',
+          readonly: false,
           children: [
             {
               name: '置于顶层',
@@ -136,19 +145,16 @@ export default {
         this.isShowShapMover = true;
       }
     },
-    model(val) {
-      val === parameter.EDIT ? this.initContextMenu() : this.destoryContextMenu();
+    model() {
+      this.$store.dispatch('common/destroy_context_menu');
+      this.initContextMenu();
     },
   },
   mounted() {
-    if (this.model === parameter.EDIT) {
-      this.initContextMenu();
-    }
+    this.initContextMenu();
   },
   beforeDestroy() {
-    if (this.model === parameter.EDIT) {
-      this.destoryContextMenu();
-    }
+    this.destoryContextMenu();
   },
   methods: {
     /**
@@ -177,17 +183,23 @@ export default {
      */
     handleCreateMenu(e) {
       e.stopPropagation();
+      let list = this.contenxtMenu;
+      if (checkFullScreen()) {
+        list = this.contenxtMenu.filter(item => item.readonly);
+      }
       const that = this;
       function addEvent(target) {
         target.$$fun = function () {
-          Array.prototype.push.call(arguments, that.component, that.index);
+          Array.prototype.push.call(arguments, that.component, that.index, that);
           target.onClick.apply(this, arguments);
         };
       }
+      const targetDom = this.$parent.$el;
+      const isFullScreen = checkFullScreen();
       // eslint-disable-next-line no-new
       new ContextMenu({
         vm: that,
-        menus: that.contenxtMenu.map(item => {
+        menus: list.map(item => {
           if (item['children'] && item.children.length) {
             item.children.forEach(subitem => {
               addEvent(subitem);
@@ -200,6 +212,8 @@ export default {
         target: e,
         subPosition: 'right',
         handleMarkCancel: function () {},
+        containerDom: isFullScreen ? targetDom : null,
+        markDom: isFullScreen ? targetDom : null,
       });
     },
     /**

@@ -11,7 +11,11 @@
       <!-- 侧边栏 end -->
 
       <!-- 内容编辑区 start -->
-      <DrawingBoardContent :components="components" :type="parameter.EDIT"></DrawingBoardContent>
+      <DrawingBoardContent
+        :components="components"
+        :type="parameter.EDIT"
+        :screenName="screenInfo.screenName"
+      ></DrawingBoardContent>
       <!-- 内容编辑区 end -->
 
       <!-- 内容编辑区工具栏 start -->

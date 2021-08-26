@@ -111,7 +111,11 @@
           <div class="drawing-board-preview scrollbar" v-if="fileSelect.id > 0">
             <div class="preview-board-app">
               <!-- 内容编辑区 start -->
-              <DrawingBoardContent :components="components" :type="parameter.PREVIEW"></DrawingBoardContent>
+              <DrawingBoardContent
+                :components="components"
+                :type="parameter.PREVIEW"
+                :screenName="fileSelect.name"
+              ></DrawingBoardContent>
               <!-- 内容编辑区 end -->
 
               <!-- 内容编辑区工具栏 start -->
@@ -518,6 +522,9 @@ export default {
      * @description 编辑大屏
      */
     handleEditScreen() {
+      this.$store.commit(boardMutaion.SET_BOARD_MODEL, {
+        model: this.parameter.EDIT,
+      });
       this.$router.push({
         name: 'screenEdit',
         query: {

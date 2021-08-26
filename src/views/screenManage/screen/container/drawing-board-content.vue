@@ -7,7 +7,7 @@
         <!-- 画板控制拖放 start -->
         <div class="board-box board-dropable">
           <!-- 画板网格控制真实尺寸 start -->
-          <div class="board-grid" :style="boardGridStyle">
+          <div class="board-grid" ref="js-board-grid" :style="boardGridStyle">
             <BoardShapeUnit
               v-for="(item, index) in components"
               :key="item.id"
@@ -53,12 +53,15 @@ import ShapeRectangular from '../components/shape/rectangular/rectangular';
 import ChartMap from '../components/chart/map/map';
 
 import { parameter, mutationTypes as boardMutaion } from '@/store/modules/board';
+import ContextMenu from '@/components/contextmenu';
+import ContenxtmenuMethodMixin from '@/views/screenManage/screen/setting/contenxtmenu-method-mixin';
 
 /**
  * @description 大屏编辑区
  */
 export default {
   name: 'DrawingBoardContent',
+  mixins: [ContenxtmenuMethodMixin],
   components: {
     BoardShapeUnit,
     ShapeLine,
@@ -97,6 +100,11 @@ export default {
         return [parameter.PREVIEW, parameter.EDIT].indexOf(value) !== -1;
       },
     },
+    screenName: {
+      type: String,
+      required: false,
+      default: '大屏',
+    },
   },
   data() {
     return {
@@ -105,6 +113,11 @@ export default {
       boardFrameStyle: {}, // 画板外框样式
       boardCanvasStyle: {}, // 画板样式
       cacheBoardScale: '', // 缓存画板比例
+      contenxtMenuForScreen: [
+        { name: '导出当前大屏', onClick: this.handleExportScreen },
+        // 右键菜单
+        { name: '取消' },
+      ],
     };
   },
   computed: {
@@ -141,10 +154,13 @@ export default {
       },
     },
     boardModel(val) {
+      // 删除出现的右键菜单
+      this.$store.dispatch('common/destroy_context_menu');
       // 监听大屏模式
       if (val === parameter.FULLSCREEN) {
         this.cacheBoardScale = this.boardScale;
         this.fullScreenPreview();
+        this.initContextMenuForScreen();
       }
     },
   },
@@ -273,12 +289,54 @@ export default {
         document.removeEventListener(listener, this.listenerFun);
       });
     },
+    /**
+     * @description 初始化导出大屏右键菜单
+     */
+    initContextMenuForScreen() {
+      const screenDom = this.$refs['js-board-grid'];
+      screenDom && screenDom.addEventListener('contextmenu', this.handleCreateMenuForScreen);
+    },
+    /**
+     * @description 创建导出大屏右键菜单
+     */
+    handleCreateMenuForScreen(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      const that = this;
+      function addEvent(target) {
+        target.$$fun = function () {
+          Array.prototype.push.call(arguments, that);
+          target.onClick.apply(this, arguments);
+        };
+      }
+      const isFullScreen = checkFullScreen();
+      // eslint-disable-next-line no-new
+      new ContextMenu({
+        vm: that,
+        menus: that.contenxtMenuForScreen.map(item => {
+          if (item['children'] && item.children.length) {
+            item.children.forEach(subitem => {
+              addEvent(subitem);
+            });
+          } else {
+            addEvent(item);
+          }
+          return item;
+        }),
+        target: e,
+        subPosition: 'right',
+        handleMarkCancel: function () {},
+        containerDom: isFullScreen ? this.$refs['js-board-content'] : null,
+        markDom: isFullScreen ? this.$refs['js-board-content'] : null,
+      });
+    },
   },
   mounted() {
     this.$nextTick(() => {
       this.doWithRect();
       window.addEventListener('resize', this.doWithRect);
       this.listenerFullScreen();
+      this.initContextMenuForScreen();
     });
   },
   beforeDestroy() {
