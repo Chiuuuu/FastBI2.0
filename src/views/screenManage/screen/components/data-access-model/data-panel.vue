@@ -233,11 +233,9 @@ export default {
       let len = index.length;
       if (len < 1) return false;
       if (type === 'dimension') {
-        const data = len === 1 ? this.dimension[index[0]] : this.dimension[index[0]][index[1]];
-        return { data, index };
+        return len === 1 ? this.dimension[index[0]] : this.dimension[index[0]][index[1]];
       } else if (type === 'measure') {
-        const data = len === 1 ? this.measure[index[0]] : this.measure[index[0]][index[1]];
-        return { data, index };
+        return len === 1 ? this.measure[index[0]] : this.measure[index[0]][index[1]];
       } else {
         return false;
       }
@@ -256,10 +254,9 @@ export default {
         contextMenu = this.contextMenuMea;
       }
       const that = this;
-      const { data, index } = res;
       function addEvent(target) {
         target.$$fun = function () {
-          Array.prototype.push.call(arguments, that, data, index);
+          Array.prototype.push.call(arguments, that, res);
           target.onClick.apply(this, arguments);
         };
       }
@@ -283,32 +280,16 @@ export default {
     /**
      * @description 转换维度度量
      */
-    handleChangeRole(e, item, vm, data, index) {
-      let addList = [],
-        deleList = [];
-      const len = index.length;
+    handleChangeRole(e, item, vm, data) {
       if (data.role === 1) {
         // 维度转度量
         data.role = 2;
-        addList = len === 1 ? this.measure : this.measure[data.tableNo];
-        deleList = len === 1 ? this.dimension : this.dimension[data.tableNo];
+        this.$emit('changeRole', data, 'dimension', 'measure');
       } else if (data.role === 2) {
         // 度量转维度
         data.role = 1;
-        addList = len === 1 ? this.dimension : this.dimension[data.tableNo];
-        deleList = len === 1 ? this.measure : this.measure[data.tableNo];
+        this.$emit('changeRole', data, 'measure', 'dimension');
       }
-      const target = [
-        {
-          method: 'add',
-          list: addList,
-        },
-        {
-          method: 'dele',
-          list: deleList,
-        },
-      ];
-      this.recordHistory(target, data, 'move');
     },
     /**
      * @description 创建地理角色
@@ -340,38 +321,12 @@ export default {
     dropDimensionList(item) {
       // 修改维度度量类型为维度
       item.role = 1;
-
-      const addList = this.handleIsArray(this.dimension) ? this.dimension : this.dimension[item.tableNo];
-      const deleList = this.handleIsArray(this.measure) ? this.measure : this.measure[item.tableNo];
-      const target = [
-        {
-          method: 'add',
-          list: addList,
-        },
-        {
-          method: 'dele',
-          list: deleList,
-        },
-      ];
-      this.recordHistory(target, item, 'move');
+      this.$emit('changeRole', item, 'measure', 'dimension');
     },
     dropMeasureList(item) {
       // 修改维度度量类型为度量
       item.role = 2;
-
-      const addList = this.handleIsArray(this.measure) ? this.measure : this.measure[item.tableNo];
-      const deleList = this.handleIsArray(this.dimension) ? this.dimension : this.dimension[item.tableNo];
-      const target = [
-        {
-          method: 'add',
-          list: addList,
-        },
-        {
-          method: 'dele',
-          list: deleList,
-        },
-      ];
-      this.recordHistory(target, item, 'move');
+      this.$emit('changeRole', item, 'dimension', 'measure');
     },
   },
 };
