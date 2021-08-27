@@ -41,6 +41,7 @@ import ChartProgressSetting from '../components/progress/setting';
 import ChartTableSetting from '../components/table/setting';
 import BoardSettingRight from '../components/board-setting-right';
 import ChartMapSetting from '../components/chart/map/setting';
+import ChartFunnelSetting from '../components/chart/funnel/setting';
 import { mapState } from 'vuex';
 
 /**
@@ -107,6 +108,7 @@ export default {
     BoardImageSetting,
     ChartMapSetting,
     BoardSourceSetting,
+    ChartFunnelSetting,
   },
   computed: {
     ...mapState({

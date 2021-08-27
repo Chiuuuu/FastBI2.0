@@ -51,6 +51,7 @@ import ShapeLine from '../components/shape/line/line';
 import ShapeRound from '../components/shape/round/round';
 import ShapeRectangular from '../components/shape/rectangular/rectangular';
 import ChartMap from '../components/chart/map/map';
+import ChartFunnel from '../components/chart/funnel/funnel';
 
 import { parameter, mutationTypes as boardMutaion } from '@/store/modules/board';
 import ContextMenu from '@/components/contextmenu';
@@ -84,6 +85,7 @@ export default {
     BoardImage,
     ChartMap,
     BoardSource,
+    ChartFunnel,
   },
   props: {
     components: {

@@ -22,6 +22,7 @@ import ShapeRound from '@/views/screenManage/screen/components/shape/round/defau
 import ShapeRectangular from '@/views/screenManage/screen/components/shape/rectangular/default-setting';
 import ChartMap from '@/views/screenManage/screen/components/chart/map/default-setting';
 import Page from '@/views/screenManage/screen/components/page/default-setting';
+import ChartFunnel from '@/views/screenManage/screen/components/chart/funnel/default-setting';
 
 export default {
   ChartLine,
@@ -45,4 +46,5 @@ export default {
   ChartMap,
   BoardSource,
   Page,
+  ChartFunnel,
 };

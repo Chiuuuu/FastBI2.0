@@ -22,5 +22,6 @@ const BoardType = {
   ShapeRound: 'ShapeRound',
   ShapeRectangular: 'ShapeRectangular',
   ChartMap: 'ChartMap',
+  ChartFunnel: 'ChartFunnel',
 };
 export default BoardType;

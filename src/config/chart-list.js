@@ -62,6 +62,10 @@ const chartList = [
     name: '地图',
     type: BoardType.ChartMap,
   },
+  {
+    name: '漏斗图',
+    type: BoardType.ChartFunnel,
+  },
 ];
 
 export default chartList;
