@@ -15,6 +15,28 @@ let orginPageSettings = {
 };
 const app = {
   state: {
+    screenInfo: {
+      // 当前tab页的所有信息
+      screenName: '', // 大屏名称
+      screenId: '', // 大屏id
+      tabId: '', // 当前tab页id
+      tabName: '', // 当前tab页名称
+      accessList: [], // 数据接入列表
+      modelList: [], // 数据模型列表
+      privileges: [], // 大屏权限
+      screenGraphs: [], // 大屏图表
+      setting: {}, // 画布样式配置(背景, 宽高)
+    },
+    polymerizeType: [
+      // 聚合方式及中文映射
+      { name: '求和', value: 'SUM' },
+      { name: '平均', value: 'AVG' },
+      { name: '最大值', value: 'MAX' },
+      { name: '最小值', value: 'MIN' },
+      { name: '计数', value: 'COUNT' },
+      { name: '去重计数', value: 'DCNT' },
+    ],
+    tabs: [], // tab页列表
     orginPageSettings,
     pageSettings: orginPageSettings,
     // 状态数据
@@ -23,23 +45,10 @@ const app = {
     modelExpand: true, // 8-14数据模型面板
     coverageExpand: false, // 图层面板打开关闭
     isScreen: false, // 是否全屏
-    screenId: '', // 大屏id
-    fileName: '',
     parentId: '', // 大屏父id
     screenDataModels: [],
-    pageList: [],
     currentPageId: '',
     isPublish: '', // 大屏是否已发布
-    polymerizeType: [
-      // 聚合方式及中文映射
-      { name: '求和', value: 'SUM' },
-      { name: '平均', value: 'AVG' },
-      { name: '最大值', value: 'MAX' },
-      { name: '最小值', value: 'MIN' },
-      { name: '计数', value: 'CNT' },
-      { name: '计数', value: 'COUNT' },
-      { name: '去重计数', value: 'DCNT' },
-    ],
   },
   mutations: {
     SET_CANVAS_RANGE: (state, val) => {
@@ -55,27 +64,28 @@ const app = {
       state.coverageExpand = !state.coverageExpand;
     },
     SET_PAGE_SETTING: (state, setting) => {
-      console.log(setting);
-      state.pageSettings = { ...setting };
+      state.screenInfo.setting = { ...setting };
+    },
+    SET_SCREEN_INFO: (state, screenInfo) => {
+      state.screenInfo = screenInfo;
+    },
+    SET_SCREEN_ID(state, res) {
+      state.screenInfo.screenId = res;
+    },
+    SET_TAB_ID(state, id) {
+      state.screenInfo.tabId = id;
+    },
+    SET_TABS(state, tabs) {
+      state.tabs = tabs;
     },
     SET_IS_SCREEN: (state, val) => {
       state.isScreen = val;
-    },
-    SET_SCREEN_ID(state, res) {
-      console.log('screenId', res);
-      state.screenId = res;
     },
     SET_FILE_NAME(state, val) {
       state.fileName = val;
     },
     SET_PARENT_ID(state, id) {
       state.parentId = id;
-    },
-    SET_PAGE_LIST(state, pages) {
-      state.pageList = pages;
-    },
-    SET_PAGE_ID(state, page) {
-      state.currentPageId = page;
     },
     SET_IS_PUBLISH(state, isPublish) {
       state.isPublish = isPublish;
@@ -94,6 +104,9 @@ const app = {
     ToggleCoverageExpand: ({ commit }) => {
       commit('SET_COVERAGE_EXPAND');
     },
+    SetScreenInfo: ({ commit }, screenInfo) => {
+      commit('SET_SCREEN_INFO', screenInfo);
+    },
     SetPageSettings: ({ commit }, setting) => {
       commit('SET_PAGE_SETTING', setting);
     },
@@ -109,11 +122,11 @@ const app = {
     SetParentId({ commit }, id) {
       commit('SET_PARENT_ID', id);
     },
-    SetPageList({ commit }, pages) {
-      commit('SET_PAGE_LIST', pages);
+    SetTabs({ commit }, tabs) {
+      commit('SET_TABS', tabs);
     },
-    SetPageId({ commit }, page) {
-      commit('SET_PAGE_ID', page);
+    SetTabId({ commit }, id) {
+      commit('SET_TAB_ID', id);
     },
     SetIsPublish({ commit }, isPublish) {
       commit('SET_IS_PUBLISH', isPublish);

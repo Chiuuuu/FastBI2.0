@@ -97,6 +97,9 @@ export default {
         this.getScreenDetailByTabId(id, tabId);
       }
     },
+    tabs(newValue) {
+      this.$store.dispatch('SetTabs', newValue);
+    },
   },
   mounted() {
     const {
@@ -133,6 +136,7 @@ export default {
       const result = await this.$server.screenManage.getScreenTabs(screenId);
       if (result && result.code === 200) {
         this.tabs = [].concat(result.data.screenTabList);
+        this.$store.dispatch('SetTabId', this.tabs[0].id);
         this.getScreenDetailByTabId(result.data.id, tabId || this.tabs[0].id);
         this.$nextTick(() => {
           this.$refs.pageTools && this.$refs.pageTools.handleResize();
@@ -213,6 +217,7 @@ export default {
       if (needSave) {
         // 先保存当前的tab页面再进行切换
         this.handleSave(() => {
+          this.$store.dispatch('SetTabId', params.tabId);
           this.$router.push({
             query: {
               id: this.screenInfo.screenId,
@@ -221,6 +226,7 @@ export default {
           });
         }, '切换失败');
       } else {
+        this.$store.dispatch('SetTabId', params.tabId);
         this.$router.push({
           query: {
             id: this.screenInfo.screenId,
@@ -314,6 +320,7 @@ export default {
         ...this.screenInfo,
         ...data,
       };
+      this.$store.dispatch('SetPageSettings', this.screenInfo);
     },
   },
 };
