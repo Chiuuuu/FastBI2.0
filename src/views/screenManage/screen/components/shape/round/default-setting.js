@@ -5,6 +5,7 @@ import cloneDeep from 'lodash/cloneDeep';
 
 export default merge(cloneDeep(BASE), {
   type: BoardType.ShapeRound,
+  graphName: '圆形',
   setting: {
     style: {
       size: {

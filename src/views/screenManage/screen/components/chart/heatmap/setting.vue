@@ -2,7 +2,7 @@
   <div class="chart-setting">
     <div class="panel-setting">
       <div class="setting-wrapper">
-        <h2 class="title">矩形热力图</h2>
+        <h2 class="title">{{ currentCom.graphName }}</h2>
         <!-- Tab切换栏 start -->
         <div class="tab-wrapper">
           <Tabs v-model="tabAcitve">

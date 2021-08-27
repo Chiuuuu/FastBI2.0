@@ -5,6 +5,7 @@ import cloneDeep from 'lodash/cloneDeep';
 
 export default merge(cloneDeep(BASE), {
   type: BoardType.ChartHeatmap,
+  graphName: '矩形热力图',
   setting: {
     data: {
       measures: [], // 度量

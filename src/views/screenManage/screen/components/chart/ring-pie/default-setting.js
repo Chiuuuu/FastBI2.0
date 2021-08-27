@@ -6,6 +6,7 @@ import cloneDeep from 'lodash/cloneDeep';
 const fontSize = 16;
 export default merge(cloneDeep(BASE), {
   type: BoardType.ChartRingPie,
+  graphName: '环形饼图',
   setting: {
     data: {
       progress: [], // 进度

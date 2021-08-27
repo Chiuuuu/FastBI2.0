@@ -5,6 +5,7 @@ import cloneDeep from 'lodash/cloneDeep';
 
 export default merge(cloneDeep(BASE), {
   type: BoardType.Source,
+  graphName: '图片',
   setting: {
     data: {
       imgUrl: '',

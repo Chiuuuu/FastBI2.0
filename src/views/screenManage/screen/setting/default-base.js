@@ -8,6 +8,7 @@ export default {
   id: '', // 图表的id
   type: '', // 图表的类型
   tabs: [],
+  graphName: '', //图表名称
   setting: {
     // 配置信息
     data: {

@@ -5,6 +5,7 @@ import cloneDeep from 'lodash/cloneDeep';
 
 export default merge(cloneDeep(BASE), {
   type: BoardType.ShapeLine,
+  graphName: '直线',
   setting: {
     style: {
       size: {

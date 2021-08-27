@@ -5,6 +5,7 @@ import cloneDeep from 'lodash/cloneDeep';
 
 export default merge(cloneDeep(BASE), {
   type: BoardType.Text,
+  graphName: '文本选择框',
   setting: {
     data: {
       measures: [],

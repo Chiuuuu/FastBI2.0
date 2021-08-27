@@ -2,8 +2,8 @@ import { mutationTypes as boardMutaion } from '@/store/modules/board';
 import cloneDeep from 'lodash/cloneDeep';
 import html2canvas from 'html2canvas';
 import JSPDF from 'jspdf';
-import { mapGetters } from 'vuex';
-// import { Loading } from 'element-ui';
+import { mapState } from 'vuex';
+import { Loading } from 'element-ui';
 /**
  * @description 下载图片
  */
@@ -81,7 +81,9 @@ function exportPdf(canvas, name) {
 }
 const ContenxtmenuMethodMixin = {
   computed: {
-    ...mapGetters(['fileName', 'pageList']),
+    ...mapState({
+      screenInfo: state => state.app.screenInfo.setting,
+    }),
   },
   methods: {
     /**
@@ -190,7 +192,7 @@ const ContenxtmenuMethodMixin = {
     async handleChartDataComponent(e, item, component) {
       console.log(e, item, component);
       // 判断当前图表数据为服务数据
-      if (this.$children[0].isServerData()) {
+      if (!this.$children[0].isServerData()) {
         let dom = document.querySelector('.board-canvas');
         this.$message.config({
           getContainer: () => dom,
@@ -199,139 +201,113 @@ const ContenxtmenuMethodMixin = {
         return;
       }
 
-      // let dataList = await this.getChartData(component);
-      // 查看数据弹出展示窗
-      // if (type === 'view') {
-      //   this.showChartData(this.chartData);
-      //   return
-      // }
-      // return dataList
+      let dataList = await this.getChartData(component);
+      // 查看数据弹出展示窗 -- 在board-shape-unit.vue
+      this.showChartData(this.chartData);
+
+      return dataList;
     },
     // 查看/导出数据 -- 构造数据
-    // async getChartData(component) {
-    //   console.log(this);
-    //   let tabName = '';
-    //   this.pageList.forEach(item => {
-    //     if (component.tabId === item.id) {
-    //       tabName = item.name;
-    //     }
-    //   })
-    //   let params = {
-    //     id: component.id,
-    //     type: component.type,
-    //     screenName: this.fileName,
-    //     tabName: tabName,
-    //     graphName: component.graphName,
-    //   };
-    //   let loadingInstance = Loading.service({
-    //     lock: true,
-    //     text: '加载中...',
-    //     target: 'body',
-    //     background: 'rgb(255, 255, 255, 0.6)'
-    //   });
-    //   let res = await this.$server.screenManage.getGraphInfo(params);
-    //   loadingInstance.close();
-    //   if (res.code !== 200) {
-    //     this.$message.error(res.msg || '请重新操作')
-    //     return;
-    //   }
+    async getChartData(component) {
+      // let params = {
+      //   id: component.id,
+      //   type: component.type,
+      //   screenName: this.screenInfo.screenName,
+      //   tabName: this.screenInfo.tabName,
+      //   graphName: component.graphName,
+      // };
+      let params = {
+        id: '590847113604485120',
+        type: 'v-histogram',
+        screenName: '21',
+        tabName: '页面1',
+        graphName: '柱状图',
+      };
 
-    //   let source = res.data || [];
+      let loadingInstance = Loading.service({
+        lock: true,
+        text: '加载中...',
+        target: 'body',
+        background: 'rgb(255, 255, 255, 0.6)',
+      });
+      let res = await this.$server.screenManage.getGraphInfo(params);
+      loadingInstance.close();
+      if (res.code !== 200) {
+        this.$message.error(res.msg || '请重新操作');
+        return;
+      }
 
-    //   let columns = [];
-    //   let rows = [];
-    //   let tableName = [];
-    //   let exportList = [];
+      let source = res.data || [];
 
-    //   if (this.currSelected.setting.chartType === 'v-map') {
-    //     await Promise.all(
-    //       Object.keys(source).map(async item => {
-    //         if (source[item]) {
-    //           let aliasKeys = this.handleTableColumns(
-    //             Object.keys(source[item][0]),
-    //             item
-    //           )
-    //           columns.push(aliasKeys)
-    //           let type = '填充'
-    //           let row = []
-    //           if (item === 'fillList') {
-    //             row = await handleReturnChartData(
-    //               source[item],
-    //               this.currSelected.setting,
-    //               false,
-    //               aliasKeys.filter(item => item.role === 2)
-    //             )
-    //             type = '填充'
-    //           } else if (item === 'labelList') {
-    //             row = await handleReturnChartData(
-    //               source[item],
-    //               this.currSelected.setting,
-    //               true,
-    //               aliasKeys.filter(item => item.role === 2)
-    //             )
-    //           }
-    //           rows.push(row)
-    //           tableName.push(type)
-    //           let aliasObj = {}
-    //           aliasKeys.forEach((alias, index) => {
-    //             aliasObj['name' + index] = alias['colName']
-    //           })
-    //           let cunstomRow = source[item].map(row => {
-    //             let obj = {}
-    //             aliasKeys.forEach((alias, index) => {
-    //               obj['name' + index] = row[alias['colName']]
-    //             })
-    //             return obj
-    //           })
-    //           let titleRow = { name0: type, name1: '', name2: '' }
-    //           cunstomRow = [titleRow, aliasObj].concat(cunstomRow)
-    //           exportList = cunstomRow.concat(exportList)
-    //         }
-    //       })
-    //     )
-    //   } else {
-    //     // 处理空数据
-    //     columns = [this.handleTableColumns(Object.keys(source[0]))]
-    //     source = await handleReturnChartData(
-    //       source,
-    //       this.currSelected.setting,
-    //       false,
-    //       columns[0].filter(item => item.role === 2)
-    //     )
-    //     rows = [source]
-    //     exportList = source
-    //   }
-    //   this.chartData = {
-    //     columns,
-    //     rows,
-    //     tableName,
-    //   };
-    //   return exportList;
-    // },
-    // 处理表头, 按拖入的维度度量顺序排列
-    // handleTableColumns(keys, label) {
-    //   const apiData = this.currSelected.setting.api_data
-    //   let fieldList = []
-    //   if (label && label == 'labelList') {
-    //     // 地图 -- 标记点数据
-    //     fieldList = []
-    //       .concat(apiData.labelDimensions)
-    //       .concat(apiData.labelMeasures)
-    //   } else {
-    //     fieldList = [].concat(apiData.dimensions).concat(apiData.measures)
-    //   }
-    //   const column = []
-    //   fieldList.map(item => {
-    //     if (keys.includes(item.alias)) {
-    //       column.push({
-    //         alias: item.alias,
-    //         colName: this.formatAggregator(item),
-    //         role: item.role
-    //       })
-    //     }
-    //   })
-    //   return column
-    // },
+      let columns = [];
+      let rows = [];
+      let tableName = [];
+      let exportList = [];
+
+      if (component.type === 'ChartMap') {
+        await Promise.all(
+          Object.keys(source).map(async item => {
+            if (source[item]) {
+              let aliasKeys = this.handleTableColumns(Object.keys(source[item][0]), item);
+              columns.push(aliasKeys);
+              let type = '填充';
+              let row = [];
+              if (item === 'fillList') {
+                row = source[item];
+                // row = await handleReturnChartData(
+                //   source[item],
+                //   this.currSelected.setting,
+                //   false,
+                //   aliasKeys.filter(item => item.role === 2)
+                // )
+                type = '填充';
+              } else if (item === 'labelList') {
+                row = source[item];
+                // row = await handleReturnChartData(
+                //   source[item],
+                //   this.currSelected.setting,
+                //   true,
+                //   aliasKeys.filter(item => item.role === 2)
+                // )
+              }
+              rows.push(row);
+              tableName.push(type);
+              let aliasObj = {};
+              aliasKeys.forEach((alias, index) => {
+                aliasObj['name' + index] = alias['colName'];
+              });
+              let cunstomRow = source[item].map(row => {
+                let obj = {};
+                aliasKeys.forEach((alias, index) => {
+                  obj['name' + index] = row[alias['colName']];
+                });
+                return obj;
+              });
+              let titleRow = { name0: type, name1: '', name2: '' };
+              cunstomRow = [titleRow, aliasObj].concat(cunstomRow);
+              exportList = cunstomRow.concat(exportList);
+            }
+          }),
+        );
+      } else {
+        // 处理空数据
+        columns = [this.$children[0].handleTableColumns(Object.keys(source[0]))];
+        // source = await handleReturnChartData(
+        //   source,
+        //   this.currSelected.setting,
+        //   false,
+        //   columns[0].filter(item => item.role === 2)
+        // )
+        rows = [source];
+        exportList = source;
+      }
+      this.chartData = {
+        columns,
+        rows,
+        tableName,
+      };
+      return exportList;
+    },
   },
 };
 

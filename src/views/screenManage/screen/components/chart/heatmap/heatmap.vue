@@ -13,6 +13,13 @@ export default {
   extends: BaseChart,
   methods: {
     /**
+     * @description 获取拖入的维度度量列数据
+     */
+    getFieldList() {
+      const { data } = this.options;
+      return [].concat(data.measures).concat(data.xaxis).concat(data.yaxis);
+    },
+    /**
      * @description 判断是否获取服务端数据
      */
     isServerData() {

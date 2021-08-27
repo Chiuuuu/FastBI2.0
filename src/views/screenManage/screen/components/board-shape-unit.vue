@@ -40,6 +40,7 @@
     ></div>
 
     <!-- 查看数据 -->
+    <UnitChartTableData :show="show" :chart-data="chartData" @cancel="show = false"></UnitChartTableData>
   </div>
 </template>
 <script>
@@ -109,6 +110,8 @@ export default {
           ],
         },
       ],
+      show: false, // 图表数据查看
+      chartData: {}, // 图表数据
     };
   },
   provide() {
@@ -564,6 +567,13 @@ export default {
      */
     handleDbClick() {
       this.isShowShapMover = false;
+    },
+    /**
+     * @description 查看数据
+     */
+    showChartData(chartData) {
+      this.chartData = chartData;
+      this.show = true;
     },
   },
 };

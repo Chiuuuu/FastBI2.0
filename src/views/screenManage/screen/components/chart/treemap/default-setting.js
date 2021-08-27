@@ -5,6 +5,7 @@ import cloneDeep from 'lodash/cloneDeep';
 
 export default merge(cloneDeep(BASE), {
   type: BoardType.ChartTreemap,
+  graphName: '矩形树图',
   setting: {
     data: {
       dimensions: [], // 维度

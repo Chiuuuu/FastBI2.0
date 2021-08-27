@@ -5,6 +5,7 @@ import cloneDeep from 'lodash/cloneDeep';
 
 export default merge(cloneDeep(BASE), {
   type: BoardType.ChartRadar,
+  graphName: '普通雷达图',
   setting: {
     data: {
       dimensions: [], // 维度

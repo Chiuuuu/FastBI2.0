@@ -6,6 +6,7 @@ import cloneDeep from 'lodash/cloneDeep';
 const fontSize = 14;
 export default merge(cloneDeep(BASE), {
   type: BoardType.ChartNestPie,
+  graphName: '嵌套饼图',
   setting: {
     data: {
       outerIng: [], // 外圈

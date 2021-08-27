@@ -5,6 +5,7 @@ import cloneDeep from 'lodash/cloneDeep';
 
 export default merge(cloneDeep(BASE), {
   type: BoardType.ChartBar,
+  graphName: '普通柱状图',
   setting: {
     data: {
       dimensions: [], // 维度

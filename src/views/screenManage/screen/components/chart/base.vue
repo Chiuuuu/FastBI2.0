@@ -7,7 +7,7 @@
   </div>
 </template>
 <script>
-import { mapState } from 'vuex';
+import { mapState, mapGetters } from 'vuex';
 
 /**
  * @description chart的公共组件
@@ -33,6 +33,7 @@ export default {
       // 当前组件状态
       currentComState: state => state.board.currentComState,
     }),
+    ...mapGetters(['polymerizeType']),
     titleStyle() {
       // 标题样式
       const { style } = this.options;
@@ -198,6 +199,44 @@ export default {
             '0x' + hex.slice(5, 7),
           )},${opacity})`
         : '';
+    },
+    /**
+     * @description 获取拖入的维度度量列数据
+     * 各个图表文件里重写该方法
+     */
+    getFieldList() {
+      // const { data } = this.options;
+      // return [].concat(data.dimensions).concat(data.measures);
+    },
+    /**
+     * @description 处理表头名字显示
+     * @param {*} item 当前列
+     */
+    formatAggregator(item) {
+      const fun = this.polymerizeType.find(x => x.value === item.defaultAggregator);
+      if (item.role === 2) {
+        return `${item.alias} (${fun.name})`;
+      } else {
+        return item.alias;
+      }
+    },
+    /**
+     * @description 查看数据 -- 处理表头, 按拖入的维度度量顺序排列
+     * @param { array } keys 列名
+     */
+    handleTableColumns(keys) {
+      let fieldList = this.getFieldList();
+      const column = [];
+      fieldList.map(item => {
+        if (keys.includes(item.alias)) {
+          column.push({
+            alias: item.alias,
+            colName: this.formatAggregator(item),
+            role: item.role,
+          });
+        }
+      });
+      return column;
     },
   },
 };

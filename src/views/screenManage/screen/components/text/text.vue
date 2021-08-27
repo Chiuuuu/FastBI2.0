@@ -142,6 +142,13 @@ export default {
   },
   methods: {
     /**
+     * @description 获取拖入的维度度量列数据
+     */
+    getFieldList() {
+      const { data } = this.options;
+      return [].concat(data.measures);
+    },
+    /**
      * @description 初始化编辑器
      */
     initEditor() {

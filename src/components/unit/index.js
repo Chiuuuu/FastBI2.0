@@ -19,6 +19,7 @@ import UnitLabel from './components/label.vue';
 import UnitDrawing from './components/drawing.vue';
 import UnitInputField from './components/input-field.vue';
 import UnitGridMargin from './components/grid-margin.vue';
+import UnitChartTableData from './components/chart-table-data.vue';
 
 const UnitList = [
   UnitBackgroundColor,
@@ -41,6 +42,7 @@ const UnitList = [
   UnitDrawing,
   UnitInputField,
   UnitGridMargin,
+  UnitChartTableData,
 ];
 
 UnitList.forEach(Component => {

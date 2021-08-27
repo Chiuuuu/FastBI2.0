@@ -6,6 +6,7 @@ import cloneDeep from 'lodash/cloneDeep';
 const fontSize = 14;
 export default merge(cloneDeep(BASE), {
   type: BoardType.ChartPie,
+  graphName: '普通饼图',
   setting: {
     data: {
       dimensions: [], // 维度
