@@ -5,6 +5,7 @@ import cloneDeep from 'lodash/cloneDeep';
 
 export default merge(cloneDeep(BASE), {
   type: BoardType.ChartLine,
+  graphName: '普通折线图',
   setting: {
     data: {
       dimensions: [], // 维度

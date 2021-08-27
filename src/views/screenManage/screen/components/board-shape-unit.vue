@@ -38,6 +38,8 @@
       @mousedown.stop="$event => handleMouseDown($event, 'rotate')"
       v-if="isShapeLine && model === parameter.EDIT"
     ></div>
+
+    <!-- 查看数据 -->
   </div>
 </template>
 <script>
@@ -63,6 +65,11 @@ export default {
       pointList: ['leftTop', 'top', 'rightTop', 'right', 'rightBottom', 'bottom', 'leftBottom', 'left'], // 八个方向
       dragging: false, // 是否正则拖拽
       contenxtMenu: [
+        {
+          name: '查看数据',
+          readonly: true,
+          onClick: this.handleChartDataComponent,
+        },
         {
           name: '导出',
           readonly: true,
