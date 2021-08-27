@@ -23,5 +23,6 @@ const BoardType = {
   ShapeRectangular: 'ShapeRectangular',
   ChartMap: 'ChartMap',
   ChartFunnel: 'ChartFunnel',
+  QuatoCard: 'BoardQuatoCard',
 };
 export default BoardType;

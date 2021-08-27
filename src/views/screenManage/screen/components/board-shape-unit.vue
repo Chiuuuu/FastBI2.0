@@ -74,7 +74,11 @@ export default {
         {
           name: '导出',
           readonly: true,
-          children: [{ name: '导出图片', onClick: this.handleExportImg }],
+          children: [
+            { name: 'excel', onClick: this.handleExportExcel },
+            { name: 'csv', onClick: this.handleExportCsv },
+            { name: '导出图片', onClick: this.handleExportImg },
+          ],
         },
         // 右键菜单
         {
@@ -148,6 +152,10 @@ export default {
     isShapeLine() {
       return this.component.type === BoardType.ShapeLine;
     },
+    // 是否需要导出
+    isNeedExport() {
+      return this.component.type.includes('Chart');
+    },
   },
   watch: {
     isActive(val) {
@@ -193,9 +201,16 @@ export default {
      */
     handleCreateMenu(e) {
       e.stopPropagation();
+      const isFullScreen = checkFullScreen();
+      if (isFullScreen && !this.isNeedExport) {
+        return;
+      }
       let list = this.contenxtMenu;
-      if (checkFullScreen()) {
-        list = this.contenxtMenu.filter(item => item.readonly);
+      if (isFullScreen) {
+        list = list.filter(item => item.readonly);
+      }
+      if (!this.isNeedExport) {
+        list = list.filter(item => !item.readonly);
       }
       const that = this;
       function addEvent(target) {
@@ -204,8 +219,7 @@ export default {
           target.onClick.apply(this, arguments);
         };
       }
-      const targetDom = this.$parent.$el;
-      const isFullScreen = checkFullScreen();
+      const targetDom = this.$parent.$parent.$refs['js-board-content'];
       // eslint-disable-next-line no-new
       new ContextMenu({
         vm: that,

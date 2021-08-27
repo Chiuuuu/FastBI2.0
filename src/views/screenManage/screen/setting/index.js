@@ -21,6 +21,7 @@ import ShapeLine from '@/views/screenManage/screen/components/shape/line/default
 import ShapeRound from '@/views/screenManage/screen/components/shape/round/default-setting';
 import ShapeRectangular from '@/views/screenManage/screen/components/shape/rectangular/default-setting';
 import ChartMap from '@/views/screenManage/screen/components/chart/map/default-setting';
+import BoardQuatoCard from '@/views/screenManage/screen/components/quota-card/default-setting';
 import Page from '@/views/screenManage/screen/components/page/default-setting';
 import ChartFunnel from '@/views/screenManage/screen/components/chart/funnel/default-setting';
 
@@ -44,6 +45,7 @@ export default {
   BoardText,
   BoardImage,
   ChartMap,
+  BoardQuatoCard,
   BoardSource,
   Page,
   ChartFunnel,

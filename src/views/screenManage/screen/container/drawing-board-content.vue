@@ -1,31 +1,33 @@
 <template>
-  <div class="drawing-board-content reset-scrollbar" ref="js-board-content">
-    <!-- 画板外框控制视图宽高 start -->
-    <div class="board-frame" :style="boardFrameStyle">
-      <!-- 画板控制缩放比例 start -->
-      <div class="board-canvas" :style="boardCanvasStyle" @mousedown="handleBoardFrame">
-        <!-- 画板控制拖放 start -->
-        <div class="board-box board-dropable">
-          <!-- 画板网格控制真实尺寸 start -->
-          <div class="board-grid" ref="js-board-grid" :style="boardGridStyle">
-            <BoardShapeUnit
-              v-for="(item, index) in components"
-              :key="item.id"
-              :config="item.setting"
-              :index="index"
-              :component="item"
-            >
-              <component :is="item.type" :options="item.setting"></component>
-            </BoardShapeUnit>
+  <a-spin :spinning="spinning" :tip="tip">
+    <div class="drawing-board-content reset-scrollbar" ref="js-board-content">
+      <!-- 画板外框控制视图宽高 start -->
+      <div class="board-frame" :style="boardFrameStyle">
+        <!-- 画板控制缩放比例 start -->
+        <div class="board-canvas" :style="boardCanvasStyle" @mousedown="handleBoardFrame">
+          <!-- 画板控制拖放 start -->
+          <div class="board-box board-dropable">
+            <!-- 画板网格控制真实尺寸 start -->
+            <div class="board-grid" ref="js-board-grid" :style="boardGridStyle">
+              <BoardShapeUnit
+                v-for="(item, index) in components"
+                :key="item.id"
+                :config="item.setting"
+                :index="index"
+                :component="item"
+              >
+                <component :is="item.type" :options="item.setting"></component>
+              </BoardShapeUnit>
+            </div>
+            <!-- 画板网格控制真实尺寸 end -->
           </div>
-          <!-- 画板网格控制真实尺寸 end -->
+          <!-- 画板控制拖放 end -->
         </div>
-        <!-- 画板控制拖放 end -->
+        <!-- 画板控制缩放比例 end -->
       </div>
-      <!-- 画板控制缩放比例 end -->
+      <!-- 画板外框控制视图宽高 end -->
     </div>
-    <!-- 画板外框控制视图宽高 end -->
-  </div>
+  </a-spin>
 </template>
 <script>
 import { mapState } from 'vuex';
@@ -52,6 +54,7 @@ import ShapeRound from '../components/shape/round/round';
 import ShapeRectangular from '../components/shape/rectangular/rectangular';
 import ChartMap from '../components/chart/map/map';
 import ChartFunnel from '../components/chart/funnel/funnel';
+import BoardQuatoCard from '../components/quota-card/quota-card';
 
 import { parameter, mutationTypes as boardMutaion } from '@/store/modules/board';
 import ContextMenu from '@/components/contextmenu';
@@ -84,6 +87,7 @@ export default {
     BoardText,
     BoardImage,
     ChartMap,
+    BoardQuatoCard,
     BoardSource,
     ChartFunnel,
   },
@@ -115,6 +119,8 @@ export default {
       boardFrameStyle: {}, // 画板外框样式
       boardCanvasStyle: {}, // 画板样式
       cacheBoardScale: '', // 缓存画板比例
+      spinning: false,
+      tip: '导出大屏...',
       contenxtMenuForScreen: [
         { name: '导出当前大屏', onClick: this.handleExportScreen },
         // 右键菜单

@@ -1,0 +1,202 @@
+<template>
+  <div class="board-quota-card">
+    <div class="board-chart-unit-title" :style="titleStyle" v-if="options.style.title.show">
+      {{ options.style.title.text }}
+    </div>
+    <p v-if="options.style.echart.totalQuatoTitle.show" class="total-quota-title" :style="totalQuatoTitleStyle">
+      {{ totalQuotaTitle }}
+    </p>
+    <p class="total-quota-value" :style="totalQuatoValueStyle">{{ totalQuotaValue }}</p>
+    <p class="secondary-quota" v-for="(quota, index) in secondaryQuotas" :key="index">
+      <span
+        v-if="options.style.echart.secondaryQuatoTitle.show"
+        class="secondary-quota-title"
+        :style="secondaryQuatoTitleStyle"
+      >
+        {{ quota.secondaryQuotasTitle }}
+      </span>
+      <span class="secondary-quota-quota-value" :style="secondaryQuatoValueStyle">
+        {{ quota.secondaryQuotasValue }}
+      </span>
+    </p>
+  </div>
+</template>
+<script>
+import BoardType from '@/views/screenManage/screen/setting/default-type';
+// import { getStyle } from '@/utils';
+import defaultData from './default-data';
+import BaseChart from '../chart/base';
+/**
+ * @description 文本框
+ */
+export default {
+  name: `${BoardType.QuatoCard}View`,
+  extends: BaseChart,
+  data() {
+    return {
+      totalQuotaTitle: '',
+      totalQuotaValue: '',
+      secondaryQuotas: [],
+      totalQuatoTitleStyle: {},
+      totalQuatoValueStyle: {},
+      secondaryQuatoTitleStyle: {},
+      secondaryQuatoValueStyle: {},
+    };
+  },
+  watch: {
+    'options.style': {
+      deep: true,
+      immediate: false,
+      handler(opt) {
+        // 1. 状态要是是停止（移动或者缩放情况下不更变）
+        // 2. 配置项发生改变
+        if (opt && this.currentComState && this.currentComState === 'stop') {
+          this.$nextTick(() => {
+            this.updateChartStyle();
+          });
+        }
+      },
+    },
+    'options.data': {
+      deep: true,
+      immediate: false,
+      handler(opt) {
+        if (opt && this.currentComState && this.currentComState === 'stop') {
+          this.$nextTick(() => {
+            this.getChartData();
+          });
+        }
+      },
+    },
+  },
+  methods: {
+    /**
+     * @description 处理标签配置
+     */
+    doWithStyle(echart, key) {
+      const styleObj = Object.assign({}, echart[key]);
+      const style = {
+        color: `${styleObj.color}`,
+        fontSize: `${styleObj.size}px`,
+        fontWeight: `${styleObj.weight}`,
+        fontFamily: `${styleObj.family}`,
+      };
+      if (styleObj.align) {
+        style.textAlign = `${styleObj.align}`;
+      }
+      if (styleObj.marginBottom) {
+        style.marginBottom = `${styleObj.marginBottom || 0}px`;
+      }
+      return style;
+    },
+    /**
+     * @description 整合配置
+     */
+    doWithOptions() {
+      const {
+        style: { echart },
+      } = this.options;
+
+      this.totalQuatoTitleStyle = this.doWithStyle(echart, 'totalQuatoTitle');
+      this.totalQuatoValueStyle = this.doWithStyle(echart, 'totalQuatoValue');
+      this.secondaryQuatoTitleStyle = this.doWithStyle(echart, 'secondaryQuatoTitle');
+      this.secondaryQuatoValueStyle = this.doWithStyle(echart, 'secondaryQuatoValue');
+    },
+    /**F
+     * @description 初始化Echart图表
+     */
+    initChart() {
+      this.doWithOptions();
+    },
+    /**
+     * @description 判断是否获取服务端数据
+     */
+    isServerData() {
+      const { data } = this.options;
+      return data.totalQuota.length || data.secondaryQuota.length;
+    },
+    /**
+     * @description 图表获取数据
+     */
+    getChartData() {
+      this.isServerData() ? this.getServerData() : this.getDefaultData();
+    },
+    /**
+     * @description 图表获取服务端数据
+     */
+    async getServerData() {
+      this.serverData = {
+        current: this.options.data.targe,
+        max: this.options.data.max,
+        min: this.options.data.min,
+      };
+      const result = this.doWithData(this.serverData);
+      this.progressStyle = Object.assign({}, this.progressStyle, {
+        width: `${result.percent}%`,
+      });
+    },
+    /**
+     * @description 图表获取默认数据
+     */
+    getDefaultData() {
+      this.serverData = null;
+      this.doWithData(defaultData);
+    },
+    /**
+     * @description 获取数据
+     */
+    doWithData(handledData) {
+      const data = handledData.data;
+      const {
+        style: { echart },
+      } = this.options;
+      // 获取主指标名称
+      this.totalQuotaTitle = echart.totalQuatoTitle.text || data.totalQuotaTitle;
+
+      // 格式化数值
+      this.totalQuotaValue = this.handleValue(data.totalQuotaValue);
+
+      // 处理次指标
+      let secondaryQuotas = JSON.parse(JSON.stringify(data.secondaryQuotas));
+      secondaryQuotas.forEach((item, index) => {
+        if (echart.secondaryQuatoTitle.text[index]) {
+          item.secondaryQuotasTitle = echart.secondaryQuatoTitle.text[index];
+        }
+        item.secondaryQuotasValue = this.handleValue(item.secondaryQuotasValue);
+      });
+      this.secondaryQuotas = secondaryQuotas;
+    },
+    /**
+     * @description 格式化数值
+     */
+    handleValue(value) {
+      const arr = value.split('.');
+      let str = +arr[0];
+      str = str.toLocaleString();
+      if (arr[1]) {
+        str += `.${arr[1]}`;
+      }
+      return str;
+    },
+    /**
+     * @description 更新图表样式
+     */
+    updateChartStyle() {
+      this.doWithOptions();
+      this.doWithData(this.serverData ? this.serverData : defaultData);
+    },
+  },
+};
+</script>
+<style lang="less" scoped>
+.board-quota-card {
+  padding: 10px 25px;
+}
+.progress {
+  width: 80%;
+  height: 100%;
+}
+.progress-value {
+  position: absolute;
+}
+</style>

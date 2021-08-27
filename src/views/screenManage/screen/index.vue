@@ -361,11 +361,11 @@ export default {
   .@{board}-setting {
     position: absolute;
   }
-  .@{board}-side ~ .@{board}-content,
+  .@{board}-side ~ .ant-spin-nested-loading .ant-spin-container .@{board}-content,
   .@{board}-side ~ .@{board}-page-tools {
     left: 48px;
   }
-  .@{board}-side.open ~ .@{board}-content,
+  .@{board}-side.open ~ .ant-spin-nested-loading .ant-spin-container .@{board}-content,
   .@{board}-side.open ~ .@{board}-page-tools {
     left: 200px;
   }

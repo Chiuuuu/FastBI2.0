@@ -4,6 +4,7 @@ import html2canvas from 'html2canvas';
 import JSPDF from 'jspdf';
 import { mapState } from 'vuex';
 import { Loading } from 'element-ui';
+import json2csv from 'json2csv';
 /**
  * @description 下载图片
  */
@@ -40,7 +41,7 @@ function dataURLToBlob(dataurl) {
  * @description 导出成pdf
  */
 
-function exportPdf(canvas, name) {
+async function exportPdf(canvas, name) {
   // 开始将图片转换为PDF
   var pdf = new JSPDF('p', 'mm', 'a4'); // A4纸，纵向
   var ctx = canvas.getContext('2d');
@@ -78,6 +79,7 @@ function exportPdf(canvas, name) {
     } // 如果后面还有内容，添加空白页
   }
   pdf.save(`${name}.pdf`);
+  return;
 }
 const ContenxtmenuMethodMixin = {
   computed: {
@@ -128,7 +130,9 @@ const ContenxtmenuMethodMixin = {
     /**
      * @description 导出图片
      */
-    handleExportImg(e, item, component, index, vm) {
+    async handleExportImg(e, item, component, index, vm) {
+      vm.$parent.tip = '导出图表...';
+      vm.$parent.spinning = true;
       const clone = vm.$el.cloneNode(true);
       clone.removeChild(clone.childNodes[0]);
       clone.removeChild(clone.childNodes[0]);
@@ -141,7 +145,7 @@ const ContenxtmenuMethodMixin = {
       }
       const dom = document.querySelector('.drawing-board-wrapper') || document.querySelector('.drawing-board-preview');
       dom.append(clone);
-      html2canvas(clone, {
+      const cutCanvas = await html2canvas(clone, {
         width: clone.clientWidth,
         height: clone.clientHeight,
         scale: 1,
@@ -151,15 +155,18 @@ const ContenxtmenuMethodMixin = {
         scrollX: 0,
         useCORS: true, // 【重要】开启跨域配置
         allowTaint: true,
-      }).then(canvas => {
-        clone.remove();
-        download(canvas, component.setting.style.title.text + '.png', 'img');
       });
+      clone.remove();
+      await download(cutCanvas, component.setting.style.title.text + '.png');
+      vm.$parent.spinning = false;
+      vm.$message.success('导出成功');
     },
     /**
      * @description 导出大屏
      */
-    handleExportScreen(e, item, vm) {
+    async handleExportScreen(e, item, vm) {
+      vm.tip = '导出大屏...';
+      vm.spinning = true;
       const screen = vm.$refs['js-board-grid'];
       const cloneScreen = screen.cloneNode(true);
       cloneScreen.style.position = 'relative';
@@ -171,7 +178,7 @@ const ContenxtmenuMethodMixin = {
       }
       const dom = document.querySelector('.drawing-board-wrapper') || document.querySelector('.drawing-board-preview');
       dom.append(cloneScreen);
-      html2canvas(cloneScreen, {
+      const canvas = await html2canvas(cloneScreen, {
         width: cloneScreen.clientWidth,
         height: cloneScreen.clientHeight,
         scale: 1,
@@ -181,10 +188,23 @@ const ContenxtmenuMethodMixin = {
         scrollX: 0,
         useCORS: true, // 【重要】开启跨域配置
         allowTaint: true,
-      }).then(canvas => {
-        cloneScreen.remove();
-        exportPdf(canvas, vm.screenName);
       });
+      cloneScreen.remove();
+      await exportPdf(canvas, vm.screenName);
+      vm.spinning = false;
+      vm.$message.success('导出成功');
+    },
+    handleExportCsv(e, item, component) {
+      const test = [
+        { aa: 'tt', bb: 'ee' },
+        { aa: 'qq', bb: 'pp' },
+      ];
+      const result = json2csv.parse(test, null);
+      const csvContent = 'data:text/csv;charset=utf-8,\uFEFF' + result;
+      download(csvContent, component.setting.style.title.text + '.csv');
+    },
+    handleExportExcel() {
+      // 导出excel,调接口
     },
     /**
      * @description 右键菜单——查看图表数据

@@ -66,6 +66,10 @@ const chartList = [
     name: '漏斗图',
     type: BoardType.ChartFunnel,
   },
+  {
+    name: '指标卡',
+    type: BoardType.QuatoCard,
+  },
 ];
 
 export default chartList;

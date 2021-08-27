@@ -130,6 +130,7 @@ export default {
         [BoardType.ChartMap]: 'bi-data-ditu',
         [BoardType.Source]: 'bi-data-sucaiku-side',
         [BoardType.ChartFunnel]: 'bi-data-leidatu',
+        [BoardType.QuatoCard]: 'bi-data-sucaiku-side',
       };
       return icon[type];
     },

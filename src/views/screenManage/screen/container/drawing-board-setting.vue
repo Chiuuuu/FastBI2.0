@@ -42,6 +42,7 @@ import ChartTableSetting from '../components/table/setting';
 import BoardSettingRight from '../components/board-setting-right';
 import ChartMapSetting from '../components/chart/map/setting';
 import ChartFunnelSetting from '../components/chart/funnel/setting';
+import BoardQuatoCardSetting from '../components/quota-card/setting';
 import { mapState } from 'vuex';
 
 /**
@@ -109,6 +110,7 @@ export default {
     ChartMapSetting,
     BoardSourceSetting,
     ChartFunnelSetting,
+    BoardQuatoCardSetting,
   },
   computed: {
     ...mapState({

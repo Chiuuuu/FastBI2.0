@@ -235,9 +235,6 @@ export default {
           },
         },
       });
-
-      const options = this.doWithOptions(this.serverData);
-      this.updateSaveChart(options);
     },
     /**
      * @description 初始化地图指标显示内容列表
