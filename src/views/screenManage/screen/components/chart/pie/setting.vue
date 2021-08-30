@@ -29,6 +29,8 @@
                     type="measure"
                     label="拖入度量"
                     backgroundColor="#40c0a8"
+                    :limit="true"
+                    :limitNum="1"
                     openAggre
                     :list="currentCom.setting.data.measures"
                   ></UnitField>

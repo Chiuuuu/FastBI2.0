@@ -121,6 +121,35 @@
                       </div>
                     </div>
                     <!-- 边距 end -->
+                    <!-- 转化率小数位数 start -->
+                    <a-row class="unit-show-block mb-8 mt-4">
+                      <a-col :span="12" class="unit-show-block">
+                        <div class="unit-block-title">转化率小数位数</div>
+                      </a-col>
+                      <a-col :span="12">
+                        <a-input-number
+                          :min="0"
+                          :value="currentCom.setting.style.echart.customConverseRateDigit"
+                          @change="customConverseRateDigit => handleChange('echart', { customConverseRateDigit })"
+                        ></a-input-number>
+                      </a-col>
+                    </a-row>
+                    <!-- 转化率小数位数 end -->
+                    <!-- 到达率小数位数 start -->
+                    <a-row class="unit-show-block mb-4">
+                      <a-col :span="12" class="unit-show-block">
+                        <div class="unit-block-title">到达率小数位数</div>
+                      </a-col>
+                      <a-col :span="12">
+                        <a-input-number
+                          :min="0"
+                          :value="currentCom.setting.style.echart.customArriveRateDigit"
+                          @change="customArriveRateDigit => handleChange('echart', { customArriveRateDigit })"
+                        ></a-input-number>
+                      </a-col>
+                    </a-row>
+                    <!-- 到达率小数位数 end -->
+
                     <!-- 展示数值 start -->
                     <UnitLabel
                       label="数值"

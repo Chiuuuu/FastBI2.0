@@ -3,6 +3,7 @@ import BoardType from '@/views/screenManage/screen/setting/default-type';
 import BaseChart from '../base';
 import defaultData from './default-data';
 import merge from 'lodash/merge';
+import omit from 'lodash/omit';
 import { setLinkageData, resetOriginData } from '@/utils/setDataLink';
 /**
  * @description 折线图
@@ -39,42 +40,23 @@ export default {
       const {
         data: { dimensions, measures },
       } = this.options;
-      const res = await this.$server.common.getData('/screen/getData', {
+      const res = await this.$server.common.getData('/screen/graph/v2/getData', {
         id: this.shapeUnit.component.id,
+        tabId: this.shapeUnit.component.tabId,
         type: this.shapeUnit.component.type,
-        data: this.options.data,
+        ...omit(this.options.data, ['expands']),
       });
       if (res.code === 500) {
         this.$message.error('isChange');
         return;
       }
-      const datas = res.rows;
+      const datas = res.data || [];
       const categoryData = datas.map(row => row[dimensions[0].alias]);
       let series = [];
       measures.forEach(measure => {
         series.push({ type: 'line', name: measure.alias, data: datas.map(row => row[measure.alias]) });
       });
       this.serverData = { categoryData, series };
-      //   this.serverData = {
-      //     categoryData: ['可口可乐', '百事可乐', '雪碧', '健力宝', '康师傅', '星巴克', '统一'],
-      //     series: [
-      //       {
-      //         name: '销量',
-      //         type: 'line',
-      //         data: [1000, 5600, 3000, 2000, 1500, 4000, 300],
-      //       },
-      //       {
-      //         name: '生产',
-      //         type: 'line',
-      //         data: [1500, 6100, 3500, 2500, 2000, 4500, 800],
-      //       },
-      //       {
-      //         name: '退货',
-      //         type: 'line',
-      //         data: [10, 100, 50, 80, 70, 20, 40],
-      //       },
-      //     ],
-      //   };
       const options = this.doWithOptions(this.serverData);
       this.updateSaveChart(options);
     },

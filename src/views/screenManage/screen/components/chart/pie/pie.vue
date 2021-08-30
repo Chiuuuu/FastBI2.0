@@ -160,16 +160,17 @@ export default {
       const {
         data: { dimensions, measures },
       } = this.options;
-      const res = await this.$server.common.getData('/screen/getData', {
+      const res = await this.$server.common.getData('/screen/graph/v2/getData', {
         id: this.shapeUnit.component.id,
+        tabId: this.shapeUnit.component.tabId,
         type: this.shapeUnit.component.type,
-        data: this.options.data,
+        ...omit(this.options.data, ['expands']),
       });
       if (res.code === 500) {
         this.$message.error('isChange');
         return;
       }
-      const datas = res.rows;
+      const datas = res.data || [];
       const data = datas.map(row => {
         return { name: row[dimensions[0].alias], value: row[measures[0].alias] };
       });

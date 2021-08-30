@@ -46,7 +46,7 @@ export default merge(cloneDeep(BASE), {
         // 系列
         customSeries: {
           top: 70,
-          right: 80,
+          right: 100,
           bottom: 60,
           left: 80,
           label: {
@@ -57,6 +57,22 @@ export default merge(cloneDeep(BASE), {
             position: 'outside',
           },
         },
+        customConverseRate: {
+          //转化率
+          show: true,
+          color: '#fff',
+          fontSize: 16,
+          digit: 0, //小数位数
+        },
+        customArriveRate: {
+          //到达率
+          show: true,
+          color: '#fff',
+          fontSize: 16,
+          digit: 0, //小数位数
+        },
+        customConverseRateDigit: 0, //转化率小数位数
+        customArriveRateDigit: 0, //到达率小数位数
         customIsOpenDataLink: false, // 是否开启图表联动
         customInteractive: {}, // 保存联动数据
       },
