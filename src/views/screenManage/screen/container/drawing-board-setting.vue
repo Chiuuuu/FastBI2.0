@@ -69,6 +69,8 @@ export const DROG_TYPE = {
   LABELMEASURE: 'labelMeasure', // 散点度量字段
   LABELLONGITUDE: 'labelLongitude', // 散点经度
   LABELLATITUDE: 'labelLatitude', // 散点纬度
+  TOTALQUOTA: 'totalQuota', // 散点经度
+  SECONDARYQUOTA: 'secondaryQuota', // 散点纬度
 };
 
 /**

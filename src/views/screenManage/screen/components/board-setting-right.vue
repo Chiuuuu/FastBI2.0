@@ -113,6 +113,10 @@ export default {
       // 接入列表
       return this.screenInstance.screenInfo.accessList || [];
     },
+    tabId() {
+      // 页面
+      return this.screenInstance.screenInfo.tabId;
+    },
     panelDimension() {
       if (this.tabAcitve === 'model') {
         return groupBy(this.dimension, 'tableNo');
@@ -131,25 +135,35 @@ export default {
   watch: {
     modelList(list) {
       if (list && list.length) {
-        if (!this.modelSelected) {
-          // 如果模型菜单没有选中，初始化的时候默认选中第一个
-          this.modelSelected = list[0];
-          this.handleGetPivoSchemaList(this.modelSelected.tableId);
-        }
+        // 如果模型菜单没有选中，初始化的时候默认选中第一个
+        this.modelSelected = list[0];
+        this.handleGetPivoSchemaList(this.modelSelected.tableId);
       } else {
-        this.tabAcitve = 'access';
+        // 没有数据列表清空当前选择模型
+        this.modelSelected = null;
+        // 清空对应类型下模型数据
+        if (this.tabAcitve === 'model') {
+          this.dimension = [];
+          this.measure = [];
+        }
+        // this.tabAcitve = 'access';
       }
     },
     accessList(list) {
       if (list && list.length && this.tabAcitve === 'access') {
-        if (!this.accessSelected) {
-          // 如果模型菜单没有数据
-          // 并且接入菜单没有选中，初始化的时候默认选中第一个
-          this.accessSelected = list[0];
-          this.handleGetPivoSchemaList(this.accessSelected.tableId);
-        }
+        // 如果模型菜单没有数据
+        // 并且接入菜单没有选中，初始化的时候默认选中第一个
+        this.accessSelected = list[0];
+        this.handleGetPivoSchemaList(this.accessSelected.tableId);
       } else {
-        this.tabAcitve = 'model';
+        // 没有数据列表清空当前选择模型
+        this.accessSelected = null;
+        // 清空对应类型下模型数据
+        if (this.tabAcitve === 'access') {
+          this.dimension = [];
+          this.measure = [];
+        }
+        // this.tabAcitve = 'model';
       }
     },
   },

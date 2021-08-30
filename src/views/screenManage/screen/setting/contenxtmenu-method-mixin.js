@@ -3,7 +3,6 @@ import cloneDeep from 'lodash/cloneDeep';
 import html2canvas from 'html2canvas';
 import JSPDF from 'jspdf';
 import { mapState } from 'vuex';
-import { Loading } from 'element-ui';
 import json2csv from 'json2csv';
 /**
  * @description 下载图片
@@ -81,6 +80,13 @@ async function exportPdf(canvas, name) {
   pdf.save(`${name}.pdf`);
   return;
 }
+/**
+ * @description 图表操作开启/关闭loading
+ */
+function handleSpinning(vm, isLoading, tip = 'loading...') {
+  vm.$parent.$parent.spinning = isLoading;
+  vm.$parent.$parent.tip = tip;
+}
 const ContenxtmenuMethodMixin = {
   computed: {
     ...mapState({
@@ -131,8 +137,7 @@ const ContenxtmenuMethodMixin = {
      * @description 导出图片
      */
     async handleExportImg(e, item, component, index, vm) {
-      vm.$parent.tip = '导出图表...';
-      vm.$parent.spinning = true;
+      handleSpinning(vm, true, '导出图表...');
       const clone = vm.$el.cloneNode(true);
       clone.removeChild(clone.childNodes[0]);
       clone.removeChild(clone.childNodes[0]);
@@ -158,8 +163,8 @@ const ContenxtmenuMethodMixin = {
       });
       clone.remove();
       await download(cutCanvas, component.setting.style.title.text + '.png');
-      vm.$parent.spinning = false;
-      vm.$message.success('导出成功');
+      handleSpinning(vm, false);
+      this.$message.success('导出成功');
     },
     /**
      * @description 导出大屏
@@ -192,25 +197,27 @@ const ContenxtmenuMethodMixin = {
       cloneScreen.remove();
       await exportPdf(canvas, vm.screenName);
       vm.spinning = false;
-      vm.$message.success('导出成功');
+      this.$message.success('导出成功');
     },
-    handleExportCsv(e, item, component) {
-      const test = [
-        { aa: 'tt', bb: 'ee' },
-        { aa: 'qq', bb: 'pp' },
-      ];
-      const result = json2csv.parse(test, null);
+    /**
+     * @description 导出csv
+     */
+    async handleExportCsv(e, item, component, index, vm) {
+      const dataList = await this.getChartData(component, vm);
+      const result = json2csv.parse(dataList, null);
       const csvContent = 'data:text/csv;charset=utf-8,\uFEFF' + result;
       download(csvContent, component.setting.style.title.text + '.csv');
     },
+    /**
+     * @description 导出excel
+     */
     handleExportExcel() {
       // 导出excel,调接口
     },
     /**
      * @description 右键菜单——查看图表数据
      */
-    async handleChartDataComponent(e, item, component) {
-      console.log(e, item, component);
+    async handleChartDataComponent(e, item, component, index, vm) {
       // 判断当前图表数据为服务数据
       if (!this.$children[0].isServerData()) {
         let dom = document.querySelector('.board-canvas');
@@ -221,14 +228,14 @@ const ContenxtmenuMethodMixin = {
         return;
       }
 
-      let dataList = await this.getChartData(component);
+      let dataList = await this.getChartData(component, vm);
       // 查看数据弹出展示窗 -- 在board-shape-unit.vue
       this.showChartData(this.chartData);
 
       return dataList;
     },
     // 查看/导出数据 -- 构造数据
-    async getChartData(component) {
+    async getChartData(component, vm) {
       // let params = {
       //   id: component.id,
       //   type: component.type,
@@ -237,21 +244,16 @@ const ContenxtmenuMethodMixin = {
       //   graphName: component.graphName,
       // };
       let params = {
-        id: '590847113604485120',
-        type: 'v-histogram',
-        screenName: '21',
-        tabName: '页面1',
         graphName: '柱状图',
+        id: '592217476619948032',
+        screenName: 'test',
+        tabName: '页面1',
+        type: 'v-histogram',
       };
 
-      let loadingInstance = Loading.service({
-        lock: true,
-        text: '加载中...',
-        target: 'body',
-        background: 'rgb(255, 255, 255, 0.6)',
-      });
+      handleSpinning(vm, true, '请求数据...');
       let res = await this.$server.screenManage.getGraphInfo(params);
-      loadingInstance.close();
+      handleSpinning(vm, false);
       if (res.code !== 200) {
         this.$message.error(res.msg || '请重新操作');
         return;
@@ -274,21 +276,9 @@ const ContenxtmenuMethodMixin = {
               let row = [];
               if (item === 'fillList') {
                 row = source[item];
-                // row = await handleReturnChartData(
-                //   source[item],
-                //   this.currSelected.setting,
-                //   false,
-                //   aliasKeys.filter(item => item.role === 2)
-                // )
                 type = '填充';
               } else if (item === 'labelList') {
                 row = source[item];
-                // row = await handleReturnChartData(
-                //   source[item],
-                //   this.currSelected.setting,
-                //   true,
-                //   aliasKeys.filter(item => item.role === 2)
-                // )
               }
               rows.push(row);
               tableName.push(type);
@@ -312,12 +302,6 @@ const ContenxtmenuMethodMixin = {
       } else {
         // 处理空数据
         columns = [this.$children[0].handleTableColumns(Object.keys(source[0]))];
-        // source = await handleReturnChartData(
-        //   source,
-        //   this.currSelected.setting,
-        //   false,
-        //   columns[0].filter(item => item.role === 2)
-        // )
         rows = [source];
         exportList = source;
       }

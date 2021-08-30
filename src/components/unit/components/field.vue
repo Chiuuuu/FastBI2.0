@@ -274,6 +274,8 @@ export default {
         [DROG_TYPE.LABELMEASURE]: this.handleLabelMeasure,
         [DROG_TYPE.LABELLONGITUDE]: this.handleLabelLongitude,
         [DROG_TYPE.LABELLATITUDE]: this.handleLabelLatitude,
+        [DROG_TYPE.TOTALQUOTA]: this.handleTotalQuota,
+        [DROG_TYPE.SECONDARYQUOTA]: this.handleSecondaryQuota,
       };
 
       const fun = funs[dropType];
@@ -350,12 +352,11 @@ export default {
     /**
      * @description 拼接经度纬度到维度
      */
-    handleMapDimension(isLabel = false) {
+    handleMapDimension(data, isLabel = false) {
       // 构造度量列表
       let dimensionList = [];
-      let datas = this.currentCom.setting.data;
-      let latitude = isLabel ? datas.labelLatitude : datas.latitude;
-      let longitude = isLabel ? datas.labelLongitude : datas.longitude;
+      let latitude = isLabel ? data.labelLatitude : data.latitude;
+      let longitude = isLabel ? data.labelLongitude : data.longitude;
       if (latitude) {
         dimensionList = [...dimensionList, ...latitude];
       }
@@ -370,7 +371,7 @@ export default {
     handleSetLong(data, method = 'add') {
       return {
         longitude: this.conversionArry('longitude', data, method),
-        dimensions: this.handleMapDimension(),
+        dimensions: this.conversionArry('dimensions', this.handleMapDimension(data), method),
       };
     },
     /**
@@ -379,7 +380,7 @@ export default {
     handleLatitude(data, method = 'add') {
       return {
         latitude: this.conversionArry('latitude', data, method),
-        dimensions: this.handleMapDimension(),
+        dimensions: this.conversionArry('dimensions', this.handleMapDimension(data), method),
       };
     },
     /**
@@ -404,7 +405,7 @@ export default {
     handleLabelLongitude(data, method = 'add') {
       return {
         labelLatitude: this.conversionArry('labelLatitude', data, method),
-        labelDimensions: this.handleMapDimension(true),
+        labelDimensions: this.conversionArry('labelDimensions', this.handleMapDimension(data), method),
       };
     },
     /**
@@ -413,7 +414,23 @@ export default {
     handleLabelLatitude(data, method = 'add') {
       return {
         labelLatitude: this.conversionArry('labelLatitude', data, method),
-        labelDimensions: this.handleMapDimension(true),
+        labelDimensions: this.conversionArry('labelDimensions', this.handleMapDimension(data), method),
+      };
+    },
+    /**
+     * @description 当放置到主指标
+     */
+    handleTotalQuota(data, method = 'add') {
+      return {
+        totalQuota: this.conversionArry('totalQuota', data, method),
+      };
+    },
+    /**
+     * @description 当放置到次指标
+     */
+    handleSecondaryQuota(data, method = 'add') {
+      return {
+        secondaryQuota: this.conversionArry('secondaryQuota', data, method),
       };
     },
     /**

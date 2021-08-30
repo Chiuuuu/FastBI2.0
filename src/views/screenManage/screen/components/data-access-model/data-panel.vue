@@ -10,7 +10,7 @@
         <div class="schema-list-wrapper">
           <Collapse ref="dimensionList" class="schema-list reset-scrollbar js-schema-dimension-list">
             <template v-if="!handleIsArray(dimension)">
-              <template v-if="dimension">
+              <template v-if="dimension && Object.keys(dimension).length">
                 <CollapsePanel
                   v-for="(value, name) in dimension"
                   :key="name"
@@ -65,7 +65,7 @@
         <div class="schema-list-wrapper">
           <Collapse ref="measureList" class="schema-list reset-scrollbar js-schema-measure-list">
             <template v-if="!handleIsArray(measure)">
-              <template v-if="measure">
+              <template v-if="measure && Object.keys(measure).length">
                 <CollapsePanel
                   v-for="(value, name) in measure"
                   :key="name"

@@ -1,13 +1,13 @@
 <template>
-  <a-spin :spinning="spinning" :tip="tip">
-    <div class="drawing-board-content reset-scrollbar" ref="js-board-content">
-      <!-- 画板外框控制视图宽高 start -->
-      <div class="board-frame" :style="boardFrameStyle">
-        <!-- 画板控制缩放比例 start -->
-        <div class="board-canvas" :style="boardCanvasStyle" @mousedown="handleBoardFrame">
-          <!-- 画板控制拖放 start -->
-          <div class="board-box board-dropable">
-            <!-- 画板网格控制真实尺寸 start -->
+  <div class="drawing-board-content reset-scrollbar" ref="js-board-content">
+    <!-- 画板外框控制视图宽高 start -->
+    <div class="board-frame" :style="boardFrameStyle">
+      <!-- 画板控制缩放比例 start -->
+      <div class="board-canvas" :style="boardCanvasStyle" @mousedown="handleBoardFrame">
+        <!-- 画板控制拖放 start -->
+        <div class="board-box board-dropable">
+          <!-- 画板网格控制真实尺寸 start -->
+          <a-spin :spinning="spinning" :tip="tip">
             <div class="board-grid" ref="js-board-grid" :style="boardGridStyle">
               <BoardShapeUnit
                 v-for="(item, index) in components"
@@ -19,15 +19,15 @@
                 <component :is="item.type" :options="item.setting"></component>
               </BoardShapeUnit>
             </div>
-            <!-- 画板网格控制真实尺寸 end -->
-          </div>
-          <!-- 画板控制拖放 end -->
+          </a-spin>
+          <!-- 画板网格控制真实尺寸 end -->
         </div>
-        <!-- 画板控制缩放比例 end -->
+        <!-- 画板控制拖放 end -->
       </div>
-      <!-- 画板外框控制视图宽高 end -->
+      <!-- 画板控制缩放比例 end -->
     </div>
-  </a-spin>
+    <!-- 画板外框控制视图宽高 end -->
+  </div>
 </template>
 <script>
 import { mapState } from 'vuex';
