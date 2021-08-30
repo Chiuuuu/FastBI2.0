@@ -19,6 +19,7 @@ export default merge(cloneDeep(BASE), {
           fontFamily: 'sans-serif',
           color: 'rgb(217, 217, 217)',
           fontWeight: 'normal',
+          verticalAlign: 'top',
         },
       },
     },
