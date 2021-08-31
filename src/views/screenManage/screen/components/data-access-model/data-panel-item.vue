@@ -2,6 +2,7 @@
   <li
     class="js-field-item field-item text-item clearfix"
     ref="js-field-item"
+    :tabindex="100"
     :data-index="fieldIndex"
     :class="selected ? 'selected' : ''"
     @click="handleClick"
@@ -23,6 +24,7 @@ export default {
   inject: ['boardSettingWrapper'],
   props: {
     fieldIndex: {
+      // 事件委托的标记
       type: [Number, String],
       required: true,
     },
@@ -62,6 +64,14 @@ export default {
         TIMESTAMP: 'bi-data-datetimepick',
       };
       return icons[this.data.dataType] || '';
+    },
+  },
+  watch: {
+    selected(selected) {
+      // 选中聚焦(加了tabindex)
+      if (selected) {
+        this.$refs['js-field-item'] && this.$refs['js-field-item'].focus();
+      }
     },
   },
   mounted() {
