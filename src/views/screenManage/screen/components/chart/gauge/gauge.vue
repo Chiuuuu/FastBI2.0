@@ -32,18 +32,32 @@ export default {
      * @description 图表获取服务端数据
      */
     async getServerData() {
+      console.log({ id: this.shapeUnit.component.id, type: this.shapeUnit.component.type, data: this.options.data });
       console.log('从这里获取服务端数据');
-      const { data } = this.options;
+      const {
+        data: { progress },
+      } = this.options;
+      const res = await this.$server.common.getData('/screen/graph/v2/getData', {
+        id: this.shapeUnit.component.id,
+        tabId: this.shapeUnit.component.tabId,
+        type: this.shapeUnit.component.type,
+        ...omit(this.options.data, ['expands', 'progress']),
+        measures: [].concat(progress),
+      });
+      if (res.code === 500) {
+        this.$message.error('isChange');
+        return;
+      }
+      const datas = res.data || [];
       this.serverData = {
         current: {
-          value: 50,
-          name: '测试',
+          value: datas[0][progress[0].alias],
+          name: progress[0].alias,
         },
-        min: !Array.isArray(data.min) ? data.min : 0,
-        max: !Array.isArray(data.max) ? data.max : 90,
-        target: !Array.isArray(data.targe) ? data.targe : 80,
+        min: !Array.isArray(this.options.data.min) ? this.options.data.min : 0,
+        max: !Array.isArray(this.options.data.max) ? this.options.data.max : 90,
+        target: !Array.isArray(this.options.data.targe) ? this.options.data.targe : 80,
       };
-
       const options = this.doWithOptions(this.serverData);
       this.updateSaveChart(options);
     },

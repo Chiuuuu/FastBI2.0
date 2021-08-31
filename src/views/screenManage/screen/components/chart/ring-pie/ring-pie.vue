@@ -137,7 +137,13 @@ export default {
           radius,
           label: Object.assign({}, label, {
             formatter: param => {
-              return `${this.doWithFormatter(data, customFormatterWay, customFixed, param.dataIndex)}`;
+              // return `${this.doWithFormatter(data, customFormatterWay, customFixed, param.dataIndex)}`;
+              if (label.position === 'center') {
+                // 固定中间显示为目标值 -- 目前数据长度等于2时，数组下标为0的暂定为目标值
+                return `${this.doWithFormatter(data, customFormatterWay, customFixed, 0)}`;
+              } else {
+                return `${this.doWithFormatter(data, customFormatterWay, customFixed, param.dataIndex)}`;
+              }
             },
           }),
           color: customColors,
@@ -177,24 +183,39 @@ export default {
      * @description 图表获取服务端数据
      */
     async getServerData() {
+      console.log({ id: this.shapeUnit.component.id, type: this.shapeUnit.component.type, data: this.options.data });
       console.log('从这里获取服务端数据');
-
+      const {
+        data: { progress, targe },
+      } = this.options;
+      const res = await this.$server.common.getData('/screen/graph/v2/getData', {
+        id: this.shapeUnit.component.id,
+        tabId: this.shapeUnit.component.tabId,
+        type: this.shapeUnit.component.type,
+        ...omit(this.options.data, ['expands', 'progress', 'targe']),
+        measures: [].concat(progress).concat(targe),
+      });
+      if (res.code === 500) {
+        this.$message.error('isChange');
+        return;
+      }
+      const datas = res.data || [];
       this.serverData = {
         data: this.options.style.echart.customTarge
           ? [
               {
-                value: 8,
-                name: '就业率',
+                value: datas[0][progress[0].alias],
+                name: progress[0].alias,
               },
               {
-                value: 10,
-                name: '总人数',
+                value: datas[0][targe[0].alias],
+                name: targe[0].alias,
               },
             ]
           : [
               {
-                value: 5,
-                name: '就业率',
+                value: datas[0][progress[0].alias],
+                name: progress[0].alias,
               },
             ],
       };

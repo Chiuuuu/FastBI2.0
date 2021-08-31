@@ -36,27 +36,26 @@ export default {
      * @description 图表获取服务端数据
      */
     async getServerData() {
-      console.log(this);
+      console.log({ id: this.shapeUnit.component.id, type: this.shapeUnit.component.type, data: this.options.data });
       console.log('从这里获取服务端数据');
+      const {
+        data: { dimensions, xaxis, yaxis },
+      } = this.options;
+      const res = await this.$server.common.getData('/screen/graph/v2/getData', {
+        id: this.shapeUnit.component.id,
+        tabId: this.shapeUnit.component.tabId,
+        type: this.shapeUnit.component.type,
+        ...omit(this.options.data, ['expands', 'xaxis', 'yaxis']),
+        measures: [].concat(xaxis).concat(yaxis),
+      });
+      if (res.code === 500) {
+        this.$message.error('isChange');
+        return;
+      }
+      const datas = res.data || [];
       this.serverData = {
-        // legend: ['可口可乐', '百事可乐', '雪碧', '健力宝', '康师傅', '星巴克', '统一'],
-        data: [
-          {
-            man: 100,
-            women: 100,
-            name: '产品部',
-          },
-          {
-            man: 76,
-            women: 95,
-            name: '市场部',
-          },
-          {
-            man: 45,
-            women: 47,
-            name: '销售部',
-          },
-        ],
+        fieidName: [xaxis[0].alias, yaxis[0].alias, dimensions[0].alias],
+        data: datas,
       };
       const options = this.doWithOptions(this.serverData);
       this.updateSaveChart(options);
@@ -108,8 +107,9 @@ export default {
       } = this.options;
 
       const series = [];
+      let fieidName = fetchData.fieidName;
       fetchData.data.forEach(data => {
-        const ary = [data.man, data.women, data.name, 'man', 'women', 'name'];
+        const ary = [data[fieidName[0]], data[fieidName[1]], data[fieidName[2]]].concat(fetchData.fieidName);
         const item = this.createScatterUnit(data.name, [ary], echart);
 
         // 处理散点大小

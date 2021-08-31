@@ -1,4 +1,5 @@
 export default {
+  fieidName: ['man', 'women', 'name'],
   data: [
     {
       man: 100,

@@ -135,23 +135,37 @@ export default {
      * @description 图表获取服务端数据
      */
     async getServerData() {
+      console.log({ id: this.shapeUnit.component.id, type: this.shapeUnit.component.type, data: this.options.data });
       console.log('从这里获取服务端数据');
-      this.serverData = {
-        data: [
-          { value: 16237, name: '其它' },
-          { value: 3399, name: '西南' },
-          { value: 1796, name: '西北' },
-          { value: 5146, name: '华北' },
-          { value: 11115, name: '华东' },
-          { value: 10000, name: '华南' },
-        ],
-        row: [
-          { value: 234, name: '广告' },
-          { value: 3100, name: '邮件营销' },
-          { value: 2340, name: '联盟广告' },
-          { value: 1350, name: '视频广告' },
-        ],
-      };
+      const {
+        data: { measures, outerIng, innerIng },
+      } = this.options;
+      const res = await this.$server.common.getData('/screen/graph/v2/getData', {
+        id: this.shapeUnit.component.id,
+        tabId: this.shapeUnit.component.tabId,
+        type: this.shapeUnit.component.type,
+        ...omit(this.options.data, ['expands', 'outerIng', 'innerIng']),
+        dimensions: [].concat(outerIng).concat(innerIng),
+      });
+      if (res.code === 500) {
+        this.$message.error('isChange');
+        return;
+      }
+      const datas = res.data || [];
+      let series = [];
+      []
+        .concat(outerIng)
+        .concat(innerIng)
+        .forEach(outerInnerIng => {
+          series.push([]);
+          datas.forEach(datas => {
+            series[series.length - 1].push({
+              name: datas[outerInnerIng.alias],
+              value: datas[measures[0].alias],
+            });
+          });
+        });
+      this.serverData = { data: series[0], row: series[1] };
       const options = this.doWithOptions(this.serverData);
       this.updateSaveChart(options);
     },

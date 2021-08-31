@@ -13,6 +13,9 @@ export default merge(cloneDeep(BASE), {
     },
     style: {
       echart: {
+        tooltip: {
+          show: true,
+        },
         // 图表配置
         grid: {
           // 网格
@@ -41,11 +44,11 @@ export default merge(cloneDeep(BASE), {
           top: 'top',
         },
         customInRadius: 0, // 内半径
-        customOutRadius: 75, // 外半径
+        customOutRadius: 70, // 外半径
         customCenter: [50, 50], // 坐标中心点
         radar: {
           // 雷达图
-          shape: 'polygon', // polygon(多边形), circle(圆形)
+          shape: 'circle', // polygon(多边形), circle(圆形)
           axisName: {
             // 外圈字体设置
             color: '#fff',
