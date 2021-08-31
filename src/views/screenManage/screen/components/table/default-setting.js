@@ -5,7 +5,7 @@ import cloneDeep from 'lodash/cloneDeep';
 
 export default merge(cloneDeep(BASE), {
   type: BoardType.ChartTable,
-  graphName: '表格',
+  name: '表格',
   setting: {
     data: {
       fields: [],

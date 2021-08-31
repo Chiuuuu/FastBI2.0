@@ -5,7 +5,7 @@ import cloneDeep from 'lodash/cloneDeep';
 
 export default merge(cloneDeep(BASE), {
   type: BoardType.ChartGauge,
-  graphName: '普通仪表盘',
+  name: '普通仪表盘',
   setting: {
     data: {
       progress: [], // 进度

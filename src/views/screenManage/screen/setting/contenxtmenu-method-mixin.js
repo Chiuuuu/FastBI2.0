@@ -234,14 +234,14 @@ const ContenxtmenuMethodMixin = {
       //   type: component.type,
       //   screenName: this.screenInfo.screenName,
       //   tabName: this.screenInfo.tabName,
-      //   graphName: component.graphName,
+      //   name: component.name,
       // };
       let params = {
         id: '590847113604485120',
         type: 'v-histogram',
         screenName: '21',
         tabName: '页面1',
-        graphName: '柱状图',
+        name: '柱状图',
       };
 
       let loadingInstance = Loading.service({

@@ -5,7 +5,7 @@ import cloneDeep from 'lodash/cloneDeep';
 
 export default merge(cloneDeep(BASE), {
   type: BoardType.ChartScatter,
-  graphName: '散点图',
+  name: '散点图',
   setting: {
     data: {
       dimensions: [], // 维度

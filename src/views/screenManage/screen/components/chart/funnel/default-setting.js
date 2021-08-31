@@ -5,7 +5,7 @@ import cloneDeep from 'lodash/cloneDeep';
 
 export default merge(cloneDeep(BASE), {
   type: BoardType.ChartFunnel,
-  graphName: '漏斗图',
+  name: '漏斗图',
   setting: {
     data: {
       dimensions: [], // 维度

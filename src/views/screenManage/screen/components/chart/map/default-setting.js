@@ -5,7 +5,7 @@ import cloneDeep from 'lodash/cloneDeep';
 
 export default merge(cloneDeep(BASE), {
   type: BoardType.ChartMap,
-  graphName: '地图',
+  name: '地图',
   setting: {
     data: {
       dimensions: [], // 填充维度
