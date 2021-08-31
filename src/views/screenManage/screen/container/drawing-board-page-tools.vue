@@ -32,18 +32,21 @@
       <div class="pagebar-middle clearfix" ref="tabArea">
         <div class="pagebar-center">
           <ul v-if="tabs && tabs.length" ref="tabList" class="page-list" :style="{ left: tabAreaPositionLeft + 'px' }">
-            <li class="page-item" v-for="(tab, index) in tabs" :key="tab.id" :class="tab.id === value ? 'active' : ''">
+            <li
+              class="page-item"
+              v-for="(tab, index) in tabs"
+              :key="tab.id"
+              :class="tab.id === value ? 'active' : ''"
+              @click="handleTabChange(tab)"
+              @dblclick="handleRenameTab(tab, index)"
+              draggable
+              @dragstart="handleDragStart($event, tab)"
+              @dragover.prevent="handleDragOver($event, tab)"
+              @dragend="handleDragEnd($event, tab)"
+              @drop="handleDrop($event, tab)"
+            >
               <a-dropdown v-if="renameIndex !== index" :trigger="['contextmenu']" placement="topCenter">
-                <div
-                  class="page-item-box page-name"
-                  draggable
-                  @click="handleTabChange(tab)"
-                  @dblclick="handleRenameTab(tab, index)"
-                  @dragstart="handleDragStart($event, tab)"
-                  @dragover.prevent="handleDragOver($event, tab)"
-                  @dragend="handleDragEnd($event, tab)"
-                  @drop="handleDrop($event, tab)"
-                >
+                <div class="page-item-box page-name">
                   {{ tab.name }}
                 </div>
                 <a-menu slot="overlay">
