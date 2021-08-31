@@ -150,17 +150,55 @@ export default {
      * @description 图表获取服务端数据
      */
     async getServerData() {
-      this.serverData = {
-        data: {
-          totalQuotaTitle: '总获取量',
-          totalQuotaValue: '45678654.1561',
-          secondaryQuotas: [
-            { secondaryQuotasTitle: 'test1', secondaryQuotasValue: '52244.056' },
-            { secondaryQuotasTitle: 'test3', secondaryQuotasValue: '156465454' },
-          ],
-        },
+      const { dimensions, measures } = this.handleGetDataParmas();
+      const params = {
+        id: this.shapeUnit.component.id,
+        tabId: this.shapeUnit.component.tabId,
+        type: this.shapeUnit.component.type,
+        ...this.options.data,
+        dimensions, // 拼装维度
+        measures, // 拼装度量
       };
-      this.doWithData(this.serverData);
+      const res = await this.$server.common.getData('/screen/graph/v2/getData', params);
+      if (res.code === 200) {
+        const data = res.data[0];
+        const totalAlias = this.options.data['totalQuota'][0].alias;
+        const totalQuotaTitle = totalAlias;
+        const totalQuotaValue = data[totalAlias].toString();
+        let secondaryQuotas = [];
+        Object.keys(data).forEach(key => {
+          if (key !== totalAlias) {
+            secondaryQuotas.push({ secondaryQuotasTitle: key, secondaryQuotasValue: data[key].toString() });
+          }
+        });
+        this.serverData = {
+          data: {
+            totalQuotaTitle,
+            totalQuotaValue,
+            secondaryQuotas,
+          },
+        };
+        this.doWithData(this.serverData);
+      } else {
+        this.$message.error(res.msg);
+      }
+    },
+    /**
+     * @description 拼装维度度量
+     */
+    handleGetDataParmas() {
+      let dimensions = [];
+      let measures = [];
+      ['totalQuota', 'secondaryQuota'].forEach(key => {
+        this.options.data[key].forEach(item => {
+          if (item.role === 1) {
+            dimensions.push(item);
+          } else {
+            measures.push(item);
+          }
+        });
+      });
+      return { dimensions, measures };
     },
     /**
      * @description 图表获取默认数据

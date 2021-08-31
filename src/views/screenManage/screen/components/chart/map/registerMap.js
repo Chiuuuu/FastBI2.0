@@ -5,5 +5,5 @@ const areaMap = {
   guangzhou,
 };
 export default function registerMap(area) {
-  Vue.prototype.$echarts.registerMap(area, areaMap[area]);
+  Vue.prototype.$echarts.registerMap(area, areaMap['guangzhou']);
 }

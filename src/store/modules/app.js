@@ -26,6 +26,8 @@ const app = {
       privileges: [], // 大屏权限
       screenGraphs: [], // 大屏图表
       setting: {}, // 画布样式配置(背景, 宽高)
+      modelMeasures: [], // 度量列表，文本框插入用
+      resourceType: '', // 数据类型，文本框请求用
     },
     polymerizeType: [
       // 聚合方式及中文映射
@@ -80,6 +82,12 @@ const app = {
     SET_TAB_ID(state, id) {
       state.screenInfo.tabId = id;
     },
+    SET_MODEL_MEASURE(state, measures) {
+      state.screenInfo.modelMeasures = measures;
+    },
+    SET_RESOURCE_TYPE(state, resourceType) {
+      state.screenInfo.resourceType = resourceType;
+    },
     SET_TABS(state, tabs) {
       state.tabs = tabs;
     },
@@ -132,6 +140,12 @@ const app = {
     },
     SetTabId({ commit }, id) {
       commit('SET_TAB_ID', id);
+    },
+    SetModelMeasures({ commit }, measures) {
+      commit('SET_MODEL_MEASURE', measures);
+    },
+    SetResourceType({ commit }, resourceType) {
+      commit('SET_RESOURCE_TYPE', resourceType);
     },
     SetIsPublish({ commit }, isPublish) {
       commit('SET_IS_PUBLISH', isPublish);

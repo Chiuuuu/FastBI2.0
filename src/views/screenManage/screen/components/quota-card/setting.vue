@@ -34,7 +34,7 @@
                       v-if="currentCom.setting.style.echart.showSecondaryQuato"
                       receive="measure"
                       type="secondaryQuota"
-                      label="拖入度量"
+                      label="拖入次指标"
                       backgroundColor="#40c0a8"
                       openAggre
                       :list="currentCom.setting.data.secondaryQuota"

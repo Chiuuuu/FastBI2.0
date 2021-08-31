@@ -218,18 +218,33 @@ export default {
       const { data } = this.options;
       // TODO:只要其中一个是数组类型就要去网络请求数据
       // 不然就是填写的不需要请求
+      return Array.isArray(data.targe) || Array.isArray(data.max) || Array.isArray(data.min);
+    },
+    /**
+     * @description 判断是否有填入图表数据
+     */
+    hasData() {
+      const { data } = this.options;
+      // TODO:只要其中一个是数组类型就要去网络请求数据
+      // 不然就是填写的不需要请求
       return typeof data.targe === 'number' && typeof data.max === 'number' && typeof data.min === 'number';
     },
     /**
      * @description 图表获取数据
      */
     getChartData() {
-      this.isServerData() ? this.getServerData() : this.getDefaultData();
+      if (this.isServerData()) {
+        this.getServerData();
+      } else if (this.hasData()) {
+        this.handleInputData();
+      } else {
+        this.getDefaultData();
+      }
     },
     /**
-     * @description 图表获取服务端数据
+     * @description 处理填入的数据
      */
-    async getServerData() {
+    handleInputData() {
       this.serverData = {
         current: this.options.data.targe,
         max: this.options.data.max,
@@ -239,7 +254,53 @@ export default {
       this.progressStyle = Object.assign({}, this.progressStyle, {
         width: `${result.percent}%`,
       });
-      this.result = this.doWithFormatter(result);
+    },
+    /**
+     * @description 图表获取服务端数据
+     */
+    async getServerData() {
+      const { dimensions, measures } = this.handleGetDataParmas();
+      const params = {
+        id: this.shapeUnit.component.id,
+        tabId: this.shapeUnit.component.tabId,
+        type: this.shapeUnit.component.type,
+        ...this.options.data,
+        dimensions, // 拼装维度
+        measures, // 拼装度量
+      };
+      const res = await this.$server.common.getData('/screen/graph/v2/getData', params);
+      if (res.code === 200) {
+        const data = res.data[0];
+        this.serverData = {
+          current: data[this.options.data.targe[0].alias],
+          max: data[this.options.data.max[0].alias],
+          min: data[this.options.data.min[0].alias],
+        };
+        const result = this.doWithData(this.serverData);
+        this.progressStyle = Object.assign({}, this.progressStyle, {
+          width: `${result.percent}%`,
+        });
+        this.result = this.doWithFormatter(result);
+      } else {
+        this.$message.error(res.msg);
+      }
+    },
+    /**
+     * @description 拼装维度度量
+     */
+    handleGetDataParmas() {
+      let dimensions = [];
+      let measures = [];
+      ['targe', 'max', 'min'].forEach(key => {
+        this.options.data[key].forEach(item => {
+          if (item.role === 1) {
+            dimensions.push(item);
+          } else {
+            measures.push(item);
+          }
+        });
+      });
+      return { dimensions, measures };
     },
     /**
      * @description 图表获取默认数据

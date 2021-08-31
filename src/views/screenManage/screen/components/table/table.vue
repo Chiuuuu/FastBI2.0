@@ -265,47 +265,34 @@ export default {
      * @description 图表获取服务端数据
      */
     async getServerData() {
-      this.serverData = {
-        data: [
-          {
-            car_number: '粤C154',
-          },
-          {
-            car_number: '粤C1541231316255',
-          },
-          {
-            car_number: '粤C154',
-          },
-          {
-            car_number: '粤C15462',
-          },
-          {
-            car_number: '粤C15462',
-          },
-          {
-            car_number: '粤C15462',
-          },
-          {
-            car_number: '粤C15462',
-          },
-          {
-            car_number: '粤C15462',
-          },
-          {
-            car_number: '粤C15462',
-          },
-          {
-            car_number: '粤C15462',
-          },
-        ],
-      };
-      this.fields = [
-        {
-          name: 'car_number',
-        },
-      ];
-      this.doWithOptions(this.serverData);
-      this.refreshCount += 1;
+      let dimensions = [];
+      let measures = [];
+      this.options.data.fields.forEach(item => {
+        if (item.role === 1) {
+          dimensions.push(item);
+        } else {
+          measures.push(item);
+        }
+      });
+      const res = await this.$server.common.getData('/screen/graph/v2/getData', {
+        id: this.shapeUnit.component.id,
+        tabId: this.shapeUnit.component.tabId,
+        type: this.shapeUnit.component.type,
+        ...this.options.data,
+        dimensions, // 拼装维度
+        measures, // 拼装度量
+      });
+      if (res.code === 200) {
+        this.serverData = { data: res.data };
+        const keys = res.data[0] ? Object.keys(res.data[0]) : [];
+        this.fields = keys.map(key => {
+          return { name: key };
+        });
+        this.doWithOptions(this.serverData);
+        this.refreshCount += 1;
+      } else {
+        this.$message.error(res.msg);
+      }
     },
     /**
      * @description 图表获取默认数据

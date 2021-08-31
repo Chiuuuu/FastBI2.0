@@ -32,6 +32,7 @@ export default {
     ...mapState({
       // 当前组件状态
       currentComState: state => state.board.currentComState,
+      tabId: state => state.app.screenInfo.tabId,
     }),
     ...mapGetters(['polymerizeType']),
     titleStyle() {

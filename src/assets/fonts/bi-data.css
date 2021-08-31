@@ -228,3 +228,11 @@
 .bi-data-fengexian:before {
   content: '\e671';
 }
+
+.bi-data-loudoutu:before {
+  content: '\e69d';
+}
+
+.bi-data-zhibiaoka:before {
+  content: '\e698';
+}

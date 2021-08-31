@@ -166,6 +166,11 @@ export default {
         // this.tabAcitve = 'model';
       }
     },
+    // 保存当前度量列表，文本框插入
+    measure(val) {
+      this.$store.dispatch('SetModelMeasures', val);
+      this.$store.dispatch('SetResourceType', this.tabAcitve);
+    },
   },
   methods: {
     /**

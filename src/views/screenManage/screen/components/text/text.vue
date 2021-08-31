@@ -14,7 +14,7 @@ import { parameter } from '@/store/modules/board';
 import debounce from 'lodash/debounce';
 import { getStyle } from '@/utils';
 import { mutationTypes as historyMutation } from '@/store/modules/history';
-const reg = /<span data-id="(.*?)" contenteditable="false" class="anchor-measure">(.*?)<\/span>/g;
+const reg = /<span data-id="(.*?)" contenteditable="false" class="anchor-measure">\[(.*?)\(.*?\)(&nbsp;){3}]<\/span>/g;
 const polymerizationData = {
   // 数字
   num: [
@@ -75,6 +75,11 @@ export default {
   computed: {
     ...mapState({
       model: state => state.board.model,
+      measures: state => state.app.screenInfo.modelMeasures,
+      resourceType: state => {
+        const rt = state.app.screenInfo.resourceType;
+        return rt === 'model' ? 8 : 3;
+      },
     }),
     contentStyle() {
       const {
@@ -86,17 +91,21 @@ export default {
       return getStyle({}, { text }, ['fontSize'], []);
     },
     modelMeasures() {
-      return [
+      const noDataList = [
         {
-          alias: '成本',
-          name: '成本',
-          id: '1',
-          defaultAggregator: 'SUM',
-          screenTableId: 1,
-          status: 0,
-          dataType: 'VARCHAR',
+          name: '没有可插入的数据',
+          onClick: (event, handler, vm, wrap, antor) => {
+            antor && antor.removeAttribute('id');
+          },
         },
       ];
+      // 度量没有数据或者不同模显示没有可插入的数据
+      if (!this.measures.length || this.options.data.dataModelId !== this.dataModelId) {
+        return noDataList;
+      }
+
+      // 过滤已更改的度量
+      return this.measures.filter(item => item.status === 0);
     },
   },
   watch: {
@@ -220,24 +229,26 @@ export default {
         },
         createMenuWithAnchor: function (event, wrap, anchor) {
           const measureList = that.modelMeasures.map(item => {
-            return {
-              ...item,
-              onClick: (event, item, vm) => {
-                var range = document.createRange();
-                range.selectNode(anchor);
-                range.deleteContents();
-                const span = document.createElement('span');
-                span.setAttribute('data-id', item.id);
-                span.setAttribute('contenteditable', false);
-                span.setAttribute('class', 'anchor-measure');
-                span.innerHTML = `[${vm.formatAggregator(item)}&nbsp;&nbsp;&nbsp;]`;
-                span.oncontextmenu = span.onclick = that.clickMeasure;
-                vm.dataModelId = item.screenTableId; // 记录使用的模型id
-                range.insertNode(span);
-                range.selectNode(span);
-                this.selectRange(range);
-              },
-            };
+            return item.onClick
+              ? { ...item }
+              : {
+                  ...item,
+                  onClick: (event, item, vm) => {
+                    var range = document.createRange();
+                    range.selectNode(anchor);
+                    range.deleteContents();
+                    const span = document.createElement('span');
+                    span.setAttribute('data-id', item.id);
+                    span.setAttribute('contenteditable', false);
+                    span.setAttribute('class', 'anchor-measure');
+                    span.innerHTML = `[${vm.formatAggregator(item)}&nbsp;&nbsp;&nbsp;]`;
+                    span.oncontextmenu = span.onclick = e => that.clickMeasure(e, item);
+                    vm.dataModelId = item.screenTableId; // 记录使用的模型id
+                    range.insertNode(span);
+                    range.selectNode(span);
+                    this.selectRange(range);
+                  },
+                };
           });
           function addEvent(target) {
             target.$$fun = function () {
@@ -324,17 +335,9 @@ export default {
       // 匹配度量数据
       const measures = this.getMeasureDatas();
       this.saveText(measures);
-      let replaceString = await this.getContent(measures);
-      this.$nextTick(() => {
-        this.$refs['js-board-text-unit'].innerHTML = replaceString;
-        if (replaceString) {
-          this.$refs['js-board-text-unit'].classList.remove('medium-editor-placeholder');
-        }
-
-        // 移除光标
-        (document.selection && document.selection.empty && (document.selection.empty(), 1)) ||
-          (window.getSelection && window.getSelection().removeAllRanges());
-      });
+      // 移除光标
+      (document.selection && document.selection.empty && (document.selection.empty(), 1)) ||
+        (window.getSelection && window.getSelection().removeAllRanges());
     },
     /**
      * @description 保存文本
@@ -354,16 +357,20 @@ export default {
     async getContent(measures = []) {
       let resultStr = this.$refs['js-board-text-unit'].innerHTML;
       if (measures.length) {
-        //     let res = await this.$server.screenManage.getData(this.shapeUnit.component);
-        //     // 数据源被删掉
-        //     if (res.code === 500 && res.msg === 'IsChanged') {
-        //       return 'isChanged';
-        //     }
-        //     if (res.code === 500) {
-        //       return res.msg;
-        //     }
-        resultStr = resultStr.replace(reg, (match, string) => {
-          return `<span>${string}</span>`; // res.rows[0][alias]
+        const parmas = {
+          id: this.shapeUnit.component.id,
+          tabId: this.shapeUnit.component.tabId,
+          type: this.shapeUnit.component.type,
+          ...this.options.data,
+          dataModelId: this.dataModelId,
+          resourceType: this.resourceType,
+        };
+        const res = await this.$server.common.getData('/screen/graph/v2/getData', parmas);
+        if (res.code === 500) {
+          return res.msg;
+        }
+        resultStr = resultStr.replace(reg, (match, id, alias) => {
+          return `<span>${res.data[0][alias]}</span>`;
         });
       }
       return resultStr;
@@ -380,10 +387,12 @@ export default {
           // 验重
           if (!measures.find(item => item.alias === alias)) {
             // 添加度量到图表数据
-            let measure = this.modelMeasures.find(item => item.alias === alias);
-            // 添加聚合方式值
-            measure.defaultAggregator = polymerizationMap[aggregator];
-            measures.push(measure);
+            let measure = this.measures.find(item => item.alias === alias);
+            if (measure) {
+              // 添加聚合方式值
+              measure.defaultAggregator = polymerizationMap[aggregator];
+              measures.push(measure);
+            }
           }
         }
       }
@@ -406,18 +415,17 @@ export default {
       // 富文本度量添加点击事件
       let spanList = document.querySelectorAll('.anchor-measure');
       spanList.forEach(span => {
-        span.addEventListener('click', this.clickMeasure);
-        span.addEventListener('contextmenu', this.clickMeasure);
         // 验证度量更改
         // 去掉空格
-        let alias = span.innerHTML.replace(
-          /\[(.*?)\(.*?\)(&nbsp;){3}]/,
-          (reg,
-          (match, string) => {
-            return string;
-          }),
-        );
+        let alias = span.innerHTML.replace(/\[(.*?)\(.*?\)(&nbsp;){3}]/, (match, string) => {
+          return string;
+        });
         const measure = this.modelMeasures.find(item => item.alias === alias);
+        if (!measure) {
+          return;
+        }
+        span.addEventListener('click', e => this.clickMeasure(e, measure));
+        span.addEventListener('contextmenu', e => this.clickMeasure(e, measure));
         // 度量不存在飘红
         if (measure.status === 1) {
           // 加style不进reg匹配
@@ -428,7 +436,7 @@ export default {
     /**
      * @description 度量聚合选择事件
      */
-    clickMeasure(e) {
+    clickMeasure(e, measureData) {
       e.preventDefault();
       e.stopPropagation();
       let that = this;
@@ -440,8 +448,7 @@ export default {
       }
       const dom = e.target.getBoundingClientRect();
       // 构造聚合方式选择列表
-      const dataType = e.target.dataType;
-      const type = dataType === 'BIGINT' || dataType === 'DECIMAL' || dataType === 'DOUBLE' ? 'num' : 'str';
+      const type = this.judgeDataType(measureData.dataType);
       let aggregatorList = polymerizationData[type];
       polymerizationList[0].children = aggregatorList.map(aggregatorData => {
         return {
@@ -473,9 +480,14 @@ export default {
      * @description 聚合显示处理
      */
     formatAggregator(item) {
-      const dataType = item.dataType;
-      const isNum = dataType === 'BIGINT' || dataType === 'DECIMAL' || dataType === 'DOUBLE';
-      return `${item.alias}(${isNum ? '求和' : '计数'})`;
+      const isNum = this.judgeDataType(item.dataType) === 'num';
+      return `${item.name}(${isNum ? '求和' : '计数'})`;
+    },
+    /**
+     * @description 判断数值类型，返回聚合类型
+     */
+    judgeDataType(dataType) {
+      return dataType === 'BIGINT' || dataType === 'DECIMAL' || dataType === 'DOUBLE' ? 'num' : 'str';
     },
   },
 };

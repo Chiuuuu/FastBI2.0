@@ -129,8 +129,8 @@ export default {
         [BoardType.Image]: 'bi-data-img',
         [BoardType.ChartMap]: 'bi-data-ditu',
         [BoardType.Source]: 'bi-data-sucaiku-side',
-        [BoardType.ChartFunnel]: 'bi-data-leidatu',
-        [BoardType.QuatoCard]: 'bi-data-sucaiku-side',
+        [BoardType.ChartFunnel]: 'bi-data-loudoutu',
+        [BoardType.QuatoCard]: 'bi-data-zhibiaoka',
       };
       return icon[type];
     },

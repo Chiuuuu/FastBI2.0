@@ -80,6 +80,7 @@ import optionObj from './map-options';
 import * as echarts from 'echarts';
 import guangZhouJson from '@/utils/guangzhou.json';
 import matchWindow from './match-window';
+import { mapState } from 'vuex';
 const colu = [
   {
     title: '您的数据',
@@ -171,6 +172,9 @@ export default {
     };
   },
   computed: {
+    ...mapState({
+      tabId: state => state.app.screenInfo.tabId,
+    }),
     unmatchedLen() {
       let umatcheds = this.datas.filter(item => !item.MathedVal);
       return umatcheds.length;
@@ -200,6 +204,7 @@ export default {
         province: '广东省',
         city: '广州市',
         pivotschemaId: this.dimensionsData.pivotschemaId,
+        tabId: this.tabId,
       };
       this.loading = true;
       let res = await this.$server.screenManage.getGeoData(params);
@@ -273,6 +278,7 @@ export default {
         city: '广州市',
         pivotschemaId: this.dimensionsData.pivotschemaId,
         condition: this.condition,
+        tabId: this.tabId,
       };
       let res = await this.$server.screenManage.saveGeoData(params);
       if (res.code === 500) {

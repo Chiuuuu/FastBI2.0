@@ -52,7 +52,12 @@ export default {
       const {
         style: { echart },
       } = this.options;
-      this.doWithMap(fetchData.series[mapSeries], echart.mapStyle, echart.geo.itemStyle.emphasis.areaColor);
+      this.doWithMap(
+        fetchData.series[mapSeries],
+        echart.mapStyle,
+        echart.geo.itemStyle.emphasis.areaColor,
+        echart.geo.map,
+      );
       this.doWithScatter(fetchData.series[scatterSeries], echart.scatterStyle);
       const legendData = this.doWithlegend(fetchData.series);
 
@@ -62,13 +67,12 @@ export default {
           data: legendData,
         },
       });
-
       return options;
     },
     /**
      * @description 处理填充层
      */
-    doWithMap(series, mapStyle, chartEmphasisColor) {
+    doWithMap(series, mapStyle, chartEmphasisColor, map) {
       // 处理区域悬停
       series.itemStyle = Object.assign({}, defaultData.series[mapSeries].itemStyle, {
         emphasis: { areaColor: chartEmphasisColor },
@@ -85,9 +89,9 @@ export default {
       // 处理label属性
       this.doWithKeyValue(series.label, 'normal', { show, fontSize, color });
       series.tooltip.show = customShowTooltip;
+      series.map = map;
       // 拼凑显示格式
       this.dowWithLabelFormatter(series, customPointShowList, customOrient);
-
       this.dowWithTooltipFormatter(series, customTooltipShowList);
     },
     /**
@@ -161,80 +165,81 @@ export default {
       };
     },
     /**
+     * @description 处理填充层
+     */
+    handleFillList(fillList) {
+      const dimensionAlias = this.options.data.dimensions[0].alias;
+      const measureAlias = this.options.data.measures[0].alias;
+      let datas = fillList.map(data => {
+        return {
+          name: data[dimensionAlias],
+          value: data[measureAlias],
+          // 构造映射数据，给指标提示框内容显示
+          [`地区名/${dimensionAlias}`]: data[dimensionAlias], // 地区名/维度
+          [dimensionAlias]: data[dimensionAlias], // 维度
+          [measureAlias]: data[measureAlias], // 度量
+        };
+      });
+      return datas;
+    },
+    handleLabelList(labelList) {
+      const dimensionAlias = this.options.data.labelDimensions[0].alias;
+      const measureAlias = this.options.data.labelMeasures[0].alias;
+      let datas = labelList.map(data => {
+        return {
+          name: data[dimensionAlias],
+          value: data[measureAlias],
+          // 构造映射数据，给指标提示框内容显示
+          [`地区名/${dimensionAlias}`]: data[dimensionAlias], // 地区名/维度
+          [dimensionAlias]: data[dimensionAlias], // 维度
+          [measureAlias]: data[measureAlias], // 度量
+        };
+      });
+      return datas;
+    },
+    /**
      * @description 图表获取服务端数据
      */
     async getServerData() {
-      console.log('从这里获取服务端数据');
-      let data = defaultData.series;
-      let returnData = {
-        fillList:
-          this.options.data.dimensions.length && this.options.data.measures.length
-            ? [
-                {
-                  '地区名/diqu': '海珠区',
-                  diqu: '海珠区',
-                  name: '海珠区',
-                  renkoushuliang: 456,
-                  value: 456,
-                },
-                {
-                  '地区名/diqu': '花都区',
-                  diqu: '花都区',
-                  name: '花都区',
-                  renkoushuliang: 111,
-                  value: 111,
-                },
-              ]
-            : [],
-        labelList:
-          this.options.data.labelDimensions.length && this.options.data.labelMeasures.length
-            ? [
-                {
-                  '地区名/diqu': '花都区',
-                  diqu: '花都区',
-                  name: '花都区',
-                  renkoushuliang: 111,
-                  value: [
-                    113.211184, // 经度
-                    23.39205, // 纬度度
-                    111, // 值
-                  ],
-                },
-                {
-                  '地区名/diqu': '增城区',
-                  diqu: '增城区',
-                  name: '增城区',
-                  renkoushuliang: 3456,
-                  value: [113.829579, 23.290497, 3456],
-                },
-              ]
-            : [],
-      };
-      this.serverData = {
-        series: [
-          Object.assign({}, data[0], {
-            data: returnData.fillList,
-          }),
-          Object.assign({}, data[1], {
-            name: 'test',
-            data: returnData.labelList,
-          }),
-        ],
-      };
-      // 获取数据之后需要更改visualMap范围
-      const valueList = returnData.fillList.map(item => item.value);
-      const selectListData = this.handleMapFormatterSelect({
-        mapData: returnData.fillList,
-        scatterData: returnData.labelList,
+      const res = await this.$server.common.getData('/screen/graph/v2/getData', {
+        id: this.shapeUnit.component.id,
+        tabId: this.tabId,
+        type: this.shapeUnit.component.type,
+        ...omit(this.options.data, ['expands']),
       });
-      this.$store.commit(boardMutation.SET_STYLE, {
-        style: {
-          echart: {
-            visualMap: Object.assign({}, this.options.style.echart.visualMap, { max: Math.max(...valueList) }),
-            ...selectListData,
+      if (res.code === 200) {
+        let fillList = res.data.fillList ? this.handleFillList(res.data.fillList) : [];
+        let labelList = res.data.labelList ? this.handleLabelList(res.data.labelList) : [];
+
+        const data = defaultData.series;
+        this.serverData = {
+          series: [
+            Object.assign({}, data[mapSeries], {
+              name: this.options.data.measures[0].alias,
+              data: fillList,
+            }),
+            Object.assign({}, data[scatterSeries], {
+              name: this.options.data.labelMeasures[0].alias,
+              data: labelList,
+            }),
+          ],
+        };
+        // 获取数据之后需要更改visualMap范围
+        const valueList = fillList.map(item => item.value);
+        this.$store.commit(boardMutation.SET_STYLE, {
+          style: {
+            echart: {
+              visualMap: Object.assign({}, this.options.style.echart.visualMap, {
+                max: Math.max(...valueList),
+                min: Math.min(...valueList),
+              }),
+            },
           },
-        },
-      });
+          updateCom: this.shapeUnit.component,
+        });
+      } else {
+        this.$message.error(res.msg);
+      }
     },
     /**
      * @description 初始化地图指标显示内容列表
@@ -265,13 +270,8 @@ export default {
      */
     updateChartStyle() {
       if (!this.chartInstane) return;
-      const options = this.chartInstane.getOption();
-
-      const data = {
-        series: options.series,
-      };
-
-      const newOptions = this.doWithOptions(data);
+      const newOptions = this.doWithOptions(this.serverData ? this.serverData : defaultData);
+      this.chartInstane.clear();
       this.chartInstane.setOption(newOptions, {
         replaceMerge: ['series'],
       });
