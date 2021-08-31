@@ -244,10 +244,12 @@ export default {
       if (this.boardSettingRightInstance.tabAcitve === 'model') {
         if (this.boardSettingRightInstance.modelSelected) {
           selected = this.boardSettingRightInstance.modelSelected;
+          result.resourceType = 8;
         }
       } else if (this.boardSettingRightInstance.tabAcitve === 'access') {
         if (this.boardSettingRightInstance.accessSelected) {
           selected = this.boardSettingRightInstance.modelSelected;
+          result.resourceType = 3;
         }
       }
 

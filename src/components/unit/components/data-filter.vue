@@ -195,17 +195,17 @@ export default {
         // 维度
         operation: 'list', //list列表，manual手动
         searchList: [
-          '选项1',
-          '选项2',
-          '选项3',
-          '选项4',
-          '选项5',
-          '选项6',
-          '选项7',
-          '选项8',
-          '选项9',
-          '选项10',
-          '选项11',
+          // '选项1',
+          // '选项2',
+          // '选项3',
+          // '选项4',
+          // '选项5',
+          // '选项6',
+          // '选项7',
+          // '选项8',
+          // '选项9',
+          // '选项10',
+          // '选项11',
         ],
         indeterminate: false, //全选 -- 样式控制
         checkAll: false,
@@ -274,6 +274,7 @@ export default {
       if (item) {
         this.currentType = this.judgeFiledType(item.role);
         this.currentData = item;
+        this.getFieldData();
       }
       this.visible = true;
     },
@@ -286,6 +287,27 @@ export default {
         dropType: this.type,
         data: this.currentData,
       });
+    },
+    async getFieldData() {
+      console.log(this);
+      console.log(this.currentData);
+      const params = {
+        resourceType: this.currentCom.setting.data.resourceType,
+        datamodelId: this.currentCom.setting.data.dataModelId,
+        dimensions: [this.currentData],
+      };
+      this.spinning = true;
+      const res = await this.$server.screenManage.getDataPick(params).finally(() => {
+        // this.spinning = false;
+      });
+      if (res.code === 500 && res.msg === 'IsChanged') {
+        this.$message.error('模型数据不存在');
+        return;
+      }
+      if (res.code === 200) {
+        this.dataRows = res.rows.map(item => Object.values(item).toString());
+      }
+      this.currentFile.searchList = this.dataRows || [];
     },
     /**
      * @description 校验鼠标是否在放置区中
