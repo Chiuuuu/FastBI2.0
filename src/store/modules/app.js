@@ -36,6 +36,11 @@ const app = {
       { name: '计数', value: 'COUNT' },
       { name: '去重计数', value: 'DCNT' },
     ],
+    // 资源类型
+    resourceType: {
+      model: 8, // 数据模型
+      access: 3, // 数据接入
+    },
     tabs: [], // tab页列表
     orginPageSettings,
     pageSettings: orginPageSettings,

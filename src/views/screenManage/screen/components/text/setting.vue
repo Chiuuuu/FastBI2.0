@@ -138,6 +138,19 @@
                         </a-col>
                       </template>
                     </a-row>
+                    <a-row class="unit-show-block mb-8">
+                      <template v-for="(item, index) in verticalAlign">
+                        <a-col :span="4" :offset="index === 0 ? 12 : 0" :key="item">
+                          <div
+                            class="font-align"
+                            :class="item === currentCom.setting.style.echart.text.verticalAlign ? 'selected' : ''"
+                            @click="handleSelect('verticalAlign', item)"
+                          >
+                            <a-icon :type="`vertical-align-${item}`" />
+                          </div>
+                        </a-col>
+                      </template>
+                    </a-row>
                     <!-- 标题 对齐 end -->
                   </div>
                 </CollapsePanel>
@@ -201,6 +214,7 @@ export default {
       tabAcitve: 'style', // tab选项栏活动目标
       dataCollapseActive: ['dataFilter'], // 折叠打开选项data() {
       align: ['left', 'center', 'right'], // 对齐方式
+      verticalAlign: ['top', 'middle', 'bottom'], // 对齐方式
       fontFamily, //字体
     };
   },

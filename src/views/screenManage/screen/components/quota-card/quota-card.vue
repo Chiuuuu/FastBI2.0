@@ -1,24 +1,37 @@
 <template>
   <div class="board-quota-card">
-    <div class="board-chart-unit-title" :style="titleStyle" v-if="options.style.title.show">
+    <!-- 标题 -->
+    <p class="board-chart-unit-title" :style="titleStyle" v-if="options.style.title.show">
       {{ options.style.title.text }}
-    </div>
+    </p>
+    <!-- 主指标标题 -->
     <p v-if="options.style.echart.totalQuatoTitle.show" class="total-quota-title" :style="totalQuatoTitleStyle">
       {{ totalQuotaTitle }}
     </p>
+    <!-- 主指标值 -->
     <p class="total-quota-value" :style="totalQuatoValueStyle">{{ totalQuotaValue }}</p>
-    <p class="secondary-quota" v-for="(quota, index) in secondaryQuotas" :key="index">
-      <span
-        v-if="options.style.echart.secondaryQuatoTitle.show"
-        class="secondary-quota-title"
-        :style="secondaryQuatoTitleStyle"
+    <!-- 次指标 -->
+    <div v-if="options.style.echart.showSecondaryQuato">
+      <p
+        class="secondary-quota"
+        v-for="(quota, index) in secondaryQuotas"
+        :key="index"
+        :style="secondaryQuatoTitleLineStyle"
       >
-        {{ quota.secondaryQuotasTitle }}
-      </span>
-      <span class="secondary-quota-quota-value" :style="secondaryQuatoValueStyle">
-        {{ quota.secondaryQuotasValue }}
-      </span>
-    </p>
+        <!-- 次指标标题 -->
+        <span
+          v-if="options.style.echart.secondaryQuatoTitle.show"
+          class="secondary-quota-title"
+          :style="secondaryQuatoTitleStyle"
+        >
+          {{ quota.secondaryQuotasTitle }}
+        </span>
+        <!-- 次指标值 -->
+        <span class="secondary-quota-quota-value" :style="secondaryQuatoValueStyle">
+          {{ quota.secondaryQuotasValue }}
+        </span>
+      </p>
+    </div>
   </div>
 </template>
 <script>
@@ -41,6 +54,7 @@ export default {
       totalQuatoValueStyle: {},
       secondaryQuatoTitleStyle: {},
       secondaryQuatoValueStyle: {},
+      secondaryQuatoTitleLineStyle: {},
     };
   },
   watch: {
@@ -73,7 +87,7 @@ export default {
     /**
      * @description 处理标签配置
      */
-    doWithStyle(echart, key) {
+    doWithTextStyle(echart, key) {
       const styleObj = Object.assign({}, echart[key]);
       const style = {
         color: `${styleObj.color}`,
@@ -87,7 +101,17 @@ export default {
       if (styleObj.marginBottom) {
         style.marginBottom = `${styleObj.marginBottom || 0}px`;
       }
+      if (styleObj.marginRight) {
+        style.marginRight = `${styleObj.marginRight || 0}px`;
+      }
       return style;
+    },
+    doWithLineStyle(echart) {
+      const styleObj = Object.assign({}, echart['secondaryQuatoTitleLine']);
+      return {
+        marginBottom: `${styleObj.marginBottom || 0}px`,
+        'justify-content': `${styleObj.align}`,
+      };
     },
     /**
      * @description 整合配置
@@ -97,10 +121,11 @@ export default {
         style: { echart },
       } = this.options;
 
-      this.totalQuatoTitleStyle = this.doWithStyle(echart, 'totalQuatoTitle');
-      this.totalQuatoValueStyle = this.doWithStyle(echart, 'totalQuatoValue');
-      this.secondaryQuatoTitleStyle = this.doWithStyle(echart, 'secondaryQuatoTitle');
-      this.secondaryQuatoValueStyle = this.doWithStyle(echart, 'secondaryQuatoValue');
+      this.totalQuatoTitleStyle = this.doWithTextStyle(echart, 'totalQuatoTitle');
+      this.totalQuatoValueStyle = this.doWithTextStyle(echart, 'totalQuatoValue');
+      this.secondaryQuatoTitleStyle = this.doWithTextStyle(echart, 'secondaryQuatoTitle');
+      this.secondaryQuatoValueStyle = this.doWithTextStyle(echart, 'secondaryQuatoValue');
+      this.secondaryQuatoTitleLineStyle = this.doWithLineStyle(echart);
     },
     /**F
      * @description 初始化Echart图表
@@ -126,14 +151,16 @@ export default {
      */
     async getServerData() {
       this.serverData = {
-        current: this.options.data.targe,
-        max: this.options.data.max,
-        min: this.options.data.min,
+        data: {
+          totalQuotaTitle: '总获取量',
+          totalQuotaValue: '45678654.1561',
+          secondaryQuotas: [
+            { secondaryQuotasTitle: 'test1', secondaryQuotasValue: '52244.056' },
+            { secondaryQuotasTitle: 'test3', secondaryQuotasValue: '156465454' },
+          ],
+        },
       };
-      const result = this.doWithData(this.serverData);
-      this.progressStyle = Object.assign({}, this.progressStyle, {
-        width: `${result.percent}%`,
-      });
+      this.doWithData(this.serverData);
     },
     /**
      * @description 图表获取默认数据
@@ -189,14 +216,26 @@ export default {
 };
 </script>
 <style lang="less" scoped>
+.ellipsis {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  word-break: break-all;
+}
 .board-quota-card {
-  padding: 10px 25px;
-}
-.progress {
-  width: 80%;
+  width: 100%;
   height: 100%;
+  padding: 10px 25px;
+  overflow: hidden;
+  & > p {
+    .ellipsis;
+  }
 }
-.progress-value {
-  position: absolute;
+.secondary-quota {
+  display: flex;
+  flex-direction: row;
+  & > span {
+    .ellipsis;
+  }
 }
 </style>

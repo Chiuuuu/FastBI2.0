@@ -41,6 +41,11 @@ export default merge(cloneDeep(BASE), {
           align: 'left',
           marginBottom: 20,
         },
+        showSecondaryQuato: true,
+        secondaryQuatoTitleLine: {
+          align: 'flex-start',
+          marginBottom: 10,
+        },
         secondaryQuatoTitle: {
           text: [], // 自定义的标题
           show: true,
@@ -48,13 +53,13 @@ export default merge(cloneDeep(BASE), {
           size: 16,
           family: 'sans-serif',
           weight: 'normal',
+          marginRight: 10,
         },
         secondaryQuatoValue: {
           color: '#617BFF',
           size: 12,
           family: 'sans-serif',
           weight: 'normal',
-          marginBottom: 20,
         },
         border: {
           width: 1,

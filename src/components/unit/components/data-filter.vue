@@ -14,7 +14,7 @@
                 }"
                 v-for="item in list"
                 :key="item.id"
-                @click="showModel(item)"
+                @click="showModel(item, true)"
               >
                 <p class="text">{{ item.name }}</p>
                 <div class="suffix-btn" @click.stop="handleFiledOps($event, item)"></div>
@@ -33,8 +33,8 @@
     <a-modal v-model="visible" title="数据筛选" @ok="handleOk">
       <div class="data-filter-modal">
         <!-- 维度 start -->
-        <div v-if="currentType === 'dimensions'">
-          <a-radio-group v-model="currentFile.operation">
+        <div v-if="!dataTypeObj['num'].includes(dataType)">
+          <a-radio-group v-model="currentFile.operation" @change="operationChange">
             <a-radio :value="'list'">列表</a-radio>
             <a-radio :value="'manual'">手动</a-radio>
           </a-radio-group>
@@ -54,7 +54,7 @@
                 </a-checkbox>
                 <a-checkbox-group
                   class="f-flexcolumn"
-                  v-model="currentFile.checkedList"
+                  v-model="currentFile.value"
                   :options="currentFile.searchList"
                   @change="onCheckChange"
                 />
@@ -63,22 +63,17 @@
           </div>
           <!--手动-->
           <div class="item" v-if="currentFile.operation === 'manual'">
-            <a-input
-              type="text"
-              :class="['pick-input']"
-              placeholder="请输入内容"
-              v-model="currentFile.inputCon"
-            ></a-input>
+            <a-input type="text" :class="['pick-input']" placeholder="请输入内容" v-model="inputCon"></a-input>
             <a-button type="primary" @click="handleAddCon">添加</a-button>
             <br />
             <div class="pick-checkbox-box">
               <div class="scrollbar">
-                <div class="pick-property" v-for="(item, index) in currentFile.manualList" :key="item">
+                <div class="pick-property" v-for="(item, index) in currentFile.value" :key="item">
                   <span>{{ item }}</span>
                   <a-icon
                     type="close"
                     class="pick-icon-close"
-                    @click="deleList(currentFile.manualList, item, undefined, index)"
+                    @click="deleList(currentFile.value, item, undefined, index)"
                   />
                 </div>
               </div>
@@ -92,7 +87,7 @@
           <div class="pick-checkbox-box" style="margin: 0; padding: 0">
             <div class="scrollbar">
               <br />
-              <div :class="['pick-condition-box']" v-for="(item, index) in currentFile.conditionList" :key="index">
+              <div :class="['pick-condition-box']" v-for="(item, index) in currentFile.rules" :key="index">
                 <a-select
                   :class="['pick-select', 'has-margin']"
                   v-model="item.condition"
@@ -121,7 +116,7 @@
                 <a-icon
                   type="close"
                   class="pick-icon-close"
-                  @click="deleList(currentFile.conditionList, item, undefined, index)"
+                  @click="deleList(currentFile.rules, item, undefined, index)"
                 />
               </div>
             </div>
@@ -148,6 +143,8 @@ import ContextMenu from '@/components/contextmenu';
 import { arrayAddData, arrayDeleData } from '@/utils';
 import { mutationTypes as historyMutation } from '@/store/modules/history';
 import { DROG_TYPE } from '@/views/screenManage/screen/container/drawing-board-setting.vue';
+import omit from 'lodash/omit';
+import pick from 'lodash/pick';
 /**
  * @description 数据筛选设置
  */
@@ -192,38 +189,29 @@ export default {
       ], // 条件选项
       currentFile: {
         // 当前选中的维度/度量数据
-        // 维度
         operation: 'list', //list列表，manual手动
-        searchList: [
-          // '选项1',
-          // '选项2',
-          // '选项3',
-          // '选项4',
-          // '选项5',
-          // '选项6',
-          // '选项7',
-          // '选项8',
-          // '选项9',
-          // '选项10',
-          // '选项11',
-        ],
+        searchList: [],
         indeterminate: false, //全选 -- 样式控制
         checkAll: false,
-        checkedList: [],
-        manualList: ['111'],
-        // 度量
-        inputCon: '',
-        conditionList: [],
+        value: [], //s数值类型--选中的值
+        rules: [], //文本类型--选中的值
         type: 1, //1只显示 2排除
       },
+      inputCon: '', // 度量
       currentType: '', //当前选中的类型
       currentData: {}, //当前弹框字段数据
+      dataType: '', //数据类型
+      dataTypeObj: {
+        // 数值
+        num: ['BIGINT', 'DECIMAL', 'DOUBLE'], //除却这些，其他为文本
+      },
     };
   },
   computed: {
     ...mapState({
       currentCom: state => state.board.currentCom,
       dragdropState: state => state.dragdrop,
+      resourceType: state => state.app.resourceType,
     }),
   },
   watch: {
@@ -234,6 +222,7 @@ export default {
         if (!dragdrop.status) return;
 
         this.currentType = this.judgeFiledType(dragdrop.data.role);
+        this.dataType = dragdrop.data.dataType;
 
         // 根据状态执行方法
         const status = {
@@ -267,36 +256,58 @@ export default {
       return role === 1 ? 'dimensions' : 'measures';
     },
     /**
-     * @description 维度、度量数据筛选弹框
-     * @param {Object} item 当前选择的字段
+     * @description 初始化currentFile
      */
-    showModel(item) {
-      if (item) {
-        this.currentType = this.judgeFiledType(item.role);
-        this.currentData = item;
+    initCurrentFile() {
+      this.currentFile = {
+        // 当前选中的维度/度量数据
+        operation: 'list', //list列表，manual手动
+        searchList: [],
+        indeterminate: false, //全选 -- 样式控制
+        checkAll: false,
+        type: 1, //1只显示 2排除
+      };
+      // 数值类型字段
+      if (this.dataTypeObj['num'].includes(this.dataType)) {
+        this.currentFile.rules = [];
+      } else {
+        this.currentFile.value = [];
+      }
+    },
+    /**
+     * @description 维度、度量数据筛选弹框
+     * @param {Object} item 当前选择的字段数据
+     * @param {Boolean} flag true时为点击已拖入的字段
+     */
+    showModel(item, flag) {
+      if (!item) {
+        return;
+      }
+      if (this.currentCom.setting.data.filter.fileList.map(item => item.id).includes(item.id) && !flag) return;
+      this.currentType = this.judgeFiledType(item.role);
+      this.dataType = item.dataType;
+      this.currentData = item;
+      this.initCurrentFile();
+      this.currentFile = Object.assign({}, this.currentFile, pick(item, Object.keys(this.currentFile)));
+      // 非数值类型字段才调接口
+      if (!this.dataTypeObj['num'].includes(this.dataType)) {
         this.getFieldData();
       }
       this.visible = true;
     },
     /**
-     * @description 维度、度量数据筛选弹框 -- 确定
+     * @description 获取文本类型的数据
      */
-    handleOk() {
-      this.visible = false;
-      this.handleDropField({
-        dropType: this.type,
-        data: this.currentData,
-      });
-    },
     async getFieldData() {
-      console.log(this);
-      console.log(this.currentData);
+      if (!this.boardSettingRightInstance) {
+        this.boardSettingRightInstance = this.boardSettingWrapper.$refs['js-board-setting-right'];
+      }
       const params = {
-        resourceType: this.currentCom.setting.data.resourceType,
-        datamodelId: this.currentCom.setting.data.dataModelId,
+        resourceType: this.resourceType[this.boardSettingRightInstance.tabAcitve],
+        datamodelId: this.boardSettingRightInstance.modelSelected.tableId,
         dimensions: [this.currentData],
       };
-      this.spinning = true;
+      // this.spinning = true;
       const res = await this.$server.screenManage.getDataPick(params).finally(() => {
         // this.spinning = false;
       });
@@ -308,6 +319,90 @@ export default {
         this.dataRows = res.rows.map(item => Object.values(item).toString());
       }
       this.currentFile.searchList = this.dataRows || [];
+    },
+    /**
+     * @description 文本数据-列表/手动切换
+     * @param {string} val list列表,manual手动
+     */
+    operationChange() {
+      // 数值类型字段
+      if (this.dataTypeObj['num'].includes(this.dataType)) {
+        this.currentFile.rules = [];
+      } else {
+        this.currentFile.value = [];
+      }
+      this.currentFile.checkAll = false;
+    },
+    /**
+     * @description 维度、度量数据筛选弹框 -- 确定
+     */
+    async handleOk() {
+      if (this.dataTypeObj['num'].includes(this.dataType) && !this.handleNumData()) {
+        return;
+      }
+      this.visible = false;
+      this.currentData = Object.assign({}, this.currentData, omit(this.currentFile, ['searchList']));
+      this.handleDropField({
+        dropType: this.type,
+        data: this.currentData,
+      });
+      await this.$nextTick();
+      this.getServerData();
+    },
+    /**
+     * @description 获取图表数据
+     */
+    getServerData() {
+      // 获取图标数据
+      if (this.boardSettingWrapper.$parent.$refs['boardContent'].$refs['js-board-grid-chart'][0].isServerData()) {
+        this.boardSettingWrapper.$parent.$refs['boardContent'].$refs['js-board-grid-chart'][0].getServerData();
+      }
+    },
+    /**
+     * @description 数值类型数据处理
+     */
+    handleNumData() {
+      if (this.currentFile.rules.some(item => !item.firstValue || (item.condition === 'range' && !item.secondValue))) {
+        this.$message.error('请输入筛选数值');
+        return false;
+      }
+      // 处理度量筛选数据
+      // 如果是排除的，action取补集符号
+      this.currentFile.rules.forEach(item => {
+        if (!item.firstValue) {
+          this.$message.error('请输入筛选数值');
+          return false;
+        }
+        if (item.condition === 'range' && !item.secondValue) {
+          this.$message.error('请输入范围第二个筛选数值');
+          return false;
+        }
+        switch (item.condition) {
+          case 'range':
+            item.action = item.condition;
+            break;
+          case 'more':
+            item.action = this.currentFile.type === 1 ? item.condition : 'lessOrEqual';
+            break;
+          case 'less':
+            item.action = this.currentFile.type === 1 ? item.condition : 'moreOrEqual';
+            break;
+          case 'moreOrEqual':
+            item.action = this.currentFile.type === 1 ? item.condition : 'less';
+            break;
+          case 'lessOrEqual':
+            item.action = this.currentFile.type === 1 ? item.condition : 'more';
+            break;
+          case 'equal':
+            item.action = this.currentFile.type === 1 ? item.condition : 'notEqual';
+            break;
+          case 'notEqual':
+            item.action = this.currentFile.type === 1 ? item.condition : 'equal';
+            break;
+        }
+      });
+
+      return true;
     },
     /**
      * @description 校验鼠标是否在放置区中
@@ -398,10 +493,12 @@ export default {
       if (this.boardSettingRightInstance.tabAcitve === 'model') {
         if (this.boardSettingRightInstance.modelSelected) {
           selected = this.boardSettingRightInstance.modelSelected;
+          result.resourceType = this.resourceType[this.boardSettingRightInstance.tabAcitve];
         }
       } else if (this.boardSettingRightInstance.tabAcitve === 'access') {
         if (this.boardSettingRightInstance.accessSelected) {
           selected = this.boardSettingRightInstance.modelSelected;
+          result.resourceType = this.resourceType[this.boardSettingRightInstance.tabAcitve];
         }
       }
 
@@ -461,7 +558,7 @@ export default {
     handleList(list, data, method = 'add') {
       if (method === 'add') {
         // 如果数据有重复则直接返回
-        if (list.includes(data)) return list;
+        if (list.map(item => item.id).includes(data.id)) return list;
 
         arrayAddData(list, data);
       } else if (method === 'dele') {
@@ -474,7 +571,6 @@ export default {
      */
     handleSetDataFilter(data, method = 'add') {
       let filter = Object.assign({}, this.currentCom.setting.data.filter);
-      // filter[this.currentType + 'Limit'] = this.conversionArry(this.currentType + 'Limit', data, method);
       filter['fileList'] = this.conversionArry('fileList', data, method);
 
       return { filter };
@@ -526,6 +622,7 @@ export default {
     handleFiledOps(event, item) {
       const that = this;
       this.currentType = this.judgeFiledType(item.role);
+      this.dataType = item.dataType;
       function addEvent(target) {
         target.$$fun = function () {
           Array.prototype.push.call(arguments, that, item);
@@ -553,16 +650,16 @@ export default {
     /**
      * @description 维度-列表 选择
      */
-    onCheckChange(checkedList) {
-      this.currentFile.indeterminate = !!checkedList.length && checkedList.length < this.currentFile.searchList.length;
-      this.currentFile.checkAll = checkedList.length === this.currentFile.searchList.length;
+    onCheckChange(value) {
+      this.currentFile.indeterminate = !!value.length && value.length < this.currentFile.value.length;
+      this.currentFile.checkAll = value.length === this.currentFile.searchList.length;
     },
     /**
      * @description 维度-列表 全选
      */
     onCheckAllChange(e) {
       Object.assign(this.currentFile, {
-        checkedList: e.target.checked ? this.currentFile.searchList : [],
+        value: e.target.checked ? this.currentFile.searchList : [],
         checkAll: e.target.checked,
         indeterminate: false,
       });
@@ -571,15 +668,15 @@ export default {
      * @description 维度-手动添加内容
      */
     handleAddCon() {
-      this.currentFile.manualList.push(this.currentFile.inputCon);
-      this.currentFile.inputCon = '';
+      this.currentFile.value.push(this.inputCon);
+      this.inputCon = '';
     },
     /**
      * @description 度量-添加条件
      */
     addDimensionsCondition() {
-      if (this.currentFile.conditionList.length < 5) {
-        this.currentFile.conditionList.push({
+      if (this.currentFile.rules.length < 5) {
+        this.currentFile.rules.push({
           condition: 'range', // 条件选择，显示
           action: '', // 条件选择，实际
           firstValue: '',

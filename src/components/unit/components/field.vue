@@ -91,6 +91,7 @@ export default {
     ...mapState({
       currentCom: state => state.board.currentCom,
       dragdropState: state => state.dragdrop,
+      resourceType: state => state.app.resourceType,
     }),
     isShowEmpty() {
       // 控制是否显示空的情况
@@ -229,12 +230,12 @@ export default {
       if (this.boardSettingRightInstance.tabAcitve === 'model') {
         if (this.boardSettingRightInstance.modelSelected) {
           selected = this.boardSettingRightInstance.modelSelected;
-          result.resourceType = 8;
+          result.resourceType = this.resourceType[this.boardSettingRightInstance.tabAcitve];
         }
       } else if (this.boardSettingRightInstance.tabAcitve === 'access') {
         if (this.boardSettingRightInstance.accessSelected) {
           selected = this.boardSettingRightInstance.modelSelected;
-          result.resourceType = 3;
+          result.resourceType = this.resourceType[this.boardSettingRightInstance.tabAcitve];
         }
       }
 
@@ -274,6 +275,8 @@ export default {
         [DROG_TYPE.LABELMEASURE]: this.handleLabelMeasure,
         [DROG_TYPE.LABELLONGITUDE]: this.handleLabelLongitude,
         [DROG_TYPE.LABELLATITUDE]: this.handleLabelLatitude,
+        [DROG_TYPE.TOTALQUOTA]: this.handleTotalQuota,
+        [DROG_TYPE.SECONDARYQUOTA]: this.handleSecondaryQuota,
       };
 
       const fun = funs[dropType];
@@ -304,7 +307,7 @@ export default {
     handleList(list, data, method = 'add') {
       if (method === 'add') {
         // 如果数据有重复则直接返回
-        if (list.includes(data)) return list;
+        if (list.map(item => item.id).includes(data.id)) return list;
 
         // 1. 是否开启限制
         if (this.limit) {
@@ -350,12 +353,11 @@ export default {
     /**
      * @description 拼接经度纬度到维度
      */
-    handleMapDimension(isLabel = false) {
+    handleMapDimension(data, isLabel = false) {
       // 构造度量列表
       let dimensionList = [];
-      let datas = this.currentCom.setting.data;
-      let latitude = isLabel ? datas.labelLatitude : datas.latitude;
-      let longitude = isLabel ? datas.labelLongitude : datas.longitude;
+      let latitude = isLabel ? data.labelLatitude : data.latitude;
+      let longitude = isLabel ? data.labelLongitude : data.longitude;
       if (latitude) {
         dimensionList = [...dimensionList, ...latitude];
       }
@@ -370,7 +372,7 @@ export default {
     handleSetLong(data, method = 'add') {
       return {
         longitude: this.conversionArry('longitude', data, method),
-        dimensions: this.handleMapDimension(),
+        dimensions: this.conversionArry('dimensions', this.handleMapDimension(data), method),
       };
     },
     /**
@@ -379,7 +381,7 @@ export default {
     handleLatitude(data, method = 'add') {
       return {
         latitude: this.conversionArry('latitude', data, method),
-        dimensions: this.handleMapDimension(),
+        dimensions: this.conversionArry('dimensions', this.handleMapDimension(data), method),
       };
     },
     /**
@@ -404,7 +406,7 @@ export default {
     handleLabelLongitude(data, method = 'add') {
       return {
         labelLatitude: this.conversionArry('labelLatitude', data, method),
-        labelDimensions: this.handleMapDimension(true),
+        labelDimensions: this.conversionArry('labelDimensions', this.handleMapDimension(data), method),
       };
     },
     /**
@@ -413,7 +415,23 @@ export default {
     handleLabelLatitude(data, method = 'add') {
       return {
         labelLatitude: this.conversionArry('labelLatitude', data, method),
-        labelDimensions: this.handleMapDimension(true),
+        labelDimensions: this.conversionArry('labelDimensions', this.handleMapDimension(data), method),
+      };
+    },
+    /**
+     * @description 当放置到主指标
+     */
+    handleTotalQuota(data, method = 'add') {
+      return {
+        totalQuota: this.conversionArry('totalQuota', data, method),
+      };
+    },
+    /**
+     * @description 当放置到次指标
+     */
+    handleSecondaryQuota(data, method = 'add') {
+      return {
+        secondaryQuota: this.conversionArry('secondaryQuota', data, method),
       };
     },
     /**

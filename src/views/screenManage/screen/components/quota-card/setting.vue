@@ -8,44 +8,37 @@
           <Tabs v-model="tabAcitve">
             <TabPanel tab="data" label="数据">
               <Collapse v-model="dataCollapseActive">
-                <CollapsePanel class="content-item" panel="targe" header="进度值">
-                  <div class="setting-unit-content">
-                    <!-- 度量 end -->
-                    <UnitInputField
-                      receive="measure"
-                      type="targe"
-                      label="输入值或拖入度量"
-                      backgroundColor="#40c0a8"
-                      openAggre
-                      :list="currentCom.setting.data.targe"
-                    ></UnitInputField>
-                  </div>
+                <CollapsePanel class="content-item" panel="total" header="主指标">
+                  <UnitField
+                    class="setting-unit-content"
+                    receive="measure"
+                    type="totalQuota"
+                    label="拖入主指标"
+                    backgroundColor="#40c0a8"
+                    openAggre
+                    limit
+                    :list="currentCom.setting.data.totalQuota"
+                  ></UnitField>
                 </CollapsePanel>
-                <CollapsePanel class="content-item" panel="range" header="范围">
+                <CollapsePanel class="content-item" panel="secondary" header="次指标">
                   <div class="setting-unit-content">
-                    <!-- 最小值 start -->
-                    <p>最小值</p>
-                    <UnitInputField
+                    <!-- 次指标开关 start -->
+                    <UnitCheckbox
+                      class="show-btn"
+                      :style="`top:${currentCom.setting.style.echart.showSecondaryQuato ? -28 : -43}px`"
+                      :value="currentCom.setting.style.echart.showSecondaryQuato"
+                      @change="show => handleShowSecondaryQuato(show)"
+                    ></UnitCheckbox>
+                    <!-- 次指标开关 end -->
+                    <UnitField
+                      v-if="currentCom.setting.style.echart.showSecondaryQuato"
                       receive="measure"
-                      type="min"
-                      label="输入值或拖入度量"
+                      type="secondaryQuota"
+                      label="拖入度量"
                       backgroundColor="#40c0a8"
                       openAggre
-                      :list="currentCom.setting.data.min"
-                    ></UnitInputField>
-                    <!-- 最小值 end -->
-
-                    <!-- 最大值 start -->
-                    <p class="mt-8">最大值</p>
-                    <UnitInputField
-                      receive="measure"
-                      type="max"
-                      label="输入值或拖入度量"
-                      backgroundColor="#40c0a8"
-                      openAggre
-                      :list="currentCom.setting.data.max"
-                    ></UnitInputField>
-                    <!-- 最大值 end -->
+                      :list="currentCom.setting.data.secondaryQuota"
+                    ></UnitField>
                   </div>
                 </CollapsePanel>
                 <CollapsePanel class="content-item" panel="dataFilter" header="数据筛选">
@@ -170,7 +163,42 @@
                   <!-- 文本设置 end -->
 
                   <div class="setting-unit-content">
-                    <!-- 与次指标间距 start -->
+                    <!-- 对齐 start -->
+                    <a-row class="unit-show-block mb-8">
+                      <a-col :span="12">
+                        <div class="unit-block-title">对齐</div>
+                      </a-col>
+                      <template v-for="item in align">
+                        <a-col :span="4" :key="item">
+                          <div
+                            class="font-align"
+                            :class="
+                              item === currentCom.setting.style.echart.secondaryQuatoTitleLine.align ? 'selected' : ''
+                            "
+                            @click="handleSelect('secondaryQuatoTitleLine', 'align', item)"
+                          >
+                            <a-icon :type="`align-${flexIconMap[item]}`" />
+                          </div>
+                        </a-col>
+                      </template>
+                    </a-row>
+                    <!--对齐 end -->
+                    <!-- 次指标间距 start -->
+                    <a-row class="unit-show-block mb-8">
+                      <a-col :span="10" class="unit-show-block">
+                        <div class="unit-block-title">标题间距</div>
+                      </a-col>
+                      <a-col :span="14">
+                        <a-input-number
+                          :min="0"
+                          :max="100"
+                          :value="currentCom.setting.style.echart.secondaryQuatoTitle.marginRight"
+                          @change="value => handleSelect('secondaryQuatoTitle', 'marginRight', value)"
+                        ></a-input-number>
+                      </a-col>
+                    </a-row>
+                    <!-- 次指标间距 end -->
+                    <!-- 次指标间距 start -->
                     <a-row class="unit-show-block mb-8">
                       <a-col :span="10" class="unit-show-block">
                         <div class="unit-block-title">指标间距</div>
@@ -179,12 +207,12 @@
                         <a-input-number
                           :min="0"
                           :max="100"
-                          :value="currentCom.setting.style.echart.secondaryQuatoValue.marginBottom"
-                          @change="value => handleSelect('secondaryQuatoValue', 'marginBottom', value)"
+                          :value="currentCom.setting.style.echart.secondaryQuatoTitleLine.marginBottom"
+                          @change="value => handleSelect('secondaryQuatoTitleLine', 'marginBottom', value)"
                         ></a-input-number>
                       </a-col>
                     </a-row>
-                    <!-- 与次指标间距 end -->
+                    <!-- 次指标间距 end -->
                   </div>
 
                   <!-- 样式设置 end -->
@@ -266,6 +294,12 @@ export default {
       styleCollapseActive: [],
       type: '', // 弹窗标题
       quotaTitles: [], // 设置标题弹窗显示的列表
+      align: ['flex-start', 'center', 'flex-end'], // 对齐方式
+      flexIconMap: {
+        'flex-start': 'left',
+        center: 'center',
+        'flex-end': 'right',
+      }, // flex对应对齐的icon
     };
   },
   methods: {
@@ -278,7 +312,14 @@ export default {
           [key]: value,
         },
       });
-      console.log('new', this.currentCom);
+    },
+    /**
+     * @description 处理次指标显示
+     */
+    handleShowSecondaryQuato(value) {
+      this.handleChange('echart', {
+        showSecondaryQuato: value,
+      });
     },
     /**
      * @description 设置标题弹窗
@@ -321,15 +362,3 @@ export default {
   },
 };
 </script>
-<style lang="less" scoped>
-.unit-content-radius {
-  display: flex;
-  flex-wrap: wrap;
-  & > .unit-show-block {
-    width: 50%;
-    &:nth-of-type(2n) {
-      padding-left: 10px;
-    }
-  }
-}
-</style>

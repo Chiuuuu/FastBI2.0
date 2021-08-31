@@ -116,6 +116,7 @@ export default {
     ...mapState({
       currentCom: state => state.board.currentCom,
       dragdropState: state => state.dragdrop,
+      resourceType: state => state.app.resourceType,
     }),
   },
   watch: {
@@ -244,12 +245,12 @@ export default {
       if (this.boardSettingRightInstance.tabAcitve === 'model') {
         if (this.boardSettingRightInstance.modelSelected) {
           selected = this.boardSettingRightInstance.modelSelected;
-          result.resourceType = 8;
+          result.resourceType = this.resourceType[this.boardSettingRightInstance.tabAcitve];
         }
       } else if (this.boardSettingRightInstance.tabAcitve === 'access') {
         if (this.boardSettingRightInstance.accessSelected) {
           selected = this.boardSettingRightInstance.modelSelected;
-          result.resourceType = 3;
+          result.resourceType = this.resourceType[this.boardSettingRightInstance.tabAcitve];
         }
       }
 
@@ -305,7 +306,7 @@ export default {
     handleList(list, data, method = 'add') {
       if (method === 'add') {
         // 如果数据有重复则直接返回
-        if (list.includes(data)) return list;
+        if (list.map(item => item.id).includes(data.id)) return list;
 
         arrayAddData(list, data);
       } else if (method === 'dele') {
