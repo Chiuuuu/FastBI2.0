@@ -49,22 +49,6 @@
                   </UnitDataFilter>
                   <!-- 数据筛选 end -->
                 </CollapsePanel>
-                <CollapsePanel class="content-item" panel="dataSort" header="排序">
-                  <!-- 数据排序 start -->
-                  <UnitDataSort
-                    class="setting-unit-content"
-                    type="dataSort"
-                    label="拖入字段"
-                    limit
-                    :openAggre="true"
-                    :list="currentCom.setting.data.sort"
-                  >
-                    <template #tip>
-                      <UnitTip content="应用于当前图层"></UnitTip>
-                    </template>
-                  </UnitDataSort>
-                  <!-- 数据排序 end -->
-                </CollapsePanel>
               </Collapse>
             </TabPanel>
             <TabPanel tab="style" label="样式">
@@ -262,6 +246,35 @@
                           })
                       "
                     ></UnitCheckbox>
+                  </div>
+                </CollapsePanel>
+                <CollapsePanel class="content-item" panel="style" header="鼠标移入提示">
+                  <div class="setting-unit-content">
+                    <UnitCheckbox
+                      class="show-btn"
+                      label="显示"
+                      :value="currentCom.setting.style.echart.tooltip.show"
+                      @change="value => handleChange('echart', { tooltip: { show: value } })"
+                    ></UnitCheckbox>
+                    <a-row class="unit-show-block mb-8">
+                      <a-col :span="24">
+                        <div class="unit-block-title">指标内容</div>
+                      </a-col>
+
+                      <!-- 内容显示 start -->
+                      <a-col :span="24">
+                        <a-select
+                          :value="currentCom.setting.style.echart.customTooltipFormatter"
+                          style="width: 100%"
+                          @change="customTooltipFormatter => handleChange('echart', { customTooltipFormatter })"
+                        >
+                          <a-select-option value="name">维度</a-select-option>
+                          <a-select-option value="value">值</a-select-option>
+                          <a-select-option value="nv">维度+值</a-select-option>
+                        </a-select>
+                      </a-col>
+                      <!-- 内容显示 end -->
+                    </a-row>
                   </div>
                 </CollapsePanel>
                 <CollapsePanel class="content-item" panel="bgAndBorder" header="背景设置">

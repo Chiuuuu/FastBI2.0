@@ -3,6 +3,7 @@ import BoardType from '@/views/screenManage/screen/setting/default-type';
 import BaseChart from '../base';
 import defaultData from './default-data';
 import merge from 'lodash/merge';
+import omit from 'lodash/omit';
 /**
  * @description 旭日图
  */
@@ -28,75 +29,23 @@ export default {
      * @description 图表获取服务端数据
      */
     async getServerData() {
+      console.log({ id: this.shapeUnit.component.id, type: this.shapeUnit.component.type, data: this.options.data });
       console.log('从这里获取服务端数据');
-      this.serverData = {
-        data: [
-          {
-            name: '加拿大',
-            value: 30,
-            children: [
-              {
-                name: 'Uncle Leo',
-                value: 15,
-                children: [
-                  {
-                    name: 'Cousin Jack',
-                    value: 5,
-                  },
-                  {
-                    name: 'Cousin Mary',
-                    value: 5,
-                    children: [
-                      {
-                        name: 'Jackson',
-                        value: 2,
-                      },
-                    ],
-                  },
-                  {
-                    name: 'Cousin Ben',
-                    value: 5,
-                  },
-                ],
-              },
-              {
-                name: 'Father',
-                value: 30,
-                children: [
-                  {
-                    name: 'Me',
-                    value: 5,
-                  },
-                  {
-                    name: 'Brother Peter',
-                    value: 5,
-                  },
-                ],
-              },
-            ],
-          },
-          {
-            name: 'Nancy',
-            value: 10,
-            children: [
-              {
-                name: 'Uncle Nike',
-                value: 6,
-                children: [
-                  {
-                    name: 'Cousin Betty',
-                    value: 4,
-                  },
-                  {
-                    name: 'Cousin Jenny',
-                    value: 2,
-                  },
-                ],
-              },
-            ],
-          },
-        ],
-      };
+      // const {
+      //   data: { dimensions, measures },
+      // } = this.options;
+      const res = await this.$server.common.getData('/screen/graph/v2/getData', {
+        id: this.shapeUnit.component.id,
+        tabId: this.shapeUnit.component.tabId,
+        type: this.shapeUnit.component.type,
+        ...omit(this.options.data, ['expands']),
+      });
+      if (res.code === 500) {
+        this.$message.error('isChange');
+        return;
+      }
+      const datas = res.data || [];
+      this.serverData = { data: datas };
       const options = this.doWithOptions(this.serverData);
       this.updateSaveChart(options);
     },
@@ -169,8 +118,12 @@ export default {
       const radius = this.doWithRadius(echart.customInRadius, echart.customOutRadius);
       const center = this.doWithCenter(echart.customCenter);
       const formatter = this.doWithFormatter(echart.customFormatterWay);
+      const tooltipFormatter = this.doWithFormatter(echart.customTooltipFormatter);
       const options = merge({}, echart, {
         visualMap,
+        tooltip: {
+          formatter: `${tooltipFormatter}`,
+        },
         series: {
           type: 'sunburst',
           emphasis: {

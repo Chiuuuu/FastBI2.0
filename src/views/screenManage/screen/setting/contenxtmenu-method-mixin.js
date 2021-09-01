@@ -236,19 +236,12 @@ const ContenxtmenuMethodMixin = {
     },
     // 查看/导出数据 -- 构造数据
     async getChartData(component, vm) {
-      // let params = {
-      //   id: component.id,
-      //   type: component.type,
-      //   screenName: this.screenInfo.screenName,
-      //   tabName: this.screenInfo.tabName,
-      //   graphName: component.name,
-      // };
       let params = {
-        graphName: '柱状图',
-        id: '592217476619948032',
-        screenName: 'test',
-        tabName: '页面1',
-        type: 'v-histogram',
+        id: component.id,
+        type: component.type,
+        screenName: this.screenInfo.screenName,
+        tabName: this.screenInfo.tabName,
+        graphName: component.name,
       };
 
       handleSpinning(vm, true, '请求数据...');

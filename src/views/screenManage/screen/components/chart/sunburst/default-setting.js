@@ -31,7 +31,8 @@ export default merge(cloneDeep(BASE), {
         visualMap: {
           show: true,
         },
-        customFormatterWay: 'nv',
+        customTooltipFormatter: 'nv', // 鼠标移入内容显示
+        customFormatterWay: 'nv', // 指标内容选择
         // 系列
         customSeries: {
           label: {
