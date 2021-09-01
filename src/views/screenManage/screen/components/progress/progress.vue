@@ -171,10 +171,6 @@ export default {
       const customFixed = this.options.style.echart.customFixed; // 自定义小数位
 
       let percent;
-      if (typeof current !== 'number' || typeof max !== 'number' || typeof min !== 'number') {
-        return console.error(`data type must is number`);
-      }
-
       if (current < min) {
         percent = 0;
       } else if (current > max) {
@@ -182,7 +178,7 @@ export default {
       } else if (min === max) {
         percent = 100;
       } else {
-        let result = (current / (max - min)) * 100;
+        let result = ((current - min) / (max - min)) * 100;
         percent = result.toFixed(customFixed);
       }
 
@@ -218,12 +214,13 @@ export default {
       const { data } = this.options;
       // TODO:只要其中一个是数组类型就要去网络请求数据
       // 不然就是填写的不需要请求
-      return Array.isArray(data.targe) || Array.isArray(data.max) || Array.isArray(data.min);
+      // 保证三个数据都有内容
+      return typeof data.targe !== 'string' && typeof data.max !== 'string' && typeof data.min !== 'string';
     },
     /**
      * @description 判断是否有填入图表数据
      */
-    hasData() {
+    isInputData() {
       const { data } = this.options;
       // TODO:只要其中一个是数组类型就要去网络请求数据
       // 不然就是填写的不需要请求
@@ -234,9 +231,7 @@ export default {
      */
     getChartData() {
       if (this.isServerData()) {
-        this.getServerData();
-      } else if (this.hasData()) {
-        this.handleInputData();
+        this.getData();
       } else {
         this.getDefaultData();
       }
@@ -258,8 +253,15 @@ export default {
     /**
      * @description 图表获取服务端数据
      */
-    async getServerData() {
-      const { dimensions, measures } = this.handleGetDataParmas();
+    async getData() {
+      // 都是手填收据不需要请求
+      if (this.isInputData()) {
+        this.handleInputData();
+        return;
+      }
+      const orginList = ['targe', 'max', 'min'];
+      const handleList = orginList.filter(key => Array.isArray(this.options.data[key]));
+      const { dimensions, measures } = this.handleGetDataParmas(handleList);
       const params = {
         id: this.shapeUnit.component.id,
         tabId: this.shapeUnit.component.tabId,
@@ -272,9 +274,9 @@ export default {
       if (res.code === 200) {
         const data = res.data[0];
         this.serverData = {
-          current: data[this.options.data.targe[0].alias],
-          max: data[this.options.data.max[0].alias],
-          min: data[this.options.data.min[0].alias],
+          current: handleList.includes('targe') ? data[this.options.data.targe[0].alias] : this.options.data.targe,
+          max: handleList.includes('max') ? data[this.options.data.max[0].alias] : this.options.data.max,
+          min: handleList.includes('min') ? data[this.options.data.min[0].alias] : this.options.data.min,
         };
         const result = this.doWithData(this.serverData);
         this.progressStyle = Object.assign({}, this.progressStyle, {
@@ -288,10 +290,10 @@ export default {
     /**
      * @description 拼装维度度量
      */
-    handleGetDataParmas() {
+    handleGetDataParmas(handleList) {
       let dimensions = [];
       let measures = [];
-      ['targe', 'max', 'min'].forEach(key => {
+      handleList.forEach(key => {
         this.options.data[key].forEach(item => {
           if (item.role === 1) {
             dimensions.push(item);

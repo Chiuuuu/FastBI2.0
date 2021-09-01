@@ -351,37 +351,23 @@ export default {
       };
     },
     /**
-     * @description 拼接经度纬度到维度
-     */
-    handleMapDimension(data, isLabel = false) {
-      // 构造度量列表
-      let dimensionList = [];
-      let latitude = isLabel ? data.labelLatitude : data.latitude;
-      let longitude = isLabel ? data.labelLongitude : data.longitude;
-      if (latitude) {
-        dimensionList = [...dimensionList, ...latitude];
-      }
-      if (longitude) {
-        dimensionList = [...dimensionList, ...longitude];
-      }
-      return dimensionList;
-    },
-    /**
      * @description 当放置到经度
      */
     handleSetLong(data, method = 'add') {
+      const { latitude } = this.currentCom.setting.data;
       return {
         longitude: this.conversionArry('longitude', data, method),
-        dimensions: this.conversionArry('dimensions', this.handleMapDimension(data), method),
+        dimensions: [...latitude, data],
       };
     },
     /**
      * @description 当放置到纬度
      */
     handleLatitude(data, method = 'add') {
+      const { longitude } = this.currentCom.setting.data;
       return {
         latitude: this.conversionArry('latitude', data, method),
-        dimensions: this.conversionArry('dimensions', this.handleMapDimension(data), method),
+        dimensions: [...longitude, data],
       };
     },
     /**
@@ -404,18 +390,20 @@ export default {
      * @description 当放置到散点纬度
      */
     handleLabelLongitude(data, method = 'add') {
+      const { labelLatitude } = this.currentCom.setting.data;
       return {
         labelLatitude: this.conversionArry('labelLatitude', data, method),
-        labelDimensions: this.conversionArry('labelDimensions', this.handleMapDimension(data), method),
+        labelDimensions: [...labelLatitude, data],
       };
     },
     /**
      * @description 当放置到散点经度
      */
     handleLabelLatitude(data, method = 'add') {
+      const { labelLongitude } = this.currentCom.setting.data;
       return {
         labelLatitude: this.conversionArry('labelLatitude', data, method),
-        labelDimensions: this.conversionArry('labelDimensions', this.handleMapDimension(data), method),
+        labelDimensions: [...labelLongitude, data],
       };
     },
     /**

@@ -60,8 +60,6 @@ export default {
      * @description 图表获取服务端数据
      */
     async getServerData() {
-      console.log({ id: this.shapeUnit.component.id, type: this.shapeUnit.component.type, data: this.options.data });
-      console.log('从这里获取服务端数据');
       const {
         data: { dimensions, measures },
       } = this.options;
@@ -75,30 +73,11 @@ export default {
         this.$message.error('isChange');
         return;
       }
-      const datas = res.rows;
-      const categoryData = datas.map(row => row[dimensions[0].alias]);
-      let series = [];
-      measures.forEach(measure => {
-        series.push({ type: 'bar', name: measure.alias, data: datas.map(row => row[measure.alias]) });
+      const datas = res.data || [];
+      const data = datas.map(row => {
+        return { name: row[dimensions[0].alias], value: row[measures[0].alias] };
       });
-      this.serverData = { categoryData, series };
-      //   this.serverData = {
-      //     categoryData: ['巴西', '印尼', '美国', '印度', '中国', '世界人口(万)'],
-      //     series: [
-      //       {
-      //         name: '2022年',
-      //         type: 'bar',
-      //         selectedMode: 'single',
-      //         data: [18203, 23489, 29034, 104970, 131744, 630230],
-      //       },
-      //       {
-      //         name: '2023年',
-      //         type: 'bar',
-      //         selectedMode: 'single',
-      //         data: [19325, 23438, 31000, 121594, 134141, 681807],
-      //       },
-      //     ],
-      //   };
+      this.serverData = { data };
       const options = this.doWithOptions(this.serverData);
       this.updateSaveChart(options);
     },

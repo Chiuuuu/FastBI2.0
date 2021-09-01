@@ -4,8 +4,9 @@ import BaseChart from '../base';
 import defaultData from './default-data';
 import merge from 'lodash/merge';
 import registerMap from './registerMap';
-import omit from 'lodash/omit';
 import { mutationTypes as boardMutation } from '@/store/modules/board';
+import guangzhou from '@/utils/guangzhou.json';
+import reverseAddressResolution from './reverseAddressResolution';
 const mapSeries = 0;
 const scatterSeries = 1;
 
@@ -150,6 +151,7 @@ export default {
      */
     dowWithTooltipFormatter(series, showList) {
       series.tooltip.formatter = function (params) {
+        debugger;
         if (!params.data) {
           return params.name;
         }
@@ -165,11 +167,26 @@ export default {
       };
     },
     /**
-     * @description 处理填充层
+     * @description 处理填充数据
      */
-    handleFillList(fillList) {
-      const dimensionAlias = this.options.data.dimensions[0].alias;
-      const measureAlias = this.options.data.measures[0].alias;
+    async handleFillList(fillList) {
+      if (!fillList) {
+        return { fillList: [], fillName: '', fillCustomPointShowList: [], fillCustomTooltipShowList: [] };
+      }
+      // 地区
+      if (this.options.data.customFillDataType === 'area') {
+        return this.handleFillArea(fillList);
+      }
+      // 经纬度
+      return await this.handleFillDot(fillList);
+    },
+    /**
+     * @description 处理填充地区
+     */
+    handleFillArea(fillList) {
+      const { dimensions, measures } = this.options.data;
+      const measureAlias = measures[0].alias;
+      const dimensionAlias = dimensions[0].alias;
       let datas = fillList.map(data => {
         return {
           name: data[dimensionAlias],
@@ -180,22 +197,148 @@ export default {
           [measureAlias]: data[measureAlias], // 度量
         };
       });
-      return datas;
+      return {
+        fillList: datas,
+        fillName: measureAlias,
+        fillCustomPointShowList: [`地区名/${dimensionAlias}`],
+        fillCustomTooltipShowList: [dimensionAlias, measureAlias],
+      };
     },
-    handleLabelList(labelList) {
-      const dimensionAlias = this.options.data.labelDimensions[0].alias;
-      const measureAlias = this.options.data.labelMeasures[0].alias;
-      let datas = labelList.map(data => {
+    /**
+     * @description 处理填充经纬度
+     */
+    async handleFillDot(fillList) {
+      const { latitude, longitude, measures } = this.options.data;
+      const measureAlias = measures[0].alias;
+      //经纬度
+      let datas = [];
+      fillList.forEach(async data => {
+        // 获取位置信息
+        try {
+          let positionMsg = await reverseAddressResolution([data.longitude[0].alias, data.latitude[0].alias]);
+
+          let datacontent = {
+            name: positionMsg.district,
+            value: data[measureAlias],
+            // 构造映射数据，给指标提示框内容显示
+            [latitude[0].alias]: data[latitude[0].alias], // 经度
+            [longitude[0].alias]: data[longitude[0].alias], // 维度
+            地区名: positionMsg.district, // 地区名
+            [measureAlias]: data[measureAlias], // 度量
+          };
+          // 已有地图数据直接累加
+          let areaData = datas.find(item => item.name === datacontent.name);
+          if (areaData) {
+            areaData[measureAlias] += datacontent[measureAlias];
+            areaData.value += datacontent.value;
+          } else {
+            datas.push(datacontent);
+          }
+        } catch (err) {
+          return;
+        }
+      });
+      return {
+        fillList: datas,
+        fillName: measureAlias,
+        fillCustomPointShowList: [`地区名`],
+        fillCustomTooltipShowList: [longitude[0].alias, latitude[0].alias, measureAlias],
+      };
+    },
+    /**
+     * @description 处理标点数据
+     */
+    async handleLabelList(labelList) {
+      if (!labelList) {
         return {
+          labelList: [],
+          labelName: '',
+          labelCustomPointShowList: [],
+          labelCustomTooltipShowList: [],
+        };
+      }
+      // 地区
+      if (this.options.data.customLabelDataType === 'area') {
+        return this.handleLabelArea(labelList);
+      }
+      // 经纬度
+      return await this.handleLabelDot(labelList);
+    },
+    /**
+     * @description 处理填充地区
+     */
+    handleLabelArea(labelList) {
+      const { labelDimensions, labelMeasures } = this.options.data;
+      const dimensionAlias = labelDimensions[0].alias;
+      const measureAlias = labelMeasures[0].alias;
+      let datas = [];
+      labelList.forEach(data => {
+        // 抓取区域坐标
+        const center = this.getCenterCoordinate(data[dimensionAlias]);
+        // 找不到对应坐标跳过
+        if (!center) {
+          return;
+        }
+        datas.push({
           name: data[dimensionAlias],
-          value: data[measureAlias],
+          value: center.concat(data[measureAlias]),
           // 构造映射数据，给指标提示框内容显示
           [`地区名/${dimensionAlias}`]: data[dimensionAlias], // 地区名/维度
           [dimensionAlias]: data[dimensionAlias], // 维度
           [measureAlias]: data[measureAlias], // 度量
-        };
+        });
       });
-      return datas;
+      return {
+        labelList: datas,
+        labelName: measureAlias,
+        labelCustomPointShowList: [`地区名/${dimensionAlias}`],
+        labelCustomTooltipShowList: [dimensionAlias, measureAlias],
+      };
+    },
+    /**
+     * @description 处理填充经纬度
+     */
+    async handleLabelDot(labelList) {
+      const { labelLatitude, labelLongitude, labelMeasures } = this.options.data;
+      const measureAlias = labelMeasures[0].alias;
+      //经纬度
+      let datas = [];
+      labelList.forEach(async data => {
+        // 获取位置信息
+        try {
+          const position = [data.labelLongitude[0].alias, data.labelLatitude[0].alias];
+          let positionMsg = await reverseAddressResolution(position);
+          // 获取位置信息
+          datas.push({
+            name: positionMsg.district,
+            value: [parseFloat(position[0]), parseFloat(position[1])].concat(data[measureAlias]),
+            // 构造映射数据，给指标提示框内容显示
+            [labelLatitude[0].alias]: data[labelLatitude[0].alias], // 经度
+            [labelLongitude[0].alias]: data[labelLongitude[0].alias], // 维度
+            地区名: positionMsg.district, // 地区名
+            [measureAlias]: data[measureAlias], // 度量
+          });
+        } catch (err) {
+          return;
+        }
+      });
+      return {
+        fillList: datas,
+        fillName: measureAlias,
+        fillCustomPointShowList: [`地区名`],
+        fillCustomTooltipShowList: [labelLongitude[0].alias, labelLatitude[0].alias, measureAlias],
+      };
+    },
+    /**
+     * @description 抓取区中心点
+     */
+    getCenterCoordinate(name) {
+      const dataList = guangzhou.features;
+      const countryside = dataList.find(item => item.properties.name === name);
+      if (!countryside) {
+        return null;
+      }
+      return countryside.properties.centroid;
     },
     /**
      * @description 图表获取服务端数据
@@ -205,21 +348,24 @@ export default {
         id: this.shapeUnit.component.id,
         tabId: this.tabId,
         type: this.shapeUnit.component.type,
-        ...omit(this.options.data, ['expands']),
+        ...this.options.data,
       });
       if (res.code === 200) {
-        let fillList = res.data.fillList ? this.handleFillList(res.data.fillList) : [];
-        let labelList = res.data.labelList ? this.handleLabelList(res.data.labelList) : [];
+        const { fillList, fillName, fillCustomPointShowList, fillCustomTooltipShowList } = await this.handleFillList(
+          res.data.fillList,
+        );
+        const { labelList, labelName, labelCustomPointShowList, labelCustomTooltipShowList } =
+          await this.handleLabelList(res.data.labelList);
 
         const data = defaultData.series;
         this.serverData = {
           series: [
             Object.assign({}, data[mapSeries], {
-              name: this.options.data.measures[0].alias,
+              name: fillName,
               data: fillList,
             }),
             Object.assign({}, data[scatterSeries], {
-              name: this.options.data.labelMeasures[0].alias,
+              name: labelName,
               data: labelList,
             }),
           ],
@@ -233,6 +379,14 @@ export default {
                 max: Math.max(...valueList),
                 min: Math.min(...valueList),
               }),
+              mapStyle: Object.assign({}, this.options.style.echart.mapStyle, {
+                customPointShowList: fillCustomPointShowList,
+                customTooltipShowList: fillCustomTooltipShowList,
+              }),
+              scatterStyle: Object.assign({}, this.options.style.echart.scatterStyle, {
+                customPointShowList: labelCustomPointShowList,
+                customTooltipShowList: labelCustomTooltipShowList,
+              }),
             },
           },
           updateCom: this.shapeUnit.component,
@@ -240,22 +394,6 @@ export default {
       } else {
         this.$message.error(res.msg);
       }
-    },
-    /**
-     * @description 初始化地图指标显示内容列表
-     */
-    handleMapFormatterSelect({ mapData, scatterData }) {
-      // 填充
-      const fillList = Object.keys(omit(mapData, ['name', 'value']));
-      const mapSelectList = { pointSelectList: fillList, tooltipSelectList: fillList.concat().shift() };
-      // 散点
-      const scatterList = Object.keys(omit(scatterData, ['name', 'value']));
-      const scatterSelectList = { pointSelectList: scatterList, tooltipSelectList: scatterList.concat().shift() };
-
-      return {
-        mapSelectList,
-        scatterSelectList,
-      };
     },
     /*
      * 处理默认数据
@@ -271,10 +409,10 @@ export default {
     updateChartStyle() {
       if (!this.chartInstane) return;
       const newOptions = this.doWithOptions(this.serverData ? this.serverData : defaultData);
-      this.chartInstane.clear();
       this.chartInstane.setOption(newOptions, {
         replaceMerge: ['series'],
       });
+      console.log('later', newOptions);
     },
     /**
      * @description 初始化Echart图表

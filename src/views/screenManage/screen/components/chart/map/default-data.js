@@ -69,7 +69,9 @@ export default {
           orient: 'vertical',
         },
         emphasis: {
-          show: true,
+          label: {
+            show: false,
+          },
         },
       },
       itemStyle: {
