@@ -27,6 +27,7 @@ export default merge(cloneDeep(BASE), {
           borderColor: 'transparent',
         },
         tooltip: {
+          show: true,
           trigger: 'axis',
         },
         visualMap: {
@@ -154,6 +155,8 @@ export default merge(cloneDeep(BASE), {
             position: 'inside',
           },
         },
+        customFormatterWay: ['0', '1', '2'], // 指标内容
+        customTooltipFormatter: ['0', '1', '2'], //鼠标移入显示
       },
     },
   },

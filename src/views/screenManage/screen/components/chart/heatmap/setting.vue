@@ -113,10 +113,46 @@
 
                       <!-- 内容显示 start -->
                       <a-col :span="24">
-                        <a-select :value="currentCom.setting.style.echart.customFormatterWay" style="width: 100%">
-                          <!-- <a-select-option value="name">维度</a-select-option>
-                          <a-select-option value="value">值</a-select-option>
-                          <a-select-option value="all">全部</a-select-option> -->
+                        <a-select
+                          mode="tags"
+                          :value="currentCom.setting.style.echart.customFormatterWay"
+                          style="width: 100%"
+                          @change="customFormatterWay => handleChange('echart', { customFormatterWay })"
+                        >
+                          <a-select-option v-for="(item, index) in concatDimAndMea" :key="item" :value="index + ''">
+                            {{ item }}
+                          </a-select-option>
+                        </a-select>
+                      </a-col>
+                      <!-- 内容显示 end -->
+                    </a-row>
+                  </div>
+                </CollapsePanel>
+                <CollapsePanel class="content-item" panel="style" header="鼠标移入提示">
+                  <div class="setting-unit-content">
+                    <UnitCheckbox
+                      class="show-btn"
+                      label="显示"
+                      :value="currentCom.setting.style.echart.tooltip.show"
+                      @change="value => handleChange('echart', { tooltip: { show: value } })"
+                    ></UnitCheckbox>
+                    <a-row class="unit-show-block mb-8">
+                      <a-col :span="24">
+                        <div class="unit-block-title">指标内容</div>
+                      </a-col>
+
+                      <!-- 内容显示 start -->
+                      <a-col :span="24">
+                        <a-select
+                          mode="tags"
+                          :value="currentCom.setting.style.echart.customTooltipFormatter"
+                          style="width: 100%"
+                          @change="customTooltipFormatter => handleChange('echart', { customTooltipFormatter })"
+                        >
+                          <!-- select mode="tags"时，option的key和value必须是string -->
+                          <a-select-option v-for="(item, index) in concatDimAndMea" :key="item" :value="index + ''">
+                            {{ item }}
+                          </a-select-option>
                         </a-select>
                       </a-col>
                       <!-- 内容显示 end -->
@@ -245,6 +281,17 @@ export default {
         { name: '外部', value: 'outside' },
       ],
     };
+  },
+  computed: {
+    // 维度度量合并列表
+    concatDimAndMea() {
+      const { measures = [], xaxis = [], yaxis = [] } = this.currentCom.setting.data;
+      if (measures.concat(xaxis, yaxis).length >= 3) {
+        return measures.concat(xaxis, yaxis).map(item => item.alias);
+      } else {
+        return ['x轴', 'y轴', '度量'];
+      }
+    },
   },
   methods: {
     /**

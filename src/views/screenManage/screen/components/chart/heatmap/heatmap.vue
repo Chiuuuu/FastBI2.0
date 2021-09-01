@@ -5,6 +5,7 @@ import defaultData from './default-data';
 import minBy from 'lodash/minBy';
 import maxBy from 'lodash/maxBy';
 import merge from 'lodash/merge';
+import omit from 'lodash/omit';
 /**
  * @description 矩形热力图
  */
@@ -30,26 +31,30 @@ export default {
      * @description 图表获取服务端数据
      */
     async getServerData() {
+      console.log({ id: this.shapeUnit.component.id, type: this.shapeUnit.component.type, data: this.options.data });
       console.log('从这里获取服务端数据');
+      const {
+        data: { measures, xaxis, yaxis },
+      } = this.options;
+      const res = await this.$server.common.getData('/screen/graph/v2/getData', {
+        id: this.shapeUnit.component.id,
+        tabId: this.shapeUnit.component.tabId,
+        type: this.shapeUnit.component.type,
+        ...omit(this.options.data, ['expands', 'xaxis', 'yaxis']),
+        dimensions: [].concat(xaxis, yaxis),
+      });
+      if (res.code === 500) {
+        this.$message.error('isChange');
+        return;
+      }
+      const datas = res.data || [];
       this.serverData = {
-        categoryData: ['可口可乐', '百事可乐', '雪碧', '健力宝', '康师傅', '星巴克', '统一'],
-        series: [
-          {
-            name: '销量',
-            type: 'line',
-            data: [1000, 5600, 3000, 2000, 1500, 4000, 300],
-          },
-          {
-            name: '生产',
-            type: 'line',
-            data: [1500, 6100, 3500, 2500, 2000, 4500, 800],
-          },
-          {
-            name: '退货',
-            type: 'line',
-            data: [10, 100, 50, 80, 70, 20, 40],
-          },
-        ],
+        fieldName: {
+          xaxis: xaxis[0].alias,
+          yaxis: yaxis[0].alias,
+          measures: measures[0].alias,
+        },
+        data: datas,
       };
       const options = this.doWithOptions(this.serverData);
       this.updateSaveChart(options);
@@ -77,10 +82,30 @@ export default {
     /**
      * @description 处理数据
      */
-    doWithData(data, xaxis, yaxis, measure) {
+    doWithData(data, xaxis, yaxis, measures) {
       return data.map(item => {
-        return [item[xaxis.name], item[yaxis.name], item[measure.name]];
+        return [item[xaxis.name], item[yaxis.name], item[measures.name]];
       });
+    },
+    /**
+     * @description 指标内容显示
+     */
+    doWithLabelShow(param, customFormatterWay = []) {
+      let label = [];
+      customFormatterWay.forEach(item => {
+        label.push(param.value[item]);
+      });
+      return label.join(',');
+    },
+    /**
+     * @description 鼠标移入内容显示
+     */
+    doWithTooltipShow(param, customTooltipFormatter = []) {
+      let label = [];
+      customTooltipFormatter.forEach(item => {
+        label.push(param[0].value[item]);
+      });
+      return label.join(',');
     },
     /**
      * @description 处理图表配置项
@@ -91,27 +116,36 @@ export default {
       } = this.options;
 
       const xaxis = {
-        name: 'USER_NAME',
+        name: fetchData.fieldName['xaxis'],
       };
       const yaxis = {
-        name: 'USER_BIRTHDAY',
+        name: fetchData.fieldName['yaxis'],
       };
-      const measure = {
-        name: 'USER_AGE',
+      const measures = {
+        name: fetchData.fieldName['measures'],
       };
 
-      const key = measure.name;
+      const key = measures.name;
       const max = maxBy(fetchData.data, key)[key];
       const min = minBy(fetchData.data, key)[key];
       const visualMap = this.doWithVisualMap(max, min);
-      const data = this.doWithData(fetchData.data, xaxis, yaxis, measure);
+      const data = this.doWithData(fetchData.data, xaxis, yaxis, measures);
       const options = merge({}, echart, {
         visualMap,
+        tooltip: {
+          formatter: param => {
+            return this.doWithTooltipShow(param, echart.customTooltipFormatter);
+          },
+        },
         series: [
           {
             type: 'heatmap',
             data,
-            label: echart.customSeries.label,
+            label: Object.assign({}, echart.customSeries.label, {
+              formatter: param => {
+                return this.doWithLabelShow(param, echart.customFormatterWay);
+              },
+            }),
           },
         ],
       });

@@ -1,4 +1,9 @@
 export default {
+  fieldName: {
+    xaxis: 'USER_NAME',
+    yaxis: 'USER_BIRTHDAY',
+    measures: 'USER_AGE',
+  },
   data: [
     {
       USER_NAME: '刘一',
