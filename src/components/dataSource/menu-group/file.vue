@@ -11,7 +11,7 @@
     @click="handleFileSelect"
   >
     <h4 class="title" :title="file[fileName]">
-      <a-icon type="file" v-if="icon === 'default'" style="margin-right: 2px" />
+      <i v-if="icon === 'default'" class="bi-data bi-data-wenjian" />
       <div class="file-icon icon-bg icon-model" v-else-if="icon === 'dataModel'" />
       <div :class="['file-icon', 'icon-bg', 'icon-' + file.type]" v-else />
       <span>{{ file[fileName] }}</span>
@@ -131,6 +131,11 @@ export default {
 };
 </script>
 <style lang="less" scoped>
+.bi-data {
+  color: #cccdcf;
+  font-size: 12px;
+  margin-right: 5px;
+}
 .icon-bg {
   background: url('../../../assets/images/common/types.png') no-repeat;
   background-size: 110px 16px;

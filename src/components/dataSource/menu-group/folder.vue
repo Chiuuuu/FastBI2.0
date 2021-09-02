@@ -9,8 +9,12 @@
       @drop.stop="handleDrop"
     >
       <h4 class="title" :title="folder.name">
-        <a-icon v-if="folderOpen" type="folder-open" class="folder-icon" />
-        <a-icon v-else type="folder" class="folder-icon" />
+        <i
+          :class="[
+            'folder-icon bi-data',
+            folderOpen ? 'folder-icon bi-data-wenjianjia-zhankai' : 'bi-data-wenjianjia-shouqi',
+          ]"
+        />
         <span class="title-span">{{ folder.name }}</span>
       </h4>
       <span class="menu" v-if="hasContextmenus">
@@ -126,3 +130,7 @@ export default {
   },
 };
 </script>
+<style lang="less" scoped>
+@deep: ~'>>>';
+@import url('../../../assets/fonts/bi-data.css');
+</style>
