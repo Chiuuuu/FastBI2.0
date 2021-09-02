@@ -15,7 +15,11 @@ export default merge(cloneDeep(BASE), {
       echart: {
         customPiecesIndex: 0,
         customShowWay: 'average', // measure || average
-        customFormatterWay: 'all', // 全部 || 维度 || 度量
+        customFormatterLabel: ['员工姓名', '部门名称', '公司', 'bumenTableid'], // 指标内容
+        customFormatterTooltip: ['员工姓名', '部门名称', '公司', 'bumenTableid'], // 指标内容
+        tooltip: {
+          show: true,
+        },
         visualMap: {
           show: true,
           type: 'piecewise',

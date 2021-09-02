@@ -352,17 +352,6 @@ export default {
         dropType: this.type,
         data: this.currentData,
       });
-      await this.$nextTick();
-      this.getServerData();
-    },
-    /**
-     * @description 获取图表数据
-     */
-    getServerData() {
-      // 获取图标数据
-      if (this.boardSettingWrapper.$parent.$refs['boardContent'].$refs['js-board-grid-chart'][0].isServerData()) {
-        this.boardSettingWrapper.$parent.$refs['boardContent'].$refs['js-board-grid-chart'][0].getServerData();
-      }
     },
     /**
      * @description 数值类型数据处理
