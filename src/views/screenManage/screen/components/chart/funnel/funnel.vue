@@ -92,7 +92,7 @@ export default {
       way.forEach(item => {
         formatter.push(ways[item]);
       });
-      return arrange === 'horizontal' ? formatter.join('：') : formatter.join('\n');
+      return arrange === 'horizontal' ? formatter.join(' ') : formatter.join('\n');
     },
     /**
      * @description 鼠标移入显示
@@ -107,7 +107,7 @@ export default {
       way.forEach(item => {
         formatter.push(ways[item]);
       });
-      return formatter.join('：');
+      return formatter.join(' ');
     },
     /**
      * @description 数组根据数组对象中的某个属性值进行排序的方法
