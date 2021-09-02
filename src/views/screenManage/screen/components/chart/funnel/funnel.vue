@@ -82,23 +82,6 @@ export default {
         series.push({ type: 'bar', name: measure.alias, data: datas.map(row => row[measure.alias]) });
       });
       this.serverData = { categoryData, series };
-      //   this.serverData = {
-      //     categoryData: ['巴西', '印尼', '美国', '印度', '中国', '世界人口(万)'],
-      //     series: [
-      //       {
-      //         name: '2022年',
-      //         type: 'bar',
-      //         selectedMode: 'single',
-      //         data: [18203, 23489, 29034, 104970, 131744, 630230],
-      //       },
-      //       {
-      //         name: '2023年',
-      //         type: 'bar',
-      //         selectedMode: 'single',
-      //         data: [19325, 23438, 31000, 121594, 134141, 681807],
-      //       },
-      //     ],
-      //   };
       const options = this.doWithOptions(this.serverData);
       this.updateSaveChart(options);
     },

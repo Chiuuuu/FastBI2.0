@@ -121,8 +121,143 @@
                       </div>
                     </div>
                     <!-- 边距 end -->
+                    <!-- 转化率/到达率 样式配置  start -->
+                    <div class="unit-content-link">
+                      <a-row class="unit-show-block mb-2 mt-4">
+                        <a-col :span="12" class="unit-show-block">
+                          <div class="unit-block-title">展示环节</div>
+                        </a-col>
+                        <a-col :span="12">
+                          <UnitCheckbox
+                            class="show-btn"
+                            style="top: 0"
+                            label="显示"
+                            :value="currentCom.setting.style.echart.customRate.show"
+                            @change="value => handleCustomRateChange('show', value)"
+                          ></UnitCheckbox>
+                        </a-col>
+                      </a-row>
+                      <a-row class="unit-show-block mb-8">
+                        <a-col :span="24" class="unit-show-block">
+                          <div class="unit-block-title">显示内容</div>
+                        </a-col>
+                        <a-col :span="24">
+                          <a-select
+                            mode="tags"
+                            :value="currentCom.setting.style.echart.customRate.labelContent"
+                            style="width: 100%"
+                            @change="value => handleCustomRateChange('labelContent', value)"
+                          >
+                            <a-select-option value="converse">转化率</a-select-option>
+                            <a-select-option value="arrive">到达率</a-select-option>
+                          </a-select>
+                        </a-col>
+                      </a-row>
+                      <!-- 文本 start -->
+                      <a-row class="unit-show-block mb-8">
+                        <a-col :span="4">
+                          <div class="unit-block-title">文本</div>
+                        </a-col>
+
+                        <!-- 展示环节 字体 颜色 start -->
+                        <a-col :span="4">
+                          <div class="font-color">
+                            <ColorPicker
+                              :value="currentCom.setting.style.echart.customRate.color"
+                              @change="value => handleCustomRateChange('color', value)"
+                            ></ColorPicker>
+                          </div>
+                        </a-col>
+                        <!-- 展示环节 字体 颜色 end -->
+
+                        <!-- 展示环节 字体 大小 start -->
+                        <a-col :span="16">
+                          <a-input-number
+                            :min="0"
+                            :value="currentCom.setting.style.echart.customRate.fontSize"
+                            @change="value => handleCustomRateChange('fontSize', value)"
+                          />
+                        </a-col>
+                        <!-- 展示环节 字体 大小 end -->
+                      </a-row>
+                      <!-- 文本 end -->
+                      <!-- 字体 start -->
+                      <a-row class="unit-show-block mb-8">
+                        <a-col :span="8">
+                          <div class="unit-block-title">字体</div>
+                        </a-col>
+                        <a-col :span="16">
+                          <a-select
+                            style="width: 100%"
+                            :value="currentCom.setting.style.echart.customRate.fontFamily"
+                            @change="value => handleCustomRateChange('fontFamily', value)"
+                          >
+                            <a-select-option :value="item.value" v-for="(item, index) in fontFamily" :key="index">
+                              {{ item.label }}
+                            </a-select-option>
+                          </a-select>
+                        </a-col>
+                      </a-row>
+                      <!-- 字体 end -->
+                      <!-- 粗细 start -->
+                      <a-row class="unit-show-block mb-8">
+                        <a-col :span="8">
+                          <div class="unit-block-title">粗细</div>
+                        </a-col>
+                        <a-col :span="16">
+                          <a-select
+                            style="width: 100%"
+                            :value="currentCom.setting.style.echart.customRate.fontWeight"
+                            @change="value => handleCustomRateChange('fontWeight', value)"
+                          >
+                            <a-select-option value="normal">正常</a-select-option>
+                            <a-select-option value="bolder">加粗</a-select-option>
+                            <a-select-option value="lighter">更细</a-select-option>
+                          </a-select>
+                        </a-col>
+                      </a-row>
+                      <!-- 粗细 end -->
+                      <!-- 显示位置 start -->
+                      <a-row class="unit-show-block mb-8">
+                        <a-col :span="8">
+                          <div class="unit-block-title">显示位置</div>
+                        </a-col>
+                        <a-col :span="16">
+                          <a-radio-group
+                            name="radioGroup"
+                            class="float-right"
+                            :value="currentCom.setting.style.echart.customRate.position"
+                            @change="event => handleArrange('position', event.target.value)"
+                          >
+                            <a-radio-button value="left">左</a-radio-button>
+                            <a-radio-button value="right">右</a-radio-button>
+                          </a-radio-group>
+                        </a-col>
+                      </a-row>
+                      <!-- 显示位置 end -->
+                      <!-- 排列 start -->
+                      <a-row class="unit-show-block mb-8">
+                        <a-col :span="8">
+                          <div class="unit-block-title">粗细</div>
+                        </a-col>
+                        <a-col :span="16">
+                          <a-radio-group
+                            name="radioGroup"
+                            class="float-right"
+                            :value="currentCom.setting.style.echart.customRate.arrange"
+                            @change="event => handleArrange('arrange', event.target.value)"
+                          >
+                            <a-radio-button value="vertical">垂直</a-radio-button>
+                            <a-radio-button value="horizontal">水平</a-radio-button>
+                          </a-radio-group>
+                        </a-col>
+                      </a-row>
+                      <!-- 排列 end -->
+                    </div>
+                    <!-- 转化率/到达率 样式配置  end -->
+
                     <!-- 转化率小数位数 start -->
-                    <a-row class="unit-show-block mb-8 mt-4">
+                    <!-- <a-row class="unit-show-block mb-8 mt-4">
                       <a-col :span="12" class="unit-show-block">
                         <div class="unit-block-title">转化率小数位数</div>
                       </a-col>
@@ -133,10 +268,10 @@
                           @change="customConverseRateDigit => handleChange('echart', { customConverseRateDigit })"
                         ></a-input-number>
                       </a-col>
-                    </a-row>
+                    </a-row> -->
                     <!-- 转化率小数位数 end -->
                     <!-- 到达率小数位数 start -->
-                    <a-row class="unit-show-block mb-4">
+                    <!-- <a-row class="unit-show-block mb-4">
                       <a-col :span="12" class="unit-show-block">
                         <div class="unit-block-title">到达率小数位数</div>
                       </a-col>
@@ -147,16 +282,8 @@
                           @change="customArriveRateDigit => handleChange('echart', { customArriveRateDigit })"
                         ></a-input-number>
                       </a-col>
-                    </a-row>
+                    </a-row> -->
                     <!-- 到达率小数位数 end -->
-
-                    <!-- 展示数值 start -->
-                    <UnitLabel
-                      label="数值"
-                      :seriesLabel="currentCom.setting.style.echart.customSeries.label"
-                      :labelPositionList="labelPositionList"
-                      @change="(key, value) => doWithSeries(key, value)"
-                    ></UnitLabel>
                     <!-- 展示数值 end -->
                   </div>
                 </CollapsePanel>
@@ -240,6 +367,7 @@
 <script>
 import BoardType from '@/views/screenManage/screen/setting/default-type';
 import StyleMethodMixin from '@/views/screenManage/screen/setting/style-method-mixin';
+import fontFamily from '@/utils/fontFamily';
 export default {
   name: `${BoardType.ChartFunnel}Setting`,
   mixins: [StyleMethodMixin],
@@ -254,6 +382,7 @@ export default {
       tabAcitve: 'style', // tab选项栏活动目标
       dataCollapseActive: ['dimension', 'measure', 'dataFilter', 'dataSort', 'reset'], // 折叠打开选项
       styleCollapseActive: [],
+      fontFamily, //字体
       labelPositionList: [
         //标签位置
         { name: '内部', value: 'inside' },
@@ -302,6 +431,16 @@ export default {
     handleLabel(key, value) {
       this.doWithSeries('label', {
         [key]: value,
+      });
+    },
+    /**
+     * @description 展示环节 - 转化率/到达率 配置配置
+     */
+    handleCustomRateChange(key, value) {
+      this.handleChange('echart', {
+        customRate: {
+          [key]: value,
+        },
       });
     },
   },

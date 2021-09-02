@@ -57,22 +57,18 @@ export default merge(cloneDeep(BASE), {
             position: 'outside',
           },
         },
-        customConverseRate: {
-          //转化率
+        // 展示环节-转化率/到达率 配置
+        customRate: {
           show: true,
           color: '#fff',
           fontSize: 16,
+          fontFamily: 'sans-serif',
+          fontWeight: 'normal',
           digit: 0, //小数位数
+          labelContent: ['converse', 'arrive'], //显示内容
+          position: 'right', //位置 left right
+          arrage: 'vertical', // 排列 horizontal vertical
         },
-        customArriveRate: {
-          //到达率
-          show: true,
-          color: '#fff',
-          fontSize: 16,
-          digit: 0, //小数位数
-        },
-        customConverseRateDigit: 0, //转化率小数位数
-        customArriveRateDigit: 0, //到达率小数位数
         customIsOpenDataLink: false, // 是否开启图表联动
         customInteractive: {}, // 保存联动数据
       },
