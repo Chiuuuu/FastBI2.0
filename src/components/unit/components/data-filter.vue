@@ -319,10 +319,8 @@ export default {
         this.dataRows = res.rows.map(item => {
           if (Object.prototype.toString.call(item) === '[object Object]') {
             return Object.values(item).toString();
-          } else if (item === null) {
-            return item + '';
           } else {
-            return item;
+            return '';
           }
         });
       }

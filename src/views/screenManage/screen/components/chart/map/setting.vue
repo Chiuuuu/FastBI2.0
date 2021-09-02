@@ -506,11 +506,7 @@
                         :value="currentCom.setting.style.echart.mapStyle.customPointShowList"
                         @change="value => handleSelect('mapStyle', 'customPointShowList', value)"
                       >
-                        <a-select-option
-                          v-for="i in currentCom.setting.style.echart.mapSelectList.customPointSelectList"
-                          :key="i.alias"
-                          :value="i.alias"
-                        >
+                        <a-select-option v-for="i in mapFillPointSelectList" :key="i.alias" :value="i.alias">
                           {{ i.alias }}
                         </a-select-option>
                       </a-select>
@@ -575,11 +571,7 @@
                         :value="currentCom.setting.style.echart.mapStyle.customTooltipShowList"
                         @change="value => handleSelect('mapStyle', 'customTooltipShowList', value)"
                       >
-                        <a-select-option
-                          v-for="i in currentCom.setting.style.echart.mapSelectList.customTooltipSelectList"
-                          :key="i.alias"
-                          :value="i.alias"
-                        >
+                        <a-select-option v-for="i in mapFillTooltipSelectList" :key="i.alias" :value="i.alias">
                           {{ i.alias }}
                         </a-select-option>
                       </a-select>
@@ -655,11 +647,7 @@
                         :value="currentCom.setting.style.echart.scatterStyle.customPointShowList"
                         @change="value => handleSelect('scatterStyle', 'customPointShowList', value)"
                       >
-                        <a-select-option
-                          v-for="i in currentCom.setting.style.echart.scatterSelectList.customPointSelectList"
-                          :key="i.alias"
-                          :value="i.alias"
-                        >
+                        <a-select-option v-for="i in mapLabelPointSelectList" :key="i.alias" :value="i.alias">
                           {{ i.alias }}
                         </a-select-option>
                       </a-select>
@@ -747,11 +735,7 @@
                         :value="currentCom.setting.style.echart.scatterStyle.customTooltipShowList"
                         @change="value => handleSelect('scatterStyle', 'customTooltipShowList', value)"
                       >
-                        <a-select-option
-                          v-for="i in currentCom.setting.style.echart.scatterSelectList.customTooltipSelectList"
-                          :key="i.alias"
-                          :value="i.alias"
-                        >
+                        <a-select-option v-for="i in mapLabelTooltipSelectList" :key="i.alias" :value="i.alias">
                           {{ i.alias }}
                         </a-select-option>
                       </a-select>
@@ -834,6 +818,15 @@ export default {
       mapLabelPointSelectList: [], // 地图标记层指标选择列表
       mapLabelTooltipSelectList: [], // 地图标记层提示框内容选择列表
     };
+  },
+  watch: {
+    'currentCom.setting.data': {
+      handler(val) {
+        this.handleMapFormatterSelect(val);
+      },
+      immediate: true,
+      deep: true,
+    },
   },
   methods: {
     /**
@@ -929,6 +922,36 @@ export default {
         eventBus: this.$EventBus,
         data: dataMap[key],
       });
+    },
+    /**
+     * @description 初始化地图指标显示内容列表
+     */
+    handleMapFormatterSelect(data) {
+      // 填充
+      let { dimensions, longitude, latitude, measures, customFillDataType } = data;
+      if (customFillDataType === 'area') {
+        // 地区添加地区名/维度
+        let di = dimensions[0] ? dimensions[0].alias : '';
+        this.mapFillPointSelectList = [{ alias: di ? `地区名/${di}` : '' }].concat(measures);
+        this.mapFillTooltipSelectList = [{ alias: di }].concat(measures);
+      } else {
+        let dimensionList = longitude.concat(latitude);
+        this.mapFillTooltipSelectList = dimensionList.concat(measures);
+        this.mapFillPointSelectList = [{ alias: '地区名' }].concat(this.mapFillTooltipSelectList);
+      }
+      // 散点
+      let { labelDimensions, labelLongitude, labelLatitude, labelMeasures, customLabelDataType } =
+        this.currentCom.setting.data;
+      if (customLabelDataType === 'area') {
+        // 标记点添加维度
+        let labelDi = labelDimensions[0] ? labelDimensions[0].alias : '';
+        this.mapLabelPointSelectList = [{ alias: labelDi ? `地区名/${labelDi}` : '' }].concat(labelMeasures);
+        this.mapLabelTooltipSelectList = [{ alias: labelDi }].concat(labelMeasures);
+      } else {
+        let dimensionList = labelLongitude.concat(labelLatitude);
+        this.mapLabelTooltipSelectList = dimensionList.concat(labelMeasures);
+        this.mapLabelPointSelectList = [{ alias: '地区名' }].concat(this.mapLabelTooltipSelectList);
+      }
     },
   },
 };

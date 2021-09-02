@@ -98,10 +98,6 @@ export default merge(cloneDeep(BASE), {
           customShowTooltip: false,
           customTooltipShowList: [], // 提示框显示
         },
-        mapSelectList: {
-          customPointSelectList: [],
-          customTooltipSelectList: [],
-        },
         scatterStyle: {
           customShowItem: true, // 展示标记点
           customItemColor: '#60b8f6',
@@ -115,10 +111,6 @@ export default merge(cloneDeep(BASE), {
           customTextSize: 12,
           customTextColor: '#fff',
           customTextPosition: 'bottom',
-        },
-        scatterSelectList: {
-          customPointSelectList: [],
-          customTooltipSelectList: [],
         },
       },
     },
