@@ -29,10 +29,11 @@ export default {
      */
     isServerData() {
       const { data } = this.options;
-      return (
-        data.dataModelId &&
-        ((data.dimensions.length && data.measures.length) || (data.labelDimensions.length && data.labelMeasures.length))
-      );
+      const isFillArea = data.dimensions.length && data.measures.length;
+      const isFillDot = data.longitude.length && data.latitude.length && data.measures.length;
+      const isLabelArea = data.labelDimensions.length && data.labelMeasures.length;
+      const isLabelDot = data.labelLongitude.length && data.labelLatitude && data.labelMeasures;
+      return data.dataModelId && (isFillArea || isFillDot) && (isLabelArea || isLabelDot);
     },
     /**
      * @description 处理图例
@@ -412,7 +413,6 @@ export default {
       this.chartInstane.setOption(newOptions, {
         replaceMerge: ['series'],
       });
-      console.log('later', newOptions);
     },
     /**
      * @description 初始化Echart图表

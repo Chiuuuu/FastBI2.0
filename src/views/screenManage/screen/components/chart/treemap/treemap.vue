@@ -5,7 +5,7 @@ import { mutationTypes as boardMutation } from '@/store/modules/board';
 import defaultData from './default-data';
 import minBy from 'lodash/minBy';
 import maxBy from 'lodash/maxBy';
-import merge from 'lodash/merge';
+import mergeWith from 'lodash/mergeWith';
 import Node from './node';
 /**
  * @description 矩形树图
@@ -194,6 +194,7 @@ export default {
         return Object.assign({}, echart.visualMap, {
           dimension,
           pieces,
+          inRange: { color: echart.customPiecewiseColors },
         });
       } else {
         const visualMap = {
@@ -202,18 +203,18 @@ export default {
           max: maxBy(pieces, 'value').value,
           min: minBy(pieces, 'value').value,
           dimension: dimension + 1,
+          inRange: { color: echart.customContinuousColors },
         };
         return visualMap;
       }
     },
-    doWithFormatter(echart) {
-      const isAverage = echart.customShowWay === 'average';
-      const ways = {
-        name: '{b}',
-        value: isAverage ? `{@[1]}` : `{@[0]}`,
-        all: isAverage ? `{b}\n{@[1]}` : `{b}\n{@[0]}`,
+    doWithFormatter(echart, type) {
+      type = type[0].toUpperCase() + type.substr(1);
+      let formatter = params => {
+        const target = params.data;
+        const result = echart['customFormatter' + type].map(item => target.props[item]);
+        return result.toString();
       };
-      const formatter = ways[echart.customFormatterWay] || ways.all;
       return formatter;
     },
     /**
@@ -224,7 +225,7 @@ export default {
      */
     doWithLabel(echart) {
       const label = Object.assign({}, echart.customSeries.label, {
-        formatter: this.doWithFormatter(echart),
+        formatter: this.doWithFormatter(echart, 'label'),
       });
       this.chartInstane.setOption({
         series: [
@@ -232,6 +233,17 @@ export default {
             label,
           },
         ],
+      });
+    },
+    /**
+     * @description 处理提示框内容
+     */
+    doWithTooltip(echart) {
+      const tooltip = Object.assign({}, echart.tooltip, {
+        formatter: this.doWithFormatter(echart, 'tooltip'),
+      });
+      this.chartInstane.setOption({
+        tooltip,
       });
     },
     doWithOptions(fetchData, originDimensions, measures) {
@@ -277,98 +289,63 @@ export default {
       fn();
 
       // 这里不能设置label，因为如果当label.show为false会报错
-      const options = merge({}, echart, {
-        visualMap,
-        series: [
-          {
-            type: 'treemap',
-            nodeClick: false,
-            leafDepth: null,
-            breadcrumb: {
-              show: false,
+      const options = mergeWith(
+        {},
+        echart,
+        {
+          visualMap,
+          series: [
+            {
+              type: 'treemap',
+              nodeClick: false,
+              leafDepth: null,
+              breadcrumb: {
+                show: false,
+              },
+              roam: false, // 缩放
+              data: this.treeRoot.children,
             },
-            roam: false, // 缩放
-            data: this.treeRoot.children,
-          },
-        ],
-      });
+          ],
+        },
+        this.customizer,
+      );
       console.log(options);
       return options;
+    },
+    customizer(objValue, srcValue) {
+      if (Array.isArray(objValue)) {
+        return (objValue = srcValue);
+      }
     },
     /**
      * @description 图表获取服务端数据
      */
     async getServerData() {
-      console.log('从这里获取服务端数据');
+      const res = await this.$server.common.getData('/screen/graph/v2/getData', {
+        id: this.shapeUnit.component.id,
+        tabId: this.shapeUnit.component.tabId,
+        type: this.shapeUnit.component.type,
+        ...this.options.data,
+      });
+      if (res.code === 500) {
+        this.$message.error('isChange');
+        return;
+      }
+      this.serverData = { data: res.data };
       this.treeRoot = '';
-      this.serverData = {
-        data: [
-          {
-            数量: 100,
-            城市: '广州市',
-            地区: '广东',
-          },
-          {
-            数量: 88,
-            城市: '青海',
-            地区: '山东',
-          },
-          {
-            数量: 78,
-            城市: '徐州',
-            地区: '安徽省',
-          },
-          {
-            数量: 60,
-            城市: '南宁',
-            地区: '广西省',
-          },
-          {
-            数量: 26,
-            城市: '厦门',
-            地区: '福建',
-          },
-          {
-            数量: 11,
-            城市: '呼噜木齐',
-            地区: '新疆',
-          },
-          {
-            数量: 36,
-            城市: '衡阳',
-            地区: '湖南',
-          },
-          {
-            数量: 65,
-            城市: '杭州市',
-            地区: '江苏',
-          },
-        ],
-      };
 
-      const measures = [
-        {
-          name: '数量',
-        },
-      ];
-
-      const dimensions = [
-        {
-          name: '地区',
-        },
-        {
-          name: '城市',
-        },
-      ];
-      const options = this.doWithOptions(this.serverData, dimensions, measures);
-      this.updateSaveChart(options);
+      const formatterList = res.data[0] ? Object.keys(res.data[0]) : [];
       // 获取数据之后需要重置配色方案
       this.$store.commit(boardMutation.SET_STYLE, {
         style: {
           echart: {
             customPiecesIndex: 0,
+            customFormatterLabel: formatterList,
+            customFormatterTooltip: formatterList,
           },
         },
+        replaceMerge: ['customFormatterLabel', 'customFormatterTooltip'],
+        updateCom: this.shapeUnit.component,
       });
     },
     /*
@@ -381,6 +358,7 @@ export default {
       this.updateSaveChart(options);
 
       this.doWithLabel(this.options.style.echart);
+      this.doWithTooltip(this.options.style.echart);
 
       // 获取数据之后需要重置配色方案
       this.$store.commit(boardMutation.SET_STYLE, {
@@ -405,6 +383,7 @@ export default {
 
       this.updateSaveChart(newOptions);
       this.doWithLabel(this.options.style.echart);
+      this.doWithTooltip(this.options.style.echart);
     },
   },
 };

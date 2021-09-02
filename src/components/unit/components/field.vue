@@ -354,20 +354,16 @@ export default {
      * @description 当放置到经度
      */
     handleSetLong(data, method = 'add') {
-      const { latitude } = this.currentCom.setting.data;
       return {
         longitude: this.conversionArry('longitude', data, method),
-        dimensions: [...latitude, data],
       };
     },
     /**
      * @description 当放置到纬度
      */
     handleLatitude(data, method = 'add') {
-      const { longitude } = this.currentCom.setting.data;
       return {
         latitude: this.conversionArry('latitude', data, method),
-        dimensions: [...longitude, data],
       };
     },
     /**
@@ -390,20 +386,16 @@ export default {
      * @description 当放置到散点纬度
      */
     handleLabelLongitude(data, method = 'add') {
-      const { labelLatitude } = this.currentCom.setting.data;
       return {
-        labelLatitude: this.conversionArry('labelLatitude', data, method),
-        labelDimensions: [...labelLatitude, data],
+        labelLongitude: this.conversionArry('labelLongitude', data, method),
       };
     },
     /**
      * @description 当放置到散点经度
      */
     handleLabelLatitude(data, method = 'add') {
-      const { labelLongitude } = this.currentCom.setting.data;
       return {
         labelLatitude: this.conversionArry('labelLatitude', data, method),
-        labelDimensions: [...labelLongitude, data],
       };
     },
     /**

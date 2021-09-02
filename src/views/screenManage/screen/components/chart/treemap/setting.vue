@@ -172,25 +172,56 @@
                       </a-col>
                       <!-- 标签 字体 大小 end -->
                     </a-row>
+                    <!-- 指标内容 start -->
                     <a-row class="unit-show-block mb-8">
-                      <a-col :span="24">
-                        <div class="unit-block-title">指标内容</div>
-                      </a-col>
-
-                      <!-- 内容显示 start -->
-                      <a-col :span="24">
-                        <a-select
-                          :value="currentCom.setting.style.echart.customFormatterWay"
-                          style="width: 100%"
-                          @change="handleFormatterWay"
-                        >
-                          <a-select-option value="name">维度</a-select-option>
-                          <a-select-option value="value">值</a-select-option>
-                          <a-select-option value="all">全部</a-select-option>
-                        </a-select>
-                      </a-col>
-                      <!-- 内容显示 end -->
+                      <div class="unit-block-title">指标内容</div>
+                      <a-select
+                        mode="multiple"
+                        placeholder="选择显示内容"
+                        style="width: 100%"
+                        :value="currentCom.setting.style.echart.customFormatterLabel"
+                        @change="value => handleChange('echart', { customFormatterLabel: value })"
+                      >
+                        <a-select-option v-for="i in labelFormatterList" :key="i.alias" :value="i.alias">
+                          {{ i.alias }}
+                        </a-select-option>
+                      </a-select>
                     </a-row>
+                    <!-- 指标内容 end -->
+                  </div>
+                </CollapsePanel>
+                <CollapsePanel class="content-item" panel="tooltip" header="鼠标移入提示">
+                  <div class="setting-unit-content">
+                    <!-- 鼠标移入提示 start -->
+                    <UnitCheckbox
+                      class="show-btn"
+                      :value="currentCom.setting.style.echart.tooltip.show"
+                      @change="
+                        show =>
+                          handleChange('echart', {
+                            tooltip: {
+                              show,
+                            },
+                          })
+                      "
+                    ></UnitCheckbox>
+                    <!-- 鼠标移入提示 end -->
+                    <!-- 指标内容 start -->
+                    <a-row class="unit-show-block mb-8">
+                      <div class="unit-block-title">指标内容</div>
+                      <a-select
+                        mode="multiple"
+                        placeholder="选择显示内容"
+                        style="width: 100%"
+                        :value="currentCom.setting.style.echart.customFormatterTooltip"
+                        @change="value => handleChange('echart', { customFormatterTooltip: value })"
+                      >
+                        <a-select-option v-for="i in tooltipFormatterList" :key="i.alias" :value="i.alias">
+                          {{ i.alias }}
+                        </a-select-option>
+                      </a-select>
+                    </a-row>
+                    <!-- 指标内容 end -->
                   </div>
                 </CollapsePanel>
                 <CollapsePanel class="content-item" panel="legend" header="图例设置">
@@ -204,34 +235,20 @@
                           <div class="unit-block-title">图例颜色</div>
                         </a-col>
 
-                        <!-- 连续型 颜色设置 start -->
-                        <a-col :span="24" class="piecewise-colors" v-if="isContinuous">
+                        <!-- 颜色设置 start -->
+                        <a-col :span="24" class="piecewise-colors">
                           <div
                             class="font-color"
-                            v-for="(item, index) in currentCom.setting.style.echart.customContinuousColors"
+                            v-for="(item, index) in currentCom.setting.style.echart[colorKey]"
                             :key="index"
                           >
                             <ColorPicker
                               :value="item"
-                              @change="color => handlePiecewiseColors(color, index, 'customContinuousColors')"
+                              @change="color => handlePiecewiseColors(color, index)"
                             ></ColorPicker>
                           </div>
                         </a-col>
-                        <!-- 连续型 颜色设置 end -->
-                        <!-- 分段型 颜色设置 start -->
-                        <a-col :span="24" class="piecewise-colors" v-else>
-                          <div
-                            class="font-color"
-                            v-for="(item, index) in currentCom.setting.style.echart.customPiecewiseColors"
-                            :key="index"
-                          >
-                            <ColorPicker
-                              :value="item"
-                              @change="color => handlePiecewiseColors(color, index, 'customPiecewiseColors')"
-                            ></ColorPicker>
-                          </div>
-                        </a-col>
-                        <!-- 分段型 颜色设置 end -->
+                        <!-- 颜色设置 end -->
                       </a-row>
                     </div>
                   </UnitLegend>
@@ -295,6 +312,8 @@ export default {
       tabAcitve: 'style', // tab选项栏活动目标
       dataCollapseActive: ['dimension', 'measure', 'dataFilter'], // 折叠打开选项
       styleCollapseActive: [],
+      labelFormatterList: [], // 指标内容选择列表
+      tooltipFormatterList: [], // 指标内容选择列表
     };
   },
   computed: {
@@ -310,9 +329,25 @@ export default {
         return [];
       }
     },
-    //视觉映射是否为连续型   continuous连续型 piecewise分段型
-    isContinuous() {
-      return this.currentCom.setting.style.echart.visualMap.type === 'continuous';
+    // 根据维度/度量改变视觉映射颜色显示
+    colorKey() {
+      return this.currentCom.setting.style.echart.customPiecesIndex === this.hasServeData.length - 1
+        ? 'customContinuousColors'
+        : 'customPiecewiseColors';
+    },
+  },
+  watch: {
+    'currentCom.setting.data': {
+      handler(val) {
+        let { dimensions, measures } = val;
+        let list = dimensions.concat(measures);
+        if (!list.length) {
+          list = [{ alias: '员工姓名' }, { alias: '部门名称' }, { alias: '公司' }, { alias: 'bumenTableid' }];
+        }
+        this.tooltipFormatterList = this.labelFormatterList = list;
+      },
+      immediate: true,
+      deep: true,
     },
   },
   methods: {
@@ -322,14 +357,6 @@ export default {
     handleLabel(key, value) {
       this.doWithSeries('label', {
         [key]: value,
-      });
-    },
-    /**
-     * @description 内容显示方式
-     */
-    handleFormatterWay(value) {
-      this.handleChange('echart', {
-        customFormatterWay: value,
       });
     },
     /**
@@ -349,11 +376,11 @@ export default {
      * @param {string} index 值
      * @param {string} key  属性 customContinuousColors连续型 customPiecewiseColors分段型
      */
-    handlePiecewiseColors(value, index, key) {
-      let colors = this.currentCom.setting.style.echart[key];
+    handlePiecewiseColors(value, index) {
+      let colors = this.currentCom.setting.style.echart[this.colorKey];
       colors[index] = value;
       this.handleChange('echart', {
-        [key]: colors,
+        [this.colorKey]: colors,
         visualMap: {
           inRange: {
             color: colors,

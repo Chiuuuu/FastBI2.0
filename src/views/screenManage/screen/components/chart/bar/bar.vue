@@ -133,8 +133,6 @@ export default {
      * @description 图表获取服务端数据
      */
     async getServerData() {
-      console.log({ id: this.shapeUnit.component.id, type: this.shapeUnit.component.type, data: this.options.data });
-      console.log('从这里获取服务端数据');
       const {
         data: { dimensions, measures },
       } = this.options;
