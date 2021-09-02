@@ -26,7 +26,8 @@ export default merge(cloneDeep(BASE), {
           borderColor: 'transparent',
         },
         tooltip: {
-          trigger: 'axis',
+          show: true,
+          trigger: 'item',
         },
         legend: {
           // 图例
@@ -46,17 +47,22 @@ export default merge(cloneDeep(BASE), {
         // 系列
         customSeries: {
           top: 70,
-          right: 100,
+          right: 150,
           bottom: 60,
-          left: 80,
+          left: 50,
           label: {
             // 标签
             show: true,
             color: '#fff',
             fontSize: 16,
-            position: 'outside',
+            fontFamily: 'sans-serif',
+            fontWeight: 'normal',
+            position: 'center',
           },
         },
+        customFormatterWay: ['name', 'value'], // 指标内容选择
+        customLabelArrange: 'horizontal', // 排列 horizontal vertical
+        customTooltipFormatter: ['name', 'value'], //鼠标移入显示
         // 展示环节-转化率/到达率 配置
         customRate: {
           show: true,
@@ -64,10 +70,9 @@ export default merge(cloneDeep(BASE), {
           fontSize: 16,
           fontFamily: 'sans-serif',
           fontWeight: 'normal',
-          digit: 0, //小数位数
           labelContent: ['converse', 'arrive'], //显示内容
           position: 'right', //位置 left right
-          arrage: 'vertical', // 排列 horizontal vertical
+          arrange: 'vertical', // 排列 horizontal vertical
         },
         customIsOpenDataLink: false, // 是否开启图表联动
         customInteractive: {}, // 保存联动数据

@@ -227,7 +227,7 @@
                             name="radioGroup"
                             class="float-right"
                             :value="currentCom.setting.style.echart.customRate.position"
-                            @change="event => handleArrange('position', event.target.value)"
+                            @change="event => handleCustomRateChange('position', event.target.value)"
                           >
                             <a-radio-button value="left">左</a-radio-button>
                             <a-radio-button value="right">右</a-radio-button>
@@ -238,53 +238,133 @@
                       <!-- 排列 start -->
                       <a-row class="unit-show-block mb-8">
                         <a-col :span="8">
-                          <div class="unit-block-title">粗细</div>
+                          <div class="unit-block-title">排列</div>
                         </a-col>
                         <a-col :span="16">
                           <a-radio-group
                             name="radioGroup"
                             class="float-right"
                             :value="currentCom.setting.style.echart.customRate.arrange"
-                            @change="event => handleArrange('arrange', event.target.value)"
+                            @change="event => handleCustomRateChange('arrange', event.target.value)"
                           >
-                            <a-radio-button value="vertical">垂直</a-radio-button>
                             <a-radio-button value="horizontal">水平</a-radio-button>
+                            <a-radio-button value="vertical">垂直</a-radio-button>
                           </a-radio-group>
                         </a-col>
                       </a-row>
                       <!-- 排列 end -->
                     </div>
                     <!-- 转化率/到达率 样式配置  end -->
+                  </div>
+                </CollapsePanel>
+                <CollapsePanel class="content-item" panel="chartStyle" header="指标设置">
+                  <!-- 图形属性 start -->
+                  <div class="setting-unit-content">
+                    <UnitCheckbox
+                      class="show-btn"
+                      label="显示"
+                      :value="currentCom.setting.style.echart.customSeries.label.show"
+                      @change="show => doWithSeries('label', { show })"
+                    ></UnitCheckbox>
+                    <a-row class="unit-show-block mb-8">
+                      <a-col :span="24" class="unit-show-block">
+                        <div class="unit-block-title">显示内容</div>
+                      </a-col>
+                      <a-col :span="24">
+                        <a-select
+                          mode="tags"
+                          :value="currentCom.setting.style.echart.customFormatterWay"
+                          style="width: 100%"
+                          @change="customFormatterWay => handleChange('echart', { customFormatterWay })"
+                        >
+                          <a-select-option v-for="item in concatDimAndMea" :key="item.value" :value="item.value">
+                            {{ item.name }}
+                          </a-select-option>
+                        </a-select>
+                      </a-col>
+                    </a-row>
+                    <!-- 文本 start -->
+                    <a-row class="unit-show-block mb-8">
+                      <a-col :span="4">
+                        <div class="unit-block-title">文本</div>
+                      </a-col>
 
-                    <!-- 转化率小数位数 start -->
-                    <!-- <a-row class="unit-show-block mb-8 mt-4">
-                      <a-col :span="12" class="unit-show-block">
-                        <div class="unit-block-title">转化率小数位数</div>
+                      <!-- 展示环节 字体 颜色 start -->
+                      <a-col :span="4">
+                        <div class="font-color">
+                          <ColorPicker
+                            :value="currentCom.setting.style.echart.customSeries.label.color"
+                            @change="color => doWithSeries('label', { color })"
+                          ></ColorPicker>
+                        </div>
                       </a-col>
-                      <a-col :span="12">
+                      <!-- 展示环节 字体 颜色 end -->
+
+                      <!-- 展示环节 字体 大小 start -->
+                      <a-col :span="16">
                         <a-input-number
                           :min="0"
-                          :value="currentCom.setting.style.echart.customConverseRateDigit"
-                          @change="customConverseRateDigit => handleChange('echart', { customConverseRateDigit })"
-                        ></a-input-number>
+                          :value="currentCom.setting.style.echart.customSeries.label.fontSize"
+                          @change="fontSize => doWithSeries('label', { fontSize })"
+                        />
                       </a-col>
-                    </a-row> -->
-                    <!-- 转化率小数位数 end -->
-                    <!-- 到达率小数位数 start -->
-                    <!-- <a-row class="unit-show-block mb-4">
-                      <a-col :span="12" class="unit-show-block">
-                        <div class="unit-block-title">到达率小数位数</div>
+                      <!-- 展示环节 字体 大小 end -->
+                    </a-row>
+                    <!-- 文本 end -->
+                    <!-- 字体 start -->
+                    <a-row class="unit-show-block mb-8">
+                      <a-col :span="8">
+                        <div class="unit-block-title">字体</div>
                       </a-col>
-                      <a-col :span="12">
-                        <a-input-number
-                          :min="0"
-                          :value="currentCom.setting.style.echart.customArriveRateDigit"
-                          @change="customArriveRateDigit => handleChange('echart', { customArriveRateDigit })"
-                        ></a-input-number>
+                      <a-col :span="16">
+                        <a-select
+                          style="width: 100%"
+                          :value="currentCom.setting.style.echart.customSeries.label.fontFamily"
+                          @change="fontFamily => doWithSeries('label', { fontFamily })"
+                        >
+                          <a-select-option :value="item.value" v-for="(item, index) in fontFamily" :key="index">
+                            {{ item.label }}
+                          </a-select-option>
+                        </a-select>
                       </a-col>
-                    </a-row> -->
-                    <!-- 到达率小数位数 end -->
-                    <!-- 展示数值 end -->
+                    </a-row>
+                    <!-- 字体 end -->
+                    <!-- 粗细 start -->
+                    <a-row class="unit-show-block mb-8">
+                      <a-col :span="8">
+                        <div class="unit-block-title">粗细</div>
+                      </a-col>
+                      <a-col :span="16">
+                        <a-select
+                          style="width: 100%"
+                          :value="currentCom.setting.style.echart.customSeries.label.fontWeight"
+                          @change="fontWeight => doWithSeries('label', { fontWeight })"
+                        >
+                          <a-select-option value="normal">正常</a-select-option>
+                          <a-select-option value="bolder">加粗</a-select-option>
+                          <a-select-option value="lighter">更细</a-select-option>
+                        </a-select>
+                      </a-col>
+                    </a-row>
+                    <!-- 粗细 end -->
+                    <!-- 排列 start -->
+                    <a-row class="unit-show-block mb-8">
+                      <a-col :span="8">
+                        <div class="unit-block-title">粗细</div>
+                      </a-col>
+                      <a-col :span="16">
+                        <a-radio-group
+                          name="radioGroup"
+                          class="float-right"
+                          :value="currentCom.setting.style.echart.customLabelArrange"
+                          @change="event => handleChange('echart', { customLabelArrange: event.target.value })"
+                        >
+                          <a-radio-button value="horizontal">水平</a-radio-button>
+                          <a-radio-button value="vertical">垂直</a-radio-button>
+                        </a-radio-group>
+                      </a-col>
+                    </a-row>
+                    <!-- 排列 end -->
                   </div>
                 </CollapsePanel>
                 <CollapsePanel class="content-item" panel="legend" header="图例设置">
@@ -295,6 +375,34 @@
                         handleChange(key, value, isReset, beforeExecute, afterExecute)
                     "
                   ></UnitLegend>
+                </CollapsePanel>
+                <CollapsePanel class="content-item" panel="chartStyle" header="鼠标移入提示">
+                  <!-- 鼠标移入提示 start -->
+                  <div class="setting-unit-content">
+                    <UnitCheckbox
+                      class="show-btn"
+                      label="显示"
+                      :value="currentCom.setting.style.echart.tooltip.show"
+                      @change="show => handleChange('echart', { tooltip: { show } })"
+                    ></UnitCheckbox>
+                    <a-row class="unit-show-block mb-8">
+                      <a-col :span="24" class="unit-show-block">
+                        <div class="unit-block-title">显示内容</div>
+                      </a-col>
+                      <a-col :span="24">
+                        <a-select
+                          mode="tags"
+                          :value="currentCom.setting.style.echart.customTooltipFormatter"
+                          style="width: 100%"
+                          @change="customTooltipFormatter => handleChange('echart', { customTooltipFormatter })"
+                        >
+                          <a-select-option v-for="item in concatDimAndMea" :key="item.value" :value="item.value">
+                            {{ item.name }}
+                          </a-select-option>
+                        </a-select>
+                      </a-col>
+                    </a-row>
+                  </div>
                 </CollapsePanel>
                 <CollapsePanel class="content-item" panel="yaxis" header="颜色设置">
                   <!-- 颜色 start -->
@@ -407,6 +515,23 @@ export default {
         },
       ],
     };
+  },
+  computed: {
+    // 维度度量合并列表
+    concatDimAndMea() {
+      const { dimensions = [], measures = [] } = this.currentCom.setting.data;
+      if (dimensions.concat(measures).length >= 2) {
+        return [
+          { name: dimensions[0].alias, value: 'name' },
+          { name: measures[0].alias, value: 'value' },
+        ];
+      } else {
+        return [
+          { name: '维度', value: 'name' },
+          { name: '度量', value: 'value' },
+        ];
+      }
+    },
   },
   methods: {
     /**
