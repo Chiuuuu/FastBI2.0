@@ -10,7 +10,7 @@ export default {
   getScreenTemplates(params) {
     return $axios.get('/bigScreenTemplate/selBigScreenTemplates', params);
   },
-  saveScreenData(params) {
-    return $axios.post(`/bigScreenTemplate/saveBigScreenData?screenId=${params}`);
+  saveScreenData(screenId, parentId) {
+    return $axios.get(`/bigScreenTemplate/saveBigScreenData?screenId=${screenId}&parentId=${parentId}`);
   },
 };

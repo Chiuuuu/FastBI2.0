@@ -37,10 +37,9 @@ export class MapSheet {
   formatSheet(list) {
     let sheetList = [];
     if (this.isNewFile) {
-      // list.map(([key, value]) => {
-      list.map(arr => {
+      list.map(([key]) => {
         sheetList.push({
-          name: arr[0],
+          name: key,
         });
       });
     } else {
@@ -51,9 +50,10 @@ export class MapSheet {
 
   formatTable(list) {
     let tableList = [];
-    // list.map(([key, value]) => {
-    list.map(arr => {
-      tableList.push(arr[1]);
+    list.map(item => {
+      const value = item[1];
+      value.originRows = value.rows;
+      tableList.push(value);
     });
     this.tableList = tableList;
   }
@@ -69,8 +69,15 @@ export class MapSheet {
   addTable(table, index) {
     if (index !== undefined) {
       this.tableList[index] = table;
+      table.originRows = table.rows;
     } else {
       this.tableList.push(table);
     }
   }
 }
+
+// export let findParentId = (menuid, menuList) => {
+//     menuList.find(item => {
+//         item.
+//     })
+// }

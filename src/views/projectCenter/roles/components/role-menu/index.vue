@@ -237,6 +237,9 @@ export default {
     },
   },
   mounted() {
+    if (this.fileSelectId !== -1) {
+      this.getRoleInfo();
+    }
     this.handleGetMenuList();
     this.$on('fileSelect', this.handleFileSelect);
   },
@@ -251,6 +254,7 @@ export default {
      * @description 获取角色详情信息
      */
     async getRoleInfo() {
+      if (!this.roleId || this.roleId === -1) return;
       const roleInfo = await this.$server.projectCenter.getRoleInfo(this.fileSelectId);
       // const rolePermission = await this.$server.projectCenter.getRolePermission(this.fileSelectId)
       if (roleInfo.code === 200) {
@@ -325,6 +329,7 @@ export default {
           if (result.code === 200) {
             this.handleGetMenuList();
             this.$message.success('删除成功');
+            this.$store.commit('common/SET_MENUSELECTID', -1);
             const isSame = file.id === this.fileSelectId;
             if (isSame) {
               this.$store.commit('projectRoles/SET_ROLEID', 0);
@@ -350,7 +355,7 @@ export default {
           if (result.code === 200) {
             this.handleGetMenuList();
             this.$message.success('删除成功');
-            // const isSame = folder.id === this.fileSelectId;
+            this.$store.commit('common/SET_MENUSELECTID', -1);
           } else {
             this.$message.error(result.msg);
           }
@@ -556,7 +561,6 @@ export default {
       const isHas = list.filter(item => {
         return item.name === values.name;
       });
-      console.log(isHas);
       return !!(isHas && isHas.length > 0);
     },
   },

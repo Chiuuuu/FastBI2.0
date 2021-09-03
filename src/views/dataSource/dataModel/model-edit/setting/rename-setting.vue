@@ -54,6 +54,21 @@ export default {
             }
           });
           if (valid) {
+            // 筛选排序列表同步修改
+            const id = this.renameData.id;
+            const { filterRules = [], sortRules = [] } = this.$parent.detailInfo.modelPivotschemaRule;
+            for (const item of filterRules) {
+              if (item.pivotschemaId === id) {
+                item.alias = this.form.rename;
+              }
+            }
+            for (const item of sortRules) {
+              if (item.pivotschemaId === id) {
+                console.log(item.alias, this.form.name);
+                item.alias = this.form.rename;
+              }
+            }
+
             this.renameData.alias = this.form.rename;
             this.$message.success('修改成功');
             this.handleClose();

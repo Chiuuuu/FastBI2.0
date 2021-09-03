@@ -7,7 +7,7 @@
     @close="handleClose"
   >
     <div class="drawer-btn">
-      <a-button style="width: 110px" :disabled="!fieldSetable" @click="handleShowSetting($event, 'dataType')">
+      <a-button style="width: 110px" :disabled="!fieldSetable" @click="handleShowSetting($event, 'convertType')">
         设置字段类型
       </a-button>
       <a-button style="width: 110px" :disabled="!selectDrawer" @click="handleShowSetting($event, 'role')">
@@ -54,10 +54,10 @@
       <a-button type="primary" @click="handleSave">保存</a-button>
     </div>
     <a-modal :visible="showSetting" :afterClose="handleAfterClose" @cancel="handleCancelModal" @ok="handleBatchSetting">
-      <template v-if="setType === 'dataType'">
+      <template v-if="setType === 'convertType'">
         <a-form-model :model="modalForm" :label-col="{ span: 5 }" :wrapper-col="{ span: 12 }">
           <a-form-model-item label="字段类型" required>
-            <a-select default-value="BIGINT" style="width: 100px" v-model="modalForm.dataType">
+            <a-select default-value="BIGINT" style="width: 100px" v-model="modalForm.convertType">
               <a-select-option value="BIGINT">整数</a-select-option>
               <a-select-option value="DOUBLE">小数</a-select-option>
               <a-select-option value="DECIMAL">数值</a-select-option>
@@ -113,7 +113,7 @@ export default {
       setType: '',
       cacheTables: '',
       modalForm: {
-        dataType: 'BIGINT',
+        convertType: 'BIGINT',
         role: 1,
         visible: true,
       },
@@ -150,7 +150,7 @@ export default {
     },
     // 取消全选
     handleDeleteSelectAllRows(rows) {
-      pullAllBy(this.selectedRows, rows, 'id');
+      this.selectedRows = [].concat(pullAllBy(this.selectedRows, rows, 'id'));
     },
     // 选择单个
     handleSelectRows(record) {
@@ -158,7 +158,7 @@ export default {
     },
     // 取消单个
     handleDeleteSelectRow(record) {
-      pullAllBy(this.selectedRows, [record], 'id');
+      this.selectedRows = [].concat(pullAllBy(this.selectedRows, [record], 'id'));
     },
     handleSelect(value, record, index) {
       const has = Object.keys(this.cacheTables).some(item => item === record.tableNo || item === `${record.tableNo}`);

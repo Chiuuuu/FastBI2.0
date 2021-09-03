@@ -53,16 +53,4 @@ export default {
   getDetailByMenuId(url) {
     return $axios.get(url);
   },
-  /**
-   * @description 请求图表数据
-   * @param {String} url 请求地址
-   * @param {Object} params 请求参数
-   * @param {String} params.id 图表id
-   * @param {String} params.type 图表类型
-   * @param {Object} params.data 图表拖入的数据
-   * @returns {Object} 图表数据
-   */
-  getData(url, params) {
-    return $axios.post(url, params);
-  },
 };

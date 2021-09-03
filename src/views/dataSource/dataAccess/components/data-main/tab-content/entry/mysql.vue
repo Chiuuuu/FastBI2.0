@@ -312,6 +312,16 @@ export default {
     handleSaveForm() {
       this.$refs.dbForm.validate(async valid => {
         if (valid) {
+          // const datadbitem = this.databaseList
+          //   .filter(item => item.id === this.form.dbid)
+          //   .pop()
+          // this.form = Object.assign(this.form, {
+          //   databaseName: datadbitem.name
+          // })
+
+          // 保存前先校验密码是否正确
+          // if (this.connectPassword !== this.form.password) {}
+
           this.saveBtn = true;
           const params = {
             id: this.$store.state.dataAccess.modelId,

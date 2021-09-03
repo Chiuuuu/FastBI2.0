@@ -21,21 +21,30 @@
       </a-col>
     </a-row>
     <a-row class="title">
-      <a-col span="14">
+      <a-col :span="(injectRoleTab === 3 ? 22 : 24) - injectActionList.length * 2">
         <span>所有目录</span>
       </a-col>
-      <a-col span="2" align="left" v-for="item in injectActionList" :key="item.permission">{{ item.name }}</a-col>
-      <a-col span="2" align="left" v-if="injectRoleTab === 3">
+      <a-col :span="2" align="left" v-for="item in injectActionList" :key="item.permission">
+        <span>{{ item.name }}</span>
+        <a-tooltip
+          v-if="item.permission === 'lock'"
+          placement="top"
+          title="锁定后原模型仅模型添加者、项目管理员和企业域管理员可编辑"
+        >
+          <a-icon style="margin-left: 2px" type="question-circle" />
+        </a-tooltip>
+      </a-col>
+      <a-col :span="2" align="left" v-if="injectRoleTab === 3">
         <span>可见库组</span>
       </a-col>
     </a-row>
     <div class="checkbox-all">
       <a-row>
-        <a-col :span="14">
+        <a-col :span="(injectRoleTab === 3 ? 22 : 24) - injectActionList.length * 2">
           <span style="margin-right: 8px">全选</span>
           <a-checkbox :disabled="status === 'show'" :checked="checkAll" @change="handleCheckAll"></a-checkbox>
         </a-col>
-        <a-col :span="8">
+        <a-col :span="injectActionList.length * 2">
           <a-checkbox-group :value="injectAllPermission" style="width: 100%">
             <a-row>
               <a-col
@@ -59,7 +68,7 @@
       </a-row>
     </div>
     <div class="content scrollbar">
-      <limit-tree ref="tree" v-on="$listeners" @setTable="handleSetVisibleTable"></limit-tree>
+      <LimitTree ref="tree" v-on="$listeners" @setTable="handleSetVisibleTable" />
     </div>
 
     <!-- 可见库组模态框 -->
@@ -132,6 +141,7 @@ export default {
         case 'read':
           return 'folderRead';
         case 'edit':
+        case 'lock':
           return 'folderEdit';
         case 'remove':
           return 'folderRemove';
@@ -148,6 +158,9 @@ export default {
     // 处理全选栏按钮
     handleCheckbox({ permission }, e) {
       const checked = e.target.checked;
+      const READ_PERMISSION = 'read';
+      const EDIT_PERMISSION = 'edit';
+      const EDIT_LOCK_PERMISSION = 'lock';
       // 调用limit-tree组件的递归方法赋值权限
       const handleCheckbox = this.$refs.tree.handleCheckbox;
       // 遍历树结构
@@ -172,18 +185,31 @@ export default {
       // 处理全选栏的逻辑
       if (!checked) {
         if (this.injectAllPermission.includes(permission)) {
-          if (permission === 'read') {
+          if (permission === READ_PERMISSION) {
             this.injectAllPermission.splice(0);
           } else {
             const index = this.injectAllPermission.indexOf(permission);
-            this.injectAllPermission.splice(index, 1);
+            if (index > -1) {
+              this.injectAllPermission.splice(index, 1);
+            }
+            // 数据模型取消勾选编辑权限, 同时要去掉编辑锁定权限
+            if (this.injectRoleTab === 2 && permission === EDIT_PERMISSION) {
+              const lockIndex = this.injectAllPermission.indexOf(EDIT_LOCK_PERMISSION);
+              if (lockIndex > -1) {
+                this.injectAllPermission.splice(lockIndex, 1);
+              }
+            }
           }
         }
       } else {
         if (!this.injectAllPermission.includes(permission)) {
           this.injectAllPermission.push(permission);
-          if (permission !== 'read' && !this.injectAllPermission.includes('read')) {
-            this.injectAllPermission.push('read');
+          if (permission !== READ_PERMISSION && !this.injectAllPermission.includes(READ_PERMISSION)) {
+            this.injectAllPermission.push(READ_PERMISSION);
+          }
+          // 数据模型模块 勾选了编辑锁定权限同时要勾选编辑权限
+          if (permission === EDIT_LOCK_PERMISSION && !this.injectAllPermission.includes(EDIT_PERMISSION)) {
+            this.injectAllPermission.push(EDIT_PERMISSION);
           }
         }
       }

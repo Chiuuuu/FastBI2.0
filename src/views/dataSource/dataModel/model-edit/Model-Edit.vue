@@ -132,9 +132,20 @@
             <span class="sub">{{ createViewName ? `(已导入BI库-表名: ${createViewName})` : '' }}</span>
           </span>
           <div class="detail_btn">
-            <a-button v-on:click="openModal('create-view')" :disabled="disableByDetailInfo">导入BI库</a-button>
+            <a-checkbox
+              :checked="Boolean(+detailInfo.isDuplicate)"
+              :disabled="disableByDetailInfo"
+              @change="e => $set(detailInfo, 'isDuplicate', +e.target.checked)"
+              style="margin-top: 5px"
+            >
+              数据去重
+            </a-checkbox>
+            <a-button v-on:click="openModal('create-view')" :disabled="disableByDetailInfo || model === 'add'">
+              导入BI库
+            </a-button>
             <a-button v-on:click="openModal('check-table')" :disabled="disableByDetailInfo">查看宽表</a-button>
             <a-button v-on:click="openModal('batch-setting')" :disabled="disableByDetailInfo">批量编辑字段</a-button>
+            <a-button v-on:click="openModal('field-filter-sort')" :disabled="disableByDetailInfo">筛选排序</a-button>
           </div>
         </div>
         <div class="detail_main">
@@ -219,13 +230,22 @@
         :description="detailInfo.description"
         :rename-data="panelData"
         :union-data="unionNode"
+        @showGroupbyModal="openModal('field-aggregator')"
         @get-fetch-param="handleGetFetchParams"
         @close="close"
         @success="data => componentSuccess(data)"
+        @handleSaveFilterSort="handleSaveFilterSort"
       />
+
       <div class="submit_btn">
         <!-- <a-button :disabled="!detailInfo">保存并新建报告</a-button> -->
-        <a-button v-if="hasBtnPermissionSave" type="primary" @click="handleSave" :disabled="!detailInfo">
+        <a-button
+          v-if="hasBtnPermissionSave"
+          type="primary"
+          @click="handleSave"
+          :loading="spinning"
+          :disabled="!detailInfo"
+        >
           保 存
         </a-button>
         <a-button v-on:click="exit">退 出</a-button>
@@ -249,6 +269,8 @@ import RenameSetting from './setting/rename-setting';
 import UnionSetting from './setting/union-setting';
 import CreateView from './setting/create-view';
 import PanelItem from './panel-item';
+import FieldAggregator from './setting/field-handler/field-aggregator';
+import FieldFilterSort from './setting/field-handler/field-filter-sort';
 import { hasPermission } from '@/utils/permission';
 import groupBy from 'lodash/groupBy';
 import keys from 'lodash/keys';
@@ -276,14 +298,27 @@ export default {
     UnionSetting, // 表上下合并
     PanelItem,
     CreateView, // 创建视图
+    FieldAggregator, // 数据筛选
+    FieldFilterSort, // 数据排序
   },
   provide() {
     return {
       nodeStatus: this.globalStatus,
+      NUMBER_LIST: this.NUMBER_LIST,
+      AGGREGATOR_LIST: [
+        // 聚合方式及中文映射
+        { name: '求和', value: 'SUM' },
+        { name: '平均', value: 'AVG' },
+        { name: '最大值', value: 'MAX' },
+        { name: '最小值', value: 'MIN' },
+        { name: '计数', value: 'COUNT' },
+        { name: '去重计数', value: 'COUNTD' },
+      ],
     };
   },
   data() {
     return {
+      NUMBER_LIST: ['BIGINT', 'DOUBLE', 'DECIMAL'],
       DimensionsIcon,
       MeasureIcon,
       modelForm: this.$form.createForm(this, { name: 'modelForm' }),
@@ -371,12 +406,12 @@ export default {
       return hasPermission(this.privileges, this.$PERMISSION_CODE.OPERATOR.edit);
     },
   },
-  mounted() {
+  async mounted() {
     this.handleGetDatabaseList();
     if (this.model === 'add') {
-      this.handleGetAddModelDatamodel();
+      await this.handleGetAddModelDatamodel();
     } else if (this.model === 'edit') {
-      this.handleGetData(this.$route.query.modelId);
+      await this.handleGetData(this.$route.query.modelId);
       this.$store.dispatch('dataModel/setModelId', this.$route.query.modelId);
       this.$store.commit('common/SET_MENUSELECTID', this.$route.query.modelId);
     }
@@ -386,6 +421,7 @@ export default {
     this.$EventBus.$off('deleteBelongCustom', this.handleDeleteCustomDimMea);
     this.$EventBus.$off('tableUnion', this.handleTableUnion);
     this.$store.dispatch('dataModel/setAddModelId', -1);
+    this.$store.commit('common/SET_MENUSELECTID', -1);
   },
   methods: {
     /** 组合右键菜单 */
@@ -464,16 +500,22 @@ export default {
     switchFieldType(e, item, vm) {
       let dataType = item.dataType;
       vm.itemData.convertType = dataType;
+      // 转换类型后, 需要同步更新筛选排序列表的状态
+      this.handleFilterSort();
     },
     handleEditField(event, handler, vm) {
       const role = vm.itemData.role;
       this.panelData = vm.itemData;
-      const isDimension = role === 1;
-      const isMeasures = role === 2;
-      if (isDimension) {
-        this.openModal('compute-setting', '维度');
-      } else if (isMeasures) {
-        this.openModal('compute-setting', '度量');
+      let computeType = '';
+      if (role === 1) {
+        computeType = '维度';
+      } else if (role === 2) {
+        computeType = '度量';
+      }
+      if (vm.itemData.isGroupFlag !== 0 && vm.itemData.isGroupFlag !== null) {
+        this.openModal('field-aggregator', computeType);
+      } else {
+        this.openModal('compute-setting', computeType);
       }
     },
     handleDeleField(event, handler, vm) {
@@ -494,6 +536,8 @@ export default {
           this.handleMeasures();
         }
       }
+      this.handleFilterSort();
+      this.handleGroupField();
     },
     async handleGetDatabaseList() {
       const result = await this.$server.dataModel.getDatabaseList(this.$route.query.datasourceId);
@@ -513,6 +557,13 @@ export default {
       const result = await this.$server.dataModel.getAddModelDatamodel();
       if (result.code === 200) {
         this.detailInfo = result.data;
+        // 如果之前没有筛选排序, 则初始化一个对象
+        if (!this.detailInfo.modelPivotschemaRule) {
+          this.detailInfo.modelPivotschemaRule = {
+            sortRules: [],
+            filterRules: [],
+          };
+        }
         this.$store.dispatch('dataModel/setAddModelId', result.data.id);
         this.$store.commit('common/SET_PRIVILEGES', [0]); // 新增赋予所有权限
         this.$nextTick(() => {
@@ -625,6 +676,7 @@ export default {
       }
       this.handleDimensions();
       this.handleMeasures();
+      this.handleGroupField();
     },
     getTargetIndex(list, target) {
       return list.findIndex(item => item.alias === target);
@@ -656,9 +708,11 @@ export default {
         if (isDimension) {
           this.cacheDimensions.push(newField);
           this.handleDimensions();
+          this.handleGroupField();
         } else if (isMeasures) {
           this.cacheMeasures.push(newField);
           this.handleMeasures();
+          this.handleGroupField();
         } else {
           this.$message.error('无法复制字段, 请刷新重试');
         }
@@ -772,9 +826,92 @@ export default {
      */
     handleConcat() {
       return {
-        dimensions: this.handleConcatDimensions(),
-        measures: this.handleConcatMeasures(),
+        dimensions: this.handleConcatDimensions(true),
+        measures: this.handleConcatMeasures(true),
       };
+    },
+    // 判断字段是否为数值类型
+    isNumber(data) {
+      return this.NUMBER_LIST.includes(data.convertType || data.dataType);
+    },
+    /**
+     * 表格变更时, 处理筛选排序的列表
+     */
+    handleFilterSort() {
+      const tables = this.detailInfo.config.tables;
+      if (Array.isArray(tables)) {
+        const { filterRules, sortRules } = this.detailInfo.modelPivotschemaRule;
+        const { dimensions, measures } = this.detailInfo.pivotSchema;
+        const fieldList = []
+          .concat(dimensions)
+          .concat(measures)
+          .concat(this.cacheDimensions)
+          .concat(this.cacheMeasures);
+
+        if (sortRules.length > 0) {
+          const result = [];
+          sortRules.forEach(item => {
+            const field = fieldList.find(f => f.id === item.pivotschemaId);
+            if (field) {
+              if (field.visible === false) {
+                // visible为false(不可见)字段要置灰
+                item.status = 2;
+              } else {
+                item.status = 0;
+              }
+              result.push(item);
+            }
+          });
+          // 重置order顺序
+          this.detailInfo.modelPivotschemaRule.sortRules = result.map((item, index) => {
+            item.displayOrder = index + 1;
+            return item;
+          });
+        }
+        if (filterRules.length > 0) {
+          const result = [];
+          filterRules.forEach(item => {
+            const field = fieldList.find(f => f.id === item.pivotschemaId);
+            if (field) {
+              if (field.visible === false) {
+                // visible为false(不可见)字段要置灰
+                item.status = 2;
+              } else if (this.isNumber(item) !== this.isNumber(field)) {
+                // 字段类型修改, 数值->非数值 or 非数值->数值, 需标黄
+                item.status = 3;
+              } else {
+                item.status = 0;
+              }
+              result.push(item);
+            }
+          });
+          this.detailInfo.modelPivotschemaRule.filterRules = result;
+        }
+      }
+    },
+    /**
+     * 字段变更时, 处理分了组的指定聚合, 把删掉的字段去掉
+     */
+    handleGroupField() {
+      const { dimensions, measures } = this.detailInfo.pivotSchema;
+      const fieldList = [].concat(dimensions).concat(measures).concat(this.cacheDimensions).concat(this.cacheMeasures);
+      const groupList = fieldList.filter(item => item.isGroupFlag === 2);
+      groupList.forEach(field => {
+        // 制定聚合
+        let rawExpr = {};
+        try {
+          rawExpr = JSON.parse(field.raw_expr);
+        } catch (error) {
+          console.log(error);
+        }
+        // 分组的字段数组, 要清除被删除的字段
+        const list = rawExpr.checkedList.split(',').filter(item => fieldList.some(p => p.alias === item));
+        if (list.length === 0) {
+          field.isGroupFlag = 1;
+        }
+        rawExpr.checkedList = list.toString();
+        field.raw_expr = JSON.stringify(rawExpr);
+      });
     },
     /**
      * 编辑时获取模型数据
@@ -786,9 +923,16 @@ export default {
       });
 
       if (result.code === 200) {
-        this.$message.success('获取数据成功');
+        // this.$message.success('获取数据成功')
         this.createViewName = result.data.alias;
         this.detailInfo = result.data;
+        // 如果之前没有筛选排序, 则初始化一个对象
+        if (!this.detailInfo.modelPivotschemaRule) {
+          this.detailInfo.modelPivotschemaRule = {
+            sortRules: [],
+            filterRules: [],
+          };
+        }
         // 将自定义维度度量剥离处理
         this.detailInfo.pivotSchema.dimensions = this.handlePeelCustom(
           this.detailInfo.pivotSchema.dimensions,
@@ -798,7 +942,6 @@ export default {
           this.detailInfo.pivotSchema.measures,
           this.cacheMeasures,
         );
-
         // 校验缺失字段
         this.doWithMissing(this.cacheDimensions, result.data.pivotSchema);
         this.doWithMissing(this.cacheMeasures, result.data.pivotSchema);
@@ -807,6 +950,7 @@ export default {
 
         this.handleDimensions();
         this.handleMeasures();
+        this.handleGroupField();
         this.$nextTick(() => {
           this.handleGetDatabase();
         });
@@ -816,17 +960,49 @@ export default {
     },
     // 替换为缺失文案
     doWithMissing(list, pivotSchema) {
-      list.forEach(filed => {
-        const matchs = filed.raw_expr.match(/(\[)(.*?)(\])/g);
-        if (matchs) {
+      list.forEach(field => {
+        // 判断是否是指定聚合
+        const isGroup = field.groupByFunc;
+        // 根据id判断字段是否还存在
+        const matchs = field.expr.match(/(?<=\$\$)(\d)+/g);
+        // 非指定聚合
+        if (!isGroup) {
+          if (matchs) {
+            matchs.forEach(value => {
+              const pairList = [...pivotSchema.dimensions, ...pivotSchema.measures];
+              const missing = pairList.filter(item => item.id === value).pop();
+              if (!missing) {
+                field.status = 1;
+                field.raw_expr = field.raw_expr.replace(value, '<此位置字段丢失>');
+              } else {
+                field.status = 0;
+              }
+            });
+          }
+        } else {
+          // 制定聚合
+          let rawExpr = {};
+          try {
+            rawExpr = JSON.parse(field.raw_expr);
+          } catch (error) {
+            console.log(error);
+          }
+
+          const pairList = [
+            ...this.cacheDimensions,
+            ...pivotSchema.dimensions,
+            ...this.cacheMeasures,
+            ...pivotSchema.measures,
+          ];
+
           matchs.forEach(value => {
-            const matchStr = value.match(/(\[)(.+)(\])/);
-            const key = matchStr[2] ? matchStr[2] : '';
-            const pairList = [...pivotSchema.dimensions, ...pivotSchema.measures];
-            const missing = pairList.filter(item => item.alias === key).pop();
+            const missing = pairList.filter(item => item.id === value).pop();
             if (!missing) {
-              filed.status = 1;
-              filed.raw_expr = filed.raw_expr.replace(value, '<此位置字段丢失>');
+              field.status = 1;
+              rawExpr.field = '';
+              field.raw_expr = JSON.stringify(rawExpr);
+            } else {
+              field.status = 0;
             }
           });
         }
@@ -848,8 +1024,10 @@ export default {
       this.$refs.rightTopRef.handleMapRemoveClass();
     },
     openModal(modalName, computeType) {
-      this.visible = true;
       this.modalName = modalName;
+      this.$nextTick(() => {
+        this.visible = true;
+      });
       if (computeType) this.computeType = computeType;
     },
     handleAddSQL(type, item) {
@@ -886,6 +1064,14 @@ export default {
     close() {
       this.visible = false;
     },
+    // 确认筛选排序后, 先保存, 不然查看宽表拿不到条件
+    handleSaveFilterSort({ fieldFilterList, fieldSortList }) {
+      if (this.modalName === 'field-filter-sort') {
+        // 保存筛选排序字段
+        this.detailInfo.modelPivotschemaRule.sortRules = fieldSortList;
+        this.detailInfo.modelPivotschemaRule.filterRules = fieldFilterList;
+      }
+    },
     componentSuccess(data) {
       if (this.modalName === 'sql-setting') {
         this.doWithSqlSetting(data);
@@ -898,9 +1084,13 @@ export default {
         this.doWithBatchSetting(data);
       }
 
-      if (this.modalName === 'compute-setting') {
+      if (this.modalName === 'compute-setting' || this.modalName === 'field-aggregator') {
         this.doWithComputeSetting(data);
       }
+
+      // if (this.modalName === 'field-aggregator') {
+      //   this.doWithFieldAggregator(data)
+      // }
 
       if (this.modalName === 'create-view') {
         this.doWithCreateView(data);
@@ -950,6 +1140,8 @@ export default {
 
       this.handleDimensions();
       this.handleMeasures();
+      this.handleFilterSort();
+      this.handleGroupField();
     },
     doWithBatchSetting(data) {
       if (data) {
@@ -973,6 +1165,8 @@ export default {
         this.detailInfo.pivotSchema.measures = this.handlePeelCustom(cacheMeasures, this.cacheMeasures);
         this.handleDimensions();
         this.handleMeasures();
+        this.handleFilterSort();
+        this.handleGroupField();
       }
     },
     doWithComputeSetting(data) {
@@ -990,6 +1184,7 @@ export default {
       }
       this.handleDimensions();
       this.handleMeasures();
+      this.handleGroupField();
     },
     doWithCreateView(data) {
       this.createViewName = data;
@@ -1062,39 +1257,60 @@ export default {
         table.alias = table.name;
       });
 
+      const { dimensions, measures } = this.handleConcat(); // 处理维度度量
       const params = {
         ...this.detailInfo,
         pivotSchema: {
-          ...this.handleConcat(), // 处理维度度量
+          dimensions: dimensions.map(item => {
+            if (item.isGroupFlag === null) {
+              // 兼容老数据
+              item.isGroupFlag = 0;
+            }
+            return item;
+          }),
+          measures: measures.map(item => {
+            if (item.isGroupFlag === null) {
+              // 兼容老数据
+              item.isGroupFlag = 0;
+            }
+            return item;
+          }),
         },
         parentId: this.parentId,
       };
-      if (!this.modelId) {
-        this.actionSaveModel(params, false);
-      } else {
-        this.$confirm({
-          title: '确认提示?',
-          content: '是否覆盖大屏的数据',
-          okText: '覆盖',
-          cancelText: '仅保存',
-          onOk: () => {
-            this.actionSaveModel(params, true);
-          },
-          onCancel: () => {
-            this.actionSaveModel(params, false);
-          },
-        });
-      }
+      this.actionSaveModel(params, true);
+      // 现版本只要保存就覆盖
+      // if (this.model === 'add') {
+      //   this.actionSaveModel(params, false)
+      // } else {
+      //   this.$confirm({
+      //     title: '确认提示?',
+      //     content: '是否覆盖大屏的数据',
+      //     okText: '覆盖',
+      //     cancelText: '仅保存',
+      //     onOk: () => {
+      //       this.actionSaveModel(params, true)
+      //     },
+      //     onCancel: () => {
+      //       this.actionSaveModel(params, false)
+      //     }
+      //   })
+      // }
     },
     /**
      * 模型保存接口 cover: 是否覆盖大屏
      */
     async actionSaveModel(params, cover) {
       let result;
+      this.spinning = true;
       if (cover) {
-        result = await this.$server.dataModel.saveModelCover(params);
+        result = await this.$server.dataModel.saveModelCover(params).finally(() => {
+          this.spinning = false;
+        });
       } else {
-        result = await this.$server.dataModel.saveModel(params);
+        result = await this.$server.dataModel.saveModel(params).finally(() => {
+          this.spinning = false;
+        });
       }
       if (result.code === 200) {
         if (this.model === 'add') {
@@ -1107,6 +1323,7 @@ export default {
           })
           .then(() => {
             this.$store.commit('dataModel/SET_MODELID', result.data.id);
+            this.$store.commit('common/SET_MENUSELECTID', result.data.id);
             this.exit();
           });
       } else {

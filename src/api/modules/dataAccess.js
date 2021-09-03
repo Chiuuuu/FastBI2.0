@@ -130,6 +130,39 @@ export default {
     });
   },
   /**
+   * @description 上传excel文件
+   * @param {Object} file 文件
+   */
+  actionUploadExcelFile(data, callback = () => {}) {
+    return $axios({
+      method: 'post',
+      headers: { 'Content-Type': 'multipart/form-data' },
+      // url: '/datasource/excel/read',
+      url: '/datasource/excel/readEasyExcel',
+      data,
+      onUploadProgress: progressEvent => {
+        if (progressEvent.lengthComputable) {
+          let num = Math.round((progressEvent.loaded / progressEvent.total) * 100);
+          callback(num);
+        }
+      },
+      timeout: 600000,
+    });
+  },
+  /**
+   * @description 切换excel表头数据类型
+   * @param {Object} data 参数
+   */
+  actionChangeExcelType(data) {
+    return $axios({
+      method: 'post',
+      headers: { 'Content-Type': 'multipart/form-data' },
+      url: '/datasource/excel/convert/read',
+      data,
+      timeout: 600000,
+    });
+  },
+  /**
    * @description 校验替换的csv文件
    * @param {Object} data 参数
    * @param {Object} data.fileList 文件
@@ -152,26 +185,7 @@ export default {
     });
   },
   /**
-   * @description 上传excel文件
-   * @param {Object} file 文件
-   */
-  actionUploadExcelFile(data, callback = () => {}) {
-    return $axios({
-      method: 'post',
-      headers: { 'Content-Type': 'multipart/form-data' },
-      url: '/datasource/excel/read',
-      data,
-      onUploadProgress: progressEvent => {
-        if (progressEvent.lengthComputable) {
-          let num = Math.round((progressEvent.loaded / progressEvent.total) * 100);
-          callback(num);
-        }
-      },
-      timeout: 600000,
-    });
-  },
-  /**
-   * @description 上传excel文件
+   * @description 上传csv文件
    * @param {Object} data 参数
    * @param {Object} data.file 文件
    * @param {String} data.delimiter 分隔符
@@ -188,6 +202,19 @@ export default {
           callback(num);
         }
       },
+      timeout: 600000,
+    });
+  },
+  /**
+   * @description 切换excel表头数据类型
+   * @param {Object} data 参数
+   */
+  actionChangeCsvType(data) {
+    return $axios({
+      method: 'post',
+      headers: { 'Content-Type': 'multipart/form-data' },
+      url: '/datasource/csv/convert/read',
+      data,
       timeout: 600000,
     });
   },
@@ -216,30 +243,32 @@ export default {
   /**
    * @description 保存excel数据源
    * @param {Object} data body对象
-   * @param {Array[string]} 'databasesIdList' 删除的文件id
-   * @param {Array[file]} 'fileList' 文件列表
-   * @param {String} 'sourceSaveInput.name' 名称
-   * @param {String} 'sourceSaveInput.type' 数据源类型
-   * @param {String} 'sourceSaveInput.parentId' parentId
-   * @param {String} 'sourceSaveInput.id' id
+   * @param {Array[file]} 'csvDatabaseList.file' 文件列表
+   * @param {Array[string]} 'csvDatabaseList.operation' 操作符 1-新增，2-替换，3-删除
+   * @param {Array[string]} 'csvDatabaseList.id' id
+   * @param {Array[string]} 'csvDatabaseList.name' 名称
+   * @param {String} 'name' 名称
+   * @param {String} 'type' 数据源类型
+   * @param {String} 'parentId' parentId
+   * @param {String} 'id' id
    */
   saveExcelInfo(data) {
     return $axios({
       method: 'post',
       headers: { 'Content-Type': 'multipart/form-data' },
-      url: '/datasource/excel/batchsave',
+      // url: '/datasource/excel/batchsave',
+      url: '/datasource/excel/save',
       data,
-      timeout: 300000,
+      timeout: 600000,
     });
   },
   /**
-   * @description 查询文件下的表格内容
+   * @description 查询文件下的预览表格
    * @param {Object} data 参数
-   * @param {String} data.tableId 表id
+   * @param {String} data.databaseId 文件id
    * @param {String} data.delimiter 分隔符
    */
   getCsvFileTableInfo(data) {
-    // return $axios.get('/datasource/csv/presto/read?tableId=' + tableId)
     return $axios({
       method: 'post',
       headers: { 'Content-Type': 'multipart/form-data' },
@@ -248,15 +277,24 @@ export default {
     });
   },
   /**
-   * @description 保存excel数据源
+   * @description 查询文件下的表格内容
+   * @param {String} databaseId 参数
+   */
+  getCsvPrestoTableInfo(databaseId) {
+    return $axios.get(`/datasource/csv/presto/read/${databaseId}`);
+  },
+  /**
+   * @description 保存csv数据源
    * @param {Object} data body对象
-   * @param {Array[file]} 'fileList' 文件列表
-   * @param {Array[string]} 'delDatabasesIdList' 删除的文件id
-   * @param {Array[string]} 'delimiter' 分隔符
-   * @param {String} 'sourceSaveInput.name' 名称
-   * @param {String} 'sourceSaveInput.type' 数据源类型
-   * @param {String} 'sourceSaveInput.parentId' parentId
-   * @param {String} 'sourceSaveInput.id' id
+   * @param {Array[file]} 'csvDatabaseList.file' 文件列表
+   * @param {Array[string]} 'csvDatabaseList.operation' 操作符 1-新增，2-替换，3-删除
+   * @param {Array[string]} 'csvDatabaseList.id' id
+   * @param {Array[string]} 'csvDatabaseList.name' 名称
+   * @param {String} 'name' 名称
+   * @param {String} 'type' 数据源类型
+   * @param {String} 'parentId' parentId
+   * @param {String} 'id' id
+   * @param {String} 'delimiter' 分隔符
    */
   saveCsvInfo(data) {
     return $axios({
@@ -264,7 +302,7 @@ export default {
       headers: { 'Content-Type': 'multipart/form-data' },
       url: '/datasource/csv/save',
       data,
-      timeout: 300000,
+      timeout: 600000,
     });
   },
   /**

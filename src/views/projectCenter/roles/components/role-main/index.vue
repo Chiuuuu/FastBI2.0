@@ -1,6 +1,6 @@
 <template>
   <div class="main">
-    <a-empty v-if="menuSelectId === -1" class="main-empty">
+    <a-empty v-if="roleId === -1 || !roleId" class="main-empty">
       <span slot="description">请新建角色或者选中左侧角色</span>
     </a-empty>
     <template v-else>
