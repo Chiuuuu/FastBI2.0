@@ -265,12 +265,12 @@ export default {
       });
       if (result && result.code === 200) {
         this.tabs.push({
-          id: result.data,
+          id: result.data.id,
           name: params.name,
         });
         this.handleTabChange({
           screenId: params.screenId,
-          tabId: result.data, // TODO:要修改成result.data.tabId
+          tabId: result.data.id, // TODO:要修改成result.data.tabId
         });
         if (callback && isFunction(callback)) callback();
       }
