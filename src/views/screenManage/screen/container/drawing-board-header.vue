@@ -19,28 +19,28 @@
         <ul class="btns-box clearfix">
           <!-- 保存按钮 start -->
           <li class="btn-item">
-            <div class="tool-icon" @click="handleSave">
+            <div class="tool-icon" @click="handleSave" title="保存数据">
               <i class="bi-data bi-data-baocun"></i>
             </div>
           </li>
           <!-- 保存按钮 end -->
           <!-- 撤销按钮 start -->
           <li class="btn-item" :class="undoDisable ? 'disabled' : ''">
-            <div class="tool-icon" @click="handleUndo">
+            <div class="tool-icon" @click="handleUndo" title="撤销操作">
               <i class="bi-data bi-data-qianjin"></i>
             </div>
           </li>
           <!-- 撤销按钮 end -->
           <!-- 还原按钮 start -->
           <li class="btn-item" :class="redoDisable ? 'disabled' : ''">
-            <div class="tool-icon" @click="handleRedo">
+            <div class="tool-icon" @click="handleRedo" title="还原撤销">
               <i class="bi-data bi-data-houtui"></i>
             </div>
           </li>
           <!-- 还原按钮 end -->
           <!-- 刷新按钮 start -->
           <li class="btn-item">
-            <div class="tool-icon">
+            <div class="tool-icon" @click="handleRefresh" title="刷新大屏">
               <i class="bi-data bi-data-shuaxin"></i>
             </div>
           </li>
@@ -315,6 +315,13 @@ export default {
      */
     handleRedo() {
       this.$store.commit(historyMutation.REDO);
+    },
+    /**
+     * @description 刷新大屏
+     */
+    async handleRefresh() {
+      const { id, tabId } = this.$route.query;
+      this.$parent.getScreenDetailByTabId(id, tabId);
     },
     /**
      * @description 大屏命名
