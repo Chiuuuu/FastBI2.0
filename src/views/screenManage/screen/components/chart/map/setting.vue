@@ -21,61 +21,57 @@
                     <a-radio value="dot">经纬度</a-radio>
                     <!-- 类型切换 end -->
                   </a-radio-group>
-                  <CollapsePanel class="content-item" panel="mapSeriesDimension" header="维度">
-                    <!-- 维度 start -->
+                  <!-- 维度 start -->
+                  <UnitField
+                    v-if="currentCom.setting.data.customFillDataType === 'area'"
+                    class="setting-unit-content"
+                    receive="dimension"
+                    type="dimension"
+                    label="拖入维度"
+                    backgroundColor="#4a90e2"
+                    limit
+                    :list="currentCom.setting.data.dimensions"
+                  ></UnitField>
+                  <!-- 维度 end -->
+                  <div v-else>
+                    <!-- 拖入经度 start -->
                     <UnitField
-                      v-if="currentCom.setting.data.customFillDataType === 'area'"
                       class="setting-unit-content"
                       receive="dimension"
-                      type="dimension"
-                      label="拖入维度"
+                      type="longitude"
+                      label="拖入经度"
                       backgroundColor="#4a90e2"
                       limit
-                      :list="currentCom.setting.data.dimensions"
+                      :list="currentCom.setting.data.longitude"
                     ></UnitField>
-                    <!-- 维度 end -->
-                    <div v-else>
-                      <!-- 拖入经度 start -->
-                      <UnitField
-                        class="setting-unit-content"
-                        receive="dimension"
-                        type="longitude"
-                        label="拖入经度"
-                        backgroundColor="#4a90e2"
-                        limit
-                        :list="currentCom.setting.data.longitude"
-                      ></UnitField>
-                      <!-- 拖入经度 end -->
-                      <!-- 拖入纬度 start -->
-                      <UnitField
-                        class="setting-unit-content"
-                        receive="dimension"
-                        type="latitude"
-                        label="拖入纬度"
-                        backgroundColor="#4a90e2"
-                        limit
-                        :list="currentCom.setting.data.latitude"
-                      ></UnitField>
-                    </div>
-                    <!-- 拖入纬度 end -->
-                  </CollapsePanel>
-                  <CollapsePanel class="content-item" panel="mapSeriesMeasure" header="度量">
-                    <!-- 度量 start -->
+                    <!-- 拖入经度 end -->
+                    <!-- 拖入纬度 start -->
                     <UnitField
                       class="setting-unit-content"
-                      receive="measure"
-                      type="measure"
-                      label="拖入度量"
-                      backgroundColor="#40c0a8"
-                      openAggre
+                      receive="dimension"
+                      type="latitude"
+                      label="拖入纬度"
+                      backgroundColor="#4a90e2"
                       limit
-                      :list="currentCom.setting.data.measures"
+                      :list="currentCom.setting.data.latitude"
                     ></UnitField>
+                  </div>
+                  <!-- 拖入纬度 end -->
+                  <!-- 度量 start -->
+                  <UnitField
+                    class="setting-unit-content"
+                    receive="measure"
+                    type="measure"
+                    label="拖入度量"
+                    backgroundColor="#40c0a8"
+                    openAggre
+                    limit
+                    :list="currentCom.setting.data.measures"
+                  ></UnitField>
 
-                    <!-- 度量 end -->
-                  </CollapsePanel>
-                  <!-- 填充层 end -->
+                  <!-- 度量 end -->
                 </CollapsePanel>
+                <!-- 填充层 end -->
                 <!-- 标记层 start -->
                 <CollapsePanel class="content-item" panel="scatterSeriesPanel" header="标记层">
                   <!-- 类型切换 start -->
@@ -89,59 +85,55 @@
                     <a-radio value="dot">经纬度</a-radio>
                     <!-- 类型切换 end -->
                   </a-radio-group>
-                  <CollapsePanel class="content-item" panel="scatterSeriesDimension" header="维度">
-                    <!-- 维度 start -->
+                  <!-- 维度 start -->
+                  <UnitField
+                    v-if="currentCom.setting.data.customLabelDataType === 'area'"
+                    class="setting-unit-content"
+                    receive="dimension"
+                    type="labelDimension"
+                    label="拖入维度"
+                    backgroundColor="#4a90e2"
+                    limit
+                    :list="currentCom.setting.data.labelDimensions"
+                  ></UnitField>
+                  <div v-else>
+                    <!-- 拖入经度 start -->
                     <UnitField
-                      v-if="currentCom.setting.data.customLabelDataType === 'area'"
                       class="setting-unit-content"
                       receive="dimension"
-                      type="labelDimension"
-                      label="拖入维度"
+                      type="labelLongitude"
+                      label="拖入经度"
                       backgroundColor="#4a90e2"
                       limit
-                      :list="currentCom.setting.data.labelDimensions"
+                      :list="currentCom.setting.data.labelLongitude"
                     ></UnitField>
-                    <div v-else>
-                      <!-- 拖入经度 start -->
-                      <UnitField
-                        class="setting-unit-content"
-                        receive="dimension"
-                        type="labelLongitude"
-                        label="拖入经度"
-                        backgroundColor="#4a90e2"
-                        limit
-                        :list="currentCom.setting.data.labelLongitude"
-                      ></UnitField>
-                      <!-- 拖入经度 end -->
-                      <!-- 拖入纬度 start -->
-                      <UnitField
-                        class="setting-unit-content"
-                        receive="dimension"
-                        type="labelLatitude"
-                        label="拖入纬度"
-                        backgroundColor="#4a90e2"
-                        limit
-                        :list="currentCom.setting.data.labelLatitude"
-                      ></UnitField>
-                    </div>
-                    <!-- 维度 end -->
-                  </CollapsePanel>
-                  <CollapsePanel class="content-item" panel="scatterSeriesMeasure" header="度量">
-                    <!-- 度量 start -->
+                    <!-- 拖入经度 end -->
+                    <!-- 拖入纬度 start -->
                     <UnitField
                       class="setting-unit-content"
-                      receive="measure"
-                      type="labelMeasure"
-                      label="拖入度量"
-                      backgroundColor="#40c0a8"
-                      openAggre
+                      receive="dimension"
+                      type="labelLatitude"
+                      label="拖入纬度"
+                      backgroundColor="#4a90e2"
                       limit
-                      :list="currentCom.setting.data.labelMeasures"
+                      :list="currentCom.setting.data.labelLatitude"
                     ></UnitField>
-                    <!-- 度量 end -->
-                  </CollapsePanel>
-                  <!-- 标记层 end -->
+                  </div>
+                  <!-- 维度 end -->
+                  <!-- 度量 start -->
+                  <UnitField
+                    class="setting-unit-content"
+                    receive="measure"
+                    type="labelMeasure"
+                    label="拖入度量"
+                    backgroundColor="#40c0a8"
+                    openAggre
+                    limit
+                    :list="currentCom.setting.data.labelMeasures"
+                  ></UnitField>
+                  <!-- 度量 end -->
                 </CollapsePanel>
+                <!-- 标记层 end -->
               </Collapse>
             </TabPanel>
             <TabPanel tab="style" label="样式">
@@ -419,6 +411,12 @@
                 <!-- 图形属性 start -->
                 <CollapsePanel class="content-item" panel="grid" header="图形属性">
                   <div class="setting-unit-content">
+                    <!-- 边距 start -->
+                    <UnitGridMargin
+                      label="边距"
+                      :grid="currentCom.setting.style.echart.geo"
+                      @change="(key, value) => handleChange(key, value)"
+                    ></UnitGridMargin>
                     <!-- 透明度 start -->
                     <a-row class="unit-show-block mb-8">
                       <a-col :span="8">
@@ -1018,6 +1016,6 @@ export default {
 .datatype-box {
   display: flex;
   justify-content: space-between;
-  margin: 0 10px;
+  margin: 0 10px 10px 10px;
 }
 </style>

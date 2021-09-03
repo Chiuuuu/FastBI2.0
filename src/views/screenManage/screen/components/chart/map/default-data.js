@@ -2,16 +2,9 @@ export default {
   series: [
     {
       type: 'map',
-      map: 'guangzhou',
-      aspectScale: 0.75,
       showLegendSymbol: false,
-      zoom: 1.1,
       roam: false,
       legendHoverLink: false,
-      mapLocation: {
-        x: 'left',
-        y: 'top',
-      },
       tooltip: {
         show: true,
         trigger: 'item',

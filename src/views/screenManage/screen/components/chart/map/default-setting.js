@@ -39,6 +39,9 @@ export default merge(cloneDeep(BASE), {
           align: 'left',
           data: [],
         },
+        tooltip: {
+          show: true,
+        },
         // 地理坐标系
         geo: {
           type: 'map',
@@ -67,6 +70,10 @@ export default merge(cloneDeep(BASE), {
               areaColor: '#061E3D',
             },
           },
+          left: 180,
+          right: 180,
+          top: 30,
+          bottom: 30,
         },
         visualMap: {
           show: false,
