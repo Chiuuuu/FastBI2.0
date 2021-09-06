@@ -258,7 +258,7 @@
                     ></UnitCheckbox>
                     <a-row class="unit-show-block mb-8">
                       <a-col :span="24">
-                        <div class="unit-block-title">指标内容</div>
+                        <div class="unit-block-title">显示内容</div>
                       </a-col>
 
                       <!-- 内容显示 start -->

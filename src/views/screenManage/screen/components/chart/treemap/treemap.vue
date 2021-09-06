@@ -333,18 +333,22 @@ export default {
       }
       this.serverData = { data: res.data };
       this.treeRoot = '';
+      // const options = this.doWithOptions(this.serverData, this.options.data.dimensions, this.options.data.measures);
+      // this.updateSaveChart(options);
+      // this.doWithLabel(this.options.style.echart);
+      // this.doWithTooltip(this.options.style.echart);
 
-      const formatterList = res.data[0] ? Object.keys(res.data[0]) : [];
+      // const formatterList = res.data[0] ? Object.keys(res.data[0]) : [];
       // 获取数据之后需要重置配色方案
       this.$store.commit(boardMutation.SET_STYLE, {
         style: {
           echart: {
             customPiecesIndex: 0,
-            customFormatterLabel: formatterList,
-            customFormatterTooltip: formatterList,
+            // customFormatterLabel: formatterList,
+            // customFormatterTooltip: formatterList,
           },
         },
-        replaceMerge: ['customFormatterLabel', 'customFormatterTooltip'],
+        // replaceMerge: ['customFormatterLabel', 'customFormatterTooltip'],
         updateCom: this.shapeUnit.component,
       });
     },

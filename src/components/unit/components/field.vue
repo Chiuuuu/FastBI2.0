@@ -219,7 +219,7 @@ export default {
     /**
      *  @description 设置数据id
      */
-    handleSetDataModelId(result) {
+    handleSetDataModelId(result, method) {
       const dataModelId = this.currentCom.setting.data.dataModelId;
 
       if (!this.boardSettingRightInstance) {
@@ -238,14 +238,13 @@ export default {
           result.resourceType = this.resourceType[this.boardSettingRightInstance.tabAcitve];
         }
       }
-
       if (!dataModelId && selected) {
         // 如果图表模型id为空并且有数据，则添加
         result.dataModelId = selected.tableId;
       } else if (dataModelId && !selected) {
         // 如果图表模型id有，但是没有数据，则清空
         result.dataModelId = '';
-      } else if (dataModelId !== selected.tableId) {
+      } else if (dataModelId !== selected.tableId && method !== 'dele') {
         this.$message.error('一个图表只能拖入一个数据模型的字段');
         return;
       }
@@ -286,7 +285,7 @@ export default {
 
       let result = fun(data, method);
 
-      result = this.handleSetDataModelId(result);
+      result = this.handleSetDataModelId(result, method);
 
       if (result && typeof result.justSkip === 'undefined') {
         this.$store.commit(historyMutation.COMMAND, {

@@ -15,7 +15,7 @@ export default merge(cloneDeep(BASE), {
       echart: {
         customPiecesIndex: 0,
         customShowWay: 'average', // measure || average
-        customFormatterLabel: ['员工姓名', '部门名称', '公司', 'bumenTableid'], // 指标内容
+        customFormatterLabel: ['bumenTableid'], // 指标内容
         customFormatterTooltip: ['员工姓名', '部门名称', '公司', 'bumenTableid'], // 指标内容
         tooltip: {
           show: true,
