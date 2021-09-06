@@ -4,12 +4,19 @@ import BaseChart from '../base';
 import defaultData from './default-data';
 import merge from 'lodash/merge';
 import omit from 'lodash/omit';
+import { setLinkageData, resetOriginData } from '@/utils/setDataLink';
 /**
  * @description 嵌套饼图
  */
 export default {
   name: `${BoardType.ChartNestPie}View`,
   extends: BaseChart,
+  data() {
+    return {
+      currentSeriesIndex: null, // 图表联动选中的下标
+      currentDataIndex: null, // 图表联动选中的下标
+    };
+  },
   methods: {
     /**
      * @description 获取拖入的维度度量列数据
@@ -175,6 +182,74 @@ export default {
       this.chartInstane.setOption(newOptions, {
         replaceMerge: ['series'],
       });
+    },
+    /**
+     * @description 添加点击事件(图表联动)
+     */
+    addClick() {
+      // 设置点击数据进行联动
+      this.chartInstane.on('click', this.handleDataClick);
+      // 设置点击空白重置联动
+      this.chartInstane.getZr().on('click', this.handleChartClick);
+    },
+    /**
+     * @description 处理点击数据显示选中效果
+     */
+    handleDataClick(e) {
+      // 重置图表
+      const options = this.chartInstane.getOption();
+      if (!this.options.style.echart.customIsOpenDataLink) {
+        return;
+      }
+      // 重复点击选中项
+      if (e.dataIndex === this.currentDataIndex && e.seriesIndex === this.currentSeriesIndex) {
+        // 重置图表
+        this.resetChartSelect(options);
+        return;
+      }
+      let self = this;
+      // series添加颜色回调函数控制，选中
+      const formatterFn = function (params) {
+        return params.dataIndex === e.dataIndex && params.seriesIndex === e.seriesIndex
+          ? options.color[params.dataIndex]
+          : self.hexToRgba(options.color[params.dataIndex], 0.4);
+      };
+      options.series.forEach(item => {
+        item.itemStyle = Object.assign(item.itemStyle, { color: formatterFn });
+      });
+      this.chartInstane.setOption(options);
+      // 记录当前选择数据的index
+      this.currentDataIndex = e.dataIndex;
+      this.currentSeriesIndex = e.seriesIndex;
+      // 嵌套饼图series顺序由外到内
+      const pickField = this.currentSeriesIndex === 0 ? 'outerIng' : 'innerIng';
+      setLinkageData([e.name], this.shapeUnit.component, pickField);
+    },
+    /**
+     * @description 处理图表点击事件(点击非数据区域重置)
+     */
+    handleChartClick(params) {
+      // 没有选中数据不需要执行重置
+      let hasSelected = this.currentDataIndex || this.currentDataIndex === 0;
+      if (typeof params.target === 'undefined' && hasSelected) {
+        // 重置图表
+        const options = this.chartInstane.getOption();
+        // 重置图表
+        this.resetChartSelect(options);
+      }
+    },
+    /**
+     * @description 取消选中
+     */
+    resetChartSelect(options) {
+      options.series.forEach(item => {
+        item.itemStyle.color && delete item.itemStyle.color;
+      });
+      // 还原数据
+      resetOriginData(this.shapeUnit.component);
+      this.chartInstane.clear();
+      this.chartInstane.setOption(options);
+      this.currentDataIndex = this.currentSeriesIndex = '';
     },
   },
 };

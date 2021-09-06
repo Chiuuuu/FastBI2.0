@@ -118,21 +118,6 @@ export default {
       const options = this.doWithOptions(defaultData);
       this.updateSaveChart(options, ['radar', 'series']);
     },
-    /*
-     * 处理图表联动数据
-     */
-    handleSelectData() {
-      //   let res = await screenManage.getDataLink(chart);
-      //   if (res.code === 200) {
-      // 构造联动选择的数据
-      // this.handleData(res.rows)
-      //   } else {
-      //     message.error(res.msg);
-      //   }
-      const data = [];
-      const options = this.doWithOptions(data);
-      this.updateSaveChart(options);
-    },
     updateChartStyle() {
       if (!this.chartInstane) return;
       const newOptions = this.doWithOptions(this.serverData ? this.serverData : defaultData);
@@ -177,6 +162,8 @@ export default {
       // 记录当前选择数据的index
       this.currentDataIndex = e.dataIndex;
       this.currentSeriesIndex = e.seriesIndex;
+      console.log('test', e);
+      debugger;
       setLinkageData([e.name], this.shapeUnit.component);
     },
     /**

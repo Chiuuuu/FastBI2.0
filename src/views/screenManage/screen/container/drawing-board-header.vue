@@ -351,12 +351,23 @@ export default {
         graphs: this.components,
         setting: this.page,
       };
+      this.exculdeDataLink();
       const result = await this.$server.screenManage.saveScreenTab(param);
       if (result && result.code === 200) {
         this.$message.success(result.msg);
       } else {
         this.$message.error(result.msg);
       }
+    },
+    /**
+     * @description 保存的时候切掉dataLink，联动不上传
+     */
+    exculdeDataLink() {
+      this.components.forEach(chart => {
+        if (chart.setting.data.dataLink) {
+          delete chart.setting.data.dataLink;
+        }
+      });
     },
     /**
      * @description 大屏退出

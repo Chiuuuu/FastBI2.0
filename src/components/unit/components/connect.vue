@@ -46,6 +46,15 @@
  */
 import { mapState } from 'vuex';
 import { mutationTypes as historyMutation } from '@/store/modules/history';
+import BoardType from '@/views/screenManage/screen/setting/default-type';
+// 没有图标联动的图表
+const noLinkCharts = [
+  BoardType.ChartGauge,
+  BoardType.ChartRingPie,
+  BoardType.QuatoCard,
+  BoardType.ChartProgress,
+  BoardType.Text,
+];
 export default {
   name: 'UnitConnect',
   data() {
@@ -63,12 +72,11 @@ export default {
       deep: true,
       immediate: false,
       handler(val) {
-        for (let chartId of val.bindedList) {
-          const chart = this.components.find(item => item.id === chartId);
-          if (chart) {
-            let chartInteracitve = chart.setting.interaction;
-            // 选中的图标被当前图表绑定
-            chartInteracitve.beBinded = this.currentCom.id;
+        for (let chart of this.components) {
+          if (val.bindedList.includes(chart.id)) {
+            chart.setting.interaction.beBinded = this.currentCom.id;
+          } else {
+            delete chart.setting.interaction.beBinded;
           }
         }
       },
@@ -97,10 +105,13 @@ export default {
     },
     // 显示的选择列表
     toBindList() {
-      return this.components.filter(
+      let list = this.components.filter(
         item =>
-          item.id !== this.currentCom.id && item.setting.data.datamodelId === this.currentCom.setting.data.datamodelId,
+          item.id !== this.currentCom.id &&
+          item.setting.data.dataModelId === this.currentCom.setting.data.dataModelId &&
+          !noLinkCharts.includes(item.type),
       );
+      return list;
     },
   },
   methods: {

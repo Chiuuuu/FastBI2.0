@@ -34,11 +34,6 @@ import { arrayAddData, arrayDeleData } from '@/utils';
 import { mutationTypes as historyMutation } from '@/store/modules/history';
 import { DROG_TYPE } from '@/views/screenManage/screen/container/drawing-board-setting.vue';
 
-const roleMap = {
-  1: 'dimensions',
-  2: 'measures',
-};
-
 /**
  * @description 字段设置
  */
@@ -90,7 +85,6 @@ export default {
   data() {
     return {
       boardSettingRightInstance: '',
-      dataType: '', // 记录拖入字段的数值类型
       contextmenuMap: {
         str: [
           {
@@ -233,7 +227,6 @@ export default {
       if (isMouseOnTarget) {
         // 如果在，则放入
         this.handleDrop(dropDom, dragdrop);
-        this.dataType = ['BIGINT', 'DECIMAL', 'DOUBLE'].includes(dragdrop.data.dataType) ? 'num' : 'str';
       }
     },
     /**
@@ -521,14 +514,14 @@ export default {
     /**
      * @description 获取右键菜单
      */
-    getOpsMenu() {
+    getOpsMenu(dataType) {
       const normal = [
         {
           name: '删除',
           onClick: this.handleFiledDelete,
         },
       ];
-      const aggrengation = this.contextmenuMap[this.dataType];
+      const aggrengation = this.contextmenuMap[this.getDataType(dataType)];
       return this.openAggre ? [...normal, ...aggrengation] : normal;
     },
     /**
@@ -545,7 +538,7 @@ export default {
       // eslint-disable-next-line no-new
       new ContextMenu({
         vm: that,
-        menus: that.getOpsMenu().map(item => {
+        menus: that.getOpsMenu(item.dataType).map(item => {
           if (item['children'] && item.children.length) {
             item.children.forEach(subitem => {
               addEvent(subitem);
@@ -583,13 +576,21 @@ export default {
       });
     },
     /**
+     * @description 判断数值类型
+     */
+    getDataType(type) {
+      return ['BIGINT', 'DECIMAL', 'DOUBLE'].includes(type) ? 'num' : 'str';
+    },
+    /**
      * @description 字段聚合方式
      */
     formatAggregator(item) {
-      if (roleMap[item.role] === 'dimensions') {
+      if (!this.openAggre) {
         return item.alias;
       }
-      const fun = this.contextmenuMap[this.dataType][0].children.find(x => x.value === item.defaultAggregator);
+      const fun = this.contextmenuMap[this.getDataType(item.dataType)][0].children.find(
+        x => x.value === item.defaultAggregator,
+      );
       if (!fun) {
         console.log('不存在这个聚合类型');
         return item.alias;

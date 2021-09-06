@@ -128,16 +128,8 @@ export default {
      * @description 图表获取数据
      */
     getChartData() {
-      if (this.options.data.dataLink) {
-        this.handleSelectData();
-        return;
-      }
       this.isServerData() ? this.getServerData() : this.getDefaultData();
     },
-    /**
-     * @description 处理图表联动数据
-     */
-    handleSelectData() {},
     /**
      * @description 图表获取服务端数据
      */

@@ -123,7 +123,7 @@
           </div>
         </div>
         <!-- 度量 end-->
-        <a-radio-group v-model="currentFile.type">
+        <a-radio-group v-model="currentFile.filterType">
           <a-radio :value="1">只显示</a-radio>
           <a-radio :value="2">排除</a-radio>
         </a-radio-group>
@@ -146,6 +146,7 @@ import { DROG_TYPE } from '@/views/screenManage/screen/container/drawing-board-s
 import omit from 'lodash/omit';
 import pick from 'lodash/pick';
 import cloneDeep from 'lodash/cloneDeep';
+
 /**
  * @description 数据筛选设置
  */
@@ -188,16 +189,7 @@ export default {
         { label: '等于', op: 'equal' },
         { label: '不等于', op: 'notEqual' },
       ], // 条件选项
-      currentFile: {
-        // 当前选中的维度/度量数据
-        operation: 'list', //list列表，manual手动
-        searchList: [],
-        indeterminate: false, //全选 -- 样式控制
-        checkAll: false,
-        value: [], //s数值类型--选中的值
-        rules: [], //文本类型--选中的值
-        type: 1, //1只显示 2排除
-      },
+      currentFile: {},
       inputCon: '', // 度量
       currentType: '', //当前选中的类型
       currentData: {}, //当前弹框字段数据
@@ -266,7 +258,7 @@ export default {
         searchList: [],
         indeterminate: false, //全选 -- 样式控制
         checkAll: false,
-        type: 1, //1只显示 2排除
+        filterType: 1, //1只显示 2排除
       };
       // 数值类型字段
       if (this.dataTypeObj['num'].includes(this.dataType)) {
@@ -383,22 +375,22 @@ export default {
             item.action = item.condition;
             break;
           case 'more':
-            item.action = this.currentFile.type === 1 ? item.condition : 'lessOrEqual';
+            item.action = this.currentFile.filterType === 1 ? item.condition : 'lessOrEqual';
             break;
           case 'less':
-            item.action = this.currentFile.type === 1 ? item.condition : 'moreOrEqual';
+            item.action = this.currentFile.filterType === 1 ? item.condition : 'moreOrEqual';
             break;
           case 'moreOrEqual':
-            item.action = this.currentFile.type === 1 ? item.condition : 'less';
+            item.action = this.currentFile.filterType === 1 ? item.condition : 'less';
             break;
           case 'lessOrEqual':
-            item.action = this.currentFile.type === 1 ? item.condition : 'more';
+            item.action = this.currentFile.filterType === 1 ? item.condition : 'more';
             break;
           case 'equal':
-            item.action = this.currentFile.type === 1 ? item.condition : 'notEqual';
+            item.action = this.currentFile.filterType === 1 ? item.condition : 'notEqual';
             break;
           case 'notEqual':
-            item.action = this.currentFile.type === 1 ? item.condition : 'equal';
+            item.action = this.currentFile.filterType === 1 ? item.condition : 'equal';
             break;
         }
       });

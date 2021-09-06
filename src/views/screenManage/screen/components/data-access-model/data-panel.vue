@@ -113,7 +113,7 @@
     <!-- 地理字段设置 -->
     <GeoSetting
       v-if="createMapVisible"
-      region="城市"
+      region="区县"
       :is-show="createMapVisible"
       :dimensions-data="createdMapData"
       @close="createMapVisible = false"
@@ -159,7 +159,7 @@ export default {
           name: '创建地理字段',
           children: [
             {
-              name: '城市',
+              name: '区县',
               onClick: this.handleCreateGeoRole,
             },
           ],
