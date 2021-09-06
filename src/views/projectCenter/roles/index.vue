@@ -26,6 +26,11 @@ export default {
       this.$refs.main.activeTab = key;
     },
   },
+  mounted() {
+    if (this.$store.state.projectRoles.roleId) {
+      this.$store.commit('common/SET_MENUSELECTID', this.$store.state.projectRoles.roleId);
+    }
+  },
   beforeDestroy() {
     this.$store.commit('projectRoles/SET_ROLEID', 0);
     this.$store.commit('common/SET_MENUSELECTID', -1);

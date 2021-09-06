@@ -1,6 +1,6 @@
 <template>
   <a-modal
-    title="添加自定义SQL视图"
+    :title="(this.status === 'new' ? '添加' : '编辑') + '自定义SQL视图'"
     :visible="isShow"
     destroyOnClose
     :confirmLoading="loading"
@@ -110,77 +110,79 @@ export default {
     validateCloneSql(rule, value, callback) {
       if (this.form.sql === '') {
         /*eslint-disable*/
-        callback('请输入SQL语句');
+        callback('请输入SQL语句')
       }
-      callback();
+      callback()
     },
     async handleValidateSql() {
       if (!this.isEqual && this.form.sql) {
-        this.$emit('get-fetch-param');
-        const params = this.doWithParams();
+        this.$emit('get-fetch-param')
+        const params = this.doWithParams()
         const result = await this.$server.dataModel.actionValidateCustomSql(params).finally(() => {
-          this.isEqual = true;
-        });
+          this.isEqual = true
+        })
         if (result.code !== 200) {
-          this.$message.error(result.msg);
-          this.okProps = true;
+          this.$message.error(result.msg)
+          this.okProps = true
         } else {
-          this.okProps = false;
+          this.okProps = false
         }
       }
     },
     handleClose() {
-      this.$emit('close');
+      this.$emit('close')
     },
     pushFetchParam(param) {
-      this.params = {};
-      this.params = assign(this.params, param);
+      this.params = {}
+      this.params = assign(this.params, param)
     },
     async handleGetDetail(item) {
-      this.spinning = true;
+      this.spinning = true
       this.result = await this.$server.dataModel.getCustomSqlDetail(item.id).finally(() => {
-        this.spinning = false;
-      });
+        this.spinning = false
+      })
       if (this.result.code === 200) {
         this.form = assign(this.form, {
           sql: this.result.data.sql,
-          name: this.result.data.name,
-        });
+          name: this.result.data.name
+        })
       } else {
-        this.$message.error(this.result.msg);
+        this.$message.error(this.result.msg)
       }
     },
     doWithParams() {
       const params = assign(this.form, this.params, {
-        tableId: this.status === 'new' ? 0 : this.result.data.id,
-      });
-      return params;
+        tableId: this.status === 'new' ? 0 : this.result.data.id
+      })
+      return params
     },
     async handleSave() {
       setTimeout(() => {
-        if (this.okProps) return;
-        this.$emit('get-fetch-param');
+        if (this.okProps) return
+        this.$emit('get-fetch-param')
         this.$refs.form.validate(async valid => {
           if (valid) {
-            this.loading = true;
-            const params = this.doWithParams();
+            this.loading = true
+            const params = this.doWithParams()
             const result = await this.$server.dataModel.saveCustomSql(params).finally(() => {
-              this.loading = false;
-            });
+              this.loading = false
+            })
             if (result.code === 200) {
-              this.$emit('success', result.data);
+              this.$emit('success', result.data)
             } else {
-              this.isEqual = true;
-              this.$message.error(result.msg);
+              this.isEqual = true
+              this.$message.error(result.msg)
             }
           } else {
-            return false;
+            return false
           }
-        });
-      }, 500);
-    },
-  },
-};
+        })
+      }, 500)
+    }
+  }
+}
 </script>
 
-<style></style>
+<style>
+
+</style>

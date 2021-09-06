@@ -16,10 +16,14 @@ export default {
   },
   computed: {
     ...mapState({
+      modelId: state => state.dataModel.modelId,
       fileSelectId: state => state.common.menuSelectId,
     }),
   },
   mounted() {
+    if (this.modelId) {
+      this.$store.commit('common/SET_MENUSELECTID', this.modelId);
+    }
     if (this.fileSelectId !== -1) {
       this.handleEmitMainGetData(this.fileSelectId);
     }

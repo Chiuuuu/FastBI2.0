@@ -227,7 +227,7 @@ const screenManage = {
    * @returns
    */
   getDataPick(params) {
-    return $axios.post('/screen/graph/getLimitData', params);
+    return $axios.post('/screen/graph/dataFilter', params);
   },
   /**
    *

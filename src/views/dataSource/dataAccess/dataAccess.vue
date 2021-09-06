@@ -30,6 +30,14 @@ export default {
       fieldInfo: {},
     };
   },
+  watch: {
+    '$store.state.common.menuSelectId'(newValue) {
+      if (newValue === -1) {
+        this.showWhat = 'Main';
+        this.tabindex = '1';
+      }
+    },
+  },
   methods: {
     handleChangeComponet(componentName, row) {
       this.showWhat = componentName;

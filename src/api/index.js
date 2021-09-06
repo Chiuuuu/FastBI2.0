@@ -8,6 +8,7 @@ import projectCenter from '@/api/modules/projectCenter';
 import corporateDomain from '@/api/modules/corporateDomain';
 import user from '@/api/modules/user';
 import chooseScreen from './modules/chooseScreen';
+import logAdmin from '@/api/modules/log-admin';
 
 const server = {
   user,
@@ -20,6 +21,7 @@ const server = {
   projectCenter,
   corporateDomain,
   chooseScreen,
+  logAdmin,
 };
 
 export default server;

@@ -361,6 +361,7 @@ export default {
             const isSame = file.id === this.fileSelectId;
             if (isSame) {
               this.$store.dispatch('dataAccess/setModelType', '');
+              this.$store.commit('common/SET_MENUSELECTID', -1);
               this.$store.dispatch('dataAccess/setFirstFinished', false);
             }
           } else {
@@ -384,6 +385,7 @@ export default {
           if (result.code === 200) {
             this.handleGetMenuList();
             this.$message.success('删除成功');
+            this.$store.commit('common/SET_MENUSELECTID', -1);
             const isSame = folder.id === this.fileSelectId;
             if (isSame) this.$store.dispatch('dataAccess/setModelType', '');
           } else {
@@ -521,6 +523,7 @@ export default {
       this.$store.dispatch('dataAccess/setModelInfo', {});
       this.$store.dispatch('dataAccess/setModelName', '');
       this.$store.commit('dataAccess/SET_DATABASENAME', '');
+      this.$store.commit('common/SET_MENUSELECTID', -1);
       this.$store.commit('common/SET_PRIVILEGES', [0]);
       this.$EventBus.$emit('resetForm');
       this.$emit('on-menuChange-componet', 'Main');

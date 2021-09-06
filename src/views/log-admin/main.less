@@ -1,185 +1,185 @@
-@import "../../styles/common/base.less";
-@deep: ~">>>";
+@import '../../styles/common/base.less';
+@deep: ~'>>>';
 .main {
-    position: relative;
+  position: relative;
+  height: 100%;
+  background-color: #ffffff;
+  color: #01040f;
+  .main-box,
+  @{deep} .ant-spin-container,
+  @{deep} .ant-spin-nested-loading {
     height: 100%;
-    background-color: #ffffff;
-    color: #01040f;
-    .main-box,
-    @{deep} .ant-spin-container,
-    @{deep} .ant-spin-nested-loading {
+  }
+  @{deep} .main-empty {
+    position: absolute;
+    margin: 0 auto;
+    left: 0;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    color: rgba(0, 0, 0, 0.65);
+  }
+  .head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 15px 0;
+    h1 {
+      color: #01040f;
+      font-weight: bold;
+      font-size: 16px;
+    }
+  }
+  .right {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+
+    @{deep} .tabs {
+      height: 100%;
+      .ant-tabs-content {
+        height: calc(100% - 60px);
+      }
+      .ant-tabs-tabpane {
         height: 100%;
-    }
-    @{deep} .main-empty {
-        position: absolute;
-        margin: 0 auto;
-        left: 0;
-        right: 0;
-        top: 50%;
-        transform: translateY(-50%);
-        color: rgba(0, 0, 0, 0.65);
-    }
-    .head{
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 16px 15px 0;
-      h1{
-        color: #01040F;
-        font-weight: bold;
-        font-size: 16px;
       }
     }
-    .right {
-        height: 100%;
-        display: flex;
-        flex-direction: column;
-
-        @{deep} .tabs {
-            height: 100%;
-            .ant-tabs-content {
-                height: calc(100% - 60px);
-            }
-            .ant-tabs-tabpane {
-                height: 100%;
-            }
-        }
-        @{deep} .middle .tabs {
-            height: calc(100% - 54px);
-        }
-
-        @{deep} .tab {
-            height: 100%;
-            overflow-y: hidden;
-        }
-
-        @{deep} .form-item {
-            width: 150px;
-        }
-
-        @{deep} .list-controller {
-            display: flex;
-            justify-content: space-between;
-            padding: 0 16px;
-            margin-bottom: 16px;
-            .searchbar {
-                display: flex;
-                .item {
-                    margin-right: 20px;
-                }
-            }
-        }
-
-        @{deep} .list-table {
-            flex: 1;
-            padding-right: 16px;
-            overflow-y: auto;
-        }
-
-        @{deep} .show {
-            li.ant-tree-treenode-disabled > .ant-tree-node-content-wrapper span {
-                color: rgba(0, 0, 0, 0.65);
-            }
-        }
-
-        @{deep} header,
-        header {
-            height: 52px;
-            padding: 0 16px;
-            margin-bottom: 16px;
-            display: flex;
-            justify-content: space-between;
-        }
-        &.edit{
-            header {
-                font-size: 16px;
-                font-weight: bold;
-                align-items: center;
-                border-bottom: 1px solid #e8e8e8;
-            }
-            .role-layout .footer {
-                height: calc(50% - 132px);
-            }
-            .role-layout .middle {
-                height: calc(100% - 130px);
-            }
-        }
-        .role-form {
-            display: flex;
-            & > div {
-                width: 50%;
-            }
-            @{deep} .ant-form-item-label {
-                width: 100px;
-                padding-left: 16px;
-            }
-        }
-        @{deep} .role-info {
-            width: calc(100% - 100px);
-            overflow: hidden;
-            .line {
-                width: 100%;
-                margin-top: 10px;
-                overflow: hidden;
-                text-overflow: ellipsis;
-                white-space: nowrap;
-            }
-        }
-        @{deep} .title {
-            height: 54px;
-            line-height: 54px;
-            padding-left: 16px;
-            background: #fafafa;
-            color: rgba(0, 0, 0, 0.65);
-        }
-        @{deep} .content {
-            height: calc(100% - 130px);
-            overflow-y: auto;
-            
-            @{deep} .ant-form-item-label {
-                width: 100px !important;
-                padding-left: 16px;
-                label {
-                    color: rgba(0, 0, 0, 0.65);
-                }
-            }
-        }
-        @{deep} .line {
-            margin-bottom: 16px;
-        }
-
-        .btn-add {
-            margin-right: 10px;
-            margin-top: 4px;
-        }
-
-        @{deep} .user-layout {
-            display: flex;
-            flex-direction: column;
-            height: 100%;
-        }
-
-        @{deep} .role-layout {
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-
-            .tab {
-                overflow: hidden;
-            }
-
-            .footer {
-                height: calc(50% - 70px);
-                .content {
-                    height: calc(100% - 54px);
-                    overflow-y: auto;
-                }
-            }
-
-            .middle {
-                // height: calc(100% - 50%);
-                height: calc(100% - 80px); // 暂时处理
-            }
-        }
+    @{deep} .middle .tabs {
+      height: calc(100% - 54px);
     }
+
+    @{deep} .tab {
+      height: 100%;
+      overflow-y: hidden;
+    }
+
+    @{deep} .form-item {
+      width: 150px;
+    }
+
+    @{deep} .list-controller {
+      display: flex;
+      justify-content: space-between;
+      padding: 0 16px;
+      margin-bottom: 16px;
+      .searchbar {
+        display: flex;
+        .item {
+          margin-right: 20px;
+        }
+      }
+    }
+
+    @{deep} .list-table {
+      flex: 1;
+      padding-right: 16px;
+      overflow-y: auto;
+    }
+
+    @{deep} .show {
+      li.ant-tree-treenode-disabled > .ant-tree-node-content-wrapper span {
+        color: rgba(0, 0, 0, 0.65);
+      }
+    }
+
+    @{deep} header,
+    header {
+      height: 52px;
+      padding: 0 16px;
+      margin-bottom: 16px;
+      display: flex;
+      justify-content: space-between;
+    }
+    &.edit {
+      header {
+        font-size: 16px;
+        font-weight: bold;
+        align-items: center;
+        border-bottom: 1px solid #e8e8e8;
+      }
+      .role-layout .footer {
+        height: calc(50% - 132px);
+      }
+      .role-layout .middle {
+        height: calc(100% - 130px);
+      }
+    }
+    .role-form {
+      display: flex;
+      & > div {
+        width: 50%;
+      }
+      @{deep} .ant-form-item-label {
+        width: 100px;
+        padding-left: 16px;
+      }
+    }
+    @{deep} .role-info {
+      width: calc(100% - 100px);
+      overflow: hidden;
+      .line {
+        width: 100%;
+        margin-top: 10px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+    }
+    @{deep} .title {
+      height: 54px;
+      line-height: 54px;
+      padding-left: 16px;
+      background: #fafafa;
+      color: rgba(0, 0, 0, 0.65);
+    }
+    @{deep} .content {
+      height: calc(100% - 130px);
+      overflow-y: auto;
+
+      @{deep} .ant-form-item-label {
+        width: 100px !important;
+        padding-left: 16px;
+        label {
+          color: rgba(0, 0, 0, 0.65);
+        }
+      }
+    }
+    @{deep} .line {
+      margin-bottom: 16px;
+    }
+
+    .btn-add {
+      margin-right: 10px;
+      margin-top: 4px;
+    }
+
+    @{deep} .user-layout {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+    }
+
+    @{deep} .role-layout {
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+
+      .tab {
+        overflow: hidden;
+      }
+
+      .footer {
+        height: calc(50% - 70px);
+        .content {
+          height: calc(100% - 54px);
+          overflow-y: auto;
+        }
+      }
+
+      .middle {
+        // height: calc(100% - 50%);
+        height: calc(100% - 80px); // 暂时处理
+      }
+    }
+  }
 }

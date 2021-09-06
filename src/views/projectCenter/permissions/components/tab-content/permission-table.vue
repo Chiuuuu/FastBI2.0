@@ -146,6 +146,7 @@ export default {
       this.modalData = data;
       this.visible = true;
     },
+    handleDeletePermission() {},
     handleAddPermission() {
       this.visible = false;
     },

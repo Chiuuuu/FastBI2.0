@@ -272,7 +272,6 @@ export default {
         if (newItem) result.push(newItem);
       });
       this.searchList = result;
-      console.log('搜索结果', this.searchList);
     },
     /**
      * 选择左侧菜单

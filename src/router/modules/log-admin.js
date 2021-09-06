@@ -1,3 +1,5 @@
+import PERMISSION_CODE from '@/config/permission';
+
 const RouteView = () => import('@/layout/routeView');
 const recordView = () => import('@/views/log-admin/record');
 
@@ -7,7 +9,8 @@ export default {
   component: RouteView,
   meta: {
     title: '日志管理',
-    icon: 'cloud',
+    icon: 'calendar',
+    permissions: [PERMISSION_CODE.PAGE.logAdmin],
   },
   children: [
     {
@@ -16,6 +19,7 @@ export default {
       component: recordView,
       meta: {
         title: '操作记录',
+        permissions: [PERMISSION_CODE.PAGE.logAdmin],
       },
     },
   ],

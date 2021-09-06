@@ -82,9 +82,7 @@ export default {
     };
   },
   mounted() {
-    if (this.$route.params.id) {
-      this.handleGetData();
-    }
+    this.handleGetData();
     this.$EventBus.$on('roleFileSelect', this.handleGetData);
   },
   beforeDestroy() {
@@ -182,55 +180,57 @@ export default {
           this.spinning3 = false;
           return;
         }
-        const result = await this.$server.projectCenter
+        this.$server.projectCenter
           .getRoleTree(this.roleId || this.$route.params.id, i)
+          .then(result => {
+            if (result.code === 200) {
+              if (result.data) {
+                this.$set(this.modulePermission, i, result.data.basePrivilege);
+                this.$set(this.moduleList, i, [].concat(result.data.header));
+                this.$set(this.treeList, i, [].concat(result.data.folder));
+                this.$emit('setBasePrivilege', this.modulePermission[i].permissions, i + '');
+                // 初始化时先记录勾选过的对象
+                if (this.status === 'edit') {
+                  const folder = result.data.folder;
+                  if (Array.isArray(folder)) {
+                    const list = [];
+                    const addItem = item => {
+                      if (item.permissions.length > 0) {
+                        // const params = {
+                        //   id: item.id,
+                        //   permissions: item.permissions,
+                        //   name: item.title
+                        // }
+                        // if (i === 3 && item.fileType === 1) {
+                        //   params.dataBasePri = item.dataBasePri
+                        // }
+                        // list.push(params)
+                        list.push(item);
+                      }
+                    };
+                    folder.map(item => {
+                      if (item.permissions.length > 0) {
+                        addItem(item);
+                      }
+                      if (item.children && item.children.length > 0) {
+                        item.children.map(leaf => {
+                          addItem(leaf);
+                        });
+                      }
+                    });
+                    this.$emit('getChangeItem', i, list);
+                  }
+                }
+                // 初始化全选栏
+                this.initAllCheckbox(i);
+              }
+            } else {
+              this.$message.error(result.msg || '请求错误');
+            }
+          })
           .finally(() => {
             this['spinning' + i] = false;
           });
-        if (result.code === 200) {
-          if (result.data) {
-            this.$set(this.modulePermission, i, result.data.basePrivilege);
-            this.$set(this.moduleList, i, [].concat(result.data.header));
-            this.$set(this.treeList, i, [].concat(result.data.folder));
-            this.$emit('setBasePrivilege', this.modulePermission[i].permissions, i + '');
-            // 初始化时先记录勾选过的对象
-            if (this.status === 'edit') {
-              const folder = result.data.folder;
-              if (Array.isArray(folder)) {
-                const list = [];
-                const addItem = item => {
-                  if (item.permissions.length > 0) {
-                    // const params = {
-                    //   id: item.id,
-                    //   permissions: item.permissions,
-                    //   name: item.title
-                    // }
-                    // if (i === 3 && item.fileType === 1) {
-                    //   params.dataBasePri = item.dataBasePri
-                    // }
-                    // list.push(params)
-                    list.push(item);
-                  }
-                };
-                folder.map(item => {
-                  if (item.permissions.length > 0) {
-                    addItem(item);
-                  }
-                  if (item.children && item.children.length > 0) {
-                    item.children.map(leaf => {
-                      addItem(leaf);
-                    });
-                  }
-                });
-                this.$emit('getChangeItem', i, list);
-              }
-            }
-            // 初始化全选栏
-            this.initAllCheckbox(i);
-          }
-        } else {
-          this.$message.error(result.msg || '请求错误');
-        }
       }
     },
   },

@@ -37,6 +37,7 @@ export default {
   methods: {
     edit() {
       // 切换至编辑模式
+      this.$store.commit('common/SET_MENUSELECTID', -1);
       this.$router.push({
         path: '/projectCenter/roles/edit/id=' + this.roleId,
       });

@@ -288,13 +288,18 @@ export default {
             });
           }
           if (result.code === 200) {
-            if (this.modalType === 'add') {
-              if (result.data && result.data.length > 0) {
-                if (result.data && result.data.length === this.modalForm.userIds.length) {
-                  return this.$message.error('所选用户已添加, 无法重复添加');
-                }
-              }
-            }
+            // let message;
+            // if (this.modalType === 'add') {
+            //   message = '添加成功';
+            //   if (result.data && result.data.length > 0) {
+            //     if (result.data && result.data.length === this.modalForm.userIds.length) {
+            //       return this.$message.error('所选用户已添加, 无法重复添加');
+            //     }
+            //     message += `\n其中${result.data.toString()}用户已添加, 无法重复添加`;
+            //   }
+            // } else if (this.modalType === 'edit') {
+            //   message = '编辑成功';
+            // }
             this.$message.success(this.modalType === 'add' ? '添加成功' : '编辑成功', 1).then(() => {
               this.handleGetTableList();
             });
@@ -314,8 +319,9 @@ export default {
       this.$refs.modalForm.resetFields();
     },
     /** 编辑操作 */
-    handleEditUser(obj, index) {
-      const item = this.usersData[index];
+    handleEditUser(record, index) {
+      const { pageSize, current } = this.pagination;
+      const item = this.usersData[index + pageSize * (current - 1)];
       this.modalUserList.push({
         id: item.id,
         username: item.username,
@@ -327,10 +333,11 @@ export default {
     },
     /** 移除操作 */
     async handleDeleteUser({ id }, index) {
+      const { pageSize, current } = this.pagination;
       const result = await this.$server.projectCenter.deleUserById(id);
       if (result.code === 200) {
         this.$message.success('移除成功');
-        this.usersData.splice(index, 1);
+        this.usersData.splice(index + pageSize * (current - 1), 1);
       } else {
         this.$message.error(result.msg || '请求错误');
       }
