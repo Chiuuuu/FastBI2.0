@@ -302,9 +302,13 @@ export default {
       if (!this.boardSettingRightInstance) {
         this.boardSettingRightInstance = this.boardSettingWrapper.$refs['js-board-setting-right'];
       }
+      let selected =
+        this.boardSettingRightInstance.tabAcitve === 'model'
+          ? this.boardSettingRightInstance.modelSelected
+          : this.boardSettingRightInstance.accessSelected;
       const params = {
         resourceType: this.resourceType[this.boardSettingRightInstance.tabAcitve],
-        datamodelId: this.boardSettingRightInstance.modelSelected.tableId,
+        datamodelId: selected.tableId,
         dimensions: [this.currentData],
       };
       // this.spinning = true;
@@ -492,7 +496,7 @@ export default {
         }
       } else if (this.boardSettingRightInstance.tabAcitve === 'access') {
         if (this.boardSettingRightInstance.accessSelected) {
-          selected = this.boardSettingRightInstance.modelSelected;
+          selected = this.boardSettingRightInstance.accessSelected;
           result.resourceType = this.resourceType[this.boardSettingRightInstance.tabAcitve];
         }
       }
@@ -552,9 +556,12 @@ export default {
      */
     handleList(list, data, method = 'add') {
       if (method === 'add') {
-        // 如果数据有重复则直接返回
-        if (list.map(item => item.id).includes(data.id)) return list;
-
+        // 如果重复数据含value，表示编辑，进行替换
+        let oldData = list.find(item => item.id === data.id);
+        if (oldData && (oldData.value || oldData.rules)) {
+          oldData = Object.assign(oldData, data);
+          return list;
+        }
         arrayAddData(list, data);
       } else if (method === 'dele') {
         arrayDeleData(list, data);

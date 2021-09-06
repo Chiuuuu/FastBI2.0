@@ -250,7 +250,7 @@ export default {
         }
       } else if (this.boardSettingRightInstance.tabAcitve === 'access') {
         if (this.boardSettingRightInstance.accessSelected) {
-          selected = this.boardSettingRightInstance.modelSelected;
+          selected = this.boardSettingRightInstance.accessSelected;
           result.resourceType = this.resourceType[this.boardSettingRightInstance.tabAcitve];
         }
       }

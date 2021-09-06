@@ -7,6 +7,7 @@ import registerMap from './registerMap';
 import { mutationTypes as boardMutation } from '@/store/modules/board';
 import guangzhou from '@/utils/guangzhou.json';
 import reverseAddressResolution from './reverseAddressResolution';
+import omit from 'lodash/omit';
 const mapSeries = 0;
 const scatterSeries = 1;
 
@@ -33,7 +34,7 @@ export default {
       const isFillDot = data.longitude.length && data.latitude.length && data.measures.length;
       const isLabelArea = data.labelDimensions.length && data.labelMeasures.length;
       const isLabelDot = data.labelLongitude.length && data.labelLatitude && data.labelMeasures;
-      return data.dataModelId && (isFillArea || isFillDot) && (isLabelArea || isLabelDot);
+      return data.dataModelId && (isFillArea || isFillDot || isLabelArea || isLabelDot);
     },
     /**
      * @description 处理图例
@@ -54,12 +55,7 @@ export default {
       const {
         style: { echart },
       } = this.options;
-      this.doWithMap(
-        fetchData.series[mapSeries],
-        echart.mapStyle,
-        echart.geo.itemStyle.emphasis.areaColor,
-        echart.geo.map,
-      );
+      this.doWithMap(fetchData.series[mapSeries], echart.mapStyle, echart.geo);
       this.doWithScatter(fetchData.series[scatterSeries], echart.scatterStyle);
       const legendData = this.doWithlegend(fetchData.series);
 
@@ -74,10 +70,10 @@ export default {
     /**
      * @description 处理填充层
      */
-    doWithMap(series, mapStyle, chartEmphasisColor, map) {
+    doWithMap(series, mapStyle, geo) {
       // 处理区域悬停
       series.itemStyle = Object.assign({}, defaultData.series[mapSeries].itemStyle, {
-        emphasis: { areaColor: chartEmphasisColor },
+        emphasis: { areaColor: geo.itemStyle.emphasis.areaColor },
       });
       let {
         customShowLabel: show,
@@ -91,7 +87,7 @@ export default {
       // 处理label属性
       this.doWithKeyValue(series.label, 'normal', { show, fontSize, color });
       series.tooltip.show = customShowTooltip;
-      series.map = map;
+      series = Object.assign(series, omit(geo, ['label', 'itemStyle', 'roam']));
       // 拼凑显示格式
       this.dowWithLabelFormatter(series, customPointShowList, customOrient);
       this.dowWithTooltipFormatter(series, customTooltipShowList);
@@ -152,7 +148,6 @@ export default {
      */
     dowWithTooltipFormatter(series, showList) {
       series.tooltip.formatter = function (params) {
-        debugger;
         if (!params.data) {
           return params.name;
         }
@@ -168,14 +163,46 @@ export default {
       };
     },
     /**
+     * @description 引入amap
+     */
+    setAmap() {
+      // 引入amap
+      return new Promise(resolve => {
+        let script = null;
+        if (window.AMap) {
+          resolve(true);
+        } else {
+          script = document.createElement('script');
+          script.id = 'amapscript';
+          script.async = 'true';
+          script.type = 'text/javascript';
+          script.src = 'https://webapi.amap.com/maps?v=1.4.15&key=692514d9fd33baea548298e394890763';
+          document.head.appendChild(script);
+          window.initMap = () => {
+            resolve(true);
+          };
+        }
+      });
+    },
+    /**
      * @description 处理填充数据
      */
     async handleFillList(fillList) {
-      if (!fillList) {
-        return { fillList: [], fillName: '', fillCustomPointShowList: [], fillCustomTooltipShowList: [] };
+      // 填充层数据条件不满足不处理
+      const noDataObj = { fillList: [], fillName: '', fillCustomPointShowList: [], fillCustomTooltipShowList: [] };
+      const { customFillDataType: dataType, dimensions, measures, longitude, latitude } = this.options.data;
+      if (!fillList || !measures.length) {
+        return noDataObj;
       }
-      // 地区
+      if (dataType === 'area' && !dimensions.length) {
+        return noDataObj;
+      }
+      if (dataType === 'dot' && (!longitude.length || !latitude.length)) {
+        return noDataObj;
+      }
+
       if (this.options.data.customFillDataType === 'area') {
+        // 地区
         return this.handleFillArea(fillList);
       }
       // 经纬度
@@ -213,11 +240,10 @@ export default {
       const measureAlias = measures[0].alias;
       //经纬度
       let datas = [];
-      fillList.forEach(async data => {
+      for (let data of fillList) {
         // 获取位置信息
         try {
-          let positionMsg = await reverseAddressResolution([data.longitude[0].alias, data.latitude[0].alias]);
-
+          let positionMsg = await reverseAddressResolution([data[longitude[0].alias], data[latitude[0].alias]]);
           let datacontent = {
             name: positionMsg.district,
             value: data[measureAlias],
@@ -236,9 +262,12 @@ export default {
             datas.push(datacontent);
           }
         } catch (err) {
-          return;
+          continue;
         }
-      });
+      }
+      if (fillList.length && !datas.length) {
+        this.$message.error('经纬度解析失败');
+      }
       return {
         fillList: datas,
         fillName: measureAlias,
@@ -250,14 +279,30 @@ export default {
      * @description 处理标点数据
      */
     async handleLabelList(labelList) {
-      if (!labelList) {
-        return {
-          labelList: [],
-          labelName: '',
-          labelCustomPointShowList: [],
-          labelCustomTooltipShowList: [],
-        };
+      // 散点层数据条件不满足不处理
+      const noDataObj = {
+        labelList: [],
+        labelName: '',
+        labelCustomPointShowList: [],
+        labelCustomTooltipShowList: [],
+      };
+      const {
+        customLabelDataType: dataType,
+        labelDimensions,
+        labelMeasures,
+        labelLongitude,
+        labelLatitude,
+      } = this.options.data;
+      if (!labelList || !labelMeasures.length) {
+        return noDataObj;
       }
+      if (dataType === 'area' && !labelDimensions.length) {
+        return noDataObj;
+      }
+      if (dataType === 'dot' && (!labelLongitude.length || !labelLatitude.length)) {
+        return noDataObj;
+      }
+
       // 地区
       if (this.options.data.customLabelDataType === 'area') {
         return this.handleLabelArea(labelList);
@@ -273,12 +318,12 @@ export default {
       const dimensionAlias = labelDimensions[0].alias;
       const measureAlias = labelMeasures[0].alias;
       let datas = [];
-      labelList.forEach(data => {
+      for (let data of labelList) {
         // 抓取区域坐标
         const center = this.getCenterCoordinate(data[dimensionAlias]);
         // 找不到对应坐标跳过
         if (!center) {
-          return;
+          continue;
         }
         datas.push({
           name: data[dimensionAlias],
@@ -288,7 +333,7 @@ export default {
           [dimensionAlias]: data[dimensionAlias], // 维度
           [measureAlias]: data[measureAlias], // 度量
         });
-      });
+      }
       return {
         labelList: datas,
         labelName: measureAlias,
@@ -304,10 +349,10 @@ export default {
       const measureAlias = labelMeasures[0].alias;
       //经纬度
       let datas = [];
-      labelList.forEach(async data => {
+      for (let data of labelList) {
         // 获取位置信息
         try {
-          const position = [data.labelLongitude[0].alias, data.labelLatitude[0].alias];
+          const position = [data[labelLongitude[0].alias], data[labelLatitude[0].alias]];
           let positionMsg = await reverseAddressResolution(position);
           // 获取位置信息
           datas.push({
@@ -320,14 +365,17 @@ export default {
             [measureAlias]: data[measureAlias], // 度量
           });
         } catch (err) {
-          return;
+          continue;
         }
-      });
+      }
+      if (labelList.length && !datas.length) {
+        this.$message.error('经纬度解析失败');
+      }
       return {
-        fillList: datas,
-        fillName: measureAlias,
-        fillCustomPointShowList: [`地区名`],
-        fillCustomTooltipShowList: [labelLongitude[0].alias, labelLatitude[0].alias, measureAlias],
+        labelList: datas,
+        labelName: measureAlias,
+        labelCustomPointShowList: [`地区名`],
+        labelCustomTooltipShowList: [labelLongitude[0].alias, labelLatitude[0].alias, measureAlias],
       };
     },
     /**
@@ -352,11 +400,12 @@ export default {
         ...this.options.data,
       });
       if (res.code === 200) {
-        const { fillList, fillName, fillCustomPointShowList, fillCustomTooltipShowList } = await this.handleFillList(
-          res.data.fillList,
-        );
-        const { labelList, labelName, labelCustomPointShowList, labelCustomTooltipShowList } =
-          await this.handleLabelList(res.data.labelList);
+        const [fillResult, labelResult] = await Promise.all([
+          this.handleFillList(res.data.fillList),
+          this.handleLabelList(res.data.labelList),
+        ]);
+        const { fillList, fillName, fillCustomPointShowList, fillCustomTooltipShowList } = fillResult;
+        const { labelList, labelName, labelCustomPointShowList, labelCustomTooltipShowList } = labelResult;
 
         const data = defaultData.series;
         this.serverData = {
@@ -389,6 +438,7 @@ export default {
                 customTooltipShowList: labelCustomTooltipShowList,
               }),
             },
+            replaceMerge: ['mapStyle', 'scatterStyle'],
           },
           updateCom: this.shapeUnit.component,
         });
@@ -417,12 +467,13 @@ export default {
     /**
      * @description 初始化Echart图表
      */
-    initChart() {
+    async initChart() {
       const dom = this.$refs['js-board-chart-unit'];
       this.chartInstane = this.$echarts.init(dom);
       if (!this.chartInstane) return console.error(`echart init fail`);
       // 改调接口拿数据
       registerMap(this.options.style.echart.geo.map);
+      await this.setAmap();
       const {
         style: { echart },
       } = this.options;
