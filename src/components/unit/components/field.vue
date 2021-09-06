@@ -12,7 +12,7 @@
                 v-for="item in list"
                 :key="item.id"
               >
-                <p class="text">{{ item.name }}</p>
+                <p class="text">{{ formatAggregator(item) }}</p>
                 <div class="suffix-btn" @click="handleFiledOps($event, item)"></div>
               </div>
             </div>
@@ -33,6 +33,11 @@ import ContextMenu from '@/components/contextmenu';
 import { arrayAddData, arrayDeleData } from '@/utils';
 import { mutationTypes as historyMutation } from '@/store/modules/history';
 import { DROG_TYPE } from '@/views/screenManage/screen/container/drawing-board-setting.vue';
+
+const roleMap = {
+  1: 'dimensions',
+  2: 'measures',
+};
 
 /**
  * @description 字段设置
@@ -85,6 +90,31 @@ export default {
   data() {
     return {
       boardSettingRightInstance: '',
+      dataType: '', // 记录拖入字段的数值类型
+      contextmenuMap: {
+        str: [
+          {
+            name: '聚合方式',
+            children: [
+              { name: '计数', value: 'CNT', onClick: this.handFiledAggrengation },
+              { name: '去重计数', value: 'DCNT', onClick: this.handFiledAggrengation },
+            ],
+          },
+        ],
+        num: [
+          {
+            name: '聚合方式',
+            children: [
+              { name: '求和', value: 'SUM', onClick: this.handFiledAggrengation },
+              { name: '平均', value: 'AVG', onClick: this.handFiledAggrengation },
+              { name: '最大值', value: 'MAX', onClick: this.handFiledAggrengation },
+              { name: '最小值', value: 'MIN', onClick: this.handFiledAggrengation },
+              { name: '计数', value: 'CNT', onClick: this.handFiledAggrengation },
+              { name: '去重计数', value: 'DCNT', onClick: this.handFiledAggrengation },
+            ],
+          },
+        ],
+      },
     };
   },
   computed: {
@@ -203,6 +233,7 @@ export default {
       if (isMouseOnTarget) {
         // 如果在，则放入
         this.handleDrop(dropDom, dragdrop);
+        this.dataType = ['BIGINT', 'DECIMAL', 'DOUBLE'].includes(dragdrop.data.dataType) ? 'num' : 'str';
       }
     },
     /**
@@ -498,17 +529,7 @@ export default {
           onClick: this.handleFiledDelete,
         },
       ];
-      const aggrengation = [
-        {
-          name: '聚合方式',
-          children: [
-            {
-              name: '平均',
-              onClick: this.handleFiledDelete,
-            },
-          ],
-        },
-      ];
+      const aggrengation = this.contextmenuMap[this.dataType];
       return this.openAggre ? [...normal, ...aggrengation] : normal;
     },
     /**
@@ -538,6 +559,43 @@ export default {
         target: event,
         handleMarkCancel: function () {},
       });
+    },
+    /**
+     * @description 字段聚合方式
+     */
+    handFiledAggrengation(mouseEvent, handler, currentVM, item) {
+      if (handler.value === item.defaultAggregator) {
+        return;
+      }
+      // 维度度量定义比data里面少了个s
+      let type = ['dimension', 'measure'].includes(this.type) ? this.type + 's' : this.type;
+      let dataList = [].concat(this.currentCom.setting.data[type]);
+      dataList.forEach(data => {
+        if (data.id == item.id) {
+          data.defaultAggregator = handler.value;
+        }
+      });
+      this.$store.commit(historyMutation.COMMAND, {
+        commandType: 'Data',
+        target: this.currentCom,
+        store: this.$store,
+        eventBus: this.$EventBus,
+        data: { [type]: dataList },
+      });
+    },
+    /**
+     * @description 字段聚合方式
+     */
+    formatAggregator(item) {
+      if (roleMap[item.role] === 'dimensions') {
+        return item.alias;
+      }
+      const fun = this.contextmenuMap[this.dataType][0].children.find(x => x.value === item.defaultAggregator);
+      if (!fun) {
+        console.log('不存在这个聚合类型');
+        return item.alias;
+      }
+      return `${item.alias} (${fun.name})`;
     },
   },
 };

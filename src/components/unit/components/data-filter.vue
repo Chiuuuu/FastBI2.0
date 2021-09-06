@@ -145,6 +145,7 @@ import { mutationTypes as historyMutation } from '@/store/modules/history';
 import { DROG_TYPE } from '@/views/screenManage/screen/container/drawing-board-setting.vue';
 import omit from 'lodash/omit';
 import pick from 'lodash/pick';
+import cloneDeep from 'lodash/cloneDeep';
 /**
  * @description 数据筛选设置
  */
@@ -288,7 +289,7 @@ export default {
       this.dataType = item.dataType;
       this.currentData = item;
       this.initCurrentFile();
-      this.currentFile = Object.assign({}, this.currentFile, pick(item, Object.keys(this.currentFile)));
+      this.currentFile = cloneDeep({ ...this.currentFile, ...pick(item, Object.keys(this.currentFile)) });
       // 非数值类型字段才调接口
       if (!this.dataTypeObj['num'].includes(this.dataType)) {
         this.getFieldData();
@@ -308,8 +309,9 @@ export default {
           : this.boardSettingRightInstance.accessSelected;
       const params = {
         resourceType: this.resourceType[this.boardSettingRightInstance.tabAcitve],
-        datamodelId: selected.tableId,
+        dataModelId: selected.tableId,
         dimensions: [this.currentData],
+        type: this.currentCom.type,
       };
       // this.spinning = true;
       const res = await this.$server.screenManage.getDataPick(params).finally(() => {
@@ -320,7 +322,7 @@ export default {
         return;
       }
       if (res.code === 200) {
-        this.dataRows = res.rows.map(item => {
+        this.dataRows = res.data.map(item => {
           if (Object.prototype.toString.call(item) === '[object Object]') {
             return Object.values(item).toString();
           } else {
@@ -328,7 +330,7 @@ export default {
           }
         });
       }
-      this.currentFile.searchList = this.dataRows || [];
+      this.currentFile.searchList = this.dataRows.filter(item => item) || [];
     },
     /**
      * @description 文本数据-列表/手动切换
@@ -361,21 +363,21 @@ export default {
      * @description 数值类型数据处理
      */
     handleNumData() {
-      if (this.currentFile.rules.some(item => !item.firstValue || (item.condition === 'range' && !item.secondValue))) {
+      // 判断数值是否输入，排除0
+      function isNoInput(value) {
+        return !value && value !== 0;
+      }
+      if (
+        this.currentFile.rules.some(
+          item => isNoInput(item.firstValue) || (item.condition === 'range' && isNoInput(item.secondValue)),
+        )
+      ) {
         this.$message.error('请输入筛选数值');
         return false;
       }
       // 处理度量筛选数据
       // 如果是排除的，action取补集符号
       this.currentFile.rules.forEach(item => {
-        if (!item.firstValue) {
-          this.$message.error('请输入筛选数值');
-          return false;
-        }
-        if (item.condition === 'range' && !item.secondValue) {
-          this.$message.error('请输入范围第二个筛选数值');
-          return false;
-        }
         switch (item.condition) {
           case 'range':
             item.action = item.condition;
