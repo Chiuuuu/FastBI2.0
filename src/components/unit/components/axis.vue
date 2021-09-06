@@ -50,7 +50,7 @@
       <!-- 轴名称是否显示 end -->
 
       <!-- 轴名称输入框 start -->
-      <a-input class="mb-8" :value="axis.cache.name" @blur="handleInputBlur"></a-input>
+      <a-input class="mb-8" :maxLength="20" :value="axis.cache.name" @blur="handleInputBlur"></a-input>
       <!-- 轴名称输入框 end -->
 
       <a-row class="unit-show-block mb-8">
@@ -217,6 +217,21 @@
             <a-select-option value="dotted">点状</a-select-option>
             <a-select-option value="dashed">虚线</a-select-option>
           </a-select>
+        </a-col>
+      </a-row>
+      <!-- 网格线线型 end -->
+      <!-- 网格线线型 start -->
+      <a-row class="unit-show-block">
+        <a-col :span="9">
+          <div class="unit-block-title">网格线粗细</div>
+        </a-col>
+        <a-col :span="15">
+          <a-input-number
+            :value="axis.splitLine.lineStyle.width"
+            :min="0"
+            :max="20"
+            @change="width => handleLineStyle('width', width)"
+          />
         </a-col>
       </a-row>
       <!-- 网格线线型 end -->

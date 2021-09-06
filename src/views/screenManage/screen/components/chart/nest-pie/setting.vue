@@ -110,25 +110,29 @@
                   <div class="setting-unit-content">
                     <a-row class="unit-show-block mb-8">
                       <a-col :span="7">
-                        <div class="unit-block-title">中心坐标</div>
+                        <div class="unit-block-title">中心点(%)</div>
                       </a-col>
 
                       <!-- 中心点 X坐标 start -->
                       <a-col :span="8" class="col-offset">
                         <div class="unit-block-title">X</div>
-                        <a-input
-                          :value="currentCom.setting.style.echart.customSeries.center[0]"
-                          @change="e => handleCenter(e.target.value, 0)"
-                        ></a-input>
+                        <a-input-number
+                          :min="0"
+                          :max="100"
+                          :value="currentCom.setting.style.echart.customCenter[0]"
+                          @change="value => handleCenter(value, 0)"
+                        ></a-input-number>
                       </a-col>
                       <!-- 中心点 X坐标 end -->
                       <!-- 中心点 Y坐标 start -->
                       <a-col :span="8" class="col-offset">
                         <div class="unit-block-title">Y</div>
-                        <a-input
-                          :value="currentCom.setting.style.echart.customSeries.center[1]"
-                          @change="e => handleCenter(e.target.value, 1)"
-                        ></a-input>
+                        <a-input-number
+                          :min="0"
+                          :max="100"
+                          :value="currentCom.setting.style.echart.customCenter[1]"
+                          @change="value => handleCenter(value, 1)"
+                        ></a-input-number>
                       </a-col>
                       <!-- 中心点 Y坐标 end -->
                     </a-row>
@@ -331,15 +335,15 @@ export default {
      */
     handleFormatterWay(value) {
       const ways = {
-        name: '{b}\n',
-        value: '{c}\n',
-        percent: '{d}%\n',
-        nv: '{b}\n{c}',
-        np: '{b}\n{d}%',
-        vp: '{c}\n{d}%',
-        all: '{b}\n{c} ({d})%',
+        name: '{b}',
+        value: '{c}',
+        percent: '{d}%',
+        nv: '{b} {c}',
+        np: '{b} {d}%',
+        vp: '{c} {d}%',
+        all: '{b} {c} ({d})%',
       };
-      const formatter = ways[value] || '{b}\n';
+      const formatter = ways[value] || '{b}';
       this.handleChange('echart', {
         customFormatterWay: value,
         customSeries: {
@@ -363,7 +367,9 @@ export default {
     handleCenter(value, index) {
       const center = [].concat(this.currentCom.setting.style.echart.customCenter);
       center.splice(index, 1, value);
-      this.doWithSeries('center', center);
+      this.handleChange('echart', {
+        customCenter: center,
+      });
     },
     handleRose(key, value) {
       this.handleChange('echart', {

@@ -34,6 +34,11 @@ export default merge(cloneDeep(BASE), {
           // 图例
           show: true,
           orient: 'horizontal',
+          type: 'scroll', // 可滚动翻页
+          pageIconColor: '#fff',
+          pageTextStyle: {
+            color: '#fff',
+          },
           textStyle: {
             color: '#ffffff',
             fontSize: 16,
@@ -49,21 +54,18 @@ export default merge(cloneDeep(BASE), {
         customSeries: {
           label: {
             show: true,
-            alignTo: 'edge',
             color: '#fff',
             position: 'outside', // outside || inside
-            formatter: '{b}\n{c}',
+            formatter: '{b} {c}',
             fontSize,
-            minMargin: fontSize,
-            edgeDistance: 1.5 * fontSize,
-            lineHeight: 1.5 * fontSize,
           },
           labelLayout: {
             // 标签是否允许重叠
             hideOverlap: false,
           },
-          center: ['50%', '50%'], // 坐标中心点
+          // center: ['50%', '50%'], // 坐标中心点
         },
+        customCenter: [50, 50], // 坐标中心点
         customRadius: 90, // 整体半径
         customFormatterWay: 'nv',
       },

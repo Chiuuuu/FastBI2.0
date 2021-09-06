@@ -16,7 +16,7 @@
       <a-col :span="16">
         <a-input-number
           :value="border.width"
-          :min="0"
+          :min="1"
           :max="widthMax"
           @change="width => handleChange('border', { width })"
         />
@@ -67,12 +67,12 @@ export default {
     // 边框宽度最大值设置
     widthMax: {
       type: Number,
-      default: () => Number.POSITIVE_INFINITY,
+      default: () => 20,
     },
     // 边框圆角最大值设置
     radiusMax: {
       type: Number,
-      default: () => Number.POSITIVE_INFINITY,
+      default: 100,
     },
   },
   methods: {

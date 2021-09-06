@@ -290,7 +290,8 @@
                       <!-- 分割线 类型 end -->
                       <a-col :span="10" :offset="1">
                         <a-input-number
-                          :min="0"
+                          :min="1"
+                          :max="20"
                           :value="currentCom.setting.style.echart.radar.splitLine.lineStyle.width"
                           @change="
                             width =>
@@ -402,7 +403,8 @@
                       <!-- 分割线 类型 end -->
                       <a-col :span="10" :offset="1">
                         <a-input-number
-                          :min="0"
+                          :min="1"
+                          :max="20"
                           :value="currentCom.setting.style.echart.radar.axisLine.lineStyle.width"
                           @change="
                             width =>

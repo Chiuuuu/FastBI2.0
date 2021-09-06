@@ -282,7 +282,7 @@ export default {
 
       const result = await this.$server.screenManage.addToGetChartId();
       if (result && result.code === 200) {
-        const len = this.components.length;
+        // const len = this.components.length;
         const component = merge(
           setting,
           {
@@ -290,7 +290,7 @@ export default {
             setting: {
               style: {
                 title: {
-                  text: `未命名图表${len}`,
+                  text: `未命名图表`,
                 },
               },
             },

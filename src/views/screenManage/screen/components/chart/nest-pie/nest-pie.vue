@@ -52,17 +52,17 @@ export default {
         maxSurfaceAngle: 80,
       };
     },
-    /**
-     * @description 处理标签字体等
-     */
-    doWithLabel(label) {
-      const { fontSize } = label;
-      return Object.assign(label, {
-        minMargin: fontSize,
-        edgeDistance: 1.5 * fontSize,
-        lineHeight: 1.5 * fontSize,
-      });
-    },
+    // /**
+    //  * @description 处理标签字体等
+    //  */
+    // doWithLabel(label) {
+    //   const { fontSize } = label;
+    //   return Object.assign(label, {
+    //     minMargin: fontSize,
+    //     edgeDistance: 1.5 * fontSize,
+    //     lineHeight: 1.5 * fontSize,
+    //   });
+    // },
     /**
      * @description 处理半径
      */
@@ -111,14 +111,14 @@ export default {
       return options;
     },
     createSeriesUnit(data, radius, echart) {
-      const seriesData = { ...omit(echart.customSeries, ['label', 'labelLayout']) };
+      const seriesData = { ...omit(echart.customSeries, ['labelLayout']) };
       return {
         type: 'pie',
-        // center: this.doWithCenter(echart.customCenter),
+        center: this.doWithCenter(echart.customCenter),
         radius: radius,
-        label: this.doWithLabel(echart.customSeries.label),
+        // label: this.doWithLabel(echart.customSeries.label),
         labelLayout: this.doWithLabelLayout.bind(this, echart.customSeries.labelLayout, this.chartInstane.getWidth()),
-        labelLine: this.doWithLabelLine(),
+        // labelLine: this.doWithLabelLine(),
         data: data,
         ...seriesData,
       };

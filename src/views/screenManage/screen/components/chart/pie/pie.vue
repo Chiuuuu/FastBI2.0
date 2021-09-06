@@ -32,44 +32,6 @@ export default {
       const { data } = this.options;
       return data.dataModelId && data.dimensions.length && data.measures.length;
     },
-    /**
-     * @description 处理标签对齐
-     */
-    doWithLabelLayout(chartInstaneWidth, params) {
-      if (this.options.style.echart.customSeries.label.position !== 'outside') return;
-
-      const isLeft = params.labelRect.x < chartInstaneWidth / 2;
-      const points = params.labelLinePoints;
-
-      if (!points) return;
-
-      // 更新节点.
-      points[2][0] = isLeft ? params.labelRect.x : params.labelRect.x + params.labelRect.width;
-      return {
-        labelLinePoints: points,
-      };
-    },
-    /**
-     * @description 处理标签线
-     */
-    doWithLabelLine() {
-      return {
-        length: 15,
-        length2: 0,
-        maxSurfaceAngle: 80,
-      };
-    },
-    /**
-     * @description 处理标签字体等
-     */
-    doWithLabel(label) {
-      const { fontSize } = label;
-      return Object.assign(label, {
-        minMargin: fontSize,
-        edgeDistance: 1.5 * fontSize,
-        lineHeight: 1.5 * fontSize,
-      });
-    },
     doWithRoseType(customRoseType) {
       const { show, type } = customRoseType;
       return {
@@ -89,6 +51,18 @@ export default {
     doWithlegend(series) {
       return series.map(item => item.name);
     },
+    /**
+     * @description 处理半径
+     */
+    doWithRadius(inRadius, outRadius) {
+      return [`${inRadius}%`, `${outRadius}%`];
+    },
+    /**
+     * @description 处理中心点
+     */
+    doWithCenter(customCenter) {
+      return [`${customCenter[0]}%`, `${customCenter[1]}%`];
+    },
     doWithOptions(fetchData) {
       const {
         style: { echart },
@@ -97,10 +71,9 @@ export default {
       const data = this.doWithLimit(fetchData.data, echart.customLimit);
       const legend = this.doWithlegend(data);
       const roseType = this.doWithRoseType(echart.customRoseType);
-
-      const label = this.doWithLabel(echart.customSeries.label);
-
-      const seriesData = { ...omit(echart.customSeries, ['label']) };
+      const radius = this.doWithRadius(echart.customInRadius, echart.customOutRadius);
+      const center = this.doWithCenter(echart.customCenter);
+      const seriesData = { ...omit(echart.customSeries, []) };
 
       const options = merge({}, echart, {
         legend: {
@@ -110,9 +83,8 @@ export default {
           {
             type: 'pie',
             roseType: roseType.show ? roseType.type : false,
-            label: label,
-            labelLine: this.doWithLabelLine(),
-            labelLayout: this.doWithLabelLayout.bind(this, this.chartInstane.getWidth()),
+            radius,
+            center,
             data: data,
             ...seriesData,
           },

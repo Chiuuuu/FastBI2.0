@@ -32,6 +32,11 @@ export default merge(cloneDeep(BASE), {
         legend: {
           // 图例
           show: true,
+          type: 'scroll', // 可滚动翻页
+          pageIconColor: '#fff',
+          pageTextStyle: {
+            color: '#fff',
+          },
           orient: 'horizontal',
           textStyle: {
             color: '#ffffff',
@@ -51,22 +56,19 @@ export default merge(cloneDeep(BASE), {
           // 标签
           label: {
             show: true,
-            alignTo: 'edge',
             color: '#fff',
             position: 'outside', // outside || inside
-            formatter: '{b}\n{c}',
+            formatter: '{b} {c}',
             fontSize,
-            minMargin: fontSize,
-            edgeDistance: 1.5 * fontSize,
-            lineHeight: 1.5 * fontSize,
           },
-          radius: ['0%', '70%'], //半径
-          center: ['50%', '50%'], // 坐标中心点
         },
         customRoseType: {
           show: false,
           type: 'radius', // radius || area
         },
+        customInRadius: 0, // 内半径
+        customOutRadius: 70, // 外半径
+        customCenter: [50, 50], // 坐标中心点
         customIsOpenDataLink: false, // 是否开启图表联动
         customInteractive: {}, // 保存联动数据
       },

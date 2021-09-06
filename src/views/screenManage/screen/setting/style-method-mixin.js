@@ -17,7 +17,7 @@ const StyleMethodMixin = {
         setting: {
           style: {
             title: {
-              text: `未命名图表${this.currentCom.id}`,
+              text: `未命名图表`,
             },
             position: {
               ...this.currentCom.setting.style.position,

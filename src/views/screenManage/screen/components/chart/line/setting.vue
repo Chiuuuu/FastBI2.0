@@ -183,6 +183,7 @@
                         <a-input-number
                           :value="currentCom.setting.style.echart.customSeries.symbolSize"
                           :min="0"
+                          :max="20"
                           @change="symbolSize => doWithSeries('symbolSize', symbolSize)"
                         />
                       </a-col>
@@ -346,7 +347,7 @@ export default {
       this.handleChange('echart', {
         customShowSymbol,
         customSeries: {
-          symbolSize: customShowSymbol ? 4 : 0,
+          symbolSize: customShowSymbol ? 1 : 0,
         },
       });
     },

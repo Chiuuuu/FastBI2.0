@@ -148,7 +148,7 @@ export default merge(cloneDeep(BASE), {
             // 标签是否允许重叠
             hideOverlap: true,
           },
-          symbolSize: 4, //标记点大小
+          symbolSize: 1, //标记点大小
           //区域填充样式设置
           areaStyle: {
             opacity: 0, //图形透明度

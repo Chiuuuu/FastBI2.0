@@ -153,10 +153,6 @@
                       </a-col>
                       <!-- 柱条间隔 start -->
                       <a-col :span="14">
-                        <!-- <a-input
-                          :value="currentCom.setting.style.echart.customSeries.barGap"
-                          @change="e => doWithSeries('barGap', e.target.value)"
-                        ></a-input> -->
                         <a-input-number
                           :min="0"
                           :max="100"
@@ -337,6 +333,18 @@ export default {
      * @description 更改形状
      */
     handleShape(key, value) {
+      // 方向改变时，若设置了圆角，则值也要相应变
+      if (key === 'customShape' && this.currentCom.setting.style.echart.customSeries.itemStyle.borderRadius) {
+        this.handleChange('echart', {
+          [key]: value,
+          customSeries: {
+            itemStyle: {
+              borderRadius: value === 'vertical' ? [50, 50, 0, 0] : [0, 50, 50, 0],
+            },
+          },
+        });
+        return;
+      }
       this.handleChange('echart', {
         [key]: value,
       });
@@ -363,7 +371,9 @@ export default {
     handleItemStyle(key, value) {
       // 圆角开启
       if (key === 'borderRadius') {
-        value = value === true ? [50, 50, 0, 0] : 0;
+        let radiusVal =
+          this.currentCom.setting.style.echart.customShape === 'vertical' ? [50, 50, 0, 0] : [0, 50, 50, 0];
+        value = value === true ? radiusVal : 0;
       }
       this.doWithSeries('itemStyle', {
         [key]: value,
