@@ -120,6 +120,11 @@ export default {
       currentCom: state => state.board.currentCom,
     }),
   },
+  watch: {
+    currentCom(newValue) {
+      this.$refs['js-board-setting-right'] && this.$refs['js-board-setting-right'].handleChartPivoSchemaList(newValue);
+    },
+  },
 };
 </script>
 <style lang="less">
