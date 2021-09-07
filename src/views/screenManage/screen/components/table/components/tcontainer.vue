@@ -15,7 +15,7 @@
         <template v-for="(tr, index) in data">
           <tr :key="index" :ref="`js-tr-${index}`" :style="handleSetBackgroundColor(index)">
             <td v-for="td in tr" :key="td">
-              <p class="content-wrap" :style="tbodyStyle.font">{{ td }}</p>
+              <p class="content-wrap" :style="tbodyStyle.font" :title="autoWrap ? '' : td">{{ td }}</p>
             </td>
           </tr>
         </template>
@@ -61,6 +61,11 @@ export default {
       // 表格内容样式
       type: Object,
       default: () => {},
+    },
+    autoWrap: {
+      // 表单元是否换行,不换行则鼠标移入显示所有内容
+      type: Boolean,
+      default: false,
     },
   },
   methods: {

@@ -84,6 +84,12 @@
                 <CollapsePanel class="content-item" panel="thead" header="表头">
                   <!-- 表头 start -->
                   <div class="setting-unit-content">
+                    <UnitCheckbox
+                      class="show-btn"
+                      label="显示"
+                      :value="currentCom.setting.style.echart.thead.show"
+                      @change="show => handleChange('echart', { thead: { show } })"
+                    ></UnitCheckbox>
                     <a-row class="unit-show-block mb-8">
                       <a-col :span="8" class="unit-show-block">
                         <div class="unit-block-title">高度</div>
@@ -91,7 +97,8 @@
                       <!-- 高度 start -->
                       <a-col :span="16">
                         <a-input-number
-                          :min="0"
+                          :min="1"
+                          :max="100"
                           :value="currentCom.setting.style.echart.thead.height"
                           @change="
                             height =>
@@ -118,7 +125,7 @@
                     ></UnitBackgroundColor>
                     <a-row class="unit-show-block mb-8">
                       <a-col :span="4">
-                        <div class="unit-block-title">字体</div>
+                        <div class="unit-block-title">文本</div>
                       </a-col>
                       <a-col :span="4">
                         <div class="font-color">
@@ -146,6 +153,42 @@
                         />
                       </a-col>
                     </a-row>
+                    <!-- 字体 start -->
+                    <a-row class="unit-show-block mb-8">
+                      <a-col :span="6">
+                        <div class="unit-block-title">字体</div>
+                      </a-col>
+                      <a-col :span="16" :offset="2">
+                        <a-select
+                          style="width: 100%"
+                          :value="currentCom.setting.style.echart.thead.font.family"
+                          @change="family => handleChange('echart', { thead: { font: { family } } })"
+                        >
+                          <a-select-option :value="item.value" v-for="(item, index) in fontFamily" :key="index">
+                            {{ item.label }}
+                          </a-select-option>
+                        </a-select>
+                      </a-col>
+                    </a-row>
+                    <!-- 字体 end -->
+                    <!-- 粗细 start -->
+                    <a-row class="unit-show-block mb-8">
+                      <a-col :span="6">
+                        <div class="unit-block-title">粗细</div>
+                      </a-col>
+                      <a-col :span="16" :offset="2">
+                        <a-select
+                          style="width: 100%"
+                          :value="currentCom.setting.style.echart.thead.font.weight"
+                          @change="weight => handleChange('echart', { thead: { font: { weight } } })"
+                        >
+                          <a-select-option value="normal">正常</a-select-option>
+                          <a-select-option value="bolder">加粗</a-select-option>
+                          <a-select-option value="lighter">更细</a-select-option>
+                        </a-select>
+                      </a-col>
+                    </a-row>
+                    <!-- 粗细 end -->
                     <a-row class="unit-show-block mb-8">
                       <a-col :span="6">
                         <div class="unit-block-title">对齐</div>
@@ -175,7 +218,8 @@
                       <!-- 高度 start -->
                       <a-col :span="16">
                         <a-input-number
-                          :min="0"
+                          :min="1"
+                          :max="100"
                           :value="currentCom.setting.style.echart.tbody.height"
                           @change="
                             height =>
@@ -188,6 +232,88 @@
                         ></a-input-number>
                       </a-col>
                       <!-- 高度 end -->
+                    </a-row>
+                    <a-row class="unit-show-block mb-8">
+                      <a-col :span="4">
+                        <div class="unit-block-title">文本</div>
+                      </a-col>
+                      <a-col :span="4">
+                        <div class="font-color">
+                          <ColorPicker
+                            :value="currentCom.setting.style.echart.tbody.font.color"
+                            @change="
+                              color =>
+                                handleChange('echart', {
+                                  tbody: { font: { color } },
+                                })
+                            "
+                          ></ColorPicker>
+                        </div>
+                      </a-col>
+                      <a-col :span="16">
+                        <a-input-number
+                          :value="currentCom.setting.style.echart.tbody.font.size"
+                          :min="12"
+                          @change="
+                            size =>
+                              handleChange('echart', {
+                                tbody: { font: { size } },
+                              })
+                          "
+                        />
+                      </a-col>
+                    </a-row>
+                    <!-- 字体 start -->
+                    <a-row class="unit-show-block mb-8">
+                      <a-col :span="6">
+                        <div class="unit-block-title">字体</div>
+                      </a-col>
+                      <a-col :span="16" :offset="2">
+                        <a-select
+                          style="width: 100%"
+                          :value="currentCom.setting.style.echart.tbody.font.family"
+                          @change="family => handleChange('echart', { tbody: { font: { family } } })"
+                        >
+                          <a-select-option :value="item.value" v-for="(item, index) in fontFamily" :key="index">
+                            {{ item.label }}
+                          </a-select-option>
+                        </a-select>
+                      </a-col>
+                    </a-row>
+                    <!-- 字体 end -->
+                    <!-- 粗细 start -->
+                    <a-row class="unit-show-block mb-8">
+                      <a-col :span="6">
+                        <div class="unit-block-title">粗细</div>
+                      </a-col>
+                      <a-col :span="16" :offset="2">
+                        <a-select
+                          style="width: 100%"
+                          :value="currentCom.setting.style.echart.tbody.font.weight"
+                          @change="weight => handleChange('echart', { tbody: { font: { weight } } })"
+                        >
+                          <a-select-option value="normal">正常</a-select-option>
+                          <a-select-option value="bolder">加粗</a-select-option>
+                          <a-select-option value="lighter">更细</a-select-option>
+                        </a-select>
+                      </a-col>
+                    </a-row>
+                    <!-- 粗细 end -->
+                    <a-row class="unit-show-block mb-8">
+                      <a-col :span="6">
+                        <div class="unit-block-title">对齐</div>
+                      </a-col>
+                      <template v-for="item in align">
+                        <a-col :span="5" :offset="1" :key="item">
+                          <div
+                            class="font-align"
+                            :class="item === currentCom.setting.style.echart.tbody.text.align ? 'selected' : ''"
+                            @click="handleTbodyTextAlign('align', item)"
+                          >
+                            <a-icon :type="`align-${item}`" />
+                          </div>
+                        </a-col>
+                      </template>
                     </a-row>
                     <!-- 奇数行颜色 start -->
                     <UnitBackgroundColor
@@ -216,52 +342,22 @@
                       "
                     ></UnitBackgroundColor>
                     <!-- 奇数行颜色 end -->
-                    <a-row class="unit-show-block mb-8">
-                      <a-col :span="4">
-                        <div class="unit-block-title">字体</div>
-                      </a-col>
-                      <a-col :span="4">
-                        <div class="font-color">
-                          <ColorPicker
-                            :value="currentCom.setting.style.echart.tbody.font.color"
-                            @change="
-                              color =>
-                                handleChange('echart', {
-                                  tbody: { font: { color } },
-                                })
-                            "
-                          ></ColorPicker>
-                        </div>
-                      </a-col>
-                      <a-col :span="16">
-                        <a-input-number
-                          :value="currentCom.setting.style.echart.tbody.font.size"
-                          :min="12"
-                          @change="
-                            size =>
-                              handleChange('echart', {
-                                tbody: { font: { size } },
-                              })
-                          "
-                        />
-                      </a-col>
-                    </a-row>
+                    <!-- 是否换行 start -->
                     <a-row class="unit-show-block mb-8">
                       <a-col :span="6">
-                        <div class="unit-block-title">对齐</div>
+                        <div class="unit-block-title">自动换行</div>
                       </a-col>
-                      <template v-for="item in align">
-                        <a-col :span="5" :offset="1" :key="item">
-                          <div
-                            class="font-align"
-                            :class="item === currentCom.setting.style.echart.tbody.text.align ? 'selected' : ''"
-                            @click="handleTbodyTextAlign('align', item)"
-                          >
-                            <a-icon :type="`align-${item}`" />
-                          </div>
-                        </a-col>
-                      </template>
+                      <a-col :span="16" :offset="2">
+                        <UnitCheckbox
+                          class="show-btn"
+                          label="启用"
+                          style="top: -3px"
+                          :value="currentCom.setting.style.echart.tbody.autoWrap"
+                          @change="autoWrap => handleChange('echart', { tbody: { autoWrap } })"
+                        ></UnitCheckbox>
+                      </a-col>
                     </a-row>
+                    <!-- 字体 end -->
                   </div>
                   <!-- 表格 end -->
                 </CollapsePanel>
@@ -310,6 +406,7 @@
 <script>
 import BoardType from '@/views/screenManage/screen/setting/default-type';
 import StyleMethodMixin from '@/views/screenManage/screen/setting/style-method-mixin';
+import fontFamily from '@/utils/fontFamily';
 export default {
   name: `${BoardType.ChartTable}Setting`,
   mixins: [StyleMethodMixin],
@@ -325,6 +422,7 @@ export default {
       dataCollapseActive: ['targe', 'range', 'dataFilter', 'dataSort'],
       align: ['left', 'center', 'right'], // 对齐方式
       styleCollapseActive: [],
+      fontFamily, //字体
     };
   },
   methods: {

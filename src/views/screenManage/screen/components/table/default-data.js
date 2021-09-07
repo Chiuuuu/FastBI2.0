@@ -2,7 +2,7 @@ export default {
   data: [
     {
       car_number: '',
-      o_place: '天河',
+      o_place: `天河`,
       car_type: '福特',
     },
     {
