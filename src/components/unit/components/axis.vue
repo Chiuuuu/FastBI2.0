@@ -28,7 +28,8 @@
       <a-col :span="13">
         <a-input-number
           :value="axis.axisLine.lineStyle.width"
-          :min="0"
+          :min="1"
+          :max="20"
           @change="width => handleAxisLine('lineStyle', { width })"
         />
       </a-col>

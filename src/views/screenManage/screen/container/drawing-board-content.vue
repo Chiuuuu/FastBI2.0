@@ -8,7 +8,7 @@
         <div class="board-box board-dropable">
           <!-- 画板网格控制真实尺寸 start -->
           <a-spin :spinning="spinning" :tip="tip">
-            <div class="board-grid" ref="js-board-grid" :style="boardGridStyle">
+            <div class="board-grid" ref="js-board-grid" :style="boardGridStyle" @keyup.enter="handleKeyup">
               <BoardShapeUnit
                 v-for="(item, index) in components"
                 :key="item.id"
@@ -130,6 +130,7 @@ export default {
   },
   computed: {
     ...mapState({
+      currentCom: state => state.board.currentCom, // 当前图表
       boardScale: state => state.board.scale, // 比例
       boardModel: state => state.board.model, // 模式
       boardPage: state => state.board.page, // 页面
@@ -173,6 +174,20 @@ export default {
     },
   },
   methods: {
+    /**
+     * @description 监听delete按键删除图表
+     */
+    handleDeleteChart(event) {
+      let e = event || window.event;
+      let code = e.keyCode || e.which;
+      if (code === 46 && this.currentCom) {
+        const index = this.components.findIndex(item => item === this.currentCom);
+        this.$store.commit(boardMutaion.DELE_COM, {
+          component: this.currentCom,
+          index,
+        });
+      }
+    },
     /**
      * @description 判断是否为全屏
      */
@@ -343,12 +358,14 @@ export default {
     this.$nextTick(() => {
       this.doWithRect();
       window.addEventListener('resize', this.doWithRect);
+      window.addEventListener('keyup', this.handleDeleteChart);
       this.listenerFullScreen();
       this.initContextMenuForScreen();
     });
   },
   beforeDestroy() {
     window.removeEventListener('resize', this.doWithRect);
+    window.removeEventListener('keyup', this.handleDeleteChart);
     this.removeListenerFullScreen();
   },
 };

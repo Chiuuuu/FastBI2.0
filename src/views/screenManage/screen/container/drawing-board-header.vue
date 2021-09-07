@@ -87,7 +87,7 @@
           <li class="btn-item">
             <div class="tool-btn" @click="handleAddChart(BoardType.Text)">
               <div class="u-icon">
-                <i class="bi-data bi-data-text"></i>
+                <i class="bi-data bi-data-wenbenkuang"></i>
               </div>
               <span class="text">文本框</span>
             </div>
@@ -97,7 +97,7 @@
           <li class="btn-item">
             <div class="tool-btn" @click="handleAddChart(BoardType.Image)">
               <div class="u-icon">
-                <i class="bi-data bi-data-img"></i>
+                <i class="bi-data bi-data-tupian"></i>
               </div>
               <span class="text">图片</span>
             </div>
@@ -560,7 +560,7 @@ export default {
                 width: 50%;
                 cursor: pointer;
                 &:hover {
-                  color: #103ffa;
+                  color: #677cf7;
                 }
               }
             }

@@ -224,7 +224,7 @@ export default {
   text-align: left;
   z-index: 10;
   > .menu-model-add {
-    color: #103ffa;
+    color: #677cf7;
     .symbol-add {
       position: relative;
       top: -1px;
@@ -265,7 +265,7 @@ export default {
       &.selected {
         background-color: #eee;
         .anticon {
-          color: #103ffa;
+          color: #677cf7;
         }
       }
       > .u-icon {

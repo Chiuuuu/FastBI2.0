@@ -40,15 +40,15 @@
                     </a-row>
                   </div>
                 </CollapsePanel>
-                <CollapsePanel class="content-item" panel="reset" :isTogger="false">
-                  <!-- 恢复默认配置 start -->
+                <!-- 恢复默认配置 start -->
+                <!-- <CollapsePanel class="content-item" panel="reset" :isTogger="false">
                   <div class="setting-unit-content">
                     <a-button class="btn-ghost reset" type="link" icon="redo" block @click="handleClickReset">
                       恢复默认配置
                     </a-button>
                   </div>
-                  <!-- 恢复默认配置 end -->
-                </CollapsePanel>
+                </CollapsePanel> -->
+                <!-- 恢复默认配置 end -->
               </Collapse>
             </TabPanel>
           </Tabs>
