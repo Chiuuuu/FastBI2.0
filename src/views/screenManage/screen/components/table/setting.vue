@@ -300,6 +300,23 @@
                 </CollapsePanel>
               </Collapse>
             </TabPanel>
+            <TabPanel tab="interaction" label="交互">
+              <Collapse>
+                <CollapsePanel class="content-item" panel="connect" header="图表联动">
+                  <!-- 图表联动 start -->
+                  <UnitConnect
+                    class="setting-unit-content"
+                    @change="
+                      value =>
+                        handleChange('echart', {
+                          customIsOpenDataLink: value,
+                        })
+                    "
+                  ></UnitConnect>
+                  <!-- 图表联动 end -->
+                </CollapsePanel>
+              </Collapse>
+            </TabPanel>
           </Tabs>
         </div>
         <!-- Tab切换栏 end -->

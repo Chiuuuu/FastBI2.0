@@ -223,7 +223,7 @@ export default {
       this.currentSeriesIndex = e.seriesIndex;
       // 嵌套饼图series顺序由外到内
       const pickField = this.currentSeriesIndex === 0 ? 'outerIng' : 'innerIng';
-      setLinkageData([e.name], this.shapeUnit.component, pickField);
+      setLinkageData(null, this.shapeUnit.component, [{ pickField, pickValue: [e.name] }]);
     },
     /**
      * @description 处理图表点击事件(点击非数据区域重置)
