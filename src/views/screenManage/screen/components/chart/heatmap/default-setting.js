@@ -45,7 +45,7 @@ export default merge(cloneDeep(BASE), {
           left: 'left',
           top: 'top',
           inRange: {
-            color: ['#F5AA9F', '#FFDA6A'],
+            color: ['#ffffff', '#f69f2e'],
           },
         },
         xAxis: {
@@ -155,6 +155,7 @@ export default merge(cloneDeep(BASE), {
             position: 'inside',
           },
         },
+        customVisualMapColor: 'gradient', // gradient: 按度量比例渐变, fullfilled: 不按度量渐变
         customFormatterWay: ['0', '1', '2'], // 指标内容
         customTooltipFormatter: ['0', '1', '2'], //鼠标移入显示
       },
