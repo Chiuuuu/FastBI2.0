@@ -323,7 +323,10 @@ export default {
     validateName(rule, value, callback) {
       const arry = [...this.sourceDimensions, ...this.sourceMeasures];
       const item = arry.filter(item => item.alias === value).pop();
-      if (item && !this.isEdit) {
+      if (item) {
+        if (this.isEdit && item.alias === this.renameData.alias) {
+          callback();
+        }
         callback(new Error('名称已存在'));
       } else {
         callback();

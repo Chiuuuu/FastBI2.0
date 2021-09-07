@@ -9,7 +9,12 @@
     bordered
   >
     <template #alias="text, record">
-      <a-input v-model="record.alias" :maxLength="20" @change="handleCheckName" style="width: 156px height: 32px" />
+      <a-input
+        v-model="record.alias"
+        :maxLength="20"
+        @change="handleCheckName($event, record.id)"
+        style="width: 156px height: 32px"
+      />
     </template>
     <template #convertType="text, record">
       <field-select
@@ -200,8 +205,8 @@ export default {
     handleSelect(value, record, index) {
       this.$emit('change-visible', value, record, index);
     },
-    handleCheckName(e) {
-      this.$emit('checkName', e);
+    handleCheckName(e, id) {
+      this.$emit('checkName', e, id);
     },
     switchFieldType(e, item, vm) {
       let dataType = item.dataType;

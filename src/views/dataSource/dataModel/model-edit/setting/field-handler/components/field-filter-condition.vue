@@ -81,7 +81,7 @@
 <script>
 export default {
   name: '',
-  inject: ['NUMBER_LIST', 'conditionOptions'],
+  inject: ['rootInstance', 'NUMBER_LIST', 'conditionOptions'],
   props: {
     fieldData: {
       // 字段对象, 用于获取数据
@@ -250,6 +250,7 @@ export default {
       if (this.fieldData) {
         Object.assign(data, this.fieldData);
         data.pivotschemaId = this.fieldData.id;
+        params.pivotschemaId = this.fieldData.id;
         params.fieldId = this.fieldData.fieldId;
         params.dataModelId = this.fieldData.datamodelId;
         // params.modelTableId = data.modelTableId
@@ -257,12 +258,21 @@ export default {
         Object.assign(data, this.conditionData);
         params.fieldId = data.fieldId;
         params.dataModelId = data.datamodelId;
+        params.pivotschemaId = data.pivotschemaId;
         // params.modelTableId = data.modelTableId
       }
       this.spinning = true;
-      const res = await this.$server.dataModel.getModelData(params).finally(() => {
-        this.spinning = false;
-      });
+      const res = await this.$server.dataModel
+        .getModelData({
+          ...this.rootInstance.detailInfo,
+          pivotSchema: {
+            ...this.rootInstance.handleConcat(), // 处理维度度量
+          },
+          resourceJson: params,
+        })
+        .finally(() => {
+          this.spinning = false;
+        });
       if (res.code === 500 && res.msg === 'IsChanged') {
         this.$message.error('模型数据不存在');
         this.isdrag = false;
