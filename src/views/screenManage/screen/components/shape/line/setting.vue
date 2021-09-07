@@ -22,7 +22,7 @@
                   <UnitSize
                     class="setting-unit-content"
                     :size="currentCom.setting.style.size"
-                    :heightMax="300"
+                    :heightMax="20"
                     @change="size => handleChange('size', size)"
                   ></UnitSize>
                   <!-- 尺寸 end -->
@@ -172,6 +172,9 @@
 <script>
 import BoardType from '@/views/screenManage/screen/setting/default-type';
 import StyleMethodMixin from '@/views/screenManage/screen/setting/style-method-mixin';
+import boardSetting from '@/views/screenManage/screen/setting';
+import cloneDeep from 'lodash/cloneDeep';
+import merge from 'lodash/merge';
 export default {
   name: `${BoardType.ShapeLine}Setting`,
   mixins: [StyleMethodMixin],
@@ -269,6 +272,30 @@ export default {
       this.handleChange('title', {
         [key]: value,
       });
+    },
+    /*
+     * 还原默认配置项
+     * 1. 先复制一份当前配置
+     * 2. 再复制一份当前类型新的配置
+     * 3. 重置添加图表功能的配置(在drawing-board-header.vue文件)
+     */
+    handleClickReset() {
+      const component = merge(cloneDeep(this.currentCom), cloneDeep(boardSetting[this.currentCom.type]), {
+        id: this.currentCom.id,
+        setting: {
+          style: {
+            title: {
+              text: `未命名图表`,
+            },
+            position: {
+              ...this.currentCom.setting.style.position,
+            },
+          },
+        },
+      });
+
+      const newStyle = component.setting.style;
+      this.handleChange(null, newStyle, true);
     },
   },
 };

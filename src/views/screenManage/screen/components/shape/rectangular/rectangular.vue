@@ -84,5 +84,6 @@ export default {
 .shape-rectangular {
   width: 100%;
   height: 100%;
+  background-clip: content-box;
 }
 </style>

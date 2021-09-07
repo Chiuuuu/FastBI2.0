@@ -86,5 +86,6 @@ export default {
   width: 100%;
   height: 100%;
   border-radius: 50%;
+  background-clip: content-box;
 }
 </style>
