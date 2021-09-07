@@ -36,7 +36,7 @@
       <div class="menu-list-wrapper" v-if="searchResult.length">
         <ul class="menu-list reset-scrollbar">
           <li class="menu-item" v-for="item in searchResult" :key="item.id" @click="handleSelectResult(item)">
-            {{ item.name }}
+            {{ item.alias }}
           </li>
         </ul>
       </div>

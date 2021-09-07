@@ -8,7 +8,7 @@
     @click="handleClick"
   >
     <div :class="['prefix-icon bi-data', icon]"></div>
-    <p>{{ data.name }}</p>
+    <p>{{ data.alias }}</p>
     <div class="suffix-btn" @click="e => $emit('arrowClick', e)"></div>
   </li>
 </template>
@@ -92,7 +92,7 @@ export default {
     createPlaceholder() {
       const div = document.createElement('div');
       div.className = `placeholder-${this.type}`;
-      div.innerHTML = `${this.data.name}`;
+      div.innerHTML = `${this.data.alias}`;
       div.style.zIndex = 1000;
       div.style.position = 'absolute';
       return div;

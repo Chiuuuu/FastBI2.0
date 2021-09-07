@@ -304,7 +304,7 @@ export default {
      * @description 判断是否为选中
      */
     isSelected(item) {
-      return item.id === this.selectFiled.id && item.name === this.selectFiled.name;
+      return item.id === this.selectFiled.id && item.alias === this.selectFiled.alias;
     },
     /**
      * @description 记录历史记录中
