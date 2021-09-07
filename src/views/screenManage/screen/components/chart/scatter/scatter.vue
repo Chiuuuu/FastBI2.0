@@ -56,6 +56,8 @@ export default {
       this.serverData = {
         fieidName: [xaxis[0].alias, yaxis[0].alias, dimensions[0].alias],
         data: datas,
+        xMax: Math.max(...datas.map(item => item[xaxis[0].alias])),
+        yMax: Math.max(...datas.map(item => item[yaxis[0].alias])),
       };
       const options = this.doWithOptions(this.serverData);
       this.updateSaveChart(options);
@@ -80,8 +82,8 @@ export default {
     /**
      * @description 处理图例
      */
-    doWithlegend(series) {
-      return series.map(item => item.name);
+    doWithlegend(series, name) {
+      return series.map(item => item[name]);
     },
     /**
      * @description 处理图表配置项
@@ -95,14 +97,13 @@ export default {
       let fieidName = fetchData.fieidName;
       fetchData.data.forEach(data => {
         const ary = [data[fieidName[0]], data[fieidName[1]], data[fieidName[2]]].concat(fetchData.fieidName);
-        const item = this.createScatterUnit(data.name, [ary], echart);
+        const item = this.createScatterUnit(data[fieidName[2]], [ary], echart);
 
         // 处理散点大小
-        this.handleScatterSize(item, echart.customScatterSize, echart.customXMax, echart.customYMax);
+        this.handleScatterSize(item, echart.customScatterSize, fetchData.xMax, fetchData.yMax);
         series.push(item);
       });
-
-      const legend = this.doWithlegend(fetchData.data);
+      const legend = this.doWithlegend(fetchData.data, fieidName[2]);
 
       const options = merge({}, echart, {
         legend: {
@@ -152,13 +153,13 @@ export default {
      * @description 处理散点大小
      * @param {Object} item 当前系列
      * @param {String} customScatterSize 散点大小类型 0：按度量1  1：按度量2  默认空，为无
-     * @param {String} customXMax 度量1最大值
-     * @param {String} customYMax 度量2最大值
+     * @param {String} xMax 度量1最大值
+     * @param {String} yMax 度量2最大值
      */
-    handleScatterSize(item, customScatterSize, customXMax, customYMax) {
+    handleScatterSize(item, customScatterSize, xMax, yMax) {
       // 散点图大小设置
       if (customScatterSize) {
-        let max = customScatterSize === '0' ? customXMax : customYMax;
+        let max = customScatterSize === '0' ? xMax : yMax;
         item.symbolSize = function (val) {
           let num = val[customScatterSize];
           return max === 0 ? 8 : (20 / max) * num + 8;

@@ -419,9 +419,9 @@ export default {
       // 标签显示内容
       scatterFormatList: [
         // { label: '无', value: '' },
-        { label: '维度1', value: '{@5}：{@2}' },
-        { label: '度量1', value: '{@3}：{@0}' },
-        { label: '度量2', value: '{@4}：{@1}' },
+        { label: '维度1', value: '{@2}' },
+        { label: '度量1', value: '{@0}' },
+        { label: '度量2', value: '{@1}' },
         { label: '度量组', value: '({@0},{@1})' },
       ],
     };

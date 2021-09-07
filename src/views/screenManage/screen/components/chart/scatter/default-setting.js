@@ -36,6 +36,11 @@ export default merge(cloneDeep(BASE), {
           // 图例
           show: true,
           orient: 'horizontal',
+          type: 'scroll', // 可滚动翻页
+          pageIconColor: '#fff',
+          pageTextStyle: {
+            color: '#fff',
+          },
           textStyle: {
             color: '#ffffff',
             fontSize: 16,
@@ -149,17 +154,15 @@ export default merge(cloneDeep(BASE), {
             fontSize: 16,
             position: 'top',
             fontFamily: 'sans-serif',
-            formatter: '{@5}：{@2} ({@0},{@1})',
+            formatter: '{@2} ({@0},{@1})',
             offset: [-10, 0],
           },
         },
         customScatterColor: '1', // 散点颜色 0单色 1按维度
         customScatterSize: '', // 散点大小  0：按度量1  1：按度量2  默认空，为无
-        customScatterLabel: ['{@5}：{@2}', '({@0},{@1})'], // 指标-显示内容
+        customScatterLabel: ['{@2}', '({@0},{@1})'], // 指标-显示内容
         customArrange: 'horizontal', // 指标-排列 horizontal水平  vertical垂直
         customScatterTargetColor: '0', // 0使用图例 1：自定义
-        customXMax: 100, // 度量1 最大值
-        customYMax: 100, // 度量2 最大值
         customIsOpenDataLink: false, // 是否开启图表联动
         customInteractive: {}, // 保存联动数据
       },

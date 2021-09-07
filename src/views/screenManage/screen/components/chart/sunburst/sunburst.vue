@@ -45,9 +45,31 @@ export default {
         return;
       }
       const datas = res.data || [];
-      this.serverData = { data: datas };
+      let valueArr = this.getValueArr(datas, 'value', 'children');
+
+      this.serverData = {
+        data: datas,
+        maxValue: Math.max(...valueArr),
+        minValue: Math.min(...valueArr),
+      };
       const options = this.doWithOptions(this.serverData);
       this.updateSaveChart(options);
+    },
+    /**
+     * @description 递归遍历树形json数据，根据属性获取所有节点值
+     * @param data 原始Json数据
+     * @param key 属性
+     * @param subChirld 子节点数组
+     */
+    getValueArr(data = [], key = 'value', subChirld = 'children') {
+      let arr = [];
+      data.forEach(item => {
+        arr.push(item[key]);
+        if (item[subChirld] && item[subChirld].length > 0) {
+          arr = arr.concat(this.getValueArr(item[subChirld], key, subChirld));
+        }
+      });
+      return arr;
     },
     /*
      * 处理默认数据
@@ -75,12 +97,12 @@ export default {
       const formatter = ways[way] || ways.nv;
       return formatter;
     },
-    doWithVisualMap(echart) {
+    doWithVisualMap(echart, fetchData) {
       return Object.assign({}, echart.visualMap, {
         // 右侧视觉映射组件
         type: 'continuous',
-        max: echart.customMax,
-        min: echart.customMin,
+        max: fetchData.maxValue,
+        min: fetchData.minValue,
         calculable: true,
         orient: 'vertical', // vertical
         left: 'right', // 左 中 右
@@ -114,7 +136,7 @@ export default {
         style: { echart },
       } = this.options;
 
-      const visualMap = this.doWithVisualMap(echart);
+      const visualMap = this.doWithVisualMap(echart, fetchData);
       const radius = this.doWithRadius(echart.customInRadius, echart.customOutRadius);
       const center = this.doWithCenter(echart.customCenter);
       const formatter = this.doWithFormatter(echart.customFormatterWay);
