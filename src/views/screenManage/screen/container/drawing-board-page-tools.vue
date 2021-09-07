@@ -491,7 +491,7 @@ export default {
             color: #666;
             &:hover,
             &.active {
-              background: #103ffa;
+              background: #677cf7;
               .page-name {
                 color: #fff;
               }

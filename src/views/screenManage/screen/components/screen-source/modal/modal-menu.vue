@@ -120,7 +120,7 @@ export default {
       padding: 4px;
       &:hover,
       &.active {
-        background: #103ffa;
+        background: #677cf7;
         color: #fff;
       }
     }
