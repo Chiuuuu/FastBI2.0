@@ -17,6 +17,13 @@
             <CollapsePanel class="content-item" panel="background" header="背景">
               <!-- 背景 start -->
               <div class="setting-unit-content">
+                <!-- 背景图片 start -->
+                <UnitBackgroundImage
+                  class="mb-8"
+                  :background="boardPage.background"
+                  @change="value => handleChange('background', value)"
+                ></UnitBackgroundImage>
+                <!-- 背景图片 end -->
                 <UnitBackgroundColor
                   label="颜色"
                   :color="boardPage.background.color"

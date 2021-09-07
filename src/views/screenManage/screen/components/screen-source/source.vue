@@ -57,7 +57,8 @@ export default {
      * @description 处理图片url
      */
     handleImgUrl(url) {
-      return process.env.VUE_APP_SERVICE_URL + url;
+      // 去掉thumbnail就是原图路径
+      return process.env.VUE_APP_SERVICE_URL + url.replace('/thumbnail', '');
     },
     /**
      * @description 判断当前的图片url是否能加载
