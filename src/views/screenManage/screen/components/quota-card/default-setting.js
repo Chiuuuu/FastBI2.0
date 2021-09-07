@@ -34,7 +34,7 @@ export default merge(cloneDeep(BASE), {
           align: 'left',
         },
         totalQuatoValue: {
-          color: '#617BFF',
+          color: '#677cf7',
           size: 36,
           family: 'sans-serif',
           weight: 'normal',
@@ -56,7 +56,7 @@ export default merge(cloneDeep(BASE), {
           marginRight: 10,
         },
         secondaryQuatoValue: {
-          color: '#617BFF',
+          color: '#677cf7',
           size: 12,
           family: 'sans-serif',
           weight: 'normal',
