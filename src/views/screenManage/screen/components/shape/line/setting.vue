@@ -76,7 +76,7 @@
                         <a-col :span="16">
                           <a-input-number
                             :value="currentCom.setting.style.size.height"
-                            :min="0"
+                            :min="1"
                             :max="20"
                             @change="height => handleChange('size', { height })"
                           />
