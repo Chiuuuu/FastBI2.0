@@ -351,7 +351,7 @@ export default {
   overflow: hidden;
 }
 .data-panel-box {
-  height: calc(100% - 88px);
+  height: calc(100% - 125px);
   position: absolute;
   top: @tabWrapperHeight;
 }
