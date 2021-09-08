@@ -27,16 +27,18 @@
     <template v-else>
       <!-- <p class="menu_tips">右键文件夹或选项有添加，重命名等操作</p> -->
       <div class="menu-wrap scrollbar" @dragover.stop="handleDragOver">
-        <div class="group" v-for="(folder, index) in menuList" :key="folder.id">
-          <ul class="items">
-            <MenuFile
-              :file="folder"
-              :index="index"
-              :isSelect="categoryId === folder.id"
-              @fileSelect="handleFileSelect"
-            ></MenuFile>
-          </ul>
-        </div>
+        <a-spin :spinning="spinning">
+          <div class="group" v-for="(folder, index) in menuList" :key="folder.id">
+            <ul class="items">
+              <MenuFile
+                :file="folder"
+                :index="index"
+                :isSelect="categoryId === folder.id"
+                @fileSelect="handleFileSelect"
+              ></MenuFile>
+            </ul>
+          </div>
+        </a-spin>
       </div>
     </template>
   </div>
@@ -68,6 +70,7 @@ export default {
   },
   data() {
     return {
+      spinning: false,
       searchValue: '', // 关键词搜索
       searchList: [], // 搜索结果
       modalOptions: {
@@ -94,7 +97,8 @@ export default {
      * 获取左侧菜单数据
      */
     async handleGetMenuList() {
-      const result = await this.$server.screenMaterial.getMaterialCategoryList();
+      this.spinning = true;
+      const result = await this.$server.screenMaterial.getMaterialCategoryList().finally(() => (this.spinning = false));
       if (result.code === 200) {
         this.$emit('update:categoryList', result.data);
         this.$emit('update:categoryId', result.data[0].id);
