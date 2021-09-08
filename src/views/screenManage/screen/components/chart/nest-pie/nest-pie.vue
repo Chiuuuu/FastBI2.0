@@ -35,33 +35,33 @@ export default {
     /**
      * @description 处理标签对齐
      */
-    doWithLabelLayout(labelLayout, chartInstaneWidth, params) {
-      if (this.options.style.echart.customSeries.label.position !== 'outside') return;
+    // doWithLabelLayout(labelLayout, chartInstaneWidth, params) {
+    //   if (this.options.style.echart.customSeries.label.position !== 'outside') return;
 
-      const isLeft = params.labelRect.x < chartInstaneWidth / 2;
-      const points = params.labelLinePoints;
+    //   const isLeft = params.labelRect.x < chartInstaneWidth / 2;
+    //   const points = params.labelLinePoints;
 
-      if (!points) return;
+    //   if (!points) return;
 
-      // 更新节点.
-      points[2][0] = isLeft ? params.labelRect.x : params.labelRect.x + params.labelRect.width;
-      return Object.assign({}, labelLayout, {
-        labelLinePoints: points,
-      });
-    },
+    //   // 更新节点.
+    //   points[2][0] = isLeft ? params.labelRect.x : params.labelRect.x + params.labelRect.width;
+    //   return Object.assign({}, labelLayout, {
+    //     labelLinePoints: points,
+    //   });
+    // },
     /**
      * @description 处理标签线
      */
-    doWithLabelLine() {
-      return {
-        length: 15,
-        length2: 0,
-        maxSurfaceAngle: 80,
-      };
-    },
-    // /**
-    //  * @description 处理标签字体等
-    //  */
+    // doWithLabelLine() {
+    //   return {
+    //     length: 15,
+    //     length2: 0,
+    //     maxSurfaceAngle: 80,
+    //   };
+    // },
+    /**
+     * @description 处理标签字体等
+     */
     // doWithLabel(label) {
     //   const { fontSize } = label;
     //   return Object.assign(label, {
@@ -97,12 +97,12 @@ export default {
         const arry = fetchData[key];
         let item;
         if (index === 0 && series.length === 0) {
-          item = this.createSeriesUnit(arry, [`0%`, `${radius / len}%`], echart);
+          item = this.createSeriesUnit(arry, [`0%`, `${radius / len}%`], echart, index);
         } else {
           const pre = series[index - 1];
           const preRadius = pre.radius;
           const value = +preRadius[1].split('%').shift() + (1 / 9) * radius;
-          item = this.createSeriesUnit(arry, [`${value}%`, `${value + (1 / 6) * radius}%`], echart);
+          item = this.createSeriesUnit(arry, [`${value}%`, `${value + (1 / 6) * radius}%`], echart, index);
         }
         series.push(item);
         arry.forEach(item => legendArry.push(item));
@@ -117,15 +117,17 @@ export default {
 
       return options;
     },
-    createSeriesUnit(data, radius, echart) {
-      const seriesData = { ...omit(echart.customSeries, ['labelLayout']) };
+    createSeriesUnit(data, radius, echart, index) {
+      const seriesData = { ...omit(echart.customSeries, ['']) };
       return {
         type: 'pie',
         center: this.doWithCenter(echart.customCenter),
         radius: radius,
         // label: this.doWithLabel(echart.customSeries.label),
-        labelLayout: this.doWithLabelLayout.bind(this, echart.customSeries.labelLayout, this.chartInstane.getWidth()),
-        // labelLine: this.doWithLabelLine(),
+        // labelLayout: this.doWithLabelLayout.bind(this, echart.customSeries.labelLayout, this.chartInstane.getWidth()),
+        labelLine: {
+          length: echart.customlabelLineLen[index],
+        },
         data: data,
         ...seriesData,
       };
@@ -178,6 +180,10 @@ export default {
     },
     updateChartStyle() {
       if (!this.chartInstane) return;
+      // 解决：已拖入维度/度量的图表，退出编辑大屏，再次进入时先显示默认图表数据，之后再显示已拖入的图表数据
+      if (this.isServerData() && !this.serverData) {
+        return;
+      }
       const newOptions = this.doWithOptions(this.serverData ? this.serverData : defaultData);
       this.chartInstane.setOption(newOptions, {
         replaceMerge: ['series'],
