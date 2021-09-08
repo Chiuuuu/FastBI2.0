@@ -144,6 +144,7 @@ export default {
     ...mapState({
       boardScale: state => state.board.scale,
       model: state => state.board.model,
+      componentsOrigin: state => state.board.components,
     }),
     isActive() {
       // 是否处于活动状态

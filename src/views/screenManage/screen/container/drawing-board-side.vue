@@ -161,7 +161,7 @@ export default {
       const that = this;
       function addEvent(target) {
         target.$$fun = function () {
-          Array.prototype.push.call(arguments, component, index);
+          Array.prototype.push.call(arguments, component, index, that);
           target.onClick.apply(this, arguments);
         };
       }
