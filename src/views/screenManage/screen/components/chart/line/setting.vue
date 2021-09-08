@@ -152,7 +152,8 @@
                         <a-input-number
                           v-model="currentCom.setting.style.echart.customSeries.lineStyle.width"
                           size="small"
-                          :min="0"
+                          :min="1"
+                          :max="20"
                           @change="width => doWithSeries('lineStyle', { width })"
                         ></a-input-number>
                       </a-col>
@@ -182,7 +183,7 @@
                       <a-col :span="14">
                         <a-input-number
                           :value="currentCom.setting.style.echart.customSeries.symbolSize"
-                          :min="0"
+                          :min="1"
                           :max="20"
                           @change="symbolSize => doWithSeries('symbolSize', symbolSize)"
                         />

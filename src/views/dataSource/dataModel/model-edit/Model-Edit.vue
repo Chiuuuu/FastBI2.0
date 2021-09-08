@@ -153,11 +153,11 @@
             <div class="dim_title">
               <span class="dim_span">维度</span>
               <div class="dim_operation">
-                <a v-on:click="handleOpenComputeSetting('维度')" style="color: #627cff; line-height: 38px">
+                <a v-on:click="handleOpenComputeSetting('维度')" style="color: #677cf7; line-height: 38px">
                   新建计算维度
                 </a>
                 <a-divider type="vertical" />
-                <!-- <a v-on:click="openModal('geo-setting')" style="color:#627CFF;">设置地理位置</a> -->
+                <!-- <a v-on:click="openModal('geo-setting')" style="color:#677cf7;">设置地理位置</a> -->
               </div>
             </div>
             <div class="dim_menu scrollbar">
@@ -187,7 +187,7 @@
               <div class="mea_operation">
                 <a
                   v-on:click="handleOpenComputeSetting('度量')"
-                  style="color: #627cff; margin-right: 20px; line-height: 38px"
+                  style="color: #677cf7; margin-right: 20px; line-height: 38px"
                 >
                   新建计算度量
                 </a>

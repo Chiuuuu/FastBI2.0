@@ -35,7 +35,7 @@
     <!-- 图例 字体 end -->
 
     <!-- 图例 间隔 start -->
-    <a-row class="unit-show-block mb-8">
+    <a-row class="unit-show-block mb-8" v-if="!except.includes('itemGap')">
       <a-col :span="6">
         <div class="unit-block-title">图例间隔</div>
       </a-col>
@@ -47,7 +47,7 @@
     <!-- 图例 间隔 end -->
 
     <!-- 图例 形状 start -->
-    <a-row class="unit-show-block mb-8">
+    <a-row class="unit-show-block mb-8" v-if="!except.includes('icon')">
       <a-col :span="6">
         <div class="unit-block-title">图例形状</div>
       </a-col>
@@ -75,9 +75,9 @@
           class="float-right"
           @change="handleSwitchHorizontalPosition"
         >
-          <a-radio-button value="left">左边</a-radio-button>
-          <a-radio-button value="center">中间</a-radio-button>
-          <a-radio-button value="right">右边</a-radio-button>
+          <a-radio-button value="left">左</a-radio-button>
+          <a-radio-button value="center">中</a-radio-button>
+          <a-radio-button value="right">右</a-radio-button>
         </a-radio-group>
       </a-col>
     </a-row>
@@ -151,6 +151,13 @@ export default {
       // 图例配置
       type: Object,
       required: true,
+    },
+    except: {
+      // 去除不要的部分
+      type: Array,
+      default() {
+        return [];
+      },
     },
   },
   methods: {

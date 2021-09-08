@@ -36,7 +36,7 @@
       <div class="menu-list-wrapper" v-if="searchResult.length">
         <ul class="menu-list reset-scrollbar">
           <li class="menu-item" v-for="item in searchResult" :key="item.id" @click="handleSelectResult(item)">
-            {{ item.name }}
+            {{ item.alias }}
           </li>
         </ul>
       </div>
@@ -107,13 +107,13 @@ export default {
       this.searchResult = [];
       value = typeof value === 'string' ? value.trim() : value;
       this.searchList.forEach(item => {
-        if (item.name.toLowerCase().indexOf(value.toLowerCase()) > -1) {
+        if (item.alias.toLowerCase().indexOf(value.toLowerCase()) > -1) {
           this.searchResult.push(item);
         }
       });
       if (this.searchResult.length === 0) {
         this.searchResult.push({
-          name: '没有符合的数据',
+          alias: '没有符合的数据',
           id: -1,
         });
       }

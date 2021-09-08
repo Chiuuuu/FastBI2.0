@@ -130,7 +130,7 @@
 
         <template slot="footer">
           <a-button key="cancel" @click="screenVisible = false">取消</a-button>
-          <a-button key="submit" type="primary" style="background: '#617BFF'">确定</a-button>
+          <a-button key="submit" type="primary" style="background: '#677cf7'">确定</a-button>
         </template>
       </div>
     </a-modal>
@@ -714,7 +714,7 @@ export default {
   }
   .ant-checkbox-indeterminate {
     .ant-checkbox-inner {
-      background-color: #617bff;
+      background-color: #677cf7;
       &::after {
         height: 1px;
         background-color: #fff;

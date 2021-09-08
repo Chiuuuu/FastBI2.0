@@ -141,6 +141,7 @@ export default {
         width: `${this.boardPage.size.width}px`,
         height: `${this.boardPage.size.height}px`,
         backgroundColor: `${this.boardPage.background.color}`,
+        backgroundImage: `${this.boardPage.background.image}`,
       };
     },
   },

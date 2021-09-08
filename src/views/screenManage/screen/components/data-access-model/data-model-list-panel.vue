@@ -206,7 +206,7 @@ export default {
     }
     // &.added:hover,
     &:hover {
-      background: #627cff;
+      background: #677cf7;
       .anticon,
       .title {
         color: #fff;
@@ -286,7 +286,7 @@ export default {
             }
           }
           &:hover {
-            background: #627cff;
+            background: #677cf7;
             .title {
               color: #fff;
             }
@@ -313,7 +313,7 @@ export default {
             }
             // &.added:hover,
             &:hover {
-              background: #627cff;
+              background: #677cf7;
               .anticon,
               .title {
                 color: #fff;

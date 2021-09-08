@@ -154,7 +154,7 @@ export default merge(cloneDeep(BASE), {
             opacity: 0, //图形透明度
           },
           lineStyle: {
-            width: 2,
+            width: 1,
           },
           // smooth: false,
         },

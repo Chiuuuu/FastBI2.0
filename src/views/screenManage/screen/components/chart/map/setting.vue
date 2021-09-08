@@ -267,9 +267,9 @@
                             size="small"
                             @change="event => handleSelect('visualMap', 'left', event.target.value)"
                           >
-                            <a-radio-button value="left">左边</a-radio-button>
-                            <a-radio-button value="center">中间</a-radio-button>
-                            <a-radio-button value="right">右边</a-radio-button>
+                            <a-radio-button value="left">左</a-radio-button>
+                            <a-radio-button value="center">中</a-radio-button>
+                            <a-radio-button value="right">右</a-radio-button>
                           </a-radio-group>
                         </a-col>
                       </a-row>
