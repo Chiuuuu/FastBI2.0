@@ -67,21 +67,6 @@ export default {
       chartList: [],
     };
   },
-  watch: {
-    'currentCom.setting.interaction': {
-      deep: true,
-      immediate: false,
-      handler(val) {
-        for (let chart of this.components) {
-          if (val.bindedList.includes(chart.id)) {
-            chart.setting.interaction.beBinded = this.currentCom.id;
-          } else {
-            delete chart.setting.interaction.beBinded;
-          }
-        }
-      },
-    },
-  },
   computed: {
     ...mapState({
       // 当前组件
@@ -148,22 +133,30 @@ export default {
     },
     // 往上寻找有没有在绑定路径中
     checkUpperBind(upperChartId, targetChartId) {
-      let upperChart = this.components.find(item => item.id === upperChartId);
-      const interactive = upperChart.setting.interaction;
+      const beBindedId = this.getBeBindedId(upperChartId);
       // 没有被任何图表绑定
-      if (!interactive.beBinded) {
+      if (!beBindedId) {
         return false;
       }
       // 绑定了当前图表
-      if (interactive.beBinded === targetChartId) {
+      if (beBindedId === targetChartId) {
         return true;
       }
-      return this.checkUpperBind(interactive.beBinded, targetChartId);
+      return this.checkUpperBind(beBindedId, targetChartId);
+    },
+    // 遍历获取图标图标被绑定图表id
+    getBeBindedId(chartId) {
+      for (let chart of this.components) {
+        if (chart.id !== chartId && chart.setting.interaction.bindedList.includes(chartId)) {
+          return chart.id;
+        }
+      }
+      return false;
     },
     // 检查可选图表是否已经被其他图表绑定
     checkHaveBind(chart) {
-      const interactive = chart.setting.interaction;
-      return interactive.beBinded && interactive.beBinded !== this.currentCom.id;
+      const beBindedId = this.getBeBindedId(chart.id);
+      return beBindedId && beBindedId !== this.currentCom.id;
     },
     // 设置图表联动
     async setLinkage() {

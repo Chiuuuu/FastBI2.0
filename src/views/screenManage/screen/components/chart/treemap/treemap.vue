@@ -7,6 +7,7 @@ import minBy from 'lodash/minBy';
 import maxBy from 'lodash/maxBy';
 import mergeWith from 'lodash/mergeWith';
 import Node from './node';
+import { setLinkageData, resetOriginData } from '@/utils/setDataLink';
 /**
  * @description 矩形树图
  */
@@ -33,6 +34,8 @@ export default {
           name: 'bumenTableid',
         },
       ],
+      currentSeriesIndex: null, // 图表联动选中的下标
+      currentDataIndex: null, // 图表联动选中的下标
     };
   },
   methods: {
@@ -393,6 +396,56 @@ export default {
       this.updateSaveChart(newOptions);
       this.doWithLabel(this.options.style.echart);
       this.doWithTooltip(this.options.style.echart);
+    },
+    /**
+     * @description 添加点击事件(图表联动)
+     */
+    addClick() {
+      // 设置点击数据进行联动
+      this.chartInstane.on('click', this.handleDataClick);
+      // 设置点击空白重置联动
+      this.chartInstane.getZr().on('click', this.handleChartClick);
+    },
+    /**
+     * @description 处理点击数据显示选中效果
+     */
+    handleDataClick(e) {
+      const options = this.chartInstane.getOption();
+      if (!this.options.style.echart.customIsOpenDataLink) {
+        return;
+      }
+      // 重复点击选中项
+      if (e.dataIndex === this.currentDataIndex && e.seriesIndex === this.currentSeriesIndex) {
+        // 重置图表
+        this.resetChartSelect(options);
+        return;
+      }
+      // 记录当前选择数据的index
+      this.currentDataIndex = e.dataIndex;
+      this.currentSeriesIndex = e.seriesIndex;
+      setLinkageData([e.name], this.shapeUnit.component);
+    },
+    /**
+     * @description 处理图表点击事件(点击非数据区域重置)
+     */
+    handleChartClick(params) {
+      let hasSelected = this.currentDataIndex || this.currentDataIndex === 0;
+      // 没有选中数据不需要执行重置
+      if (typeof params.target === 'undefined' && hasSelected) {
+        // 重置图表
+        const options = this.chartInstane.getOption();
+        this.resetChartSelect(options);
+      }
+    },
+    /**
+     * @description 取消选中
+     */
+    resetChartSelect(options) {
+      // 还原数据
+      resetOriginData(this.shapeUnit.component);
+      this.chartInstane.clear();
+      this.chartInstane.setOption(options);
+      this.currentDataIndex = this.currentSeriesIndex = '';
     },
   },
 };

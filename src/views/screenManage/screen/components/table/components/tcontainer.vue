@@ -7,7 +7,9 @@
       <thead v-if="type !== 'tbody'" :style="theadStyle.thead">
         <tr>
           <th v-for="th in data" :key="th.name">
-            <p class="content-wrap" :style="theadStyle.font" :title="th.name">{{ th.name }}</p>
+            <p class="content-wrap" :style="theadStyle.font" :title="th.name">
+              {{ th.name }}
+            </p>
           </th>
         </tr>
       </thead>
@@ -15,7 +17,14 @@
         <template v-for="(tr, index) in data">
           <tr :key="index" :ref="`js-tr-${index}`" :style="handleSetBackgroundColor(index)">
             <td v-for="td in tr" :key="td">
-              <p class="content-wrap" :style="tbodyStyle.font" :title="autoWrap ? '' : td">{{ td }}</p>
+              <p
+                class="content-wrap"
+                :style="tbodyStyle.font"
+                :title="autoWrap ? '' : td"
+                @click.stop="dataLink(td, i)"
+              >
+                {{ td }}
+              </p>
             </td>
           </tr>
         </template>
@@ -88,6 +97,12 @@ export default {
         const width = Math.ceil(tr[0].children[`${index}`].children[0].offsetWidth) + 22;
         return width;
       });
+    },
+    /**
+     * @description 图表联动
+     */
+    dataLink(name, index) {
+      this.$emit('dataLink', name, index);
     },
   },
 };

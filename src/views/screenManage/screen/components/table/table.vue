@@ -1,5 +1,5 @@
 <template>
-  <div class="board-chart-unit-wrapper">
+  <div class="board-chart-unit-wrapper" @click="resetDataLink">
     <div class="board-chart-unit-title" :style="titleStyle" v-if="options.style.title.show">
       {{ options.style.title.text }}
     </div>
@@ -27,6 +27,7 @@
           :autoWrap="tbody_autoWrap"
           @hook:mounted="doWithWidth"
           type="tbody"
+          @dataLink="dataLink"
         ></Tcontainer>
       </div>
     </div>
@@ -39,6 +40,7 @@ import defaultData from './default-data';
 import Tcontainer from './components/tcontainer';
 import { getStyle } from '@/utils';
 import { mutationTypes as boardMutation } from '@/store/modules/board';
+import { setLinkageData, resetOriginData } from '@/utils/setDataLink';
 
 /**
  * @description 表格图表
@@ -350,6 +352,24 @@ export default {
     updateChartStyle() {
       this.doWithThead();
       this.doWithTbody();
+    },
+    /**
+     * @description 图表联动
+     */
+    dataLink(name, trIndex) {
+      if (!this.options.style.echart.customIsOpenDataLink) {
+        return;
+      }
+      const index = this.shapeUnit.component.setting.data.fields.findIndex(
+        item => item.alias === this.fields[trIndex].name,
+      );
+      setLinkageData(null, this.shapeUnit.component, [{ pickField: 'fields', pickValue: name, index }]);
+    },
+    /**
+     * @description 复原图表联动
+     */
+    resetDataLink() {
+      resetOriginData(this.shapeUnit.component);
     },
   },
 };

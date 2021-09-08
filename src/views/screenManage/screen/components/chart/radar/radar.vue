@@ -14,8 +14,7 @@ export default {
   extends: BaseChart,
   data() {
     return {
-      currentSeriesIndex: null, // 图表联动选中的下标
-      currentDataIndex: null, // 图表联动选中的下标
+      currentIndex: null, // 图表联动选中的下标
     };
   },
   methods: {
@@ -145,37 +144,38 @@ export default {
       if (!this.options.style.echart.customIsOpenDataLink) {
         return;
       }
+      const dimIndex = e.event.topTarget.__dimIdx;
+      if (!dimIndex && dimIndex !== 0) {
+        return;
+      }
       // 重复点击选中项
-      if (e.dataIndex === this.currentDataIndex && e.seriesIndex === this.currentSeriesIndex) {
+      if (dimIndex === this.currentIndex) {
         // 重置图表
         this.resetChartSelect(options);
         return;
       }
       // series添加标记点回调函数控制，选中
-      // const formatterSybolSizeFn = function (value, params) {
-      //   return params.dataIndex === e.dataIndex ? 10 : 1;
-      // };
+      //   const formatterSybolSizeFn = function (value, params) {
+      //     return params.dataIndex === dimIndex ? 10 : 1;
+      //   };
       options.series.forEach(item => {
         item.data.forEach((dataItem, index) => {
-          // item.symbolSize = formatterSybolSizeFn;
+          //   item.symbolSize = formatterSybolSizeFn;
           const color = index === e.dataIndex ? options.color[index] : this.hexToRgba(options.color[index], 0.4);
           dataItem.lineStyle = { color };
         });
       });
       this.chartInstane.setOption(options);
       // 记录当前选择数据的index
-      this.currentDataIndex = e.dataIndex;
-      this.currentSeriesIndex = e.seriesIndex;
-      console.log('test', e);
-      debugger;
-      setLinkageData([e.name], this.shapeUnit.component);
+      this.currentIndex = dimIndex;
+      setLinkageData(options.radar[0].indicator[dimIndex].name, this.shapeUnit.component);
     },
     /**
      * @description 处理图表点击事件(点击非数据区域重置)
      */
     handleChartClick(params) {
       // 没有选中数据不需要执行重置
-      let hasSelected = this.currentDataIndex || this.currentDataIndex === 0;
+      let hasSelected = this.currentIndex || this.currentIndex === 0;
       if (typeof params.target === 'undefined' && hasSelected) {
         // 重置图表
         const options = this.chartInstane.getOption();
@@ -197,7 +197,7 @@ export default {
       resetOriginData(this.shapeUnit.component);
       this.chartInstane.clear();
       this.chartInstane.setOption(options);
-      this.currentDataIndex = this.currentSeriesIndex = '';
+      this.currentIndex = '';
     },
   },
 };

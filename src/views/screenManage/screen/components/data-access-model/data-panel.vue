@@ -360,7 +360,7 @@ export default {
       }
     }
     > .body {
-      height: calc(100% - 38px);
+      height: calc(100% - 35px);
       .schema-list-wrapper {
         font-size: 12px;
         height: 100%;

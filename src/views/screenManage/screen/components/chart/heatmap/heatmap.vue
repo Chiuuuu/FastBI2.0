@@ -6,12 +6,19 @@ import minBy from 'lodash/minBy';
 import maxBy from 'lodash/maxBy';
 import merge from 'lodash/merge';
 import omit from 'lodash/omit';
+import { setLinkageData, resetOriginData } from '@/utils/setDataLink';
 /**
  * @description 矩形热力图
  */
 export default {
   name: `${BoardType.ChartHeatmap}View`,
   extends: BaseChart,
+  data() {
+    return {
+      currentSeriesIndex: null, // 图表联动选中的下标
+      currentDataIndex: null, // 图表联动选中的下标
+    };
+  },
   methods: {
     /**
      * @description 获取拖入的维度度量列数据
@@ -160,6 +167,60 @@ export default {
       }
       const options = this.doWithOptions(this.serverData ? this.serverData : defaultData);
       this.updateSaveChart(options);
+    },
+    /**
+     * @description 添加点击事件(图表联动)
+     */
+    addClick() {
+      // 设置点击数据进行联动
+      this.chartInstane.on('click', this.handleDataClick);
+      // 设置点击空白重置联动
+      this.chartInstane.getZr().on('click', this.handleChartClick);
+    },
+    /**
+     * @description 处理点击数据显示选中效果
+     */
+    handleDataClick(e) {
+      const options = this.chartInstane.getOption();
+      if (!this.options.style.echart.customIsOpenDataLink) {
+        return;
+      }
+      // 重复点击选中项
+      if (e.dataIndex === this.currentDataIndex && e.seriesIndex === this.currentSeriesIndex) {
+        // 重置图表
+        this.resetChartSelect(options);
+        return;
+      }
+
+      // 记录当前选择数据的index
+      this.currentDataIndex = e.dataIndex;
+      this.currentSeriesIndex = e.seriesIndex;
+      setLinkageData(null, this.shapeUnit.component, [
+        { pickField: 'xaxis', pickValue: [e.name] },
+        { pickField: 'yaxis', pickValue: [e.data[1]] },
+      ]);
+    },
+    /**
+     * @description 处理图表点击事件(点击非数据区域重置)
+     */
+    handleChartClick(params) {
+      let hasSelected = this.currentDataIndex || this.currentDataIndex === 0;
+      // 没有选中数据不需要执行重置
+      if (typeof params.target === 'undefined' && hasSelected) {
+        // 重置图表
+        const options = this.chartInstane.getOption();
+        this.resetChartSelect(options);
+      }
+    },
+    /**
+     * @description 取消选中
+     */
+    resetChartSelect(options) {
+      // 还原数据
+      resetOriginData(this.shapeUnit.component);
+      this.chartInstane.clear();
+      this.chartInstane.setOption(options);
+      this.currentDataIndex = this.currentSeriesIndex = '';
     },
   },
 };

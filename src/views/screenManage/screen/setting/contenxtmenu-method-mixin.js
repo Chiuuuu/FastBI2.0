@@ -117,7 +117,15 @@ const ContenxtmenuMethodMixin = {
     /**
      * @description 右键菜单——删除图表
      */
-    handleDeleComponent(e, item, component, index) {
+    handleDeleComponent(e, item, component, index, vm) {
+      // 删除图表的时候解除绑定
+      for (let chart of vm.componentsOrigin) {
+        if (chart.id !== component.id && chart.setting.interaction.bindedList.includes(component.id)) {
+          chart.setting.interaction.bindedList = chart.setting.interaction.bindedList.filter(
+            item => item !== component.id,
+          );
+        }
+      }
       this.$store.commit(boardMutaion.DELE_COM, {
         component,
         index,
