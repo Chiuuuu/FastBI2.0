@@ -48,7 +48,7 @@ export default merge(cloneDeep(BASE), {
           fontFamily: 'sans-serif',
           position: {
             left: 0,
-            top: 0,
+            top: 10,
           },
         },
         border: {

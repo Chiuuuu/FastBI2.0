@@ -39,6 +39,7 @@ import BoardType from '@/views/screenManage/screen/setting/default-type';
 // import { getStyle } from '@/utils';
 import defaultData from './default-data';
 import BaseChart from '../chart/base';
+import { mutationTypes as boardMutation } from '@/store/modules/board';
 /**
  * @description 文本框
  */
@@ -166,10 +167,11 @@ export default {
         const totalQuotaTitle = totalAlias;
         const totalQuotaValue = data[totalAlias].toString();
         let secondaryQuotas = [];
-        Object.keys(data).forEach(key => {
-          if (key !== totalAlias) {
-            secondaryQuotas.push({ secondaryQuotasTitle: key, secondaryQuotasValue: data[key].toString() });
-          }
+        let customSecTitles = [];
+        this.options.data.secondaryQuota.forEach(quota => {
+          const alias = quota.alias;
+          secondaryQuotas.push({ secondaryQuotasTitle: alias, secondaryQuotasValue: data[alias].toString() });
+          customSecTitles.push(alias);
         });
         this.serverData = {
           data: {
@@ -179,6 +181,15 @@ export default {
           },
         };
         this.doWithData(this.serverData);
+        // 获取数据之后需要更改限制
+        this.$store.commit(boardMutation.SET_STYLE, {
+          style: {
+            echart: {
+              totalQuatoTitle: { text: totalQuotaTitle },
+              secondaryQuatoTitle: customSecTitles,
+            },
+          },
+        });
       } else {
         this.$message.error(res.msg);
       }

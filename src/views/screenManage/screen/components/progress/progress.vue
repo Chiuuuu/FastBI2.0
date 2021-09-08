@@ -1,16 +1,18 @@
 <template>
-  <div class="board-chart-unit-wrapper">
+  <div class="board-chart-unit-wrapper board-progress">
     <div class="board-chart-unit-title" :style="titleStyle" v-if="options.style.title.show">
       {{ options.style.title.text }}
     </div>
     <div class="board-chart-unit progress-unit" :style="chartStyle" ref="js-board-chart-unit">
-      <!-- 内圈 -->
-      <div class="progress-warpper" :style="wrapperStyle">
-        <div class="progress" :style="progressStyle"></div>
-      </div>
-      <!-- 进度值 -->
-      <div v-if="options.style.echart.label.show" class="progress-value" :style="labelStyle">
-        {{ result }}
+      <div class="board-progress-content">
+        <!-- 内圈 -->
+        <div class="progress-warpper" :style="wrapperStyle">
+          <div class="progress" :style="progressStyle"></div>
+        </div>
+        <!-- 进度值 -->
+        <div v-if="options.style.echart.label.show" class="progress-value" :style="labelStyle">
+          {{ result }}
+        </div>
       </div>
     </div>
   </div>
@@ -330,8 +332,12 @@ export default {
 };
 </script>
 <style lang="less" scoped>
+.board-progress {
+  padding: 10px 25px;
+}
 .progress-unit {
-  position: relative;
+  display: flex;
+  align-items: center;
 }
 .progress {
   width: 80%;
@@ -339,5 +345,9 @@ export default {
 }
 .progress-value {
   position: absolute;
+}
+.board-progress-content {
+  width: 100%;
+  position: relative;
 }
 </style>
