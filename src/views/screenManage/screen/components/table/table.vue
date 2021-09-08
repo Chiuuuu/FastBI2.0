@@ -13,6 +13,7 @@
           :theadStyle="theadStyle"
           type="thead"
           :key="refreshCount"
+          v-if="showHead"
         ></Tcontainer>
         <Tcontainer
           ref="js-tbody"
@@ -23,6 +24,7 @@
           :tableStyle="tableStyle"
           :tbodyStyle="tbodyStyle"
           :key="refreshCount + 1"
+          :autoWrap="autoWrap"
           @hook:mounted="doWithWidth"
           type="tbody"
           @dataLink="dataLink"
@@ -84,6 +86,19 @@ export default {
       // 距离表头高度
       return this.options.style.echart.thead.height + 'px';
     },
+    showHead() {
+      // 表头是否显示
+      const {
+        style: {
+          echart: { thead },
+        },
+      } = this.options;
+      return thead.show;
+    },
+    autoWrap() {
+      // 表单元是否换行
+      return this.options.style.echart.tbody.autoWrap;
+    },
   },
   watch: {
     'options.style': {
@@ -122,6 +137,8 @@ export default {
 
       this.$nextTick(() => {
         this.cols = this.$refs['js-tbody'].handleGetColWidth(this.maxCols);
+        // 设置列最大宽度为200
+        this.cols = this.cols.map(item => (item > 400 ? 400 : item));
         const tableWidth = this.cols.reduce((sum, current) => {
           return sum + current;
         }, 0);
@@ -157,6 +174,8 @@ export default {
         lineHeight: `${thead.height}px`,
         fontSize: `${thead.font.size}px`,
         color: thead.font.color,
+        fontFamily: thead.font.family,
+        fontWeight: thead.font.weight,
       };
 
       this.theadStyle = Object.assign({}, this.theadStyle, {
@@ -180,12 +199,22 @@ export default {
         textAlign: tbody.text.align,
       };
 
-      const fontStyle = {
-        height: `${tbody.height}px`,
+      let fontStyle = {
         lineHeight: `${tbody.height}px`,
         fontSize: `${tbody.font.size}px`,
         color: tbody.font.color,
+        fontFamily: tbody.font.family,
+        fontWeight: tbody.font.weight,
       };
+      // 是否自动换行
+      if (!tbody.autoWrap) {
+        // 不换行
+        fontStyle.height = `${tbody.height}px`;
+        fontStyle.overflow = 'hidden';
+        fontStyle.textOverflow = 'ellipsis';
+        fontStyle.wordWrap = 'normal';
+        fontStyle.whiteSpace = 'nowrap';
+      }
 
       this.tbodyStyle = Object.assign({}, this.tbodyStyle, {
         tbody: {
@@ -357,13 +386,8 @@ export default {
       overflow-x: hidden;
       .content-wrap {
         display: inline-block;
+        width: 100%;
       }
-    }
-    .content-wrap {
-      overflow: hidden;
-      text-overflow: ellipsis;
-      word-wrap: normal;
-      white-space: nowrap;
     }
   }
 

@@ -125,8 +125,8 @@ export default {
         [BoardType.ShapeLine]: 'bi-data-zhixian',
         [BoardType.ShapeRound]: 'bi-data-yuanxing',
         [BoardType.ShapeRectangular]: 'bi-data-juxing',
-        [BoardType.Text]: 'bi-data-text',
-        [BoardType.Image]: 'bi-data-img',
+        [BoardType.Text]: 'bi-data-wenbenkuang',
+        [BoardType.Image]: 'bi-data-tupian',
         [BoardType.ChartMap]: 'bi-data-ditu',
         [BoardType.Source]: 'bi-data-sucaiku-side',
         [BoardType.ChartFunnel]: 'bi-data-loudoutu',
@@ -284,6 +284,7 @@ export default {
           overflow: hidden;
           text-overflow: ellipsis;
           cursor: pointer;
+          color: #959396;
           .item-title {
             margin-left: 6px;
             font-size: 12px;
@@ -294,7 +295,7 @@ export default {
           }
           &:hover,
           &-selected {
-            background: #103ffa;
+            background: #677cf7;
             .item-title,
             .bi-data {
               color: #fff;

@@ -99,6 +99,25 @@
                       :grid="currentCom.setting.style.echart.grid"
                       @change="(key, value) => handleChange(key, value)"
                     ></UnitGridMargin>
+
+                    <a-row class="unit-show-block mb-3" v-if="labelPositionList.length">
+                      <a-col :span="6">
+                        <div class="unit-block-title">矩形颜色</div>
+                      </a-col>
+
+                      <!-- 标签 位置 start -->
+                      <a-col :span="16" :offset="2">
+                        <a-select
+                          style="width: 100%"
+                          :value="currentCom.setting.style.echart.customVisualMapColor"
+                          @change="handleCustomVisualMapColor"
+                        >
+                          <a-select-option value="gradient">按度量</a-select-option>
+                          <a-select-option value="fullfilled">不区分</a-select-option>
+                        </a-select>
+                      </a-col>
+                      <!-- 标签 位置 end -->
+                    </a-row>
                     <!-- 展示数值 start -->
                     <UnitLabel
                       label="指标"
@@ -162,6 +181,7 @@
                 <CollapsePanel class="content-item" panel="legend" header="图例设置">
                   <UnitLegend
                     :legend="currentCom.setting.style.echart.visualMap"
+                    :except="['itemGap', 'icon']"
                     @change="(key, value) => handleVisulMap(key, value)"
                   >
                     <div slot="conTop">
@@ -173,14 +193,10 @@
                         <!-- 连续型 颜色设置 start -->
                         <a-col :span="16">
                           <div class="piecewise-colors float-right">
-                            <div
-                              class="font-color"
-                              v-for="(item, index) in currentCom.setting.style.echart.visualMap.inRange.color"
-                              :key="index"
-                            >
+                            <div class="font-color">
                               <ColorPicker
-                                :value="item"
-                                @change="color => handleInRangeColor(color, index)"
+                                :value="currentCom.setting.style.echart.visualMap.inRange.color[1]"
+                                @change="color => handleInRangeColor(color, 1)"
                               ></ColorPicker>
                             </div>
                           </div>
@@ -303,8 +319,8 @@ export default {
     // 维度度量合并列表
     concatDimAndMea() {
       const { measures = [], xaxis = [], yaxis = [] } = this.currentCom.setting.data;
-      if (measures.concat(xaxis, yaxis).length >= 3) {
-        return measures.concat(xaxis, yaxis).map(item => item.alias);
+      if (xaxis.concat(yaxis, measures).length >= 3) {
+        return xaxis.concat(yaxis, measures).map(item => item.alias);
       } else {
         return ['x轴', 'y轴', '度量'];
       }
@@ -351,6 +367,20 @@ export default {
           },
         },
       });
+    },
+    /**
+     * @description 是否按度量区分颜色
+     */
+    handleCustomVisualMapColor(customVisualMapColor) {
+      // 不区分, 将前后颜色保持一致
+      if (customVisualMapColor === 'fullfilled') {
+        const color = this.currentCom.setting.style.echart.visualMap.inRange.color[1];
+        this.handleInRangeColor(color, 0);
+      } else {
+        // 区分, 将头部颜色替换成白色
+        this.handleInRangeColor('#ffffff', 0);
+      }
+      this.handleChange('echart', { customVisualMapColor });
     },
   },
 };

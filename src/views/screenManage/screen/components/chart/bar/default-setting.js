@@ -50,10 +50,10 @@ export default merge(cloneDeep(BASE), {
           boundaryGap: true,
           nameLocation: 'middle',
           nameGap: 10,
-          name: 'x名称',
+          name: 'X轴名称',
           cache: {
             // 控制缓存数据
-            name: 'x名称',
+            name: 'X轴名称',
           },
           nameShow: true,
           nameTextStyle: {
@@ -96,10 +96,10 @@ export default merge(cloneDeep(BASE), {
           position: 'left',
           boundaryGap: false,
           nameLocation: 'middle',
-          name: 'y名称',
+          name: 'Y轴名称',
           cache: {
             // 控制缓存数据
-            name: 'y名称',
+            name: 'Y轴名称',
           },
           nameShow: true,
           nameTextStyle: {

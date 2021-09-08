@@ -1,4 +1,6 @@
 export default {
+  maxValue: 30, // 最大值
+  minValue: 2, // 最小值
   data: [
     {
       name: 'Grandpa',

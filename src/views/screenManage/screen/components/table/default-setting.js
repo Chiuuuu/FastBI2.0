@@ -18,25 +18,30 @@ export default merge(cloneDeep(BASE), {
             color: '#355ee5',
           },
           font: {
-            size: 12,
+            size: 16,
             color: '#fff',
+            family: 'sans-serif',
+            weight: 'normal',
           },
           text: {
-            align: 'left',
+            align: 'center',
           },
-          height: 30,
+          height: 16,
         },
         tbody: {
           odd: 'transparent', // 奇数行
           even: '#283255', // 偶数行
           font: {
-            size: 12,
+            size: 16,
             color: '#fff',
+            family: 'sans-serif',
+            weight: 'normal',
           },
           text: {
-            align: 'left',
+            align: 'center',
           },
-          height: 32,
+          height: 16,
+          autoWrap: true, //
         },
       },
     },

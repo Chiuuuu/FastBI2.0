@@ -53,8 +53,8 @@ export default {
     outline: none;
     &:checked {
       &::before {
-        border-color: #103ffa;
-        background-color: #103ffa;
+        border-color: #677cf7;
+        background-color: #677cf7;
       }
       &::after {
         content: ' ';

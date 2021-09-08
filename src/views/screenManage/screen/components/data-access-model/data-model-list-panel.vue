@@ -196,7 +196,7 @@ export default {
     white-space: nowrap;
     cursor: pointer;
     &:hover {
-      background: #103ffa;
+      background: #677cf7;
       color: #fff;
     }
     &.added {
@@ -206,7 +206,7 @@ export default {
     }
     // &.added:hover,
     &:hover {
-      background: #627cff;
+      background: #677cf7;
       .anticon,
       .title {
         color: #fff;
@@ -286,7 +286,7 @@ export default {
             }
           }
           &:hover {
-            background: #627cff;
+            background: #677cf7;
             .title {
               color: #fff;
             }
@@ -313,7 +313,7 @@ export default {
             }
             // &.added:hover,
             &:hover {
-              background: #627cff;
+              background: #677cf7;
               .anticon,
               .title {
                 color: #fff;
@@ -362,8 +362,8 @@ export default {
         margin: 5px auto;
         width: 120px;
         margin-top: 15px;
-        background-color: #103ffa;
-        border-color: #103ffa;
+        background-color: #677cf7;
+        border-color: #677cf7;
         color: #fff;
         height: 28px;
         line-height: 28px;

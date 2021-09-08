@@ -136,7 +136,9 @@ export default {
     modelList(list) {
       if (list && list.length) {
         // 如果模型菜单没有选中，初始化的时候默认选中第一个
-        this.modelSelected = list[0];
+        if (!this.modelSelected || !this.modelSelected.tableId) {
+          this.modelSelected = list[0];
+        }
         this.handleGetPivoSchemaList(this.modelSelected.tableId);
       } else {
         // 没有数据列表清空当前选择模型
@@ -153,7 +155,9 @@ export default {
       if (list && list.length && this.tabAcitve === 'access') {
         // 如果模型菜单没有数据
         // 并且接入菜单没有选中，初始化的时候默认选中第一个
-        this.accessSelected = list[0];
+        if (!this.accessSelected || !this.accessSelected.tableId) {
+          this.accessSelected = list[0];
+        }
         this.handleGetPivoSchemaList(this.accessSelected.tableId);
       } else {
         // 没有数据列表清空当前选择模型
@@ -185,6 +189,9 @@ export default {
         this.tabAcitve === 'model' ? this.handleModeMenulSelected(selected) : this.handleAccessMenuSelected(selected);
       } else if (selected) {
         this.handleGetPivoSchemaList(selected.tableId);
+      } else {
+        this.dimension = [];
+        this.measure = [];
       }
     },
     /**
@@ -234,6 +241,21 @@ export default {
         [isModel ? 'modelList' : 'accessList']: cacheList,
       });
       isModel ? this.handleModelMenuSelected(item) : this.handleAccessMenuSelected(item);
+    },
+    /**
+     * @description 选中图表时, 初始化该图表的模型/接入数据
+     */
+    handleChartPivoSchemaList(currentCom) {
+      if (currentCom && currentCom.setting && currentCom.setting.data) {
+        const { dataModelId, resourceType } = currentCom.setting.data;
+        const isModel = resourceType === 8;
+        const list = isModel ? this.modelList : this.accessList;
+        const target = list.find(item => item.tableId === dataModelId);
+        if (target) {
+          this.handleModelMenuSelected(target);
+          this.handleGetPivoSchemaList(target.tableId);
+        }
+      }
     },
     /**
      * @description 删除菜单选项

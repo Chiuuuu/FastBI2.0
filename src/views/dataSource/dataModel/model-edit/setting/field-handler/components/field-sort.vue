@@ -6,7 +6,7 @@
         <a-button type="primary" icon="plus" :disabled="tableList.length >= 5" @click="showModal"></a-button>
       </a-col>
     </a-row>
-    <a-table :columns="columns" :data-source="tableList" :scroll="tableScroll" rowKey="field">
+    <a-table :columns="columns" :data-source="tableList" :scroll="tableScroll" rowKey="pivotschemaId">
       <template #alias="text, record">
         <!-- status: 2, 即引用字段不可见, 置灰处理 -->
         <template v-if="record.status === 2">

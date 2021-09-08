@@ -140,8 +140,8 @@ export default {
       this.fileName = e.target.files[0].name;
 
       const file = e.target.files[0];
-      if (file.size / 1024 / 1024 > 2) {
-        return this.$message.error('只支持2M以内的jpg/png格式图片');
+      if (file.size / 1024 / 1024 > 5) {
+        return this.$message.error('只支持5M以内的jpg/png格式图片');
       }
       const form = new FormData();
       form.append('avatarfile', file);

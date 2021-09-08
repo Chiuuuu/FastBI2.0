@@ -16,8 +16,15 @@
       <tbody v-else :style="tbodyStyle.tbody">
         <template v-for="(tr, index) in data">
           <tr :key="index" :ref="`js-tr-${index}`" :style="handleSetBackgroundColor(index)">
-            <td v-for="(td, i) in tr" :key="td">
-              <p class="content-wrap" :style="tbodyStyle.font" @click.stop="dataLink(td, i)">{{ td }}</p>
+            <td v-for="td in tr" :key="td">
+              <p
+                class="content-wrap"
+                :style="tbodyStyle.font"
+                :title="autoWrap ? '' : td"
+                @click.stop="dataLink(td, i)"
+              >
+                {{ td }}
+              </p>
             </td>
           </tr>
         </template>
@@ -63,6 +70,11 @@ export default {
       // 表格内容样式
       type: Object,
       default: () => {},
+    },
+    autoWrap: {
+      // 表单元是否换行,不换行则鼠标移入显示所有内容
+      type: Boolean,
+      default: false,
     },
   },
   methods: {

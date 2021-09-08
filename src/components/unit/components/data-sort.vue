@@ -447,7 +447,7 @@ export default {
   }
   .ant-checkbox-indeterminate {
     .ant-checkbox-inner {
-      background-color: #617bff;
+      background-color: #677cf7;
       &::after {
         height: 1px;
         background-color: #fff;

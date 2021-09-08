@@ -370,14 +370,15 @@ export default {
     },
     // 处理指定聚合的缺失字段
     missingGroupByFunc(filed) {
-      let rawExpr = {};
-      try {
-        rawExpr = JSON.parse(filed.raw_expr);
-      } catch (error) {
-        return;
-      }
-      rawExpr.field = '';
-      filed.raw_expr = JSON.stringify(rawExpr);
+      // let rawExpr = {}
+      // try {
+      //   rawExpr = JSON.parse(filed.raw_expr)
+      // } catch (error) {
+      //   return
+      // }
+      // rawExpr.field = ''
+      // filed.raw_expr = JSON.stringify(rawExpr)
+      filed.expr = filed.expr.replace(/(?<=\$\$)(\d)+/g, '');
     },
     // 替换为缺失文案
     replaceWithMissing(rawExpr, alias) {

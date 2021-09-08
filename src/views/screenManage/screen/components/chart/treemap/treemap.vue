@@ -374,6 +374,7 @@ export default {
             customPiecesIndex: 0,
           },
         },
+        updateCom: this.shapeUnit.component,
       });
     },
     /**

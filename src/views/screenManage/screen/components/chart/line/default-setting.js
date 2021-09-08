@@ -49,10 +49,10 @@ export default merge(cloneDeep(BASE), {
           boundaryGap: true,
           nameLocation: 'middle',
           nameGap: 10,
-          name: '12312',
+          name: 'X轴名称',
           cache: {
             // 控制缓存数据
-            name: '12312',
+            name: 'X轴名称',
           },
           nameShow: true,
           nameTextStyle: {
@@ -94,10 +94,10 @@ export default merge(cloneDeep(BASE), {
           // Y轴设置
           type: 'value',
           position: 'left',
-          name: '名称',
+          name: 'Y轴名称',
           cache: {
             // 控制缓存数据
-            name: '名称',
+            name: 'Y轴名称',
           },
           nameShow: true,
           nameLocation: 'middle',
@@ -154,7 +154,7 @@ export default merge(cloneDeep(BASE), {
             opacity: 0, //图形透明度
           },
           lineStyle: {
-            width: 2,
+            width: 1,
           },
           // smooth: false,
         },

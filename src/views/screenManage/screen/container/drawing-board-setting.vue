@@ -120,6 +120,11 @@ export default {
       currentCom: state => state.board.currentCom,
     }),
   },
+  watch: {
+    currentCom(newValue) {
+      this.$refs['js-board-setting-right'] && this.$refs['js-board-setting-right'].handleChartPivoSchemaList(newValue);
+    },
+  },
 };
 </script>
 <style lang="less">
@@ -216,7 +221,7 @@ export default {
             display: block;
             height: 2px;
             width: 100%;
-            background-color: #103ffa;
+            background-color: #677cf7;
             position: absolute;
             bottom: -1px;
           }

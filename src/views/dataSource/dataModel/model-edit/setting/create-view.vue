@@ -86,7 +86,7 @@ export default {
             this.$message
               .success({
                 content: '创建成功',
-                duration: 0.5,
+                duration: 1,
               })
               .then(() => {
                 this.$emit('success', result.data.wideTableName);

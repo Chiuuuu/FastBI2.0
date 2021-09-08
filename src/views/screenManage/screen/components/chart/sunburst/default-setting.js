@@ -49,8 +49,6 @@ export default merge(cloneDeep(BASE), {
             hideOverlap: true,
           },
         },
-        customMax: 100, // 最大值
-        customMin: 0, // 最小值
         customInRadius: 0, // 内半径
         customOutRadius: 100, // 外半径
         customCenter: [50, 50], // 坐标中心点

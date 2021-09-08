@@ -1,5 +1,7 @@
 export default {
   fieidName: ['man', 'women', 'name'],
+  xMax: 100, //man 最大值
+  yMax: 100, // woman 最大值
   data: [
     {
       man: 100,

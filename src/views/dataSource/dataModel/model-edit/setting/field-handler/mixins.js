@@ -12,7 +12,7 @@ const mixinModal = {
   },
   data() {
     return {
-      bodyStyle: { height: 'calc(100vh - 340px)', 'overflow-y': 'auto', 'min-height': '360px' },
+      bodyStyle: { height: 'calc(100vh - 330px)', 'overflow-y': 'auto', 'min-height': '370px' },
     };
   },
   computed: {

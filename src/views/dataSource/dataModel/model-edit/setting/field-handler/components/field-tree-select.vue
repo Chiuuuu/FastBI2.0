@@ -82,25 +82,24 @@ export default {
       Object.assign(this.$data, this.$options.data());
     },
     // 编辑时设置已勾选
-    setTree(checkedAlias) {
-      if (!this.$refs.dimension) {
-        return this.$nextTick(() => {
-          this.setTree(checkedAlias);
-        });
-      }
+    setTree(checked) {
       const checkedDimensions = [];
       const checkedMeasures = [];
-      checkedAlias.forEach(item => {
+      checked.forEach(item => {
+        const match = item.match(/(?<=\$\$)(\d)+/g);
+        const id = match ? match[0] : '';
         for (let i = 0; i < this.dimensions.length; i++) {
           const dimension = this.dimensions[i];
-          if (dimension.alias === item) {
+          // if (dimension.alias === item) {
+          if (dimension.id === id) {
             checkedDimensions.push(dimension);
             return;
           }
         }
         for (let i = 0; i < this.measures.length; i++) {
           const measure = this.measures[i];
-          if (measure.alias === item) {
+          // if (measure.alias === item) {
+          if (measure.id === id) {
             checkedMeasures.push(measure);
             return;
           }

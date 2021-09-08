@@ -153,11 +153,11 @@
             <div class="dim_title">
               <span class="dim_span">维度</span>
               <div class="dim_operation">
-                <a v-on:click="handleOpenComputeSetting('维度')" style="color: #627cff; line-height: 38px">
+                <a v-on:click="handleOpenComputeSetting('维度')" style="color: #677cf7; line-height: 38px">
                   新建计算维度
                 </a>
                 <a-divider type="vertical" />
-                <!-- <a v-on:click="openModal('geo-setting')" style="color:#627CFF;">设置地理位置</a> -->
+                <!-- <a v-on:click="openModal('geo-setting')" style="color:#677cf7;">设置地理位置</a> -->
               </div>
             </div>
             <div class="dim_menu scrollbar">
@@ -187,7 +187,7 @@
               <div class="mea_operation">
                 <a
                   v-on:click="handleOpenComputeSetting('度量')"
-                  style="color: #627cff; margin-right: 20px; line-height: 38px"
+                  style="color: #677cf7; margin-right: 20px; line-height: 38px"
                 >
                   新建计算度量
                 </a>
@@ -303,6 +303,7 @@ export default {
   },
   provide() {
     return {
+      rootInstance: this,
       nodeStatus: this.globalStatus,
       NUMBER_LIST: this.NUMBER_LIST,
       AGGREGATOR_LIST: [
@@ -859,6 +860,7 @@ export default {
               } else {
                 item.status = 0;
               }
+              item.expr = field.expr;
               result.push(item);
             }
           });
@@ -882,6 +884,7 @@ export default {
               } else {
                 item.status = 0;
               }
+              item.expr = field.expr;
               result.push(item);
             }
           });
@@ -898,19 +901,41 @@ export default {
       const groupList = fieldList.filter(item => item.isGroupFlag === 2);
       groupList.forEach(field => {
         // 制定聚合
-        let rawExpr = {};
+        let rawExpr = [];
         try {
           rawExpr = JSON.parse(field.raw_expr);
         } catch (error) {
           console.log(error);
         }
         // 分组的字段数组, 要清除被删除的字段
-        const list = rawExpr.checkedList.split(',').filter(item => fieldList.some(p => p.alias === item));
+        const idList = [];
+        const list = rawExpr.checkedList.filter(item =>
+          fieldList.some(p => {
+            if (`$$${p.id}` === item) {
+              idList.push(`$$${p.id}`);
+              return true;
+            } else {
+              return false;
+            }
+          }),
+        );
+        rawExpr.checkedList = list;
+        field.raw_expr = JSON.stringify(rawExpr);
+        field.groupByFunc = `group by (${idList.toString()})`;
+
+        // let rawExpr = []
+        // if (typeof field.raw_expr === 'string') {
+        //   rawExpr = field.raw_expr.slice(1, -1).split(', ')
+        // } else if (Array.isArray(field.raw_expr)) {
+        //   rawExpr = field.raw_expr
+        // }
+        // const list = rawExpr.filter(item => fieldList.some(p => `$$${p.id}` === item))
+        // field.raw_expr = list
+        // field.groupByFunc = `group by (${list.toString()})`
+
         if (list.length === 0) {
           field.isGroupFlag = 1;
         }
-        rawExpr.checkedList = list.toString();
-        field.raw_expr = JSON.stringify(rawExpr);
       });
     },
     /**
@@ -981,12 +1006,10 @@ export default {
           }
         } else {
           // 制定聚合
-          let rawExpr = {};
-          try {
-            rawExpr = JSON.parse(field.raw_expr);
-          } catch (error) {
-            console.log(error);
-          }
+          // let rawExpr = {}
+          // try {
+          //   rawExpr = JSON.parse(field.raw_expr)
+          // } catch (error) {}
 
           const pairList = [
             ...this.cacheDimensions,
@@ -995,12 +1018,21 @@ export default {
             ...pivotSchema.measures,
           ];
 
+          // matchs.forEach(value => {
+          //   const missing = pairList.filter(item => item.id === value).pop()
+          //   if (!missing) {
+          //     field.status = 1
+          //     rawExpr.field = ''
+          //     field.raw_expr = JSON.stringify(rawExpr)
+          //   } else {
+          //     field.status = 0
+          //   }
+          // })
           matchs.forEach(value => {
             const missing = pairList.filter(item => item.id === value).pop();
             if (!missing) {
               field.status = 1;
-              rawExpr.field = '';
-              field.raw_expr = JSON.stringify(rawExpr);
+              field.expr = field.expr.replace(/(?<=\$\$)(\d)+/g, '');
             } else {
               field.status = 0;
             }
