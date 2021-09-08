@@ -109,10 +109,13 @@ export default {
      */
     doWithTooltipShow(param, customTooltipFormatter = []) {
       let label = [];
+      let fieldName = this.isServerData()
+        ? [this.serverData.fieldName.xaxis, this.serverData.fieldName.yaxis, this.serverData.fieldName.measures]
+        : ['x轴', 'y轴', '度量'];
       customTooltipFormatter.forEach(item => {
-        label.push(param[0].value[item]);
+        label.push(fieldName[item] + '：' + param[0].value[item]);
       });
-      return label.join(',');
+      return `${param[0].marker}<br/>` + label.join('<br/>');
     },
     /**
      * @description 处理图表配置项

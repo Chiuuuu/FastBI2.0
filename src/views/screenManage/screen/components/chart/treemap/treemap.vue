@@ -211,15 +211,6 @@ export default {
         return visualMap;
       }
     },
-    doWithFormatter(echart, type) {
-      type = type[0].toUpperCase() + type.substr(1);
-      let formatter = params => {
-        const target = params.data;
-        const result = echart['customFormatter' + type].map(item => target.props[item]);
-        return result.toString();
-      };
-      return formatter;
-    },
     /**
      * @description 处理标签字体等
      * 1. 当在初始化的时候设置添加label.show为false
@@ -228,7 +219,7 @@ export default {
      */
     doWithLabel(echart) {
       const label = Object.assign({}, echart.customSeries.label, {
-        formatter: this.doWithFormatter(echart, 'label'),
+        formatter: this.doWithFormatter(echart),
       });
       this.chartInstane.setOption({
         series: [
@@ -238,16 +229,32 @@ export default {
         ],
       });
     },
+    doWithFormatter(echart) {
+      let formatter = params => {
+        const target = params.data;
+        const result = echart['customFormatterLabel'].map(item => target.props[item]);
+        return result.toString();
+      };
+      return formatter;
+    },
     /**
-     * @description 处理提示框内容
+     * @description 处理鼠标移入提示框内容
      */
     doWithTooltip(echart) {
       const tooltip = Object.assign({}, echart.tooltip, {
-        formatter: this.doWithFormatter(echart, 'tooltip'),
+        formatter: this.doWithFormatterTooltip(echart),
       });
       this.chartInstane.setOption({
         tooltip,
       });
+    },
+    doWithFormatterTooltip(echart) {
+      let formatter = params => {
+        const target = params.data;
+        const result = echart['customFormatterTooltip'].map(item => item + '：' + target.props[item]);
+        return `${params.marker}<br/>` + result.join('<br/>');
+      };
+      return formatter;
     },
     doWithOptions(fetchData, originDimensions, measures) {
       const pieces = [];
