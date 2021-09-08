@@ -211,6 +211,21 @@
                 <CollapsePanel class="content-item" panel="tbody" header="表格">
                   <!-- 表格 start -->
                   <div class="setting-unit-content">
+                    <!-- 是否换行 start -->
+                    <a-row class="unit-show-block mb-8">
+                      <a-col :span="6">
+                        <div class="unit-block-title">自动换行</div>
+                      </a-col>
+                      <a-col :span="16" :offset="2">
+                        <UnitCheckbox
+                          class="show-btn"
+                          label="启用"
+                          style="top: -3px"
+                          :value="currentCom.setting.style.echart.tbody.autoWrap"
+                          @change="autoWrap => handleChange('echart', { tbody: { autoWrap } })"
+                        ></UnitCheckbox>
+                      </a-col>
+                    </a-row>
                     <a-row class="unit-show-block mb-8">
                       <a-col :span="8" class="unit-show-block">
                         <div class="unit-block-title">高度</div>
@@ -342,22 +357,6 @@
                       "
                     ></UnitBackgroundColor>
                     <!-- 奇数行颜色 end -->
-                    <!-- 是否换行 start -->
-                    <a-row class="unit-show-block mb-8">
-                      <a-col :span="6">
-                        <div class="unit-block-title">自动换行</div>
-                      </a-col>
-                      <a-col :span="16" :offset="2">
-                        <UnitCheckbox
-                          class="show-btn"
-                          label="启用"
-                          style="top: -3px"
-                          :value="currentCom.setting.style.echart.tbody.autoWrap"
-                          @change="autoWrap => handleChange('echart', { tbody: { autoWrap } })"
-                        ></UnitCheckbox>
-                      </a-col>
-                    </a-row>
-                    <!-- 字体 end -->
                   </div>
                   <!-- 表格 end -->
                 </CollapsePanel>

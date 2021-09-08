@@ -24,7 +24,7 @@
           :tableStyle="tableStyle"
           :tbodyStyle="tbodyStyle"
           :key="refreshCount + 1"
-          :autoWrap="autoWrap"
+          :autoWrap="tbody_autoWrap"
           @hook:mounted="doWithWidth"
           type="tbody"
         ></Tcontainer>
@@ -38,6 +38,7 @@ import BaseChart from '../chart/base';
 import defaultData from './default-data';
 import Tcontainer from './components/tcontainer';
 import { getStyle } from '@/utils';
+import { mutationTypes as boardMutation } from '@/store/modules/board';
 
 /**
  * @description 表格图表
@@ -93,8 +94,8 @@ export default {
       } = this.options;
       return thead.show;
     },
-    autoWrap() {
-      // 表单元是否换行
+    tbody_autoWrap() {
+      // 表身是否换行
       return this.options.style.echart.tbody.autoWrap;
     },
   },
@@ -135,14 +136,25 @@ export default {
 
       this.$nextTick(() => {
         this.cols = this.$refs['js-tbody'].handleGetColWidth(this.maxCols);
-        // 设置列最大宽度为200
-        this.cols = this.cols.map(item => (item > 400 ? 400 : item));
+        // 设置列宽度固定为100
+        this.cols = this.cols.map(() => 100);
         const tableWidth = this.cols.reduce((sum, current) => {
           return sum + current;
         }, 0);
         this.tableStyle = Object.assign({}, this.tableStyle, {
           width: `${tableWidth}px`,
         });
+        // 随着拖入列，根据表格宽度改变尺寸宽度
+        if (tableWidth && tableWidth !== this.options.style.size.width) {
+          this.$store.commit(boardMutation.SET_STYLE, {
+            style: {
+              size: {
+                width: tableWidth,
+              },
+            },
+            updateCom: this.shapeUnit.component,
+          });
+        }
         this.doWithThead();
         this.doWithTbody();
       });
@@ -167,7 +179,7 @@ export default {
         ['background', 'text'],
       );
 
-      const fontStyle = {
+      let fontStyle = {
         height: `${thead.height}px`,
         lineHeight: `${thead.height}px`,
         fontSize: `${thead.font.size}px`,
@@ -313,7 +325,7 @@ export default {
       });
       if (res.code === 200) {
         this.serverData = { data: res.data };
-        const keys = res.data[0] ? Object.keys(res.data[0]) : [];
+        const keys = this.options.data.fields.map(item => item.alias);
         this.fields = keys.map(key => {
           return { name: key };
         });
@@ -359,6 +371,14 @@ export default {
     }
     .thead {
       top: 0;
+      .content-wrap {
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        word-wrap: normal;
+        display: inline-block;
+        width: 100%;
+      }
     }
     .tbody {
       //   right: 0;
@@ -368,6 +388,9 @@ export default {
         display: inline-block;
         width: 100%;
       }
+    }
+    .content-wrap {
+      word-break: break-all;
     }
   }
 

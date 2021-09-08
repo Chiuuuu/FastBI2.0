@@ -11,6 +11,11 @@ export default merge(cloneDeep(BASE), {
       fields: [],
     },
     style: {
+      size: {
+        // 尺寸
+        width: 430,
+        height: 300,
+      },
       echart: {
         thead: {
           show: true,
@@ -41,7 +46,7 @@ export default merge(cloneDeep(BASE), {
             align: 'center',
           },
           height: 16,
-          autoWrap: true, //
+          autoWrap: true, //自动换行
         },
       },
     },
