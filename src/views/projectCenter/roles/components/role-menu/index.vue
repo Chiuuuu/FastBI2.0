@@ -55,40 +55,47 @@
     <template v-else>
       <!-- <p class="menu_tips">右键文件夹或选项有添加，重命名等操作</p> -->
       <div class="menu-wrap scrollbar" @dragover.stop="handleDragOver">
-        <div
-          class="group"
-          :class="handleIsFolder(folder, 'items') ? 'is-folder' : ''"
-          v-for="(folder, index) in menuList"
-          :key="folder.id"
-        >
-          <template v-if="handleIsFolder(folder, 'items')">
-            <menu-folder :folder="folder" :index="index" :contextmenus="folderContenxtMenu" @fileDrop="handleFileDrop">
-              <template v-slot:file="slotProps">
+        <a-spin :spinning="spinning">
+          <div
+            class="group"
+            :class="handleIsFolder(folder, 'items') ? 'is-folder' : ''"
+            v-for="(folder, index) in menuList"
+            :key="folder.id"
+          >
+            <template v-if="handleIsFolder(folder, 'items')">
+              <menu-folder
+                :folder="folder"
+                :index="index"
+                :contextmenus="folderContenxtMenu"
+                @fileDrop="handleFileDrop"
+              >
+                <template v-slot:file="slotProps">
+                  <menu-file
+                    :file="slotProps.file"
+                    :index="slotProps.index"
+                    :parent="folder"
+                    :isSelect="fileSelectId === slotProps.file.id"
+                    :contextmenus="fileContenxtMenu"
+                    @fileSelect="handleFileSelect"
+                    @fileDrag="handleFileDrag"
+                  ></menu-file>
+                </template>
+              </menu-folder>
+            </template>
+            <template v-else>
+              <ul class="items">
                 <menu-file
-                  :file="slotProps.file"
-                  :index="slotProps.index"
-                  :parent="folder"
-                  :isSelect="fileSelectId === slotProps.file.id"
+                  :file="folder"
+                  :index="index"
+                  :isSelect="fileSelectId === folder.id"
                   :contextmenus="fileContenxtMenu"
                   @fileSelect="handleFileSelect"
                   @fileDrag="handleFileDrag"
                 ></menu-file>
-              </template>
-            </menu-folder>
-          </template>
-          <template v-else>
-            <ul class="items">
-              <menu-file
-                :file="folder"
-                :index="index"
-                :isSelect="fileSelectId === folder.id"
-                :contextmenus="fileContenxtMenu"
-                @fileSelect="handleFileSelect"
-                @fileDrag="handleFileDrag"
-              ></menu-file>
-            </ul>
-          </template>
-        </div>
+              </ul>
+            </template>
+          </div>
+        </a-spin>
       </div>
     </template>
     <reset-name-modal
@@ -134,6 +141,7 @@ export default {
   },
   data() {
     return {
+      spinning: false,
       searchValue: '', // 关键词搜索
       searchList: [], // 搜索结果
       // fileSelectId: '', // 选中左侧菜单
