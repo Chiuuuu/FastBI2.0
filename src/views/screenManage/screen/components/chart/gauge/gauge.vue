@@ -96,7 +96,10 @@ export default {
         max: max,
         detail: {
           formatter(value = 0) {
-            // 保留小数位
+            // 数据格式为百分比
+            if (customValue === 'percentage') {
+              return value.toFixed(customFixed) + '%';
+            }
             return value.toFixed(customFixed);
           },
         },
