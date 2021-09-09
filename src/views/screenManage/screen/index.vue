@@ -317,11 +317,26 @@ export default {
      * @description 更新大屏信息
      */
     handleUpdateScreenInfo(data) {
+      const beUsedDataIds = this.setBeUsedDataIds(data);
       this.screenInfo = {
         ...this.screenInfo,
         ...data,
+        beUsedDataIds,
       };
       this.$store.dispatch('SetScreenInfo', this.screenInfo);
+    },
+    setBeUsedDataIds(data) {
+      let beUsedDataIds = [];
+      data.screenGraphs.forEach(chart => {
+        const keys = Object.keys(chart.setting.data);
+        keys.forEach(key => {
+          if (Array.isArray(chart.setting.data[key])) {
+            const dataIds = chart.setting.data[key].map(data => data.id);
+            beUsedDataIds = beUsedDataIds.concat(dataIds);
+          }
+        });
+      });
+      return [...new Set(beUsedDataIds)];
     },
   },
 };

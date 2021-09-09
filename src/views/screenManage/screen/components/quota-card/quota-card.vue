@@ -163,9 +163,7 @@ export default {
       const res = await this.$server.common.getData('/screen/graph/v2/getData', params);
       if (res.code === 200) {
         const data = res.data[0];
-        const totalAlias = this.options.data['totalQuota'][0].alias;
-        const totalQuotaTitle = totalAlias;
-        const totalQuotaValue = data[totalAlias].toString();
+        const { totalQuotaTitle, totalQuotaValue } = this.doWithTotal(data);
         let secondaryQuotas = [];
         let customSecTitles = [];
         this.options.data.secondaryQuota.forEach(quota => {
@@ -186,13 +184,25 @@ export default {
           style: {
             echart: {
               totalQuatoTitle: { text: totalQuotaTitle },
-              secondaryQuatoTitle: customSecTitles,
+              secondaryQuatoTitle: { text: customSecTitles },
             },
           },
         });
       } else {
         this.$message.error(res.msg);
       }
+    },
+    /**
+     * @description 处理主指标
+     */
+    doWithTotal(data) {
+      let { totalQuotaTitle, totalQuotaValue } = Object.assign({}, defaultData.data);
+      if (this.options.data['totalQuota'].length) {
+        const totalAlias = this.options.data['totalQuota'][0].alias;
+        totalQuotaTitle = totalAlias;
+        totalQuotaValue = data[totalAlias].toString();
+      }
+      return { totalQuotaTitle, totalQuotaValue };
     },
     /**
      * @description 拼装维度度量

@@ -9,13 +9,14 @@
   >
     <div :class="['prefix-icon bi-data', icon]"></div>
     <p>{{ data.alias }}</p>
-    <div class="suffix-btn" @click="e => $emit('arrowClick', e)"></div>
+    <div v-if="!beUsedDataIds.includes(data.id)" class="suffix-btn" @click="arrowClick"></div>
   </li>
 </template>
 <script>
 import DragDrop from '@/utils/dragdrop';
 import { addClass, removeClass } from '@/utils/dom';
 import cloneDeep from 'lodash/cloneDeep';
+import { mapState } from 'vuex';
 
 /**
  * @description 右侧维度度量组件
@@ -55,6 +56,9 @@ export default {
     };
   },
   computed: {
+    ...mapState({
+      beUsedDataIds: state => state.app.screenInfo.setting.beUsedDataIds,
+    }),
     icon() {
       // 对应数据类型的图标
       const icons = {
@@ -231,6 +235,9 @@ export default {
           }
         },
       });
+    },
+    arrowClick(e) {
+      this.$emit('arrowClick', e);
     },
   },
 };

@@ -66,7 +66,9 @@ export default {
       editor: '', // 记录编辑器
       menu: '', // 右键菜单
       text: '', // 文本框内容
-      dataModelId: '', // 记录dataModelId
+      dataModelId: '', // 插入的时候记录dataModelId，验证同模
+      resourceType: '', // 插入的时候记录resourceType，失焦保存保持dataModel跟resourceType一致
+      usedMeasures: [], // 插入的时候记录引用了的度量，保持跟dataModel一致
     };
   },
   mounted() {
@@ -96,12 +98,17 @@ export default {
         },
       ];
       // 度量没有数据或者不同模显示没有可插入的数据
-      if (!this.measures.length || this.options.data.dataModelId !== this.dataModelId) {
+      const datamodelId = this.measures[0] ? this.measures[0].screenTableId : '';
+      if (!this.measures.length || (this.dataModelId && datamodelId !== this.dataModelId)) {
         return noDataList;
       }
-
-      // 过滤已更改的度量
-      return this.measures.filter(item => item.status === 0);
+      let list = [];
+      this.measures.forEach(item => {
+        if (item.status === 0) {
+          list.push(Object.assign(item, { name: item.alias }));
+        }
+      });
+      return list;
     },
   },
   watch: {
@@ -131,6 +138,7 @@ export default {
         }
         this.$nextTick(() => {
           this.dataModelId = val.dataModelId;
+          this.resourceType = val.resourceType;
           this.$refs['js-board-text-unit'].innerHTML = val.htmlText;
           // 非聚焦(可拖)下还要做转换
           if (this.shapeUnit.isShowShapMover) {
@@ -244,8 +252,10 @@ export default {
                     span.setAttribute('contenteditable', false);
                     span.setAttribute('class', 'anchor-measure');
                     span.innerHTML = `[${vm.formatAggregator(item)}&nbsp;&nbsp;&nbsp;]`;
-                    span.oncontextmenu = span.onclick = e => that.clickMeasure(e, item);
+                    span.oncontextmenu = span.onclick = e => vm.clickMeasure(e, item);
                     vm.dataModelId = item.screenTableId; // 记录使用的模型id
+                    vm.resourceType = vm.getResourceType(); // 记录resourceType
+                    vm.usedMeasures = [].concat(vm.measures); // 记录当前使用的度量列表，处理插入
                     range.insertNode(span);
                     range.selectNode(span);
                     this.selectRange(range);
@@ -302,9 +312,9 @@ export default {
       this.editor.subscribe('editableKeydownDelete', () => {
         if (this.menu && this.menu.remove) {
           this.menu.remove();
-          // 监听当前使用模型
-          this.checkDataModelId();
         }
+        // 检查当前使用模型
+        this.checkDataModelId();
       });
     },
     /**
@@ -352,7 +362,7 @@ export default {
         eventBus: this.$EventBus,
         data: {
           dataModelId: this.dataModelId,
-          resourceType: this.getResourceType(),
+          resourceType: this.resourceType,
           htmlText: this.$refs['js-board-text-unit'].innerHTML,
           measures,
         },
@@ -389,6 +399,10 @@ export default {
      * @description 度量数据添加进data
      */
     getMeasureDatas() {
+      // 使用的度量有记录表示有改变数据，处理度量，改变数据不处理
+      if (!this.usedMeasures.length) {
+        return [];
+      }
       let measures = [];
       const measureList = document.querySelectorAll('.anchor-measure');
       if (measureList.length) {
@@ -397,7 +411,7 @@ export default {
           // 验重
           if (!measures.find(item => item.alias === alias)) {
             // 添加度量到图表数据
-            let measure = this.measures.find(item => item.alias === alias);
+            let measure = this.usedMeasures.find(item => item.alias === alias);
             if (measure) {
               // 添加聚合方式值
               measure.defaultAggregator = polymerizationMap[aggregator];
@@ -416,6 +430,8 @@ export default {
       // 度量已经删完，清除图表datamodelId
       if (!matchList) {
         this.dataModelId = '';
+        this.resourceType = '';
+        this.usedMeasures = [];
       }
     }, 400),
     /**

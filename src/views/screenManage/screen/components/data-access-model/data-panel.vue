@@ -127,6 +127,7 @@ import ContextMenu from '@/components/contextmenu';
 import DataPanelItem from './data-panel-item.vue';
 import { mutationTypes as historyMutation } from '@/store/modules/history';
 import GeoSetting from './data-geo-setting/data-geo-setting.vue';
+import { mapState } from 'vuex';
 export default {
   name: 'DataPanel',
   components: {
@@ -146,6 +147,11 @@ export default {
       type: Object,
       default: () => {},
     },
+  },
+  computed: {
+    ...mapState({
+      beUsedDataIds: state => state.app.screenInfo.setting.beUsedDataIds,
+    }),
   },
   data() {
     return {
@@ -208,11 +214,24 @@ export default {
      */
     handleDimConextMenu(e) {
       e.preventDefault();
+      if (this.checkIsBeUsed(e, 'dimension')) {
+        return;
+      }
       this.handleCreateMenu(e, 'dimension');
     },
     handleMeaConextMenu(e) {
       e.preventDefault();
+      if (this.checkIsBeUsed(e, 'measure')) {
+        return;
+      }
       this.handleCreateMenu(e, 'measure');
+    },
+    checkIsBeUsed(e, type) {
+      const data = this[type].find(item => item.alias === e.target.innerHtml);
+      if (data && this.beUsedDataIds.includes(data.id)) {
+        return true;
+      }
+      return false;
     },
     /**
      * @description 事件委托: 判断是否点击到了item
