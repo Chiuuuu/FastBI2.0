@@ -63,6 +63,23 @@ export default {
     doWithCenter(customCenter) {
       return [`${customCenter[0]}%`, `${customCenter[1]}%`];
     },
+    /**
+     * @description 处理鼠标移入提示内容
+     */
+    dowithFormatterToolTip(param) {
+      let label = [];
+      if (param.data.origin) {
+        //服务数据显示
+        Object.keys(param.data.origin).forEach(item => {
+          label.push(item + '：' + param.data.origin[item]);
+        });
+      } else {
+        //默认数据显示
+        label.push('name：' + param.data.name);
+        label.push('value：' + param.data.value);
+      }
+      return label.join('<br/>');
+    },
     doWithOptions(fetchData) {
       const {
         style: { echart },
@@ -78,6 +95,9 @@ export default {
       const options = merge({}, echart, {
         legend: {
           data: legend,
+        },
+        tooltip: {
+          formatter: param => this.dowithFormatterToolTip(param),
         },
         series: [
           {
@@ -129,19 +149,13 @@ export default {
       }
       const datas = res.data || [];
       const data = datas.map(row => {
-        return { name: row[dimensions[0].alias], value: row[measures[0].alias] };
+        return {
+          name: row[dimensions[0].alias],
+          value: row[measures[0].alias],
+          origin: row, //原数据，鼠标移入显示内容有用
+        };
       });
       this.serverData = { data };
-      //   this.serverData = {
-      //     data: [
-      //       { value: 16237, name: '其它' },
-      //       { value: 3399, name: '西南' },
-      //       { value: 1796, name: '西北' },
-      //       { value: 5146, name: '华北' },
-      //       { value: 11115, name: '华东' },
-      //       { value: 10000, name: '华南' },
-      //     ],
-      //   };
 
       // 获取数据之后需要更改限制
       this.$store.commit(boardMutation.SET_STYLE, {

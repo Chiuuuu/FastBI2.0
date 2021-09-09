@@ -252,7 +252,7 @@ export default {
       let formatter = params => {
         const target = params.data;
         const result = echart['customFormatterTooltip'].map(item => item + '：' + target.props[item]);
-        return `${params.marker}<br/>` + result.join('<br/>');
+        return result.join('<br/>');
       };
       return formatter;
     },
