@@ -253,7 +253,6 @@ export default {
         const target = list.find(item => item.tableId === dataModelId);
         if (target) {
           this.handleModelMenuSelected(target);
-          this.handleGetPivoSchemaList(target.tableId);
         }
       }
     },
@@ -334,12 +333,29 @@ export default {
      * @description 转为维度或度量
      */
     handleChangeFieldRole(item, dele, add) {
-      const id = item.id;
-      const index = this[dele].findIndex(n => n.id === id);
-      if (index > -1) {
-        const target = this[dele].splice(index, 1)[0];
-        this[add].push(target);
-      }
+      // 调接口记录这次变化
+      const { screenId, tabId } = this.screenInstance.screenInfo;
+      const { role, pivotschemaId, screenTableId } = item;
+      this.$server.screenManage
+        .screenModuleTransform({
+          screenId,
+          tabId,
+          role,
+          pivotschemaId,
+          screenTableId,
+        })
+        .then(res => {
+          if (res.code === 200) {
+            const id = item.id;
+            const index = this[dele].findIndex(n => n.id === id);
+            if (index > -1) {
+              const target = this[dele].splice(index, 1)[0];
+              this[add].push(target);
+            }
+          } else {
+            this.$message.error('转换失败');
+          }
+        });
     },
   },
 };

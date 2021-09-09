@@ -504,12 +504,14 @@ export default {
     async getScreenShareInfoById(screenId) {
       this.$server.screenManage.showScreenRelease(screenId).then(res => {
         if (res.code === 200) {
-          const { gmtModified = '', expired = 0 } = res.data;
-          // 修改日期 + 过期天数 > 当前时间 = 没有过期
-          const valid = +new Date(gmtModified) + +new Date(expired * 24 * 3600 * 1000) > +new Date();
-          Object.assign(this.shareObj, res.data, {
-            valid,
-          });
+          if (res.data) {
+            const { gmtModified = '', expired = 0 } = res.data;
+            // 修改日期 + 过期天数 > 当前时间 = 没有过期
+            const valid = +new Date(gmtModified) + +new Date(expired * 24 * 3600 * 1000) > +new Date();
+            Object.assign(this.shareObj, res.data, {
+              valid,
+            });
+          }
         } else {
           this.$message.error(res.msg);
         }

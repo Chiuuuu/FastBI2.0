@@ -15,6 +15,7 @@
 <script>
 import DragDrop from '@/utils/dragdrop';
 import { addClass, removeClass } from '@/utils/dom';
+import cloneDeep from 'lodash/cloneDeep';
 
 /**
  * @description 右侧维度度量组件
@@ -185,11 +186,13 @@ export default {
           this.handleIsDragInDrop(mouseEvent, this.dropDataSort, dragdrop);
         },
         ondragend: (dragdrop, mouseEvent) => {
+          // 深拷贝一份, 以免修改维度度量时触发监听事件
+          const data = cloneDeep(this.data);
           this.$store.commit('dragdrop/SET_DRAG', {
             dropType: this.type,
-            data: this.data,
             status: 'dragend',
             mouseEvent,
+            data,
           });
           const b = dragdrop.checkMouseInTarget(mouseEvent, this.dropList);
           const c = dragdrop.checkMouseInTarget(mouseEvent, this.dropDataFilter);

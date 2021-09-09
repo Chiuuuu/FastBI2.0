@@ -1,5 +1,5 @@
 <template>
-  <div class="collapse-list">
+  <div class="collapse-list reset-scrollbar">
     <slot></slot>
   </div>
 </template>

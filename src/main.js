@@ -36,6 +36,11 @@ Vue.use(Antd);
 Vue.use(permission);
 Vue.use(hasPermission);
 
+import { message } from 'ant-design-vue';
+message.config({
+  top: '50px',
+  duration: 2,
+});
 Vue.prototype.$server = server;
 Vue.prototype.$EventBus = new Vue();
 Vue.prototype.$base = process.env.NODE_ENV === 'production' ? '/bin-data-site' : '';
