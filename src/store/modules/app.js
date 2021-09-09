@@ -26,10 +26,11 @@ const app = {
       privileges: [], // 大屏权限
       screenGraphs: [], // 大屏图表
       setting: {}, // 画布样式配置(背景, 宽高)
-      modelMeasures: [], // 度量列表，文本框插入用
       resourceType: '', // 数据类型，文本框请求用
       beUsedDataIds: [], // 被图表引用了的维度/度量id集合
     },
+    modelMeasures: [], // 度量列表，文本框插入用
+    resourceTypeStr: '', // 数据类型，文本框请求用
     polymerizeType: [
       // 聚合方式及中文映射
       { name: '求和', value: 'SUM' },
@@ -84,10 +85,10 @@ const app = {
       state.screenInfo.tabId = id;
     },
     SET_MODEL_MEASURE(state, measures) {
-      state.screenInfo.modelMeasures = measures;
+      state.modelMeasures = measures;
     },
     SET_RESOURCE_TYPE(state, resourceType) {
-      state.screenInfo.resourceType = resourceType;
+      state.resourceTypeStr = resourceType;
     },
     SET_TABS(state, tabs) {
       state.tabs = tabs;

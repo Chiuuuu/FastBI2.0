@@ -185,7 +185,7 @@ export default {
       }
 
       return {
-        value: current,
+        value: current.toFixed(customFixed),
         percent,
       };
     },
@@ -251,6 +251,7 @@ export default {
       this.progressStyle = Object.assign({}, this.progressStyle, {
         width: `${result.percent}%`,
       });
+      this.result = this.doWithFormatter(result);
     },
     /**
      * @description 图表获取服务端数据

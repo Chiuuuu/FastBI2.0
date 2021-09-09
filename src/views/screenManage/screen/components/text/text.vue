@@ -72,12 +72,14 @@ export default {
     };
   },
   mounted() {
-    this.initEditor();
+    if (this.model === parameter.EDIT) {
+      this.initEditor();
+    }
   },
   computed: {
     ...mapState({
       model: state => state.board.model,
-      measures: state => state.app.screenInfo.modelMeasures,
+      measures: state => state.app.modelMeasures,
     }),
     contentStyle() {
       const {
@@ -124,9 +126,13 @@ export default {
     model(val) {
       // 监听画板模式 开启/关闭 编辑器
       if (val === parameter.EDIT) {
-        this.editor.setup();
+        if (this.editor.setup) {
+          this.editor.setup();
+        }
       } else {
-        this.editor.destroy();
+        if (this.editor.destroy) {
+          this.editor.destroy();
+        }
       }
     },
     'options.data': {
@@ -370,7 +376,7 @@ export default {
     },
     // 获取当前
     getResourceType() {
-      const rt = this.$store.state.app.screenInfo.resourceType;
+      const rt = this.$store.state.app.resourceTypeStr;
       return rt === 'model' ? 8 : 3;
     },
     /**
@@ -446,7 +452,7 @@ export default {
         let alias = span.innerHTML.replace(/\[(.*?)\(.*?\)(&nbsp;){3}]/, (match, string) => {
           return string;
         });
-        const measure = this.modelMeasures.find(item => item.alias === alias);
+        const measure = this.options.data.measures.find(item => item.alias === alias);
         if (!measure) {
           return;
         }

@@ -120,8 +120,19 @@ export default {
     /**
      * @description 修改大屏名称
      */
-    changeName(name) {
-      this.screenInfo.name = name;
+    async changeName(name) {
+      if (this.screenInfo.name === name) return;
+      let params = {
+        id: this.screenInfo.screenId,
+        newName: name,
+      };
+      const result = await this.$server.screenManage.renameScreen(params);
+
+      if (result && result.code === 200) {
+        this.$message.success('重命名成功');
+      } else {
+        this.$message.error(result.msg);
+      }
     },
     /**
      * @description 加载完成后编辑大屏

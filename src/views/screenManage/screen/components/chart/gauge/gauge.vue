@@ -32,8 +32,6 @@ export default {
      * @description 图表获取服务端数据
      */
     async getServerData() {
-      console.log({ id: this.shapeUnit.component.id, type: this.shapeUnit.component.type, data: this.options.data });
-      console.log('从这里获取服务端数据');
       const {
         data: { progress },
       } = this.options;
@@ -59,6 +57,7 @@ export default {
         target: !Array.isArray(this.options.data.targe) ? this.options.data.targe : 80,
       };
       const options = this.doWithOptions(this.serverData);
+      this.chartInstane.clear();
       this.updateSaveChart(options);
     },
     /**
@@ -82,8 +81,9 @@ export default {
       const { customOptions, customValue, customFixed } = this.options.style.echart;
 
       // 如果没有最大值，则设置为2倍的进度值
-      if (customValue === 'percentage') {
+      if (!max) {
         // 开启百分比显示, 最大值恒为100
+        customValue === 'percentage';
         max = 100;
       } else {
         max = max || 2 * cur.value;

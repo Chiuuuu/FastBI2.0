@@ -10,8 +10,10 @@ import json2csv from 'json2csv';
 function download(content, name, type) {
   let a = document.createElement('a');
   a.style.display = 'none';
-  if (type === 'img') {
-    let blob = dataURLToBlob(content.toDataURL('image/png'));
+  if (type === 'blob') {
+    var blob = new Blob([content], {
+      type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    });
     a.setAttribute('href', URL.createObjectURL(blob));
   } else {
     a.setAttribute('href', encodeURI(content));
@@ -20,21 +22,10 @@ function download(content, name, type) {
   a.setAttribute('download', name);
   document.body.appendChild(a);
   a.click();
-  document.body.removeChild(a);
-}
-/**
- * @description 图片格式转换方法
- */
-function dataURLToBlob(dataurl) {
-  let arr = dataurl.split(',');
-  let mime = arr[0].match(/:(.*?);/)[1];
-  let bstr = atob(arr[1]);
-  let n = bstr.length;
-  let u8arr = new Uint8Array(n);
-  while (n--) {
-    u8arr[n] = bstr.charCodeAt(n);
+  if (type === 'blob') {
+    URL.revokeObjectURL(blob);
   }
-  return new Blob([u8arr], { type: mime });
+  document.body.removeChild(a);
 }
 /**
  * @description 导出成pdf
@@ -219,8 +210,17 @@ const ContenxtmenuMethodMixin = {
     /**
      * @description 导出excel
      */
-    handleExportExcel() {
-      // 导出excel,调接口
+    async handleExportExcel(e, item, component) {
+      const params = {
+        id: component.id,
+        graphName: component.name,
+      };
+      let res = await this.$server.screenManage.exportExcel(params);
+      if (res['code'] && res['code'] !== 200) {
+        this.$message.error(res.msg);
+        return;
+      }
+      download(res, component.setting.style.title.text + '.xlsx', 'blob');
     },
     /**
      * @description 右键菜单——查看图表数据

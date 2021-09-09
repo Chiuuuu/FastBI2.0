@@ -342,6 +342,19 @@ const screenManage = {
   getPivotschemaByAccess(tableId, tabId) {
     return $axios.get(`/screen/pivotschema/access/${tableId}/${tabId}`);
   },
+  /**
+   *@description 导出excel
+   * @param {String} id 图表id
+   * @param {String} graphName 导出的文件名，取图表标题
+   */
+  exportExcel(data) {
+    return $axios({
+      method: 'post',
+      url: '/screen/graph/export',
+      responseType: 'blob', // 注意类型
+      data,
+    });
+  },
 };
 
 export default screenManage;
