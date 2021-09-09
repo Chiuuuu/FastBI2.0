@@ -82,6 +82,23 @@ export default {
     doWithCenter(customCenter) {
       return [`${customCenter[0]}%`, `${customCenter[1]}%`];
     },
+    /**
+     * @description 处理鼠标移入提示内容
+     */
+    dowithFormatterToolTip(param) {
+      let label = [];
+      if (param.data.origin) {
+        //服务数据显示
+        Object.keys(param.data.origin).forEach(item => {
+          label.push(item + '：' + param.data.origin[item]);
+        });
+      } else {
+        //默认数据显示
+        label.push('name：' + param.data.name);
+        label.push('value：' + param.data.value);
+      }
+      return label.join('<br/>');
+    },
     doWithOptions(fetchData) {
       const {
         style: { echart },
@@ -111,6 +128,9 @@ export default {
       const options = merge({}, echart, {
         legend: {
           data: legendArry,
+        },
+        tooltip: {
+          formatter: param => this.dowithFormatterToolTip(param),
         },
         series: series,
       });
@@ -171,6 +191,7 @@ export default {
             series[series.length - 1].push({
               name: datas[outerInnerIng.alias],
               value: datas[measures[0].alias],
+              origin: datas,
             });
           });
         });
