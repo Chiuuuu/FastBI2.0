@@ -57,7 +57,7 @@ export default {
   },
   computed: {
     ...mapState({
-      beUsedDataIds: state => state.app.screenInfo.setting.beUsedDataIds,
+      beUsedDataIds: state => state.app.screenInfo.beUsedDataIds,
     }),
     icon() {
       // 对应数据类型的图标
