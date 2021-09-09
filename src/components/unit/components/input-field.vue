@@ -12,7 +12,7 @@
                 v-for="item in list"
                 :key="item.id"
               >
-                <p class="text">{{ item.name }}</p>
+                <p class="text">{{ formatAggregator(item) }}</p>
                 <div class="suffix-btn" @click="handleFiledOps($event, item)"></div>
               </div>
             </div>
@@ -179,6 +179,28 @@ export default {
         data: typeof value === 'number' ? +value : '',
         isInput: true,
       });
+    },
+    /**
+     * @description 字段聚合方式
+     */
+    formatAggregator(item) {
+      if (!this.openAggre) {
+        return item.alias;
+      }
+      const fun = this.contextmenuMap[this.getDataType(item.dataType)][0].children.find(
+        x => x.value === item.defaultAggregator,
+      );
+      if (!fun) {
+        console.log('不存在这个聚合类型');
+        return item.alias;
+      }
+      return `${item.alias} (${fun.name})`;
+    },
+    /**
+     * @description 判断数值类型
+     */
+    getDataType(type) {
+      return ['BIGINT', 'DECIMAL', 'DOUBLE'].includes(type) ? 'num' : 'str';
     },
   },
 };

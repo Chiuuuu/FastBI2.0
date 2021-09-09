@@ -5,6 +5,7 @@ import cloneDeep from 'lodash/cloneDeep';
 
 export default merge(cloneDeep(BASE), {
   type: BoardType.QuatoCard,
+  name: '指标卡',
   setting: {
     data: {
       totalQuota: [], // 主指标
@@ -25,7 +26,7 @@ export default merge(cloneDeep(BASE), {
       echart: {
         // 图表配置
         totalQuatoTitle: {
-          text: '', // 自定义的标题
+          text: '总获取量', // 自定义的标题
           show: true,
           color: '#fff',
           size: 16,

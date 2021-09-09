@@ -109,10 +109,13 @@ export default {
      */
     doWithTooltipShow(param, customTooltipFormatter = []) {
       let label = [];
+      let fieldName = this.isServerData()
+        ? [this.serverData.fieldName.xaxis, this.serverData.fieldName.yaxis, this.serverData.fieldName.measures]
+        : ['x轴', 'y轴', '度量'];
       customTooltipFormatter.forEach(item => {
-        label.push(param[0].value[item]);
+        label.push(fieldName[item] + '：' + param[0].value[item]);
       });
-      return label.join(',');
+      return `${param[0].marker}<br/>` + label.join('<br/>');
     },
     /**
      * @description 处理图表配置项
@@ -161,6 +164,10 @@ export default {
     },
     updateChartStyle() {
       if (!this.chartInstane) return;
+      // 解决：已拖入维度/度量的图表，退出编辑大屏，再次进入时先显示默认图表数据，之后再显示已拖入的图表数据
+      if (this.isServerData() && !this.serverData) {
+        return;
+      }
       const options = this.doWithOptions(this.serverData ? this.serverData : defaultData);
       this.updateSaveChart(options);
     },

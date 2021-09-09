@@ -273,6 +273,10 @@ export default {
      */
     updateChartStyle() {
       if (!this.chartInstane) return;
+      // 解决：已拖入维度/度量的图表，退出编辑大屏，再次进入时先显示默认图表数据，之后再显示已拖入的图表数据
+      if (this.isServerData() && !this.serverData) {
+        return;
+      }
       const newOptions = this.doWithOptions(this.serverData ? this.serverData : defaultData);
       this.updateSaveChart(newOptions);
     },

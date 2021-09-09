@@ -76,10 +76,6 @@ export default {
     ...mapState({
       model: state => state.board.model,
       measures: state => state.app.screenInfo.modelMeasures,
-      resourceType: state => {
-        const rt = state.app.screenInfo.resourceType;
-        return rt === 'model' ? 8 : 3;
-      },
     }),
     contentStyle() {
       const {
@@ -128,28 +124,34 @@ export default {
     },
     'options.data': {
       deep: true,
-      immediate: false,
+      immediate: true,
       handler(val) {
         if (!val) {
           return;
         }
-        this.dataModelId = val.dataModelId;
-        this.$refs['js-board-text-unit'].innerHTML = val.htmlText;
-        // 非聚焦(可拖)下还要做转换
-        if (this.shapeUnit.isShowShapMover) {
-          this.getContent(val.measures).then(resStr => {
-            this.$nextTick(() => {
-              this.$refs['js-board-text-unit'].innerHTML = resStr;
-              if (!val.htmlText) {
-                this.$refs['js-board-text-unit'].classList.add('medium-editor-placeholder');
-              }
-            });
-          });
-        }
+        this.$nextTick(() => {
+          this.dataModelId = val.dataModelId;
+          this.$refs['js-board-text-unit'].innerHTML = val.htmlText;
+          // 非聚焦(可拖)下还要做转换
+          if (this.shapeUnit.isShowShapMover) {
+            this.setText(val);
+          }
+        });
       },
     },
   },
   methods: {
+    /**
+     * @description 设置转换数据
+     */
+    setText(data) {
+      this.getContent(data.measures).then(resStr => {
+        this.$refs['js-board-text-unit'].innerHTML = resStr;
+        if (!data.htmlText) {
+          this.$refs['js-board-text-unit'].classList.add('medium-editor-placeholder');
+        }
+      });
+    },
     /**
      * @description 获取拖入的维度度量列数据
      */
@@ -348,8 +350,18 @@ export default {
         target: this.shapeUnit.component,
         store: this.$store,
         eventBus: this.$EventBus,
-        data: { dataModelId: this.dataModelId, htmlText: this.$refs['js-board-text-unit'].innerHTML, measures },
+        data: {
+          dataModelId: this.dataModelId,
+          resourceType: this.getResourceType(),
+          htmlText: this.$refs['js-board-text-unit'].innerHTML,
+          measures,
+        },
       });
+    },
+    // 获取当前
+    getResourceType() {
+      const rt = this.$store.state.app.screenInfo.resourceType;
+      return rt === 'model' ? 8 : 3;
     },
     /**
      * @description 计算显示文本,模板替换去
@@ -362,8 +374,6 @@ export default {
           tabId: this.shapeUnit.component.tabId,
           type: this.shapeUnit.component.type,
           ...this.options.data,
-          dataModelId: this.dataModelId,
-          resourceType: this.resourceType,
         };
         const res = await this.$server.common.getData('/screen/graph/v2/getData', parmas);
         if (res.code === 500) {

@@ -54,6 +54,7 @@ export default merge(cloneDeep(BASE), {
         customSeries: {
           label: {
             show: true,
+            // alignTo: 'labelLine',
             color: '#fff',
             position: 'outside', // outside || inside
             formatter: '{b} {c}',
@@ -61,10 +62,11 @@ export default merge(cloneDeep(BASE), {
           },
           labelLayout: {
             // 标签是否允许重叠
-            hideOverlap: false,
+            hideOverlap: true,
           },
           // center: ['50%', '50%'], // 坐标中心点
         },
+        customlabelLineLen: [60, 25], // 文本标签引导线
         customCenter: [50, 50], // 坐标中心点
         customRadius: 90, // 整体半径
         customFormatterWay: 'nv',

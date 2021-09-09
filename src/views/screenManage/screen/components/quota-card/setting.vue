@@ -331,14 +331,14 @@ export default {
           ? this.currentCom.setting.data.totalQuota[0].alias
           : '总获取量';
         const currentAlias = this.currentCom.setting.style.echart.totalQuatoTitle.text;
-        this.quotaTitles = [{ orgin: orginAlias, current: currentAlias || orginAlias }];
+        this.quotaTitles = [{ orgin: orginAlias, current: currentAlias }];
       } else {
         let titles = [];
         const orginAlias = this.currentCom.setting.data.secondaryQuota;
         const currentAlias = this.currentCom.setting.style.echart.secondaryQuatoTitle.text;
         for (let i = 0; i < orginAlias.length; i++) {
           const alias = orginAlias[i].alias;
-          titles.push({ orgin: alias, current: currentAlias[i] || alias });
+          titles.push({ orgin: alias, current: currentAlias[i] });
         }
         this.quotaTitles = titles;
       }
