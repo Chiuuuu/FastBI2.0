@@ -101,6 +101,9 @@ export default {
     padding-top: 1px;
     height: calc(100% - 37px);
     overflow-y: auto;
+    .tab-panel {
+      height: 100%;
+    }
   }
 }
 </style>

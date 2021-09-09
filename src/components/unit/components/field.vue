@@ -282,6 +282,7 @@ export default {
      * @param {string} options.method 放置的方法
      */
     handleDropField({ dropType, data, method }) {
+      // 这里添加了类型记得同步下面validSameField方法的判断
       const funs = {
         [DROG_TYPE.DIMENSION]: this.handleSetDimension,
         [DROG_TYPE.MEASURE]: this.handleSetMeasure,
@@ -322,15 +323,71 @@ export default {
       }
     },
     /**
+     * @description 拖入字段前, 校验当前图表是否已有且字段属性不一致
+     * @description 所有同时具有维度度量的图表,都需要校验字段
+     * @description 是否有拖入维度/度量后改成度量/维度再次拖入的情况
+     * @param {any} data 数据
+     */
+    validSameField(data) {
+      const {
+        dimensions = [],
+        measures = [],
+        labelDimensions = [],
+        labelMeasures = [],
+        xaxis = [],
+        yaxis = [],
+        outerIng = [],
+        innerIng = [],
+      } = this.currentCom.setting.data;
+      const list = [].concat(dimensions, measures, labelDimensions, labelMeasures, xaxis, yaxis, outerIng, innerIng);
+      const target = list.find(item => item.id === data.id);
+      if (target && target.role !== data.role) {
+        this.$message.error('该字段属性已修改，请先删除之前的字段');
+        return false;
+      } else {
+        return true;
+      }
+    },
+    /**
+     * @description 公共转换成数组
+     */
+    conversionArry(key, data, method, validKey) {
+      let arry = [].concat(this.currentCom.setting.data[key]);
+      arry = this.handleList(arry, data, method, validKey);
+      return arry;
+    },
+    /**
      * @description 列表公共处理方法
      * @param {array} list 列表
      * @param {any} data 数据
      * @param {string} method 方法
+     * @param {string} validKey 同字段属性的其他放置区
      */
-    handleList(list, data, method = 'add') {
+    handleList(list, data, method = 'add', validKey) {
       if (method === 'add') {
+        /**
+         * 除筛选和排序外所有图表拖入维度度量
+         * 都要判断是否有拖入维度/度量后改成度量/维度再次拖入的情况
+         */
+        if (!this.validSameField(data)) {
+          console.error(`There is already a same field: [${data.alias}]`);
+          return list;
+        }
         // 如果数据有重复则直接返回
-        if (list.map(item => item.id).includes(data.id)) return list;
+        let roleList = list;
+        if (validKey) {
+          if (Array.isArray(validKey)) {
+            validKey.forEach(k => {
+              roleList = roleList.concat(this.currentCom.setting.data[k] || []);
+            });
+          } else {
+            roleList = roleList.concat(this.currentCom.setting.data[validKey] || []);
+          }
+        }
+        if (roleList.map(item => item.id).includes(data.id)) {
+          this.$message.error('同属性区域无法拖入相同字段');
+          return list;
+        }
 
         // 1. 是否开启限制
         if (this.limit) {
@@ -378,7 +435,7 @@ export default {
      */
     handleSetLong(data, method = 'add') {
       return {
-        longitude: this.conversionArry('longitude', data, method),
+        longitude: this.conversionArry('longitude', data, method, 'latitude'),
       };
     },
     /**
@@ -386,7 +443,7 @@ export default {
      */
     handleLatitude(data, method = 'add') {
       return {
-        latitude: this.conversionArry('latitude', data, method),
+        latitude: this.conversionArry('latitude', data, method, 'longitude'),
       };
     },
     /**
@@ -394,7 +451,7 @@ export default {
      */
     handleLabelDimension(data, method = 'add') {
       return {
-        labelDimensions: this.conversionArry('labelDimensions', data, method),
+        labelDimensions: this.conversionArry('labelDimensions', data, method, 'labelMeasures'),
       };
     },
     /**
@@ -402,7 +459,7 @@ export default {
      */
     handleLabelMeasure(data, method = 'add') {
       return {
-        labelMeasures: this.conversionArry('labelMeasures', data, method),
+        labelMeasures: this.conversionArry('labelMeasures', data, method, 'labelDimensions'),
       };
     },
     /**
@@ -410,7 +467,7 @@ export default {
      */
     handleLabelLongitude(data, method = 'add') {
       return {
-        labelLongitude: this.conversionArry('labelLongitude', data, method),
+        labelLongitude: this.conversionArry('labelLongitude', data, method, 'labelLatitude'),
       };
     },
     /**
@@ -418,7 +475,7 @@ export default {
      */
     handleLabelLatitude(data, method = 'add') {
       return {
-        labelLatitude: this.conversionArry('labelLatitude', data, method),
+        labelLatitude: this.conversionArry('labelLatitude', data, method, 'labelLongitude'),
       };
     },
     /**
@@ -458,7 +515,7 @@ export default {
      */
     handleOuterIng(data, method = 'add') {
       return {
-        outerIng: this.conversionArry('outerIng', data, method),
+        outerIng: this.conversionArry('outerIng', data, method, 'innerIng'),
       };
     },
     /**
@@ -466,7 +523,7 @@ export default {
      */
     handleInnerIng(data, method = 'add') {
       return {
-        innerIng: this.conversionArry('innerIng', data, method),
+        innerIng: this.conversionArry('innerIng', data, method, 'outerIng'),
       };
     },
     /**
@@ -474,7 +531,7 @@ export default {
      */
     handleXaxis(data, method = 'add') {
       return {
-        xaxis: this.conversionArry('xaxis', data, method),
+        xaxis: this.conversionArry('xaxis', data, method, 'yaxis'),
       };
     },
     /**
@@ -482,7 +539,7 @@ export default {
      */
     handleYaxis(data, method = 'add') {
       return {
-        yaxis: this.conversionArry('yaxis', data, method),
+        yaxis: this.conversionArry('yaxis', data, method, 'xaxis'),
       };
     },
     /**
@@ -492,14 +549,6 @@ export default {
       return {
         fields: this.conversionArry('fields', data, method),
       };
-    },
-    /**
-     * @description 公共转换成数组
-     */
-    conversionArry(key, data, method) {
-      let arry = [].concat(this.currentCom.setting.data[key]);
-      arry = this.handleList(arry, data, method);
-      return arry;
     },
     /**
      * @description 字段删除

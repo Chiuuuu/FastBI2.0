@@ -321,7 +321,7 @@ export default {
         ...this.screenInfo,
         ...data,
       };
-      this.$store.dispatch('SetPageSettings', this.screenInfo);
+      this.$store.dispatch('SetScreenInfo', this.screenInfo);
     },
   },
 };

@@ -284,6 +284,7 @@ export default {
   },
   data() {
     return {
+      spinning: false,
       parameter,
       folderList: [], // 文件夹列表
       dragFile: '',
@@ -491,10 +492,30 @@ export default {
           });
         } else {
           this.getScreenDetailByTabId(result.data.id, tabId || this.tabs[0].id);
+          this.getScreenShareInfoById(result.data.id);
         }
       } else {
         result.msg && this.$message.error(result.msg);
       }
+    },
+    /**
+     * @description 获取大屏分享信息
+     */
+    async getScreenShareInfoById(screenId) {
+      this.$server.screenManage.showScreenRelease(screenId).then(res => {
+        if (res.code === 200) {
+          if (res.data) {
+            const { gmtModified = '', expired = 0 } = res.data;
+            // 修改日期 + 过期天数 > 当前时间 = 没有过期
+            const valid = +new Date(gmtModified) + +new Date(expired * 24 * 3600 * 1000) > +new Date();
+            Object.assign(this.shareObj, res.data, {
+              valid,
+            });
+          }
+        } else {
+          this.$message.error(res.msg);
+        }
+      });
     },
     /**
      * @description 获取大屏分页详情
@@ -734,6 +755,7 @@ export default {
      * @param {boolean} isGetFirstScreen 是否要获取默认获取第一个大屏数据
      */
     handleGetMenuList(isGetFirstScreen = true) {
+      this.spinning = true;
       this.$server.screenManage
         .getFolderList({
           type: 3,
@@ -751,6 +773,9 @@ export default {
           } else {
             this.$message.error(result.msg);
           }
+        })
+        .finally(() => {
+          this.spinning = false;
         });
     },
     /**
