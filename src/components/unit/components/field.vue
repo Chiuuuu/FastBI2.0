@@ -241,6 +241,22 @@ export default {
       });
     },
     /**
+     * @description 校验当前图表是否清空了字段
+     */
+    isEmptyChart() {
+      let list = [];
+      const data = this.currentCom.setting.data;
+      Object.keys(DROG_TYPE).map(key => {
+        list = list.concat(data[key] || []);
+      });
+      if (list.length === 0) {
+        data.dataModelId = '';
+        return true;
+      } else {
+        return false;
+      }
+    },
+    /**
      *  @description 设置数据id
      */
     handleSetDataModelId(result, method) {
@@ -271,6 +287,9 @@ export default {
       } else if (dataModelId !== selected.tableId && method !== 'dele') {
         this.$message.error('一个图表只能拖入一个数据模型的字段');
         return;
+      } else if (method === 'dele' && this.isEmptyChart()) {
+        // 清空了图表的所有字段, 清空
+        result.dataModelId = '';
       }
       return result;
     },
@@ -324,6 +343,9 @@ export default {
       // 清空拖拽数据
       this.$store.commit('dragdrop/RESETSTATE');
     },
+    /**
+     * @description 图表字段清空后, 清空modelId
+     */
     /**
      * @description 拖入字段前, 校验当前图表是否已有且字段属性不一致
      * @description 所有同时具有维度度量的图表,都需要校验字段

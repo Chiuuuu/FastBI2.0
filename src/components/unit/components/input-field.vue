@@ -130,7 +130,7 @@ export default {
 
       let result = fun(data, method);
 
-      result = this.handleSetDataModelId(result);
+      result = this.handleSetDataModelId(result, method);
 
       if (result && typeof result.justSkip === 'undefined') {
         this.$store.commit(historyMutation.COMMAND, {
