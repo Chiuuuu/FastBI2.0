@@ -15,6 +15,7 @@
                       type="field"
                       label="拖入字段"
                       backgroundColor="#40c0a8"
+                      openAggre
                       :list="currentCom.setting.data.fields"
                     ></UnitField>
                   </div>
