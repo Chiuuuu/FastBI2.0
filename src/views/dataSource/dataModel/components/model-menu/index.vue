@@ -278,7 +278,7 @@ export default {
     async handleGetDataSourceList() {
       this.sourceSpinning = true;
       const result = await this.$server.common.getMenuList('/datasource/catalog/list/1').finally(() => {
-        this.sourceSpinning = true;
+        this.sourceSpinning = false;
       });
 
       if (result.code === 200) {
