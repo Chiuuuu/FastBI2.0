@@ -16,7 +16,6 @@
                     label="拖入X轴"
                     receive="dimension"
                     backgroundColor="#4a90e2"
-                    openAggre
                     limit
                     :list="currentCom.setting.data.xaxis"
                   ></UnitField>
@@ -26,7 +25,6 @@
                     label="拖入Y轴"
                     receive="dimension"
                     backgroundColor="#4a90e2"
-                    openAggre
                     limit
                     :list="currentCom.setting.data.yaxis"
                   ></UnitField>
@@ -41,6 +39,7 @@
                     receive="measure"
                     backgroundColor="#40c0a8"
                     limit
+                    openAggre
                     :list="currentCom.setting.data.measures"
                   ></UnitField>
                   <!-- 度量 end -->
