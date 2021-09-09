@@ -90,8 +90,8 @@ export default {
           {
             name: '聚合方式',
             children: [
-              { name: '计数', value: 'CNT', onClick: this.handFiledAggrengation },
-              { name: '去重计数', value: 'DCNT', onClick: this.handFiledAggrengation },
+              { name: '计数', value: 'COUNT', onClick: this.handFiledAggrengation },
+              { name: '去重计数', value: 'COUNTD', onClick: this.handFiledAggrengation },
             ],
           },
         ],
@@ -103,8 +103,8 @@ export default {
               { name: '平均', value: 'AVG', onClick: this.handFiledAggrengation },
               { name: '最大值', value: 'MAX', onClick: this.handFiledAggrengation },
               { name: '最小值', value: 'MIN', onClick: this.handFiledAggrengation },
-              { name: '计数', value: 'CNT', onClick: this.handFiledAggrengation },
-              { name: '去重计数', value: 'DCNT', onClick: this.handFiledAggrengation },
+              { name: '计数', value: 'COUNT', onClick: this.handFiledAggrengation },
+              { name: '去重计数', value: 'COUNTD', onClick: this.handFiledAggrengation },
             ],
           },
         ],
@@ -321,6 +321,8 @@ export default {
           data: result,
         });
       }
+      // 清空拖拽数据
+      this.$store.commit('dragdrop/RESETSTATE');
     },
     /**
      * @description 拖入字段前, 校验当前图表是否已有且字段属性不一致

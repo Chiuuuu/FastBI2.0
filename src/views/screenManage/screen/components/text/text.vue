@@ -32,8 +32,8 @@ const polymerizationMap = {
   平均: 'AVG',
   最大值: 'MAX',
   最小值: 'MIN',
-  计数: 'CNT',
-  去重计数: 'DCNT',
+  计数: 'COUNT',
+  去重计数: 'COUNTD',
 };
 const polymerizationList = [
   {

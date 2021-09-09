@@ -36,7 +36,7 @@ const app = {
       { name: '最大值', value: 'MAX' },
       { name: '最小值', value: 'MIN' },
       { name: '计数', value: 'COUNT' },
-      { name: '去重计数', value: 'DCNT' },
+      { name: '去重计数', value: 'COUNTD' },
     ],
     // 资源类型
     resourceType: {
