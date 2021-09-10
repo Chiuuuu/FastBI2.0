@@ -216,9 +216,10 @@ export default {
     /**
      * @description 查看数据 -- 处理表头, 按拖入的维度度量顺序排列
      * @param { array } keys 列名
+     * @param { string } mapKey 地图类别(填充 || 标记)
      */
-    handleTableColumns(keys) {
-      let fieldList = this.getFieldList();
+    handleTableColumns(keys, mapKey) {
+      let fieldList = this.getFieldList(mapKey);
       const column = [];
       fieldList.map(item => {
         if (keys.includes(item.alias)) {
