@@ -80,6 +80,20 @@ export default {
         return 'drawing-board-preview';
       }
     },
+    // 被图表引用的图表id集合
+    beUsedDataIds() {
+      let beUsedDataIds = [];
+      this.components.forEach(chart => {
+        const keys = Object.keys(chart.setting.data);
+        keys.forEach(key => {
+          if (Array.isArray(chart.setting.data[key])) {
+            const dataIds = chart.setting.data[key].map(data => data.id);
+            beUsedDataIds = beUsedDataIds.concat(dataIds);
+          }
+        });
+      });
+      return [...new Set(beUsedDataIds)];
+    },
   },
   data() {
     return {
@@ -267,24 +281,29 @@ export default {
      * @description 复制tab页面
      */
     async handleCopyTab(params, callback) {
-      const result = await this.$server.screenManage.copyScreenTab({
-        ...params,
-        screenId: this.screenInfo.screenId,
-        id: this.screenInfo.tabId,
-        graphs: this.components,
-        setting: this.page,
-      });
-      if (result && result.code === 200) {
-        this.tabs.push({
-          id: result.data.id,
-          name: params.name,
+      this.handleSave(async () => {
+        const result = await this.$server.screenManage.copyScreenTab({
+          ...params,
+          screenId: this.screenInfo.screenId,
+          id: this.screenInfo.tabId,
+          graphs: this.components,
+          setting: this.page,
         });
-        this.handleTabChange({
-          screenId: params.screenId,
-          tabId: result.data.id, // TODO:要修改成result.data.tabId
-        });
-        if (callback && isFunction(callback)) callback();
-      }
+        if (result && result.code === 200) {
+          this.tabs.push({
+            id: result.data.id,
+            name: params.name,
+          });
+          this.handleTabChange(
+            {
+              screenId: params.screenId,
+              tabId: result.data.id, // TODO:要修改成result.data.tabId
+            },
+            false,
+          );
+          if (callback && isFunction(callback)) callback();
+        }
+      }, '复制失败');
     },
     /**
      * @description 重命名tab页面
@@ -328,26 +347,11 @@ export default {
      * @description 更新大屏信息
      */
     handleUpdateScreenInfo(data) {
-      const beUsedDataIds = this.setBeUsedDataIds(data);
       this.screenInfo = {
         ...this.screenInfo,
         ...data,
-        beUsedDataIds,
       };
       this.$store.dispatch('SetScreenInfo', this.screenInfo);
-    },
-    setBeUsedDataIds(data) {
-      let beUsedDataIds = [];
-      data.screenGraphs.forEach(chart => {
-        const keys = Object.keys(chart.setting.data);
-        keys.forEach(key => {
-          if (Array.isArray(chart.setting.data[key])) {
-            const dataIds = chart.setting.data[key].map(data => data.id);
-            beUsedDataIds = beUsedDataIds.concat(dataIds);
-          }
-        });
-      });
-      return [...new Set(beUsedDataIds)];
     },
   },
 };

@@ -27,7 +27,6 @@ const app = {
       screenGraphs: [], // 大屏图表
       setting: {}, // 画布样式配置(背景, 宽高)
       resourceType: '', // 数据类型，文本框请求用
-      beUsedDataIds: [], // 被图表引用了的维度/度量id集合
     },
     modelMeasures: [], // 度量列表，文本框插入用
     resourceTypeStr: '', // 数据类型，文本框请求用

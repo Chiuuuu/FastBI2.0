@@ -9,21 +9,20 @@
   >
     <div :class="['prefix-icon bi-data', icon]"></div>
     <p>{{ data.alias }}</p>
-    <div v-if="!beUsedDataIds.includes(data.id)" class="suffix-btn" @click="arrowClick"></div>
+    <div v-if="!screenInstance.beUsedDataIds.includes(data.id)" class="suffix-btn" @click="arrowClick"></div>
   </li>
 </template>
 <script>
 import DragDrop from '@/utils/dragdrop';
 import { addClass, removeClass } from '@/utils/dom';
 import cloneDeep from 'lodash/cloneDeep';
-import { mapState } from 'vuex';
 
 /**
  * @description 右侧维度度量组件
  */
 export default {
   name: 'DataPanelItem',
-  inject: ['boardSettingWrapper'],
+  inject: ['boardSettingWrapper', 'screenInstance'],
   props: {
     fieldIndex: {
       // 事件委托的标记
@@ -56,9 +55,6 @@ export default {
     };
   },
   computed: {
-    ...mapState({
-      beUsedDataIds: state => state.app.screenInfo.beUsedDataIds,
-    }),
     icon() {
       // 对应数据类型的图标
       const icons = {
