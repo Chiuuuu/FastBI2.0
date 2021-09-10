@@ -21,9 +21,13 @@ export default {
     /**
      * @description 获取拖入的维度度量列数据
      */
-    getFieldList() {
+    getFieldList(type) {
       const { data } = this.options;
-      return [].concat(data.dimensions).concat(data.measures).concat(data.labelDimensions).concat(data.labelMeasures);
+      if (type === 'fillList') {
+        return [].concat(data.dimensions).concat(data.measures);
+      } else if (type === 'labelList') {
+        return [].concat(data.labelDimensions).concat(data.labelMeasures);
+      }
     },
     /**
      * @description 判断是否获取服务端数据

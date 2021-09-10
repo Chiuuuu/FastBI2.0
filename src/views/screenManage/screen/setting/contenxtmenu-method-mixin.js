@@ -236,14 +236,14 @@ const ContenxtmenuMethodMixin = {
         return;
       }
 
-      let dataList = await this.getChartData(component, vm);
+      let dataList = await this.getChartData(component, vm, item.key);
       // 查看数据弹出展示窗 -- 在board-shape-unit.vue
       this.showChartData(this.chartData);
 
       return dataList;
     },
     // 查看/导出数据 -- 构造数据
-    async getChartData(component, vm) {
+    async getChartData(component, vm, mapKey) {
       let params = {
         id: component.id,
         type: component.type,
@@ -268,42 +268,72 @@ const ContenxtmenuMethodMixin = {
       let exportList = [];
 
       if (component.type === 'ChartMap') {
-        await Promise.all(
-          Object.keys(source).map(async item => {
-            if (source[item]) {
-              let aliasKeys = this.handleTableColumns(Object.keys(source[item][0]), item);
-              columns.push(aliasKeys);
-              let type = '填充';
-              let row = [];
-              if (item === 'fillList') {
-                row = source[item];
-                type = '填充';
-              } else if (item === 'labelList') {
-                row = source[item];
-              }
-              rows.push(row);
-              tableName.push(type);
-              let aliasObj = {};
-              aliasKeys.forEach((alias, index) => {
-                aliasObj['name' + index] = alias['colName'];
-              });
-              let cunstomRow = source[item].map(row => {
-                let obj = {};
+        // 查看数据已拆分成查看填充层or标记层(方便表格分页)
+        if (mapKey) {
+          let aliasKeys = this.$children[0].handleTableColumns(Object.keys(source[mapKey][0]), mapKey);
+          columns = aliasKeys;
+          let type = '填充';
+          let row = [];
+          if (mapKey === 'fillList') {
+            row = source[mapKey];
+            type = '填充';
+          } else if (mapKey === 'labelList') {
+            row = source[mapKey];
+          }
+          rows = row;
+          let aliasObj = {};
+          aliasKeys.forEach((alias, index) => {
+            aliasObj['name' + index] = alias['colName'];
+          });
+          let cunstomRow = source[mapKey].map(row => {
+            let obj = {};
+            aliasKeys.forEach((alias, index) => {
+              obj['name' + index] = row[alias['colName']];
+            });
+            return obj;
+          });
+          let titleRow = { name0: type, name1: '', name2: '' };
+          cunstomRow = [titleRow, aliasObj].concat(cunstomRow);
+          exportList = cunstomRow.concat(exportList);
+        } else {
+          // 导出数据照旧
+          await Promise.all(
+            Object.keys(source).map(async item => {
+              if (source[item]) {
+                let aliasKeys = this.$children[0].handleTableColumns(Object.keys(source[item][0]), item);
+                columns.push(aliasKeys);
+                let type = '填充';
+                let row = [];
+                if (item === 'fillList') {
+                  row = source[item];
+                  type = '填充';
+                } else if (item === 'labelList') {
+                  row = source[item];
+                }
+                rows.push(row);
+                tableName.push(type);
+                let aliasObj = {};
                 aliasKeys.forEach((alias, index) => {
-                  obj['name' + index] = row[alias['colName']];
+                  aliasObj['name' + index] = alias['colName'];
                 });
-                return obj;
-              });
-              let titleRow = { name0: type, name1: '', name2: '' };
-              cunstomRow = [titleRow, aliasObj].concat(cunstomRow);
-              exportList = cunstomRow.concat(exportList);
-            }
-          }),
-        );
+                let cunstomRow = source[item].map(row => {
+                  let obj = {};
+                  aliasKeys.forEach((alias, index) => {
+                    obj['name' + index] = row[alias['colName']];
+                  });
+                  return obj;
+                });
+                let titleRow = { name0: type, name1: '', name2: '' };
+                cunstomRow = [titleRow, aliasObj].concat(cunstomRow);
+                exportList = cunstomRow.concat(exportList);
+              }
+            }),
+          );
+        }
       } else {
         // 处理空数据
-        columns = [this.$children[0].handleTableColumns(Object.keys(source[0]))];
-        rows = [source];
+        columns = this.$children[0].handleTableColumns(Object.keys(source[0]));
+        rows = source;
         exportList = source;
       }
       this.chartData = {

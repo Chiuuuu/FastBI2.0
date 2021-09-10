@@ -74,7 +74,7 @@
       </div>
       <div class="right">
         <div class="right-header" v-if="fileSelect.id > 0">
-          <span class="nav_title">{{ fileSelect.name }}</span>
+          <span class="nav_title" style="margin-right: 10px">{{ fileSelect.name }}</span>
           <img
             v-show="release.status === 'ready'"
             style="width: 18px; heigth: 18px"
@@ -176,7 +176,7 @@
       <template slot="footer">
         <a-button key="cancel" @click="handleReleaseModalClose">取消</a-button>
         <a-button key="submit" type="primary" @click="handleReleaseSubmit">
-          {{ release.type === 'edit' ? '重新发布' : '发布' }}
+          {{ release.status === 'publish' ? '重新发布' : '发布' }}
         </a-button>
       </template>
       <div class="releace-box" @click="showCode = false">
@@ -199,14 +199,21 @@
         <div class="releace-line">
           <span class="label">分享密码：</span>
           <input
-            v-if="release.status === 'ready'"
             v-model="shareObj.password"
             :class="['mod_input', { 'has-error': showLimitWarn }, 'ant-input']"
             placeholder="请输入6位分享密码（数字+字母）"
             maxlength="6"
             @input="handlePassword"
           />
-          <span v-else>{{ shareObj.password || '无密码' }}</span>
+          <!-- <input
+            v-if="release.status === 'ready'"
+            v-model="shareObj.password"
+            :class="['mod_input', { 'has-error': showLimitWarn }, 'ant-input']"
+            placeholder="请输入6位分享密码（数字+字母）"
+            maxlength="6"
+            @input="handlePassword"
+          /> -->
+          <!-- <span v-else>{{ shareObj.password || '无密码' }}</span> -->
         </div>
         <div class="releace-line" v-show="showLimitWarn">
           <span class="errortext">请输入6位数字+字母</span>
@@ -216,12 +223,13 @@
             <span style="color: #ff0000">*</span>
             分享时效：
           </span>
-          <a-radio-group v-if="release.status === 'publish'" v-model="shareObj.expired">
+          <!-- <a-radio-group v-if="release.status === 'ready'" v-model="shareObj.expired"> -->
+          <a-radio-group v-model="shareObj.expired">
             <a-radio :value="7">7天</a-radio>
             <a-radio :value="30">30天</a-radio>
             <a-radio :value="0">永久</a-radio>
           </a-radio-group>
-          <span v-else>{{ expiredLabel }}</span>
+          <!-- <span v-else>{{ expiredLabel(shareObj.expired) }}</span> -->
         </div>
         <div class="code-show" v-show="showCode">
           <vue-qr :size="250" :text="shareObj.url" :margin="0"></vue-qr>
@@ -372,6 +380,7 @@ export default {
         visible: false, // 打开
       },
       shareObj: {
+        expired: 7, // 默认7天
         url: '', // 分享链接
       },
       showLimitWarn: false, // 发布大屏验证密码
@@ -393,16 +402,6 @@ export default {
     },
     hasPermissionSourceAdd() {
       return checkActionPermission(this.$PERMISSION_CODE.OBJECT.screen, this.$PERMISSION_CODE.OPERATOR.add);
-    },
-    expiredLabel() {
-      switch (this.shareObj.expired) {
-        case 7:
-          return '7天';
-        case 30:
-          return '30天';
-        default:
-          return '永久';
-      }
     },
   },
   mounted() {
@@ -431,6 +430,19 @@ export default {
     },
   },
   methods: {
+    /**
+     * @description 分享时效转换
+     */
+    expiredLabel(expired) {
+      switch (expired) {
+        case 7:
+          return '7天';
+        case 30:
+          return '30天';
+        default:
+          return '永久';
+      }
+    },
     /**
      * @description 判断是否有编辑权限
      */
@@ -482,7 +494,7 @@ export default {
           ...this.release,
           status: result.data.isPublish ? 'publish' : 'ready',
         };
-
+        console.log(this.release);
         if (isChangeRoute) {
           this.$router.push({
             query: {
@@ -490,6 +502,7 @@ export default {
               tabId: tabId || this.tabs[0].id,
             },
           });
+          this.getScreenShareInfoById(screenId);
         } else {
           this.getScreenDetailByTabId(result.data.id, tabId || this.tabs[0].id);
           this.getScreenShareInfoById(result.data.id);
@@ -508,7 +521,7 @@ export default {
             const { gmtModified = '', expired = 0 } = res.data;
             // 修改日期 + 过期天数 > 当前时间 = 没有过期
             const valid = +new Date(gmtModified) + +new Date(expired * 24 * 3600 * 1000) > +new Date();
-            Object.assign(this.shareObj, res.data, {
+            this.shareObj = Object.assign({}, res.data, {
               valid,
             });
           }

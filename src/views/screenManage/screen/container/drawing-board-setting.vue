@@ -50,7 +50,7 @@ import { mapState } from 'vuex';
  */
 export const DROG_TYPE = {
   LIST: 'list', // 维度度量列表
-  FIELD: 'field', // 字段
+  FIELD: 'fields', // 字段
   DATAFILTER: 'dataFilter', // 数据筛选
   DATASORT: 'dataSort', // 数据排序
   LONG: 'longitude', // 经度

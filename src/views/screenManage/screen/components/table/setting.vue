@@ -12,7 +12,7 @@
                   <div class="setting-unit-content">
                     <UnitField
                       :receive="['measure', 'dimension']"
-                      type="field"
+                      type="fields"
                       label="拖入字段"
                       backgroundColor="#40c0a8"
                       openAggre

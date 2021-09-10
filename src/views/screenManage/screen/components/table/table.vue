@@ -129,6 +129,14 @@ export default {
   },
   methods: {
     /**
+     * @description 切割当前展示的表格
+     */
+    doWithSliceData(start, end) {
+      if (!this.serverData) return;
+      const data = this.serverData.data.slice(start, end);
+      this.doWithOptions({ data });
+    },
+    /**
      * @description 等子组件挂载完成后处理对应的宽度
      */
     doWithWidth() {
@@ -137,6 +145,7 @@ export default {
       this.tbodyStyle = {};
 
       this.$nextTick(() => {
+        this.$refs['js-tbody'].initScrollData();
         this.cols = this.$refs['js-tbody'].handleGetColWidth(this.maxCols);
         // 设置列宽度固定为100
         this.cols = this.cols.map(() => 100);
@@ -250,7 +259,9 @@ export default {
     /**
      * @description 处理配置项
      */
-    doWithOptions(fetchData) {
+    doWithOptions(fetchData = this.serverData) {
+      if (!fetchData) return;
+
       this.maxCols = [];
       this.tbodyData = [];
 
@@ -279,7 +290,6 @@ export default {
         });
         return result;
       });
-
       this.maxCols = [...map.values()].map(item => {
         return item.index;
       });
@@ -331,7 +341,7 @@ export default {
         this.fields = keys.map(key => {
           return { name: key };
         });
-        this.doWithOptions(this.serverData);
+        this.doWithOptions();
         this.refreshCount += 1;
       } else {
         this.$message.error(res.msg);

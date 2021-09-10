@@ -60,6 +60,50 @@ export default {
   name: 'BoardShapeUnit',
   mixins: [ContenxtmenuMethodMixin],
   data() {
+    const baseContextMenu = [
+      {
+        name: '导出',
+        readonly: true,
+        children: [
+          { name: 'excel', onClick: this.handleExportExcel },
+          { name: 'csv', onClick: this.handleExportCsv },
+          { name: '导出图片', onClick: this.handleExportImg },
+        ],
+      },
+      // 右键菜单
+      {
+        name: '复制',
+        readonly: false,
+        onClick: this.handleCopyComponent,
+      },
+      {
+        name: '删除',
+        readonly: false,
+        onClick: this.handleDeleComponent,
+      },
+      {
+        name: '排列',
+        readonly: false,
+        children: [
+          {
+            name: '置于顶层',
+            onClick: this.handleSetZIndex.bind(this, 'top'),
+          },
+          {
+            name: '置于底层',
+            onClick: this.handleSetZIndex.bind(this, 'bottom'),
+          },
+          {
+            name: '上移一层',
+            onClick: this.handleSetZIndex.bind(this, 'up'),
+          },
+          {
+            name: '下移一层',
+            onClick: this.handleSetZIndex.bind(this, 'down'),
+          },
+        ],
+      },
+    ];
     return {
       parameter,
       isShowShapMover: true, // 控制是否能拖动
@@ -71,48 +115,18 @@ export default {
           readonly: true,
           onClick: this.handleChartDataComponent,
         },
+        ...baseContextMenu,
+      ],
+      mapContenxtMenu: [
         {
-          name: '导出',
+          name: '查看数据',
           readonly: true,
           children: [
-            { name: 'excel', onClick: this.handleExportExcel },
-            { name: 'csv', onClick: this.handleExportCsv },
-            { name: '导出图片', onClick: this.handleExportImg },
+            { name: '填充层', key: 'fillList', onClick: this.handleChartDataComponent },
+            { name: '标记层', key: 'labelList', onClick: this.handleChartDataComponent },
           ],
         },
-        // 右键菜单
-        {
-          name: '复制',
-          readonly: false,
-          onClick: this.handleCopyComponent,
-        },
-        {
-          name: '删除',
-          readonly: false,
-          onClick: this.handleDeleComponent,
-        },
-        {
-          name: '排列',
-          readonly: false,
-          children: [
-            {
-              name: '置于顶层',
-              onClick: this.handleSetZIndex.bind(this, 'top'),
-            },
-            {
-              name: '置于底层',
-              onClick: this.handleSetZIndex.bind(this, 'bottom'),
-            },
-            {
-              name: '上移一层',
-              onClick: this.handleSetZIndex.bind(this, 'up'),
-            },
-            {
-              name: '下移一层',
-              onClick: this.handleSetZIndex.bind(this, 'down'),
-            },
-          ],
-        },
+        ...baseContextMenu,
       ],
       show: false, // 图表数据查看
       chartData: {}, // 图表数据
@@ -206,7 +220,8 @@ export default {
       if (isFullScreen && !this.isNeedExport) {
         return;
       }
-      let list = this.contenxtMenu;
+      const isMap = this.component.type === 'ChartMap';
+      let list = isMap ? this.mapContenxtMenu : this.contenxtMenu;
       if (isFullScreen) {
         list = list.filter(item => item.readonly);
       }
