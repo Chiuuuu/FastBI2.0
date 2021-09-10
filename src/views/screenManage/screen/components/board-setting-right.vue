@@ -252,7 +252,12 @@ export default {
         const list = isModel ? this.modelList : this.accessList;
         const target = list.find(item => item.tableId === dataModelId);
         if (target) {
-          this.handleModelMenuSelected(target);
+          const type = isModel ? 'model' : 'access';
+          this.tabAcitve = type;
+          this.$nextTick(() => {
+            isModel ? this.handleModelMenuSelected(target) : this.handleAccessMenuSelected(target);
+            // this.handleListSelect(target, type);
+          });
         }
       }
     },

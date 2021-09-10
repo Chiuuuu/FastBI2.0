@@ -115,7 +115,10 @@ export default {
         this.chartList = this.toBindList;
         return;
       }
-      this.chartList = this.toBindList.filter(item => item.indexOf(this.keyword) > -1);
+      this.chartList = this.toBindList.filter(item => {
+        const title = item.setting.style.title.text;
+        return title.indexOf(this.keyword) > -1;
+      });
     },
     // 点击全选
     onCheckAllChange(e) {

@@ -121,7 +121,7 @@ export default {
      * @description 修改大屏名称
      */
     changeName(name) {
-      this.screenInfo.name = name;
+      this.screenInfo.screenName = name;
     },
     /**
      * @description 加载完成后编辑大屏

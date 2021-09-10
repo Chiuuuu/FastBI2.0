@@ -46,9 +46,11 @@
               @drop="handleDrop($event, tab)"
             >
               <a-dropdown v-if="renameIndex !== index" :trigger="['contextmenu']" placement="topCenter">
-                <div class="page-item-box page-name">
-                  {{ tab.name }}
-                </div>
+                <a-tooltip placement="topLeft" :title="tab.name">
+                  <div class="page-item-box page-name">
+                    {{ tab.name }}
+                  </div>
+                </a-tooltip>
                 <a-menu slot="overlay">
                   <!-- TODO:复制和重命名功能 -->
                   <a-menu-item key="copy" @click="handleCopyTab(tab)">复制</a-menu-item>
