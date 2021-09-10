@@ -57,7 +57,6 @@ export default {
         target: !Array.isArray(this.options.data.targe) ? this.options.data.targe : 80,
       };
       const options = this.doWithOptions(this.serverData);
-      this.chartInstane.clear();
       this.updateSaveChart(options);
     },
     /**
@@ -81,12 +80,19 @@ export default {
       const { customOptions, customValue, customFixed } = this.options.style.echart;
 
       // 如果没有最大值，则设置为2倍的进度值
-      if (!max) {
+      if (customValue === 'percentage') {
         // 开启百分比显示, 最大值恒为100
-        customValue === 'percentage';
         max = 100;
       } else {
         max = max || 2 * cur.value;
+      }
+
+      // 如果没有最大值，则设置为2倍的进度值
+      if (customValue === 'percentage') {
+        // 开启百分比显示, 最小值恒为0
+        min = 0;
+      } else {
+        max = max || 0;
       }
 
       const options = merge({}, customOptions, {
