@@ -131,8 +131,7 @@
   right: 0;
   left: 0;
 }
-.screen-catalog-wrapper .screen-catalog .drawing-board-preview .preview-board-app .drawing-board-content .page-list,
-.screen-catalog-wrapper .screen-catalog .drawing-board-preview .preview-board-app .drawing-board-page-tools .page-list {
+.screen-catalog-wrapper .screen-catalog .drawing-board-preview .preview-board-app .drawing-board-content .page-list {
   overflow: hidden;
 }
 .screen-catalog-wrapper .screen-catalog .drawing-board-preview .preview-board-app .drawing-board-content {

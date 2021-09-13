@@ -136,8 +136,12 @@ export default {
       };
 
       const key = measures.name;
-      const max = maxBy(fetchData.data, key)[key];
-      const min = minBy(fetchData.data, key)[key];
+      let max = 0;
+      let min = 0;
+      if (fetchData.data.length) {
+        max = maxBy(fetchData.data, key)[key];
+        min = minBy(fetchData.data, key)[key];
+      }
       const visualMap = this.doWithVisualMap(max, min);
       const data = this.doWithData(fetchData.data, xaxis, yaxis, measures);
       const options = merge({}, echart, {
