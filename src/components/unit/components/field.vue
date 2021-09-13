@@ -8,7 +8,10 @@
             <div v-if="list.length" class="pillys">
               <div
                 class="pilly-item mb-6"
-                :style="{ backgroundColor, color: '#fff' }"
+                :style="{
+                  backgroundColor: judgeFiledType(item.role) === 'dimensions' ? '#4a90e2' : '#40c0a8',
+                  color: '#fff',
+                }"
                 v-for="item in list"
                 :key="item.id"
               >
@@ -163,6 +166,13 @@ export default {
   },
   methods: {
     /**
+     * @description 判断字段类型
+     * @param {Number} role 字段类型 1维度，2度量
+     */
+    judgeFiledType(role) {
+      return role === 1 ? 'dimensions' : 'measures';
+    },
+    /**
      * @description 校验鼠标是否在放置区中
      * @param {object} mouseEvent 鼠标
      * @param {object} target 放置区
@@ -246,8 +256,13 @@ export default {
     isEmptyChart() {
       let list = [];
       const data = this.currentCom.setting.data;
-      Object.keys(DROG_TYPE).map(key => {
-        list = list.concat(data[key] || []);
+      Object.values(DROG_TYPE).map(key => {
+        if (key === 'demension' || key === 'measure') {
+          key = key + 's';
+        }
+        if (Array.isArray(data[key])) {
+          list = list.concat(data[key] || []);
+        }
       });
       if (list.length === 0) {
         data.dataModelId = '';

@@ -146,6 +146,7 @@ export default {
         // label: this.doWithLabel(echart.customSeries.label),
         // labelLayout: this.doWithLabelLayout.bind(this, echart.customSeries.labelLayout, this.chartInstane.getWidth()),
         labelLine: {
+          showAbove: true,
           length: echart.customlabelLineLen[index],
         },
         data: data,
@@ -191,7 +192,10 @@ export default {
             series[series.length - 1].push({
               name: datas[outerInnerIng.alias],
               value: datas[measures[0].alias],
-              origin: datas,
+              origin: {
+                [outerInnerIng.alias]: datas[outerInnerIng.alias],
+                [measures[0].alias]: datas[measures[0].alias],
+              },
             });
           });
         });

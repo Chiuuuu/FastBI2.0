@@ -91,6 +91,21 @@
                       :value="currentCom.setting.style.echart.thead.show"
                       @change="show => handleChange('echart', { thead: { show } })"
                     ></UnitCheckbox>
+                    <!-- 是否换行 start -->
+                    <a-row class="unit-show-block mb-8">
+                      <a-col :span="6">
+                        <div class="unit-block-title">自动换行</div>
+                      </a-col>
+                      <a-col :span="16" :offset="2">
+                        <UnitCheckbox
+                          class="show-btn"
+                          label="启用"
+                          style="top: -3px"
+                          :value="currentCom.setting.style.echart.thead.autoWrap"
+                          @change="autoWrap => handleChange('echart', { thead: { autoWrap } })"
+                        ></UnitCheckbox>
+                      </a-col>
+                    </a-row>
                     <a-row class="unit-show-block mb-8">
                       <a-col :span="8" class="unit-show-block">
                         <div class="unit-block-title">高度</div>

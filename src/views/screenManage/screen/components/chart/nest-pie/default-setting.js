@@ -66,9 +66,9 @@ export default merge(cloneDeep(BASE), {
           },
           // center: ['50%', '50%'], // 坐标中心点
         },
-        customlabelLineLen: [60, 25], // 文本标签引导线
+        customlabelLineLen: [55, 40], // 文本标签引导线
         customCenter: [50, 50], // 坐标中心点
-        customRadius: 90, // 整体半径
+        customRadius: 72, // 整体半径
         customFormatterWay: 'nv',
         customIsOpenDataLink: false, // 是否开启图表联动
         customInteractive: {}, // 保存联动数据

@@ -487,7 +487,7 @@ export default {
         .bi-data {
           display: inline-block;
           margin: 0px auto 2px auto;
-          font-size: 18px;
+          font-size: 16px;
           color: #fff;
         }
       }
@@ -587,7 +587,7 @@ export default {
     li.btn-item {
       float: left;
       height: 52px;
-      padding: 4px 8px;
+      padding: 7px 8px;
       cursor: pointer;
       position: relative;
       .tool-btn {
@@ -601,11 +601,11 @@ export default {
       }
       .u-icon {
         display: block;
-        height: 30px;
+        height: 28px;
         margin: 0px auto 2px auto;
         color: #fff;
         .bi-data {
-          font-size: 24px;
+          font-size: 20px;
         }
       }
       .text {

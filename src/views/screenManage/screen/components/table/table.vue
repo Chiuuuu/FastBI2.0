@@ -14,11 +14,12 @@
           type="thead"
           :key="refreshCount"
           v-if="showHead"
+          @hook:mounted="doWithHeadHeight"
         ></Tcontainer>
         <Tcontainer
           ref="js-tbody"
           class="reset-scrollbar"
-          :style="{ top: tbodyPositionTop, right: bodyScrollRight }"
+          :style="{ top: headHeight, right: bodyScrollRight }"
           :data="tbodyData"
           :cols="cols"
           :tableStyle="tableStyle"
@@ -79,14 +80,15 @@ export default {
       tbodyStyle: {}, // 表格内容样式
       refreshCount: 0, // 用来重置组件 https://cn.vuejs.org/v2/api/#key => 完整地触发组件的生命周期钩子
       bodyScrollRight: 0, // 计算滚动长度定位纵向滚动轴
+      headHeight: '38px', //表头高度
     };
   },
   destroyed() {},
   computed: {
-    tbodyPositionTop() {
-      // 距离表头高度
-      return this.options.style.echart.thead.height + 'px';
-    },
+    // tbodyPositionTop() {
+    //   // 距离表头高度
+    //   return this.options.style.echart.thead.height + 'px';
+    // },
     showHead() {
       // 表头是否显示
       const {
@@ -137,6 +139,13 @@ export default {
       this.doWithOptions({ data });
     },
     /**
+     * @description 等子组件挂载完成后处理表头的高度
+     */
+    async doWithHeadHeight() {
+      await this.$nextTick();
+      this.headHeight = this.$refs['js-thead'].handleGetHeight() + 'px';
+    },
+    /**
      * @description 等子组件挂载完成后处理对应的宽度
      */
     doWithWidth() {
@@ -149,18 +158,19 @@ export default {
         this.cols = this.$refs['js-tbody'].handleGetColWidth(this.maxCols);
         // 设置列宽度固定为100
         this.cols = this.cols.map(() => 100);
-        const tableWidth = this.cols.reduce((sum, current) => {
+        let tableWidth = this.cols.reduce((sum, current) => {
           return sum + current;
         }, 0);
         this.tableStyle = Object.assign({}, this.tableStyle, {
           width: `${tableWidth}px`,
         });
         // 随着拖入列，根据表格宽度改变尺寸宽度
-        if (tableWidth && tableWidth !== this.options.style.size.width) {
+        // 2为外层边框
+        if (tableWidth && tableWidth + 2 !== this.options.style.size.width) {
           this.$store.commit(boardMutation.SET_STYLE, {
             style: {
               size: {
-                width: tableWidth,
+                width: tableWidth + 2,
               },
             },
             updateCom: this.shapeUnit.component,
@@ -191,13 +201,25 @@ export default {
       );
 
       let fontStyle = {
-        height: `${thead.height}px`,
-        lineHeight: `${thead.height}px`,
+        // height: `${thead.height}px`,
+        // lineHeight: `${thead.height}px`,
         fontSize: `${thead.font.size}px`,
         color: thead.font.color,
         fontFamily: thead.font.family,
         fontWeight: thead.font.weight,
       };
+      // 是否自动换行
+      if (!thead.autoWrap) {
+        // 不换行
+        fontStyle.height = `${thead.height}px`;
+        fontStyle.lineHeight = `${thead.height}px`;
+        fontStyle.overflow = 'hidden';
+        fontStyle.textOverflow = 'ellipsis';
+        fontStyle.wordWrap = 'normal';
+        fontStyle.whiteSpace = 'nowrap';
+      } else {
+        fontStyle.padding = '7px 10px';
+      }
 
       this.theadStyle = Object.assign({}, this.theadStyle, {
         thead: {
@@ -205,6 +227,8 @@ export default {
         },
         font: fontStyle,
       });
+
+      this.doWithHeadHeight();
     },
     /**
      * @description 处理表格
@@ -221,7 +245,7 @@ export default {
       };
 
       let fontStyle = {
-        lineHeight: `${tbody.height}px`,
+        // lineHeight: `${tbody.height}px`,
         fontSize: `${tbody.font.size}px`,
         color: tbody.font.color,
         fontFamily: tbody.font.family,
@@ -231,10 +255,13 @@ export default {
       if (!tbody.autoWrap) {
         // 不换行
         fontStyle.height = `${tbody.height}px`;
+        fontStyle.lineHeight = `${tbody.height}px`;
         fontStyle.overflow = 'hidden';
         fontStyle.textOverflow = 'ellipsis';
         fontStyle.wordWrap = 'normal';
         fontStyle.whiteSpace = 'nowrap';
+      } else {
+        fontStyle.padding = '7px 10px';
       }
 
       this.tbodyStyle = Object.assign({}, this.tbodyStyle, {
@@ -394,6 +421,7 @@ export default {
     top: 0;
     bottom: 0;
     overflow-x: scroll;
+    border: 1px solid #313960;
     .thead,
     .tbody {
       position: absolute;
@@ -401,11 +429,14 @@ export default {
     }
     .thead {
       top: 0;
+      th:not(:last-of-type) {
+        border-right: 1px solid #313960;
+      }
       .content-wrap {
-        overflow: hidden;
-        white-space: nowrap;
-        text-overflow: ellipsis;
-        word-wrap: normal;
+        // overflow: hidden;
+        // white-space: nowrap;
+        // text-overflow: ellipsis;
+        // word-wrap: normal;
         display: inline-block;
         width: 100%;
       }
@@ -414,6 +445,12 @@ export default {
       //   right: 0;
       bottom: 0;
       overflow-x: hidden;
+      tr {
+        border-top: 1px solid #313960;
+      }
+      td:not(:last-of-type) {
+        border-right: 1px solid #313960;
+      }
       .content-wrap {
         display: inline-block;
         width: 100%;
