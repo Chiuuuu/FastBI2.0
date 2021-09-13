@@ -338,6 +338,20 @@ export default {
           [measureAlias]: data[measureAlias], // 度量
         });
       }
+      // 每个区域标记点超过20个要进行截取
+      if (datas.length > 20) {
+        let overload = false;
+        datas.map(item => {
+          if (item.value.length && item.value.length > 20) {
+            datas.length = 20;
+            overload = true;
+          }
+        });
+        if (overload) {
+          const title = this.options.style.title.text;
+          this.$message.error(`图表${title}数据量过大, 已截取前50条展示`);
+        }
+      }
       return {
         labelList: datas,
         labelName: measureAlias,
@@ -374,6 +388,20 @@ export default {
       }
       if (labelList.length && !datas.length) {
         this.$message.error('经纬度解析失败');
+      }
+      // 每个区域标记点超过20个要进行截取
+      if (datas.length > 20) {
+        let overload = false;
+        datas.map(item => {
+          if (item.value.length && item.value.length > 20) {
+            datas.length = 20;
+            overload = true;
+          }
+        });
+        if (overload) {
+          const title = this.options.style.title.text;
+          this.$message.error(`图表${title}数据量过大, 已截取前50条展示`);
+        }
       }
       return {
         labelList: datas,
