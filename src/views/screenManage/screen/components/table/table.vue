@@ -152,7 +152,6 @@ export default {
       this.tableStyle = {};
       this.theadStyle = {};
       this.tbodyStyle = {};
-
       this.$nextTick(() => {
         this.$refs['js-tbody'].initScrollData();
         this.cols = this.$refs['js-tbody'].handleGetColWidth(this.maxCols);
@@ -164,6 +163,7 @@ export default {
         this.tableStyle = Object.assign({}, this.tableStyle, {
           width: `${tableWidth}px`,
         });
+        // debugger
         // 随着拖入列，根据表格宽度改变尺寸宽度
         // 2为外层边框
         if (tableWidth && tableWidth + 2 !== this.options.style.size.width) {
@@ -421,7 +421,7 @@ export default {
     top: 0;
     bottom: 0;
     overflow-x: scroll;
-    border: 1px solid #313960;
+    // border: 1px solid #313960;
     .thead,
     .tbody {
       position: absolute;
@@ -429,6 +429,9 @@ export default {
     }
     .thead {
       top: 0;
+      border: 1px solid #313960;
+      border-bottom: none;
+      overflow: hidden;
       th:not(:last-of-type) {
         border-right: 1px solid #313960;
       }
@@ -445,6 +448,10 @@ export default {
       //   right: 0;
       bottom: 0;
       overflow-x: hidden;
+      table {
+        border: 1px solid #313960;
+        border-top: none;
+      }
       tr {
         border-top: 1px solid #313960;
       }
