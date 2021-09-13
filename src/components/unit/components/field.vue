@@ -408,7 +408,7 @@ export default {
             roleList = roleList.concat(this.currentCom.setting.data[validKey] || []);
           }
         }
-        if (roleList.map(item => item.id).includes(data.id)) {
+        if (roleList.map(item => item.pivotschemaId).includes(data.pivotschemaId)) {
           this.$message.error('同属性区域无法拖入相同字段');
           return list;
         }
