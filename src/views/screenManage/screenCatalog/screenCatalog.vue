@@ -494,7 +494,6 @@ export default {
           ...this.release,
           status: result.data.isPublish ? 'publish' : 'ready',
         };
-        console.log(this.release);
         if (isChangeRoute) {
           this.$router.push({
             query: {
@@ -550,6 +549,7 @@ export default {
           privileges: result.privileges,
         };
         this.components = [].concat(result.screenGraphs);
+        this.$store.commit('board/SET_BOARD_SETTING', result.setting);
       }
     },
     /**

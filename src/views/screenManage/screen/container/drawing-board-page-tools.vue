@@ -32,36 +32,49 @@
       <div class="pagebar-middle clearfix" ref="tabArea">
         <div class="pagebar-center">
           <ul v-if="tabs && tabs.length" ref="tabList" class="page-list" :style="{ left: tabAreaPositionLeft + 'px' }">
-            <li
-              class="page-item"
-              v-for="(tab, index) in tabs"
-              :key="tab.id"
-              :class="tab.id === value ? 'active' : ''"
-              @click="handleTabChange(tab)"
-              @dblclick="handleRenameTab(tab, index)"
-              draggable
-              @dragstart="handleDragStart($event, tab)"
-              @dragover.prevent="handleDragOver($event, tab)"
-              @dragend="handleDragEnd($event, tab)"
-              @drop="handleDrop($event, tab)"
-            >
-              <a-dropdown v-if="renameIndex !== index" :trigger="['contextmenu']" placement="topCenter">
-                <a-tooltip :title="tab.name">
-                  <div class="page-item-box page-name">
-                    {{ tab.name }}
-                  </div>
-                </a-tooltip>
-                <a-menu slot="overlay">
-                  <!-- TODO:复制和重命名功能 -->
-                  <a-menu-item key="copy" @click="handleCopyTab(tab)">复制</a-menu-item>
-                  <a-menu-item key="reset" @click="handleRenameTab(tab, index)">重命名</a-menu-item>
-                  <a-menu-item key="delete" @click="handleDeleteTab(tab, index)" :disabled="tabs.length === 1">
-                    删除
-                  </a-menu-item>
-                </a-menu>
-              </a-dropdown>
-              <input v-else ref="input" @blur="onBlur(tab)" v-model="renameValue" />
-            </li>
+            <template v-for="(tab, index) in tabs">
+              <li
+                class="page-item"
+                v-if="type === parameter.EDIT"
+                :key="tab.id"
+                :class="tab.id === value ? 'active' : ''"
+                @click="handleTabChange(tab)"
+                @dblclick="handleRenameTab(tab, index)"
+                draggable
+                @dragstart="handleDragStart($event, tab)"
+                @dragover.prevent="handleDragOver($event, tab)"
+                @dragend="handleDragEnd($event, tab)"
+                @drop="handleDrop($event, tab)"
+              >
+                <a-dropdown v-if="renameIndex !== index" :trigger="['contextmenu']" placement="topCenter">
+                  <a-tooltip :title="tab.name">
+                    <div class="page-item-box page-name">
+                      {{ tab.name }}
+                    </div>
+                  </a-tooltip>
+                  <a-menu slot="overlay">
+                    <!-- TODO:复制和重命名功能 -->
+                    <a-menu-item key="copy" @click="handleCopyTab(tab)">复制</a-menu-item>
+                    <a-menu-item key="reset" @click="handleRenameTab(tab, index)">重命名</a-menu-item>
+                    <a-menu-item key="delete" @click="handleDeleteTab(tab, index)" :disabled="tabs.length === 1">
+                      删除
+                    </a-menu-item>
+                  </a-menu>
+                </a-dropdown>
+                <input v-else ref="input" @blur="onBlur(tab)" v-model="renameValue" />
+              </li>
+              <li
+                v-else
+                :key="tab.id"
+                class="page-item"
+                :class="tab.id === value ? 'active' : ''"
+                @click="handleTabChange(tab)"
+              >
+                <div class="page-item-box page-name">
+                  {{ tab.name }}
+                </div>
+              </li>
+            </template>
           </ul>
         </div>
         <div v-if="handleIsShowButtonAdd()" class="page-add" @click="handleAddPage">+</div>

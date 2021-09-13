@@ -55,6 +55,12 @@ export default {
         return;
       }
       const datas = res.data || [];
+      // 截取前50条数据展示
+      if (datas.length > 50) {
+        datas.length = 50;
+        const title = this.options.style.title.text;
+        this.$message.error(`图表${title}数据量过大, 已截取前50条展示`);
+      }
       this.serverData = {
         fieldName: {
           xaxis: xaxis[0].alias,
@@ -136,8 +142,12 @@ export default {
       };
 
       const key = measures.name;
-      const max = maxBy(fetchData.data, key)[key];
-      const min = minBy(fetchData.data, key)[key];
+      let max = 0;
+      let min = 0;
+      if (fetchData.data.length) {
+        max = maxBy(fetchData.data, key)[key];
+        min = minBy(fetchData.data, key)[key];
+      }
       const visualMap = this.doWithVisualMap(max, min);
       const data = this.doWithData(fetchData.data, xaxis, yaxis, measures);
       const options = merge({}, echart, {

@@ -75,9 +75,11 @@ export default {
     },
     // 点击选择菜单栏跳转页面
     selectMenu(item) {
-      this.$router.push({
-        name: item.name,
-      });
+      if (this.$route.name !== item.name) {
+        this.$router.push({
+          name: item.name,
+        });
+      }
     },
   },
 };

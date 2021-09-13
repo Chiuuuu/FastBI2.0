@@ -46,13 +46,13 @@
                     <a-row class="unit-show-block mb-8">
                       <a-col :span="24">
                         <div class="photo-wrap" @click.stop="addPhote">
-                          <p v-if="fileName" :title="fileName">{{ fileName }}</p>
-                          <a-icon type="upload" v-else />
+                          <!-- <p v-if="fileName" :title="fileName">{{ fileName }}</p> -->
+                          <a-icon type="upload" />
                           <input
                             id="upload_photo"
                             type="file"
                             name
-                            accept="image/png, image/jpeg, image/gif"
+                            accept="image/png, image/jpg image/jpeg, image/gif, image/jfif, image/pjp"
                             style="display: none"
                             @change="selectPhoto($event)"
                           />
@@ -141,7 +141,7 @@ export default {
 
       const file = e.target.files[0];
       if (file.size / 1024 / 1024 > 5) {
-        return this.$message.error('只支持5M以内的jpg/png格式图片');
+        return this.$message.error('只支持5M以内的png/pjp/jpg/jpeg/jfif/gif格式图片');
       }
       const form = new FormData();
       form.append('avatarfile', file);
