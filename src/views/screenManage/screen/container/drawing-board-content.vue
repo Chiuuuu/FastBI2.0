@@ -240,10 +240,13 @@ export default {
      */
     doWithBoardFrameStyle() {
       const SPACE = 41;
+      // 全屏时展示原尺寸
       this.boardFrameStyle = this.isFullScreen()
         ? {
-            width: `${Math.ceil(this.boardPage.size.width * this.boardScale)}px`,
-            height: `${Math.ceil(this.boardPage.size.height * this.boardScale)}px`,
+            // width: `${Math.ceil(this.boardPage.size.width * this.boardScale)}px`,
+            // height: `${Math.ceil(this.boardPage.size.height * this.boardScale)}px`,
+            width: `${this.boardPage.size.width}px`,
+            height: `${this.boardPage.size.height}px`,
           }
         : {
             width: `${Math.ceil(this.boardPage.size.width * this.boardScale) + SPACE}px`, // 1920 => 1135
@@ -256,7 +259,8 @@ export default {
     doWithBoardCanvasStyle() {
       const transformList = ['transform', 'WebkitTransform', 'MozTransform'];
       transformList.forEach(css => {
-        this.boardCanvasStyle[css] = `scale(${this.boardScale})`;
+        // 全屏时展示原尺寸
+        this.boardCanvasStyle[css] = `scale(${this.isFullScreen() ? 1 : this.boardScale})`;
       });
     },
     /**

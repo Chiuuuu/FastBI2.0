@@ -169,6 +169,14 @@ const mutations = {
   SET_BOARD_MODEL(state, { model }) {
     state.model = model;
   },
+  /**
+   * 设置屏幕样式
+   * @param {object} Playload
+   * @param {number | string} Playload.model 模式
+   */
+  SET_BOARD_SETTING(state, page) {
+    state.page = Object.assign(state.page, page);
+  },
 };
 
 const actions = {};
