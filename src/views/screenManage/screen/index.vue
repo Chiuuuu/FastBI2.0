@@ -388,9 +388,15 @@ export default {
   .@{board}-header,
   .@{board}-content,
   .@{board}-side,
-  .@{board}-page-tools,
   .@{board}-setting {
     position: absolute;
+  }
+  .@{board}-page-tools{
+    position: absolute;
+    &.full-screen{
+        left: 0;
+        right: 0;
+    }
   }
   .@{board}-side ~ .@{board}-content,
   .@{board}-side ~ .@{board}-page-tools {
