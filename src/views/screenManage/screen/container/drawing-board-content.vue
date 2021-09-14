@@ -18,6 +18,14 @@
               >
                 <component :is="item.type" :options="item.setting" ref="js-board-grid-chart"></component>
               </BoardShapeUnit>
+              <!-- 全屏下内容编辑区工具栏 start -->
+              <DrawingBoardPageTools
+                v-if="isFullScreen()"
+                :tabs="$parent.tabs"
+                :type="parameter.FULLSCREEN"
+                :value="$parent.tabActive"
+                @change="$parent.handleTabChange"
+              ></DrawingBoardPageTools>
             </div>
           </a-spin>
           <!-- 画板网格控制真实尺寸 end -->
@@ -59,6 +67,7 @@ import BoardQuatoCard from '../components/quota-card/quota-card';
 import { parameter, mutationTypes as boardMutaion } from '@/store/modules/board';
 import ContextMenu from '@/components/contextmenu';
 import ContenxtmenuMethodMixin from '@/views/screenManage/screen/setting/contenxtmenu-method-mixin';
+import DrawingBoardPageTools from '@/views/screenManage/screen/container/drawing-board-page-tools';
 
 /**
  * @description 大屏编辑区
@@ -90,6 +99,7 @@ export default {
     BoardQuatoCard,
     BoardSource,
     ChartFunnel,
+    DrawingBoardPageTools,
   },
   props: {
     components: {
@@ -193,7 +203,7 @@ export default {
      * @description 判断是否为全屏
      */
     isFullScreen() {
-      return this.$store.state.board.model === this.parameter.FULLSCREEN;
+      return checkFullScreen();
     },
     /**
      * @description 点击画板设置当前组件为null

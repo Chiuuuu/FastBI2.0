@@ -14,13 +14,17 @@ export default merge(cloneDeep(BASE), {
       size: {
         // 尺寸
         width: 430,
-        height: 300,
+        height: 317,
+      },
+      background: {
+        // 背景
+        color: 'transparent',
       },
       echart: {
         thead: {
           show: true,
           background: {
-            color: '#355ee5',
+            color: 'rgba(255,255,255,0.08)',
           },
           font: {
             size: 16,
@@ -31,11 +35,12 @@ export default merge(cloneDeep(BASE), {
           text: {
             align: 'center',
           },
-          height: 16,
+          height: 38,
+          autoWrap: true, //自动换行
         },
         tbody: {
           odd: 'transparent', // 奇数行
-          even: '#283255', // 偶数行
+          even: 'transparent', // 偶数行
           font: {
             size: 16,
             color: '#fff',
@@ -45,7 +50,7 @@ export default merge(cloneDeep(BASE), {
           text: {
             align: 'center',
           },
-          height: 16,
+          height: 38,
           autoWrap: true, //自动换行
         },
       },

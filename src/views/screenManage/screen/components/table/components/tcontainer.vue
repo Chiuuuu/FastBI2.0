@@ -1,5 +1,5 @@
 <template>
-  <div :class="type" @scroll="handleScroll">
+  <div :class="type" @scroll="handleScroll" :ref="`${type}-wrap`">
     <table :style="tableStyle">
       <colgroup>
         <col v-for="(col, index) in cols" :key="index" :style="{ width: `${col}px` }" />
@@ -165,6 +165,12 @@ export default {
         const width = Math.ceil(tr[0].children[`${index}`].children[0].offsetWidth) + 22;
         return width;
       });
+    },
+    /**
+     * @description 获取表头/表身的高度
+     */
+    handleGetHeight() {
+      return this.$refs[`${this.type}-wrap`].offsetHeight;
     },
     /**
      * @description 图表联动

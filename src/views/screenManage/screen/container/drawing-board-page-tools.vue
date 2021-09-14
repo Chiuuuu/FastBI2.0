@@ -1,15 +1,15 @@
 <template>
-  <div class="drawing-board-page-tools">
+  <div :class="['drawing-board-page-tools', { 'full-screen': isFullScreenBar }]">
     <div class="pagebar clearfix">
       <!-- 页面tab切换 start -->
-      <div class="pagebar-left">
+      <div class="pagebar-left" v-if="!isFullScreenBar">
         <div class="btns-box clearfix">
           <div :class="['btn-left', { disabled: firstTabIndex < 1 }]" @click="handleTransitionTab('prev')">◀</div>
           <div :class="['btn-right', { disabled: rightBtnDisabled }]" @click="handleTransitionTab('next')">▶</div>
         </div>
       </div>
       <!-- 页面tab切换 end -->
-      <div class="pagebar-right">
+      <div class="pagebar-right" v-if="!isFullScreenBar">
         <!-- 页面比例设置 start -->
         <div class="tool-scale">
           <span class="num" ref="js-slider-result">{{ boardScale }}%</span>
@@ -29,7 +29,7 @@
         <!-- 页面比例设置 end -->
       </div>
       <!-- 中间tab页 -->
-      <div class="pagebar-middle clearfix" ref="tabArea">
+      <div :class="['pagebar-middle', 'clearfix', { 'full-screen': isFullScreenBar }]" ref="tabArea">
         <div class="pagebar-center">
           <ul v-if="tabs && tabs.length" ref="tabList" class="page-list" :style="{ left: tabAreaPositionLeft + 'px' }">
             <template v-for="(tab, index) in tabs">
@@ -86,6 +86,7 @@
 import { mapState } from 'vuex';
 import { parameter, mutationTypes as boardMutaion } from '@/store/modules/board';
 import Slider from '@/components/slider/slider';
+import { checkFullScreen } from '@/utils';
 
 /**
  * @description 编辑大屏底部工具栏
@@ -114,7 +115,7 @@ export default {
       required: true,
       validator: function (value) {
         // 这个值必须匹配下列字符串中的一个
-        return [parameter.PREVIEW, parameter.EDIT].indexOf(value) !== -1;
+        return [parameter.PREVIEW, parameter.EDIT, parameter.FULLSCREEN].indexOf(value) !== -1;
       },
     },
   },
@@ -135,10 +136,31 @@ export default {
       // 页面下标
       return this.tabs.findIndex(tab => tab.id === this.value) || 0;
     },
+    isFullScreenBar() {
+      return this.type === parameter.FULLSCREEN;
+    },
+    fullScreen() {
+      return checkFullScreen();
+    },
+  },
+  watch: {
+    fullScreen(val) {
+      if (this.isFullScreenBar) {
+        return;
+      }
+      if (val) {
+        window.removeEventListener('resize', this.handleResize);
+      } else {
+        window.addEventListener('resize', this.handleResize);
+      }
+    },
   },
   mounted() {
     this.$nextTick(() => {
       this.handleShowTableList('resize');
+      if (this.isFullScreenBar) {
+        return;
+      }
       window.addEventListener('resize', this.handleResize);
     });
   },
@@ -241,9 +263,12 @@ export default {
      * @description 统一处理tab栏状态
      */
     handleShowTableList(type) {
-      const { disabled, offset } = this.handleTableListPosition(type);
-      this.rightBtnDisabled = disabled;
-      this.tabAreaPositionLeft += offset;
+      const obj = this.handleTableListPosition(type);
+      if (!obj) {
+        return;
+      }
+      this.rightBtnDisabled = obj.disabled;
+      this.tabAreaPositionLeft += obj.offset;
     },
     /**
      * @description 重新计算tab页区域宽度, 并处理显示的tab
@@ -478,6 +503,9 @@ export default {
       margin-left: 44px;
       margin-right: 180px;
       display: flex;
+      &.full-screen {
+        margin: 0;
+      }
       .pagebar-center {
         height: 31px;
         overflow: hidden;
