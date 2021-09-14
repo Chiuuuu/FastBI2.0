@@ -8,7 +8,12 @@
     <!-- 大屏名称 start -->
     <div class="drawing-board-title">
       <span class="board-name-box" :title="screenInfo.screenName">
-        <input type="text" placeholder="请输入大屏标题" :value="screenInfo.screenName" @blur="handleChangeScreenName" />
+        <input
+          type="text"
+          placeholder="请输入大屏标题"
+          :value="screenInfo.screenName"
+          @change="handleChangeScreenName"
+        />
       </span>
     </div>
     <!-- 大屏名称 end -->
