@@ -431,13 +431,13 @@ export default {
         min-width: 176px;
         height: 20px;
         line-height: 20px;
-        padding: 0 0 0 3px;
+        padding: 0;
         font-size: 14px;
         color: #fff;
         border: 1px solid transparent;
         background: transparent;
         position: absolute;
-        left: 0;
+        left: -2px;
         top: 0;
         bottom: 0;
         margin: auto 0;

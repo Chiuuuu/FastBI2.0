@@ -148,8 +148,9 @@
                             style="width: 100%"
                             @change="value => handleCustomRateChange('labelContent', value)"
                           >
-                            <a-select-option value="converse">转化率</a-select-option>
-                            <a-select-option value="arrive">到达率</a-select-option>
+                            <a-select-option v-for="item in concatDimAndMea" :key="item.value" :value="item.value">
+                              {{ item.name }}
+                            </a-select-option>
                           </a-select>
                         </a-col>
                       </a-row>
@@ -524,11 +525,15 @@ export default {
         return [
           { name: dimensions[0].alias, value: 'name' },
           { name: measures[0].alias, value: 'value' },
+          { name: '转化率', value: 'converse' },
+          { name: '到达率', value: 'arrive' },
         ];
       } else {
         return [
           { name: '维度', value: 'name' },
           { name: '度量', value: 'value' },
+          { name: '转化率', value: 'converse' },
+          { name: '到达率', value: 'arrive' },
         ];
       }
     },

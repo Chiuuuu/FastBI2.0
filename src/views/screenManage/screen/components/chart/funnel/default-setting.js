@@ -47,7 +47,7 @@ export default merge(cloneDeep(BASE), {
         // 系列
         customSeries: {
           top: 70,
-          right: 150,
+          right: 170,
           bottom: 60,
           left: 50,
           label: {
@@ -60,9 +60,9 @@ export default merge(cloneDeep(BASE), {
             position: 'center',
           },
         },
-        customFormatterWay: ['name', 'value'], // 指标内容选择
+        customFormatterWay: ['name'], // 指标内容选择
         customLabelArrange: 'horizontal', // 排列 horizontal vertical
-        customTooltipFormatter: ['name', 'value'], //鼠标移入显示
+        customTooltipFormatter: ['name', 'value', 'converse', 'arrive'], //鼠标移入显示
         // 展示环节-转化率/到达率 配置
         customRate: {
           show: true,
@@ -70,7 +70,7 @@ export default merge(cloneDeep(BASE), {
           fontSize: 16,
           fontFamily: 'sans-serif',
           fontWeight: 'normal',
-          labelContent: ['converse', 'arrive'], //显示内容
+          labelContent: ['converse'], //显示内容
           position: 'right', //位置 left right
           arrange: 'vertical', // 排列 horizontal vertical
         },

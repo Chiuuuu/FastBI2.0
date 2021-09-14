@@ -87,8 +87,8 @@ export default {
     /**
      * @description 处理柱状条宽度（数值/百分比）
      */
-    doWithBarWidth(barWidth, length) {
-      return `${barWidth / length}%`;
+    doWithBarWidth(item, barWidth, length) {
+      item['barWidth'] = `${barWidth / length}%`;
     },
     /**
      * @description 根据key处理value值
@@ -105,11 +105,10 @@ export default {
       } = this.options;
 
       const shape = this.doWithShape(echart, fetchData.categoryData);
-      echart.customSeries.barWidth = this.doWithBarWidth(echart.customBarWidth, fetchData.series.length);
       fetchData.series.forEach(item => {
         this.doWithBarGap(item, echart.customBarGap);
         this.doWithStack(item, echart.customStack);
-
+        this.doWithBarWidth(item, echart.customBarWidth, fetchData.series.length);
         // 系列
         for (let i in echart.customSeries) {
           this.doWithKeyValue(item, i, echart.customSeries[i]);

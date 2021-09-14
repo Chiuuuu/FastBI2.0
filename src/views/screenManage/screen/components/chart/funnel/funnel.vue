@@ -9,8 +9,14 @@
       <div class="board-rate-item" :style="rateStyle.boardRateItem"></div>
       <div class="board-rate-item" :style="rateStyle.boardRateItem" v-for="(item, index) in rateList" :key="index">
         <span :style="rateStyle.line"></span>
-        <p v-show="converseShow">转化率：{{ item.converse }}</p>
-        <p v-show="arriveShow">到达率：{{ item.arrive }}</p>
+        <!-- 维度 -->
+        <p v-show="dimensionsShow">{{ `${item.dimensions.label}：${item.dimensions.val}` }}</p>
+        <!-- 度量 -->
+        <p v-show="measuresShow">{{ `${item.measures.label}：${item.measures.val}` }}</p>
+        <!-- 转化率 -->
+        <p v-show="converseShow">{{ `${item.converse.label}：${item.converse.val}` }}</p>
+        <!-- 到达率 -->
+        <p v-show="arriveShow">{{ `${item.arrive.label}：${item.arrive.val}` }}</p>
       </div>
     </div>
   </div>
@@ -21,6 +27,7 @@ import BaseChart from '../base';
 import defaultData from './default-data';
 import merge from 'lodash/merge';
 import omit from 'lodash/omit';
+import cloneDeep from 'lodash/cloneDeep';
 import { setLinkageData, resetOriginData } from '@/utils/setDataLink';
 /**
  * @description 漏斗图
@@ -40,18 +47,49 @@ export default {
     };
   },
   computed: {
-    // 转化率、到达率聚合
+    // 展示环节聚合
     rateList() {
-      if (this.isServerData()) {
-        return this.serverData ? this.serverData.rate : [];
-      }
-      return defaultData.rate;
+      const { data } = this.options;
+      let rate = this.isServerData() ? (this.serverData && this.serverData.rate) || [] : defaultData.rate;
+      rate = cloneDeep(rate);
+      let seriesData = this.isServerData() ? (this.serverData && this.serverData.data) || [] : defaultData.data;
+      seriesData = cloneDeep(seriesData);
+
+      rate.forEach((item, index) => {
+        item['dimensions'] = {
+          label: this.isServerData() ? data.dimensions[0].alias : '维度',
+          val: seriesData[index + 1].name,
+        };
+        item['measures'] = {
+          label: this.isServerData() ? data.measures[0].alias : '度量',
+          val: seriesData[index + 1].value,
+        };
+        item['converse'] = {
+          label: '转化率',
+          val: item.converse,
+        };
+        item['arrive'] = {
+          label: '到达率',
+          val: item.arrive,
+        };
+      });
+      return rate;
     },
+    // 展示环节 -- 转化率显示
     converseShow() {
       return this.options.style.echart.customRate.labelContent.includes('converse');
     },
+    // 展示环节 -- 到达率显示
     arriveShow() {
       return this.options.style.echart.customRate.labelContent.includes('arrive');
+    },
+    // 展示环节 -- 维度显示
+    dimensionsShow() {
+      return this.options.style.echart.customRate.labelContent.includes('name');
+    },
+    // 展示环节 -- 度量显示
+    measuresShow() {
+      return this.options.style.echart.customRate.labelContent.includes('value');
     },
   },
   methods: {
@@ -80,34 +118,62 @@ export default {
     },
     /**
      * @description 指标内容显示
+     * @param {object} param 当前指标
+     * @param {array} rateData 转达率/到达率数据
      * @param {array} way 指标显示选择
      * @param {array} arrange 排列 horizontal水平 vertical垂直
+     * 最顶层没有到达率、转化率，即param.dataIndex=0
      */
-    doWithFormatter(way = [], arrange) {
+    doWithFormatter(param = {}, rateData = [], way = [], arrange) {
       const ways = {
-        name: '{b}',
-        value: '{c}',
+        name: param.data['name'],
+        value: param.data['value'],
+        converse: param.dataIndex === 0 ? '' : rateData[param.dataIndex - 1]['converse'],
+        arrive: param.dataIndex === 0 ? '' : rateData[param.dataIndex - 1]['arrive'],
       };
       let formatter = [];
       way.forEach(item => {
-        formatter.push(ways[item]);
+        // dataIndex = 0时，为顶层，此层没有到达率、转化率
+        if (param.dataIndex !== 0 || (param.dataIndex === 0 && !['converse', 'arrive'].includes(item))) {
+          formatter.push(ways[item]);
+        }
       });
       return arrange === 'horizontal' ? formatter.join(' ') : formatter.join('\n');
     },
     /**
      * @description 鼠标移入显示
+     * @param {object} param 当前区域
+     * @param {array} rateData 转达率/到达率数据
      * @param {array} way 鼠标移入显示选择
+     * 最顶层没有到达率、转化率，即param.dataIndex=0
      */
-    doWithTooltipFormatter(way = []) {
+    doWithTooltipFormatter(param = {}, rateData = [], way = []) {
       const ways = {
-        name: '{b}',
-        value: '{c}',
+        name: {
+          label: this.isServerData() ? this.options.data.dimensions[0].alias : '维度',
+          val: param.data['name'],
+        },
+        value: {
+          label: this.isServerData() ? this.options.data.measures[0].alias : '度量',
+          val: param.data['value'],
+        },
+        converse: {
+          label: '转化率',
+          val: param.dataIndex === 0 ? '' : rateData[param.dataIndex - 1]['converse'],
+        },
+        arrive: {
+          label: '到达率',
+          val: param.dataIndex === 0 ? '' : rateData[param.dataIndex - 1]['arrive'],
+        },
       };
       let formatter = [];
       way.forEach(item => {
-        formatter.push(ways[item]);
+        // dataIndex = 0时，为顶层，此层没有到达率、转化率
+        if (param.dataIndex !== 0 || (param.dataIndex === 0 && !['converse', 'arrive'].includes(item))) {
+          formatter.push(ways[item]['label'] + '：' + ways[item]['val']);
+        }
       });
-      return formatter.join(' ');
+      return formatter.join('<br />');
     },
     /**
      * @description 数组根据数组对象中的某个属性值进行排序的方法
@@ -147,20 +213,19 @@ export default {
       const {
         style: { echart },
       } = this.options;
-      this.dowithRateStyle(fetchData);
-      const formatter = this.doWithFormatter(echart.customFormatterWay, echart.customLabelArrange);
-      const tooltipFormatter = this.doWithTooltipFormatter(echart.customTooltipFormatter);
+      this.dowithRateStyle(this.rateList);
       const seriesData = { ...omit(echart.customSeries, ['label']) };
       const options = merge({}, echart, {
         tooltip: {
-          formatter: `${tooltipFormatter}`,
+          formatter: param => this.doWithTooltipFormatter(param, fetchData.rate, echart.customTooltipFormatter),
         },
         series: {
           name: '',
           type: 'funnel',
           sort: this.dowithSeriesFunnelSort(fetchData.data),
           label: Object.assign({}, echart.customSeries.label, {
-            formatter: `${formatter}`,
+            formatter: param =>
+              this.doWithFormatter(param, fetchData.rate, echart.customFormatterWay, echart.customLabelArrange),
           }),
           ...seriesData,
           data: fetchData.data,
@@ -169,18 +234,28 @@ export default {
       return options;
     },
     /**
-     * @description 处理转化率、到达率样式配置
+     * @description 展示环节内容样式配置
      */
-    dowithRateStyle(fetchData) {
-      if (!fetchData || !fetchData.rate || fetchData.rate.length === 0) return;
-      // 计算转化率、到达率最大字符长度
+    dowithRateStyle(rateList) {
+      if (!rateList || rateList.length === 0) return;
+      // 计算转化率、到达率、维度、度量最大字符长度
       let rateMaxLen = 0,
         arriveRateMaxLen = 0,
-        converseRateMaxLen = 0;
-      fetchData.rate.forEach(item => {
-        rateMaxLen = Math.max(rateMaxLen, item.arrive.length, item.converse.length);
-        arriveRateMaxLen = Math.max(arriveRateMaxLen, item.arrive.length);
-        converseRateMaxLen = Math.max(converseRateMaxLen, item.converse.length);
+        converseRateMaxLen = 0,
+        dimensionsMaxLen = 0,
+        measuresMaxLen = 0;
+      rateList.forEach(item => {
+        rateMaxLen = Math.max(
+          rateMaxLen,
+          item.dimensions.label.length + item.dimensions.val.length,
+          item.measures.label.length + item.measures.val.length,
+          item.converse.label.length + item.converse.val.length,
+          item.arrive.label.length + item.arrive.val.length,
+        );
+        dimensionsMaxLen = Math.max(dimensionsMaxLen, item.dimensions.label.length + item.dimensions.val.length);
+        measuresMaxLen = Math.max(measuresMaxLen, item.measures.label.length + item.measures.val.length);
+        converseRateMaxLen = Math.max(converseRateMaxLen, item.converse.label.length + item.converse.val.length);
+        arriveRateMaxLen = Math.max(arriveRateMaxLen, item.arrive.label.length + item.arrive.val.length);
       });
 
       const {
@@ -197,26 +272,35 @@ export default {
         [customRate.position]: customRate.position === 'left' ? '40px' : '15px',
         marginTop: `${customSeries.top + title.marginBottom}px`,
         height: `calc(100% - 40px - ${title.marginBottom}px - ${customSeries.top}px - ${customSeries.bottom}px)`,
-        display: customRate.show && (this.arriveShow || this.converseShow) ? 'block' : 'none', //是否展示
+        display:
+          customRate.show && (this.arriveShow || this.converseShow || this.dimensionsShow || this.measuresShow)
+            ? 'block'
+            : 'none', //是否展示
       };
       let boardRateItem = {
-        height: `${100 / (fetchData.rate.length + 1)}%`,
+        height: `${100 / (rateList.length + 1)}%`,
       };
       let line = {
         [customRate.position === 'left' ? 'right' : 'left']: customRate.position === 'left' ? '-30px' : '-40px',
       };
       if (customRate.arrange === 'horizontal') {
-        let len = (this.converseShow && converseRateMaxLen + 4) + (this.arriveShow && arriveRateMaxLen + 4); //一行的文本字符长度
+        //一行的文本字符长度,1为“字段名：值”中的冒号长度
+        let len =
+          (this.dimensionsShow && dimensionsMaxLen + 1) +
+          (this.measuresShow && measuresMaxLen + 1) +
+          (this.converseShow && converseRateMaxLen + 1) +
+          (this.arriveShow && arriveRateMaxLen + 1);
+
         let paddingLeft = this.converseShow && this.arriveShow ? 20 : 10; //p标签的padding-left值
         boardRate.width = `${customRate.fontSize * 0.75 * len + paddingLeft}px`;
         boardRateItem.display = `flex`;
         boardRateItem.top = `-${customRate.fontSize * 0.6}px`;
         line.marginTop = `${customRate.fontSize * 0.6 + 2}px`;
       } else {
-        let len = rateMaxLen + 4; //一行的文本字符长度
+        let len = rateMaxLen + 1; //一行的文本字符长度,1为“字段名：值”中的冒号长度
         boardRate.width = `${customRate.fontSize * 0.75 * len + 10}px`; // 10为p标签的padding-right值
-        boardRateItem.top = `-${customRate.fontSize * 0.6 + 15}px`;
-        line.marginTop = `${customRate.fontSize * 0.6 + 15 + 2}px`;
+        boardRateItem.top = `-${customRate.fontSize * 0.6}px`;
+        line.marginTop = `${customRate.fontSize * 0.6 + 2}px`;
       }
       this.rateStyle.boardRate = boardRate;
       this.rateStyle.boardRateItem = boardRateItem;
