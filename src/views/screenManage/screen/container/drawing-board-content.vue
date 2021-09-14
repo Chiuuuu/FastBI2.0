@@ -146,6 +146,7 @@ export default {
       boardPage: state => state.board.page, // 页面
     }),
     boardGridStyle() {
+      if (!this.boardPage.size || !this.boardPage.background) return {};
       // 画板下的网格样式（真实的页面样式）
       return {
         width: `${this.boardPage.size.width}px`,

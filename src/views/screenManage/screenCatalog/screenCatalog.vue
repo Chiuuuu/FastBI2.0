@@ -198,7 +198,9 @@
         </div>
         <div class="releace-line">
           <span class="label">分享密码：</span>
+          <span v-if="release.status === 'publish'">{{ shareObj.password }}</span>
           <input
+            v-else
             v-model="shareObj.password"
             :class="['mod_input', { 'has-error': showLimitWarn }, 'ant-input']"
             placeholder="请输入6位分享密码（数字+字母）"
