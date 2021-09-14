@@ -354,7 +354,7 @@ export default {
       this.exculdeDataLink();
       const result = await this.$server.screenManage.saveScreenTab(param);
       if (result && result.code === 200) {
-        this.$message.success(result.msg);
+        this.$message.success('保存成功');
       } else {
         this.$message.error(result.msg);
       }

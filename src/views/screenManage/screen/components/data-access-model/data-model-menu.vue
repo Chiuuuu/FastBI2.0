@@ -19,7 +19,11 @@
             {{ item.resourceName }}
             <div class="u-icon">
               <a-icon class="check-icon" v-if="selected && selected.id === item.id" type="check"></a-icon>
-              <a-icon class="delete-icon" type="delete" @click.stop="handleDelete(item)" />
+              <a-icon
+                :class="['delete-icon', { 'is-del-not': !isDel(item) }]"
+                type="delete"
+                @click.stop="isDel(item) ? handleDelete(item) : ''"
+              />
             </div>
           </li>
         </ul>
@@ -76,6 +80,17 @@ export default {
     },
   },
   methods: {
+    /**
+     * @description 判断该数据模型是否使用于图表中，若是，则模型不可以删除
+     */
+    isDel(item) {
+      for (let component of this.screenInstance.components) {
+        if (component.setting.data.dataModelId === item.tableId) {
+          return false;
+        }
+      }
+      return true;
+    },
     /**
      * @description 打开添加数据模型
      */
@@ -250,6 +265,10 @@ export default {
       cursor: pointer;
       .delete-icon {
         display: none;
+      }
+      .is-del-not {
+        color: #d0cece !important;
+        cursor: not-allowed;
       }
       .check-icon {
         display: inline-block;

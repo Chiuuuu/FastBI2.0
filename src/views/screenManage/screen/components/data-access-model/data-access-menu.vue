@@ -19,7 +19,11 @@
             {{ item.resourceName }}
             <div class="u-icon">
               <a-icon class="check-icon" v-if="selected && selected.id === item.id" type="check"></a-icon>
-              <a-icon class="delete-icon" type="delete" @click.stop="handleDelete(item)" />
+              <a-icon
+                :class="['delete-icon', { 'is-del-not': !isDel(item) }]"
+                type="delete"
+                @click.stop="isDel(item) ? handleDelete(item) : ''"
+              />
             </div>
           </li>
         </ul>

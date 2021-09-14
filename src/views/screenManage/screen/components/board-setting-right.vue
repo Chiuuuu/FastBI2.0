@@ -272,7 +272,6 @@ export default {
 
       const tabId = this.screenInstance.screenInfo.tabId;
       const tableId = item.tableId;
-
       const result = await this.$server.screenManage.deleteListDataByScreenIdAndTableId(tabId, tableId);
       if (result && result.code === 200) {
         if (item.id === selected.id) {
