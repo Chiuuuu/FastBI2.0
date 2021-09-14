@@ -279,15 +279,25 @@ export default {
         return;
       }
       if (res.code === 200) {
-        this.dataRows = res.rows.map(item => {
+        const list = [];
+        let hasNull = false;
+        res.rows.forEach(item => {
+          // 需将null值空值也当做条件显示出来
           if (Object.prototype.toString.call(item) === '[object Object]') {
-            return Object.values(item).toString();
+            const value = Object.values(item);
+            if (value[0]) {
+              list.push(value.toString());
+            } else {
+              hasNull = true;
+            }
           } else {
-            return '';
+            hasNull = true;
           }
-        });
+        }); // 维度全字段列表
+        if (hasNull) list.unshift('');
+        this.dataRows = list;
       }
-      this.dataRowsResult = this.dataRows;
+      this.dataRowsResult = this.dataRows || [];
     },
   },
 };

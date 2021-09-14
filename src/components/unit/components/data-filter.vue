@@ -314,15 +314,25 @@ export default {
         return;
       }
       if (res.code === 200) {
-        this.dataRows = res.data.map(item => {
+        const list = [];
+        let hasNull = false;
+        res.data.forEach(item => {
+          // 需将null值空值也当做条件显示出来
           if (Object.prototype.toString.call(item) === '[object Object]') {
-            return Object.values(item).toString();
+            const value = Object.values(item);
+            if (value[0]) {
+              list.push(value.toString());
+            } else {
+              hasNull = true;
+            }
           } else {
-            return '';
+            hasNull = true;
           }
-        });
+        }); // 维度全字段列表
+        if (hasNull) list.unshift('');
+        this.dataRows = list;
       }
-      this.currentFile.searchList = this.dataRows.filter(item => item) || [];
+      this.currentFile.searchList = this.dataRows || [];
     },
     /**
      * @description 文本数据-列表/手动切换

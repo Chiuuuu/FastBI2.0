@@ -299,17 +299,18 @@ export default {
         const result = [];
         keys.forEach(key => {
           const value = item[key];
+          const len = value ? value.length : 0;
           result.push(value);
           if (!map.has(key)) {
             map.set(key, {
-              length: value.length,
+              length: len,
               index,
             });
           } else {
-            const item = map.get(key);
-            if (value.length > item.length) {
+            const res = map.get(key);
+            if (len > res.length) {
               map.set(key, {
-                length: value.length,
+                length: len,
                 index,
               });
             }
