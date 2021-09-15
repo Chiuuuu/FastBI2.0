@@ -341,24 +341,19 @@ export default {
         this.$message.error('isChange');
         return;
       }
+      this.isEmpty = res.data && res.data.length ? false : true;
+      if (this.isEmpty) {
+        return;
+      }
       this.serverData = { data: res.data };
       this.treeRoot = '';
-      // const options = this.doWithOptions(this.serverData, this.options.data.dimensions, this.options.data.measures);
-      // this.updateSaveChart(options);
-      // this.doWithLabel(this.options.style.echart);
-      // this.doWithTooltip(this.options.style.echart);
-
-      // const formatterList = res.data[0] ? Object.keys(res.data[0]) : [];
       // 获取数据之后需要重置配色方案
       this.$store.commit(boardMutation.SET_STYLE, {
         style: {
           echart: {
             customPiecesIndex: 0,
-            // customFormatterLabel: formatterList,
-            // customFormatterTooltip: formatterList,
           },
         },
-        // replaceMerge: ['customFormatterLabel', 'customFormatterTooltip'],
         updateCom: this.shapeUnit.component,
       });
     },
@@ -368,11 +363,7 @@ export default {
     getDefaultData() {
       this.serverData = null;
       this.treeRoot = '';
-      let options = this.doWithOptions(defaultData, this.defaultDimensions, this.defaultMeasures);
-      this.updateSaveChart(options);
-
-      this.doWithLabel(this.options.style.echart);
-      this.doWithTooltip(this.options.style.echart);
+      this.isEmpty = false;
 
       // 获取数据之后需要重置配色方案
       this.$store.commit(boardMutation.SET_STYLE, {
@@ -388,7 +379,7 @@ export default {
      * @description 更新图表样式
      */
     updateChartStyle() {
-      if (!this.chartInstane) return;
+      if (this.isEmpty || !this.chartInstane) return;
       // 解决：已拖入维度/度量的图表，退出编辑大屏，再次进入时先显示默认图表数据，之后再显示已拖入的图表数据
       if (this.isServerData() && !this.serverData) {
         return;

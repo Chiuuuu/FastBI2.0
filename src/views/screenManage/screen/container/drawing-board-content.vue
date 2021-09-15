@@ -1,5 +1,5 @@
 <template>
-  <div class="drawing-board-content reset-scrollbar" ref="js-board-content">
+  <div :class="['drawing-board-content', 'reset-scrollbar', { 'full-screen': isFullScreen() }]" ref="js-board-content">
     <!-- 画板外框控制视图宽高 start -->
     <div class="board-frame" :style="boardFrameStyle">
       <!-- 画板控制缩放比例 start -->
@@ -18,14 +18,6 @@
               >
                 <component :is="item.type" :options="item.setting" ref="js-board-grid-chart"></component>
               </BoardShapeUnit>
-              <!-- 全屏下内容编辑区工具栏 start -->
-              <DrawingBoardPageTools
-                v-if="isFullScreen()"
-                :tabs="$parent.tabs"
-                :type="parameter.FULLSCREEN"
-                :value="$parent.tabActive"
-                @change="$parent.handleTabChange"
-              ></DrawingBoardPageTools>
             </div>
           </a-spin>
           <!-- 画板网格控制真实尺寸 end -->
@@ -35,6 +27,14 @@
       <!-- 画板控制缩放比例 end -->
     </div>
     <!-- 画板外框控制视图宽高 end -->
+    <!-- 全屏下内容编辑区工具栏 start -->
+    <DrawingBoardPageTools
+      v-if="isFullScreen()"
+      :tabs="$parent.tabs"
+      :type="parameter.FULLSCREEN"
+      :value="$parent.tabActive"
+      @change="$parent.handleTabChange"
+    ></DrawingBoardPageTools>
   </div>
 </template>
 <script>
@@ -257,7 +257,7 @@ export default {
             // width: `${Math.ceil(this.boardPage.size.width * this.boardScale)}px`,
             // height: `${Math.ceil(this.boardPage.size.height * this.boardScale)}px`,
             width: `${this.boardPage.size.width}px`,
-            height: `${this.boardPage.size.height}px`,
+            height: `${this.boardPage.size.height - 32}px`, // 去掉页签栏高度
           }
         : {
             width: `${Math.ceil(this.boardPage.size.width * this.boardScale) + SPACE}px`, // 1920 => 1135

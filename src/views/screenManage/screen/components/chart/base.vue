@@ -3,7 +3,7 @@
     <div class="board-chart-unit-title" :style="titleStyle" v-if="options.style.title.show">
       {{ options.style.title.text }}
     </div>
-    <div class="board-chart-unit" :style="chartStyle" ref="js-board-chart-unit"></div>
+    <div class="board-chart-unit" :style="chartStyle" ref="js-board-chart-unit" v-show="!isEmpty"></div>
   </div>
 </template>
 <script>
@@ -18,6 +18,7 @@ export default {
     return {
       chartInstane: null, // 图表实例
       serverData: null, // 服务端数据
+      isEmpty: false, // 数据列表是否为空，服务器返回[]的时候true
     };
   },
   inject: ['shapeUnit'],
@@ -73,14 +74,17 @@ export default {
     'options.style': {
       deep: true,
       immediate: false,
-      handler(opt) {
+      handler(opt, c) {
+        console.log(c);
+        // debugger;
+
         // 1. 状态要是是停止（移动或者缩放情况下不更变）
         // 2. 配置项发生改变
         if (opt && this.currentComState && this.currentComState === 'stop') {
-          this.$nextTick(() => {
-            this.updateChartStyle();
-            this.screenAdapter();
-          });
+          //   this.$nextTick(() => {
+          this.updateChartStyle();
+          this.screenAdapter();
+          //   });
         }
       },
     },

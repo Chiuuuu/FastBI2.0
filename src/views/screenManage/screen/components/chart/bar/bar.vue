@@ -145,7 +145,11 @@ export default {
         this.$message.error('isChange');
         return;
       }
-      const datas = res.data || [];
+      this.isEmpty = res.data && res.data.length ? false : true;
+      if (this.isEmpty) {
+        return;
+      }
+      const datas = res.data;
       // 截取前50条数据展示
       if (datas.length > 50) {
         datas.length = 50;
@@ -166,6 +170,7 @@ export default {
      */
     getDefaultData() {
       this.serverData = null;
+      this.isEmpty = false;
       const options = this.doWithOptions(defaultData);
       this.updateSaveChart(options);
     },
@@ -173,7 +178,7 @@ export default {
      * @description 更新图表样式
      */
     updateChartStyle() {
-      if (!this.chartInstane) return;
+      if (this.isEmpty || !this.chartInstane) return;
       const options = this.chartInstane.getOption();
 
       const data = {

@@ -176,6 +176,7 @@ export default {
      */
     getDefaultData() {
       this.serverData = null;
+      this.isEmpty = false;
       const dataOption = this.doWithOptions(defaultData.data);
       this.updateSaveChart(dataOption);
     },
@@ -183,8 +184,6 @@ export default {
      * @description 图表获取服务端数据
      */
     async getServerData() {
-      console.log({ id: this.shapeUnit.component.id, type: this.shapeUnit.component.type, data: this.options.data });
-      console.log('从这里获取服务端数据');
       const {
         data: { progress, targe },
       } = this.options;
@@ -197,6 +196,10 @@ export default {
       });
       if (res.code === 500) {
         this.$message.error('isChange');
+        return;
+      }
+      this.isEmpty = res.data && res.data.length ? false : true;
+      if (this.isEmpty) {
         return;
       }
       const datas = res.data || [];
@@ -235,7 +238,7 @@ export default {
       this.updateSaveChart(options);
     },
     updateChartStyle() {
-      if (!this.chartInstane) return;
+      if (this.isEmpty || !this.chartInstane) return;
       // 解决：已拖入维度/度量的图表，退出编辑大屏，再次进入时先显示默认图表数据，之后再显示已拖入的图表数据
       if (this.isServerData() && !this.serverData) {
         return;

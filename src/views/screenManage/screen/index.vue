@@ -386,8 +386,14 @@ export default {
   .@{board}-page-tools{
     position: absolute;
     &.full-screen{
+        position: fixed;
         left: 0;
         right: 0;
+        bottom: 8px;
+        opacity: 0;
+        &:hover{
+            opacity: 1;
+        }
     }
   }
   .@{board}-side ~ .@{board}-content,
