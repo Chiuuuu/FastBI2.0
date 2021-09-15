@@ -966,6 +966,10 @@ export default {
       if (result && result.code === 200) {
         this.$message.success('重命名成功');
         this.handleGetMenuList();
+        // 大屏重命名后，右侧大屏名称及时更新
+        if (this.screen.id === this.fileSelect.id) {
+          this.fileSelect.name = formData.name;
+        }
         return true;
       } else {
         this.$message.error(result.msg);
