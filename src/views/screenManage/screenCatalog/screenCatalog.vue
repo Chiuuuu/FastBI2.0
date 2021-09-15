@@ -315,6 +315,14 @@ export default {
           onClick: this.handleScreen,
         },
         {
+          name: '选择大屏模版',
+          permission: {
+            OPERATOR: this.$PERMISSION_CODE.OPERATOR.add,
+            OBJECT: this.$PERMISSION_CODE.OBJECT.screen,
+          },
+          onClick: this.handleScreenTemplate,
+        },
+        {
           name: '重命名',
           permission: {
             OPERATOR: this.$PERMISSION_CODE.OPERATOR.edit,
@@ -391,6 +399,7 @@ export default {
       tempModal: false, // 大屏模板
       tempModalBtnloading: false, // 大屏模板确定按钮loading
       templeList: [], // 大屏模板列表
+      parentId: '', //
       templeActive: '', // 大屏选中
       components: [],
     };
@@ -841,6 +850,11 @@ export default {
         });
       });
     },
+    // 在文件夹底下新建大屏模板
+    handleScreenTemplate(event, item, { folder }) {
+      this.parentId = folder.id;
+      this.tempModal = true;
+    },
     /**
      * @description 选择左侧菜单
      */
@@ -984,6 +998,7 @@ export default {
      * @description 大屏模板打开
      */
     handleTempModalOpen() {
+      this.parentId = 0;
       this.tempModal = true;
     },
     /**
@@ -1016,9 +1031,11 @@ export default {
      */
     async handleTempModalSubmit() {
       this.tempModalBtnloading = true;
-      const result = await this.$server.chooseScreen.saveScreenData(this.templeActive.screenId).finally(() => {
-        this.tempModalBtnloading = false;
-      });
+      const result = await this.$server.chooseScreen
+        .saveScreenData(this.templeActive.screenId, this.parentId || 0)
+        .finally(() => {
+          this.tempModalBtnloading = false;
+        });
       if (result && result.code === 200) {
         this.$router.push({
           name: 'screenEdit',

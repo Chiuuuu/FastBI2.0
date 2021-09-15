@@ -545,10 +545,11 @@ export default {
     },
     /**
      * @description 当放置到目标
+     * typeof判断，若是输入值，则直接赋值，解决输入"00"时有报错显示
      */
     handleTarge(data, method = 'add') {
       return {
-        targe: this.conversionArry('targe', data, method),
+        targe: typeof data === 'object' ? this.conversionArry('targe', data, method) : data,
       };
     },
     /**
