@@ -338,6 +338,10 @@ export default {
         measures, // 拼装度量
       });
       if (res.code === 200) {
+        this.isEmpty = res.data && res.data.length ? false : true;
+        if (this.isEmpty) {
+          return;
+        }
         this.serverData = { data: res.data };
         const keys = this.options.data.fields.map(item => item.alias);
         this.fields = keys.map(key => {
@@ -354,6 +358,7 @@ export default {
      */
     getDefaultData() {
       this.serverData = null;
+      this.isEmpty = false;
       this.fields = this.$options.data().fields;
       this.doWithOptions(defaultData);
       this.refreshCount += 1;
@@ -362,6 +367,9 @@ export default {
      * @description 更新图表样式
      */
     updateChartStyle() {
+      if (this.isEmpty) {
+        return;
+      }
       this.doWithThead();
       this.doWithTbody();
     },

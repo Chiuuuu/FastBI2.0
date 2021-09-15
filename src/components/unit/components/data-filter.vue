@@ -486,20 +486,22 @@ export default {
      * @description 校验当前图表是否清空了字段
      */
     isEmptyChart() {
-      let list = [];
+      let listLen = 0;
       const data = this.currentCom.setting.data;
-      Object.values(DROG_TYPE).map(key => {
-        if (key === 'dimension' || key === 'measure') {
-          key = key + 's';
+      Object.keys(data).forEach(key => {
+        if (key === 'filter') {
+          listLen += data[key].fileList.length;
+          return;
         }
         if (Array.isArray(data[key])) {
-          list = list.concat(data[key] || []);
+          listLen += data[key].length;
         }
       });
-      list = list.concat(data['sort'], data.filter['fileList']);
-      // 判断为1，因为点击删除，是在这个判断之后才清掉
-      if (list.length === 1) {
-        data.dataModelId = '';
+      // 只有删除才会进这里，考虑异步没有执行完，长度-1
+      if (listLen > 0) {
+        listLen--;
+      }
+      if (listLen === 0) {
         return true;
       } else {
         return false;
@@ -534,6 +536,11 @@ export default {
       } else if (dataModelId && !selected) {
         // 如果图表模型id有，但是没有数据，则清空
         result.dataModelId = '';
+        return result;
+      } else if (method === 'dele' && this.isEmptyChart()) {
+        // 清空了图表的所有字段, 清空
+        result.dataModelId = '';
+        return result;
       } else if (dataModelId !== selected.tableId && method !== 'dele') {
         this.$message.error('一个图表只能拖入一个数据模型的字段');
         return;

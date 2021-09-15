@@ -381,11 +381,13 @@ export default {
           ...result,
         };
 
-        this.$store.commit(boardMutaion.SET_SHAPE_STYLE, {
-          style: {
-            ...endStyle,
-          },
-        });
+        if (this.dragging) {
+          this.$store.commit(boardMutaion.SET_SHAPE_STYLE, {
+            style: {
+              ...endStyle,
+            },
+          });
+        }
       };
 
       // 鼠标放开的时候移除并重置相关事件

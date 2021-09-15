@@ -162,6 +162,10 @@ export default {
       };
       const res = await this.$server.common.getData('/screen/graph/v2/getData', params);
       if (res.code === 200) {
+        this.isEmpty = res.data && res.data.length ? false : true;
+        if (this.isEmpty) {
+          return;
+        }
         const data = res.data[0];
         const { totalQuotaTitle, totalQuotaValue } = this.doWithTotal(data);
         let secondaryQuotas = [];
@@ -226,6 +230,7 @@ export default {
      */
     getDefaultData() {
       this.serverData = null;
+      this.isEmpty = false;
       this.doWithData(defaultData);
     },
     /**
@@ -268,6 +273,9 @@ export default {
      * @description 更新图表样式
      */
     updateChartStyle() {
+      if (this.isEmpty) {
+        return;
+      }
       this.doWithOptions();
       this.doWithData(this.serverData ? this.serverData : defaultData);
     },

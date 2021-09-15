@@ -8,6 +8,7 @@ import { mutationTypes as boardMutation } from '@/store/modules/board';
 import guangzhou from '@/utils/guangzhou.json';
 import reverseAddressResolution from './reverseAddressResolution';
 import omit from 'lodash/omit';
+// import includes from 'lodash/includes';
 const mapSeries = 0;
 const scatterSeries = 1;
 
@@ -229,11 +230,20 @@ export default {
           [measureAlias]: data[measureAlias], // 度量
         };
       });
+      let pointShowList = [];
+      let tooltipList = [];
+      //   if (!includes(datas[0], ...pointShowList) || !includes(datas[0], ...pointShowList)) {
+      //     pointShowList = [`地区名/${dimensionAlias}`];
+      //     tooltipList = [dimensionAlias, measureAlias];
+      //   } else {
+      //     pointShowList = [].concat(this.options.style.echart.mapStyle.customPointShowList);
+      //     tooltipList = [].concat(this.options.style.echart.mapStyle.customTooltipShowList);
+      //   }
       return {
         fillList: datas,
         fillName: measureAlias,
-        fillCustomPointShowList: [`地区名/${dimensionAlias}`],
-        fillCustomTooltipShowList: [dimensionAlias, measureAlias],
+        fillCustomPointShowList: pointShowList,
+        fillCustomTooltipShowList: tooltipList,
       };
     },
     /**
@@ -463,11 +473,14 @@ export default {
               }),
               mapStyle: Object.assign({}, this.options.style.echart.mapStyle, {
                 customPointShowList: fillCustomPointShowList,
-                customTooltipShowList: fillCustomTooltipShowList,
+                customTooltipShowList:
+                  fillCustomTooltipShowList || this.options.style.echart.mapStyle.customTooltipShowList,
               }),
               scatterStyle: Object.assign({}, this.options.style.echart.scatterStyle, {
-                customPointShowList: labelCustomPointShowList,
-                customTooltipShowList: labelCustomTooltipShowList,
+                customPointShowList:
+                  labelCustomPointShowList || this.options.style.echart.scatterStyle.customPointShowLis,
+                customTooltipShowList:
+                  labelCustomTooltipShowList || this.options.style.echart.scatterStyle.customTooltipShowList,
               }),
             },
             replaceMerge: ['mapStyle', 'scatterStyle'],

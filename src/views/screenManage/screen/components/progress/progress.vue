@@ -275,6 +275,10 @@ export default {
       };
       const res = await this.$server.common.getData('/screen/graph/v2/getData', params);
       if (res.code === 200) {
+        this.isEmpty = res.data && res.data.length ? false : true;
+        if (this.isEmpty) {
+          return;
+        }
         const data = res.data[0];
         this.serverData = {
           current: handleList.includes('targe') ? data[this.options.data.targe[0].alias] : this.options.data.targe,
@@ -312,6 +316,7 @@ export default {
      */
     getDefaultData() {
       this.serverData = null;
+      this.isEmpty = false;
       const result = this.doWithData(defaultData);
       this.progressStyle = Object.assign({}, this.progressStyle, {
         width: `${result.percent}%`,
@@ -322,6 +327,9 @@ export default {
      * @description 更新图表样式
      */
     updateChartStyle() {
+      if (this.isEmpty) {
+        return;
+      }
       this.doWithOptions();
       const result = this.doWithData(this.serverData ? this.serverData : defaultData);
       this.progressStyle = Object.assign({}, this.progressStyle, {

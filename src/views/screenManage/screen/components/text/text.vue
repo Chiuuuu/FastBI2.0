@@ -395,6 +395,7 @@ export default {
         if (res.code === 500) {
           return res.msg;
         }
+        // todo:要后台配合改成按id对应,保存的alias不是最新的，可能对应不上getdata的数据
         resultStr = resultStr.replace(reg, (match, id, alias) => {
           return `<span>${res.data[0][alias]}</span>`;
         });
@@ -410,14 +411,15 @@ export default {
         return [];
       }
       let measures = [];
-      const measureList = document.querySelectorAll('.anchor-measure');
+      const measureList = this.$refs['js-board-text-unit'].querySelectorAll('.anchor-measure');
       if (measureList.length) {
         for (let measureEle of measureList) {
-          const [, alias, aggregator] = measureEle.innerHTML.match(/\[(.*?)\((.*?)\)(&nbsp;){3}]/);
+          const measureId = measureEle.dataset.id;
+          const [, aggregator] = measureEle.innerHTML.match(/\[.*?\((.*?)\)(&nbsp;){3}]/);
           // 验重
-          if (!measures.find(item => item.alias === alias)) {
+          if (!measures.find(item => item.id === measureId)) {
             // 添加度量到图表数据
-            let measure = this.usedMeasures.find(item => item.alias === alias);
+            let measure = this.usedMeasures.find(item => item.id === measureId);
             if (measure) {
               // 添加聚合方式值
               measure.defaultAggregator = polymerizationMap[aggregator];
@@ -445,14 +447,11 @@ export default {
      */
     addMeasureClick() {
       // 富文本度量添加点击事件
-      let spanList = document.querySelectorAll('.anchor-measure');
+      let spanList = this.$refs['js-board-text-unit'].querySelectorAll('.anchor-measure');
       spanList.forEach(span => {
         // 验证度量更改
-        // 去掉空格
-        let alias = span.innerHTML.replace(/\[(.*?)\(.*?\)(&nbsp;){3}]/, (match, string) => {
-          return string;
-        });
-        const measure = this.options.data.measures.find(item => item.alias === alias);
+        const measureId = span.dataset.id;
+        const measure = this.options.data.measures.find(item => item.id === measureId);
         if (!measure) {
           return;
         }
