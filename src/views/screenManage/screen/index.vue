@@ -70,6 +70,7 @@ export default {
   computed: {
     ...mapState({
       // 组件列表
+      screenInfo: state => state.app.screenInfo,
       components: state => state.board.components,
       page: state => state.board.page,
     }),
@@ -98,7 +99,6 @@ export default {
   data() {
     return {
       parameter,
-      screenInfo: {},
       tabs: [],
       tabActive: '',
     };
@@ -134,19 +134,12 @@ export default {
     /**
      * @description 修改大屏名称
      */
-    async changeName(name) {
-      if (this.screenInfo.name === name) return;
-      let params = {
-        id: this.screenInfo.screenId,
-        newName: name,
-      };
-      const result = await this.$server.screenManage.renameScreen(params);
-
-      if (result && result.code === 200) {
-        this.$message.success('重命名成功');
-      } else {
-        this.$message.error(result.msg);
-      }
+    async changeName(screenName) {
+      if (this.screenInfo.screenName === screenName) return;
+      this.$store.commit('SET_SCREEN_INFO', {
+        ...this.screenInfo,
+        screenName,
+      });
     },
     /**
      * @description 加载完成后编辑大屏
@@ -347,11 +340,10 @@ export default {
      * @description 更新大屏信息
      */
     handleUpdateScreenInfo(data) {
-      this.screenInfo = {
+      this.$store.dispatch('SetScreenInfo', {
         ...this.screenInfo,
         ...data,
-      };
-      this.$store.dispatch('SetScreenInfo', this.screenInfo);
+      });
     },
   },
 };

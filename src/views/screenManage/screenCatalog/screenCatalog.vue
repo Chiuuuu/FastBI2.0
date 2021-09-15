@@ -198,7 +198,9 @@
         </div>
         <div class="releace-line">
           <span class="label">分享密码：</span>
+          <span v-if="release.status === 'publish'">{{ shareObj.password }}</span>
           <input
+            v-else
             v-model="shareObj.password"
             :class="['mod_input', { 'has-error': showLimitWarn }, 'ant-input']"
             placeholder="请输入6位分享密码（数字+字母）"
@@ -518,8 +520,11 @@ export default {
         if (res.code === 200) {
           if (res.data) {
             const { gmtModified = '', expired = 0 } = res.data;
-            // 修改日期 + 过期天数 > 当前时间 = 没有过期
-            const valid = +new Date(gmtModified) + +new Date(expired * 24 * 3600 * 1000) > +new Date();
+            let valid = expired === 0;
+            if (expired > 0) {
+              // 修改日期 + 过期天数 > 当前时间 = 没有过期
+              valid = +new Date(gmtModified) + +new Date(expired * 24 * 3600 * 1000) > +new Date();
+            }
             this.shareObj = Object.assign({}, res.data, {
               valid,
             });
