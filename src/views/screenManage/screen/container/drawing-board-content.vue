@@ -7,7 +7,7 @@
         <!-- 画板控制拖放 start -->
         <div class="board-box board-dropable">
           <!-- 画板网格控制真实尺寸 start -->
-          <a-spin :spinning="spinning" :tip="tip">
+          <a-spin :spinning="spinning" :tip="tip" size="large">
             <div class="board-grid" ref="js-board-grid" :style="boardGridStyle" @keyup.enter="handleKeyup">
               <BoardShapeUnit
                 v-for="(item, index) in components"
@@ -121,6 +121,11 @@ export default {
       required: false,
       default: '大屏',
     },
+  },
+  provide() {
+    return {
+      handleSpinning: this.handleSpinning,
+    };
   },
   data() {
     return {
@@ -368,6 +373,13 @@ export default {
         containerDom: isFullScreen ? this.$refs['js-board-content'] : null,
         markDom: isFullScreen ? this.$refs['js-board-content'] : null,
       });
+    },
+    /**
+     * @description 导出loading状态控制
+     */
+    handleSpinning(value, tip = '加载中...') {
+      this.spinning = value;
+      this.tip = tip;
     },
   },
   mounted() {

@@ -8,6 +8,7 @@ import maxBy from 'lodash/maxBy';
 import mergeWith from 'lodash/mergeWith';
 import Node from './node';
 import { setLinkageData, resetOriginData } from '@/utils/setDataLink';
+import omit from 'lodash/omit';
 /**
  * @description 矩形树图
  */
@@ -232,7 +233,13 @@ export default {
     doWithFormatter(echart) {
       let formatter = params => {
         const target = params.data;
-        const result = echart['customFormatterLabel'].map(item => target.props[item]);
+        const result = echart['customFormatterLabel'].map(item => {
+          if (target.props) {
+            return target.props[item];
+          } else {
+            return target.children[0].props[item];
+          }
+        });
         return result.toString();
       };
       return formatter;
@@ -297,6 +304,7 @@ export default {
         return console.error(`There is no method: [${echart.customShowWay}]`);
       }
       fn();
+      debugger;
 
       // 这里不能设置label，因为如果当label.show为false会报错
       const options = mergeWith(
@@ -314,6 +322,8 @@ export default {
               },
               roam: false, // 缩放
               data: this.treeRoot.children,
+              label: omit(echart.customSeries.label, ['formatter']),
+              tooltip: omit(echart.customSeries.tooltip, ['formatter']),
             },
           ],
         },
@@ -331,18 +341,21 @@ export default {
      * @description 图表获取服务端数据
      */
     async getServerData() {
+      this.shapeUnit.changeLodingChart(true);
       const res = await this.$server.common.getData('/screen/graph/v2/getData', {
         id: this.shapeUnit.component.id,
         tabId: this.shapeUnit.component.tabId,
         type: this.shapeUnit.component.type,
         ...this.options.data,
       });
+      this.shapeUnit.changeLodingChart(false);
       if (res.code === 500) {
         this.$message.error('isChange');
         return;
       }
       this.isEmpty = res.data && res.data.length ? false : true;
       if (this.isEmpty) {
+        this.chartInstane.clear();
         return;
       }
       this.serverData = { data: res.data };
@@ -390,7 +403,6 @@ export default {
       } else {
         newOptions = this.doWithOptions(defaultData, this.defaultDimensions, this.defaultMeasures);
       }
-
       this.updateSaveChart(newOptions);
       this.doWithLabel(this.options.style.echart);
       this.doWithTooltip(this.options.style.echart);

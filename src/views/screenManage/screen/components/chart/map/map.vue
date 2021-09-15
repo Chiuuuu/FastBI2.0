@@ -435,12 +435,14 @@ export default {
      * @description 图表获取服务端数据
      */
     async getServerData() {
+      this.shapeUnit.changeLodingChart(true);
       const res = await this.$server.common.getData('/screen/graph/v2/getData', {
         id: this.shapeUnit.component.id,
         tabId: this.tabId,
         type: this.shapeUnit.component.type,
         ...this.options.data,
       });
+      this.shapeUnit.changeLodingChart(false);
       if (res.code === 200) {
         const [fillResult, labelResult] = await Promise.all([
           this.handleFillList(res.data.fillList),

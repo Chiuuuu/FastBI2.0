@@ -10,10 +10,13 @@ import json2csv from 'json2csv';
 function download(content, name, type) {
   let a = document.createElement('a');
   a.style.display = 'none';
-  if (type === 'blob') {
+  if (type === 'file') {
     var blob = new Blob([content], {
       type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
     });
+    a.setAttribute('href', URL.createObjectURL(blob));
+  } else if (type === 'img') {
+    let blob = dataURLToBlob(content.toDataURL('image/png'));
     a.setAttribute('href', URL.createObjectURL(blob));
   } else {
     a.setAttribute('href', encodeURI(content));
@@ -22,10 +25,24 @@ function download(content, name, type) {
   a.setAttribute('download', name);
   document.body.appendChild(a);
   a.click();
-  if (type === 'blob') {
+  if (type === 'file') {
     URL.revokeObjectURL(blob);
   }
   document.body.removeChild(a);
+}
+/**
+ * @description 图片格式转换方法
+ */
+function dataURLToBlob(dataurl) {
+  let arr = dataurl.split(',');
+  let mime = arr[0].match(/:(.*?);/)[1];
+  let bstr = atob(arr[1]);
+  let n = bstr.length;
+  let u8arr = new Uint8Array(n);
+  while (n--) {
+    u8arr[n] = bstr.charCodeAt(n);
+  }
+  return new Blob([u8arr], { type: mime });
 }
 /**
  * @description 导出成pdf
@@ -70,13 +87,6 @@ async function exportPdf(canvas, name) {
   }
   pdf.save(`${name}.pdf`);
   return;
-}
-/**
- * @description 图表操作开启/关闭loading
- */
-function handleSpinning(vm, isLoading, tip = 'loading...') {
-  vm.$parent.$parent.spinning = isLoading;
-  vm.$parent.$parent.tip = tip;
 }
 const ContenxtmenuMethodMixin = {
   computed: {
@@ -136,11 +146,12 @@ const ContenxtmenuMethodMixin = {
      * @description 导出图片
      */
     async handleExportImg(e, item, component, index, vm) {
-      handleSpinning(vm, true, '导出图表...');
+      this.handleSpinning(true, '导出图表...');
       const clone = vm.$el.cloneNode(true);
-      clone.removeChild(clone.childNodes[0]);
-      clone.removeChild(clone.childNodes[0]);
       clone.style.position = 'relative';
+      const chartDom = clone.querySelector('.ant-spin-container');
+      chartDom.removeChild(chartDom.childNodes[0]);
+      chartDom.removeChild(chartDom.childNodes[0]);
       const canvas = vm.$el.querySelector('canvas');
       if (canvas) {
         const cloneCanvas = clone.querySelector('canvas');
@@ -161,16 +172,15 @@ const ContenxtmenuMethodMixin = {
         allowTaint: true,
       });
       clone.remove();
-      await download(cutCanvas, component.setting.style.title.text + '.png');
-      handleSpinning(vm, false);
+      await download(cutCanvas, component.setting.style.title.text + '.png', 'img');
+      this.handleSpinning(false);
       this.$message.success('导出成功');
     },
     /**
      * @description 导出大屏
      */
     async handleExportScreen(e, item, vm) {
-      vm.tip = '导出大屏...';
-      vm.spinning = true;
+      this.handleSpinning(true, '导出大屏...');
       const screen = vm.$refs['js-board-grid'];
       const cloneScreen = screen.cloneNode(true);
       cloneScreen.style.position = 'relative';
@@ -195,14 +205,16 @@ const ContenxtmenuMethodMixin = {
       });
       cloneScreen.remove();
       await exportPdf(canvas, vm.screenName);
-      vm.spinning = false;
+      this.handleSpinning(false);
       this.$message.success('导出成功');
     },
     /**
      * @description 导出csv
      */
     async handleExportCsv(e, item, component, index, vm) {
+      this.handleSpinning(true, '正在导出...');
       const dataList = await this.getChartData(component, vm);
+      this.handleSpinning(false);
       const result = json2csv.parse(dataList, null);
       const csvContent = 'data:text/csv;charset=utf-8,\uFEFF' + result;
       download(csvContent, component.setting.style.title.text + '.csv');
@@ -215,19 +227,22 @@ const ContenxtmenuMethodMixin = {
         id: component.id,
         graphName: component.name,
       };
+      this.handleSpinning(true, '正在导出...');
       let res = await this.$server.screenManage.exportExcel(params);
+      this.handleSpinning(false);
       if (res['code'] && res['code'] !== 200) {
         this.$message.error(res.msg);
         return;
       }
-      download(res, component.setting.style.title.text + '.xlsx', 'blob');
+      download(res, component.setting.style.title.text + '.xlsx', 'file');
     },
     /**
      * @description 右键菜单——查看图表数据
      */
     async handleChartDataComponent(e, item, component, index, vm) {
+      const chartNode = this.$slots.default[0].componentInstance;
       // 判断当前图表数据为服务数据
-      if (!this.$children[0].isServerData()) {
+      if (!chartNode.isServerData()) {
         let dom = document.querySelector('.board-canvas');
         this.$message.config({
           getContainer: () => dom,
@@ -244,6 +259,7 @@ const ContenxtmenuMethodMixin = {
     },
     // 查看/导出数据 -- 构造数据
     async getChartData(component, vm, mapKey) {
+      const chartNode = this.$slots.default[0].componentInstance;
       let params = {
         id: component.id,
         type: component.type,
@@ -252,9 +268,9 @@ const ContenxtmenuMethodMixin = {
         graphName: component.name,
       };
 
-      handleSpinning(vm, true, '请求数据...');
+      this.handleSpinning(true, '请求数据...');
       let res = await this.$server.screenManage.getGraphInfo(params);
-      handleSpinning(vm, false);
+      this.handleSpinning(false);
       if (res.code !== 200) {
         this.$message.error(res.msg || '请重新操作');
         return;
@@ -270,7 +286,7 @@ const ContenxtmenuMethodMixin = {
       if (component.type === 'ChartMap') {
         // 查看数据已拆分成查看填充层or标记层(方便表格分页)
         if (mapKey) {
-          let aliasKeys = this.$children[0].handleTableColumns(Object.keys(source[mapKey][0]), mapKey);
+          let aliasKeys = chartNode.handleTableColumns(Object.keys(source[mapKey][0]), mapKey);
           columns = aliasKeys;
           let type = '填充';
           let row = [];
@@ -300,7 +316,7 @@ const ContenxtmenuMethodMixin = {
           await Promise.all(
             Object.keys(source).map(async item => {
               if (source[item]) {
-                let aliasKeys = this.$children[0].handleTableColumns(Object.keys(source[item][0]), item);
+                let aliasKeys = chartNode.handleTableColumns(Object.keys(source[item][0]), item);
                 columns.push(aliasKeys);
                 let type = '填充';
                 let row = [];
@@ -332,7 +348,7 @@ const ContenxtmenuMethodMixin = {
         }
       } else {
         // 处理空数据
-        columns = this.$children[0].handleTableColumns(Object.keys(source[0]));
+        columns = chartNode.handleTableColumns(Object.keys(source[0]));
         rows = source;
         exportList = source;
       }

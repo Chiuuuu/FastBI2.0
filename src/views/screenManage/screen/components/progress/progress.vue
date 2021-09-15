@@ -273,7 +273,9 @@ export default {
         dimensions, // 拼装维度
         measures, // 拼装度量
       };
+      this.shapeUnit.changeLodingChart(true);
       const res = await this.$server.common.getData('/screen/graph/v2/getData', params);
+      this.shapeUnit.changeLodingChart(false);
       if (res.code === 200) {
         this.isEmpty = res.data && res.data.length ? false : true;
         if (this.isEmpty) {

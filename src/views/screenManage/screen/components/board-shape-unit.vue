@@ -5,39 +5,45 @@
     :style="getBoardShapeUnitStyle()"
     ref="js-board-shape-unit"
   >
-    <div
-      class="shape-rotate-left"
-      :style="getRotateStyle('left')"
-      @mousedown.stop="$event => handleMouseDown($event, 'rotate')"
-      v-if="isShapeLine && model === parameter.EDIT"
-    ></div>
-    <!-- 八个方向拖拽区 start -->
-    <div class="shape-resize" v-if="!isShapeLine && model === parameter.EDIT">
+    <a-spin
+      :spinning="spinningChart"
+      tip="加载中..."
+      :style="`background: ${spinningChart ? 'rgba(255,255,255,0.8)' : ''}`"
+    >
       <div
-        v-for="item in pointList"
-        :class="`resize-${item}`"
-        :key="item"
-        @mousedown.stop="$event => handleMouseDown($event, item)"
+        class="shape-rotate-left"
+        :style="getRotateStyle('left')"
+        @mousedown.stop="$event => handleMouseDown($event, 'rotate')"
+        v-if="isShapeLine && model === parameter.EDIT"
       ></div>
-    </div>
-    <!-- 八个方向拖拽区 end -->
+      <!-- 八个方向拖拽区 start -->
+      <div class="shape-resize" v-if="!isShapeLine && model === parameter.EDIT">
+        <div
+          v-for="item in pointList"
+          :class="`resize-${item}`"
+          :key="item"
+          @mousedown.stop="$event => handleMouseDown($event, item)"
+        ></div>
+      </div>
+      <!-- 八个方向拖拽区 end -->
 
-    <div
-      class="shape-mover"
-      v-if="model === parameter.EDIT && isShowShapMover"
-      @dblclick.stop="handleDbClick"
-      @mousedown.stop="$event => handleMouseDown($event, 'shape')"
-    ></div>
+      <div
+        class="shape-mover"
+        v-if="model === parameter.EDIT && isShowShapMover"
+        @dblclick.stop="handleDbClick"
+        @mousedown.stop="$event => handleMouseDown($event, 'shape')"
+      ></div>
 
-    <!-- 插入真正的图表 start -->
-    <slot></slot>
-    <!-- 插入真正的图表 end -->
-    <div
-      class="shape-rotate-right"
-      :style="getRotateStyle('right')"
-      @mousedown.stop="$event => handleMouseDown($event, 'rotate')"
-      v-if="isShapeLine && model === parameter.EDIT"
-    ></div>
+      <!-- 插入真正的图表 start -->
+      <slot></slot>
+      <!-- 插入真正的图表 end -->
+      <div
+        class="shape-rotate-right"
+        :style="getRotateStyle('right')"
+        @mousedown.stop="$event => handleMouseDown($event, 'rotate')"
+        v-if="isShapeLine && model === parameter.EDIT"
+      ></div>
+    </a-spin>
 
     <!-- 查看数据 -->
     <UnitChartTableData :show="show" :chart-data="chartData" @cancel="show = false"></UnitChartTableData>
@@ -130,6 +136,7 @@ export default {
       ],
       show: false, // 图表数据查看
       chartData: {}, // 图表数据
+      spinningChart: false, // 图表的加载中
     };
   },
   provide() {
@@ -137,6 +144,7 @@ export default {
       shapeUnit: this,
     };
   },
+  inject: ['handleSpinning'],
   props: {
     config: {
       // 配置项信息
@@ -381,13 +389,11 @@ export default {
           ...result,
         };
 
-        if (this.dragging) {
-          this.$store.commit(boardMutaion.SET_SHAPE_STYLE, {
-            style: {
-              ...endStyle,
-            },
-          });
-        }
+        this.$store.commit(boardMutaion.SET_SHAPE_STYLE, {
+          style: {
+            ...endStyle,
+          },
+        });
       };
 
       // 鼠标放开的时候移除并重置相关事件
@@ -606,6 +612,12 @@ export default {
     showChartData(chartData) {
       this.chartData = chartData;
       this.show = true;
+    },
+    /**
+     * @description 控制是否显示图表loading
+     */
+    changeLodingChart(val) {
+      this.spinningChart = val;
     },
   },
 };

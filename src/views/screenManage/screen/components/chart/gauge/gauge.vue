@@ -35,6 +35,7 @@ export default {
       const {
         data: { progress },
       } = this.options;
+      this.shapeUnit.changeLodingChart(true);
       const res = await this.$server.common.getData('/screen/graph/v2/getData', {
         id: this.shapeUnit.component.id,
         tabId: this.shapeUnit.component.tabId,
@@ -42,6 +43,7 @@ export default {
         ...omit(this.options.data, ['expands', 'progress']),
         measures: [].concat(progress),
       });
+      this.shapeUnit.changeLodingChart(false);
       if (res.code === 500) {
         this.$message.error('isChange');
         return;
