@@ -483,6 +483,29 @@ export default {
       });
     },
     /**
+     * @description 校验当前图表是否清空了字段
+     */
+    isEmptyChart() {
+      let list = [];
+      const data = this.currentCom.setting.data;
+      Object.values(DROG_TYPE).map(key => {
+        if (key === 'dimension' || key === 'measure') {
+          key = key + 's';
+        }
+        if (Array.isArray(data[key])) {
+          list = list.concat(data[key] || []);
+        }
+      });
+      list = list.concat(data['sort'], data.filter['fileList']);
+      // 判断为1，因为点击删除，是在这个判断之后才清掉
+      if (list.length === 1) {
+        data.dataModelId = '';
+        return true;
+      } else {
+        return false;
+      }
+    },
+    /**
      *  @description 设置数据id
      */
     handleSetDataModelId(result, method) {
@@ -514,6 +537,9 @@ export default {
       } else if (dataModelId !== selected.tableId && method !== 'dele') {
         this.$message.error('一个图表只能拖入一个数据模型的字段');
         return;
+      } else if (method === 'dele' && this.isEmptyChart()) {
+        // 清空了图表的所有字段, 清空
+        result.dataModelId = '';
       }
       return result;
     },

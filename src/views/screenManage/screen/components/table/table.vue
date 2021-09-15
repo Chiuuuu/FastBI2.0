@@ -103,32 +103,6 @@ export default {
       return this.options.style.echart.tbody.autoWrap;
     },
   },
-  watch: {
-    'options.style': {
-      deep: true,
-      immediate: false,
-      handler(opt) {
-        // 1. 状态要是是停止（移动或者缩放情况下不更变）
-        // 2. 配置项发生改变
-        if (opt && this.currentComState && this.currentComState === 'stop') {
-          this.$nextTick(() => {
-            this.updateChartStyle();
-          });
-        }
-      },
-    },
-    'options.data': {
-      deep: true,
-      immediate: false,
-      handler(opt) {
-        if (opt && this.currentComState && this.currentComState === 'stop') {
-          this.$nextTick(() => {
-            this.getChartData();
-          });
-        }
-      },
-    },
-  },
   methods: {
     /**
      * @description 切割当前展示的表格

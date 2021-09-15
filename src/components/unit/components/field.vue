@@ -257,14 +257,16 @@ export default {
       let list = [];
       const data = this.currentCom.setting.data;
       Object.values(DROG_TYPE).map(key => {
-        if (key === 'demension' || key === 'measure') {
+        if (key === 'dimension' || key === 'measure') {
           key = key + 's';
         }
         if (Array.isArray(data[key])) {
           list = list.concat(data[key] || []);
         }
       });
-      if (list.length === 0) {
+      list = list.concat(data['sort'], data.filter['fileList']);
+      // 判断为1，因为点击删除，是在这个判断之后才清掉
+      if (list.length === 1) {
         data.dataModelId = '';
         return true;
       } else {
