@@ -151,6 +151,13 @@ export default {
           data: { min },
         },
       } = this.currentCom;
+      // 若是输入值，则直接赋值，解决输入"00"时有报错显示
+      if (typeof data !== 'object') {
+        return {
+          min: data,
+        };
+      }
+      // 拖入字段时
       let arry = [].concat(min);
       arry = this.handleList(arry, data, method);
       return {
@@ -166,6 +173,13 @@ export default {
           data: { max },
         },
       } = this.currentCom;
+      // 若是输入值，则直接赋值，解决输入"00"时有报错显示
+      if (typeof data !== 'object') {
+        return {
+          max: data,
+        };
+      }
+      // 拖入字段时
       let arry = [].concat(max);
       arry = this.handleList(arry, data, method);
       return {

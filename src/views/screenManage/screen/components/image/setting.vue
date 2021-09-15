@@ -141,7 +141,7 @@ export default {
 
       const file = e.target.files[0];
       if (file.size / 1024 / 1024 > 5) {
-        return this.$message.error('只支持5M以内的png/pjp/jpg/jpeg/jfif/gif格式图片');
+        return this.$message.error('只支持5M以内的png/pjp/jpg/pjpeg/jfif/gif格式文件');
       }
       const form = new FormData();
       form.append('avatarfile', file);
