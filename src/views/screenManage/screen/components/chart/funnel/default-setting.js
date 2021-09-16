@@ -33,6 +33,11 @@ export default merge(cloneDeep(BASE), {
           // 图例
           show: true,
           orient: 'horizontal',
+          type: 'scroll', // 可滚动翻页
+          pageIconColor: '#fff',
+          pageTextStyle: {
+            color: '#fff',
+          },
           textStyle: {
             color: '#ffffff',
             fontSize: 16,

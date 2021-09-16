@@ -16,7 +16,7 @@
       <tbody v-else :style="tbodyStyle.tbody">
         <template v-for="(tr, index) in data">
           <tr :key="index" :ref="`js-tr-${index}`" :style="handleSetBackgroundColor(index)">
-            <td v-for="td in tr" :key="td">
+            <td v-for="(td, tdI) in tr" :key="tdI">
               <p
                 class="content-wrap"
                 :style="tbodyStyle.font"
