@@ -317,6 +317,9 @@ export default {
       if (!this.isShowShapMover || this.model !== this.parameter.EDIT) return;
 
       this.dragging = false;
+      this.$store.commit(boardMutaion.SET_CURCOM_STATE, {
+        comState: 'stop',
+      });
       this.$store.commit(boardMutaion.SET_CURCOM, {
         component: this.component,
       });
@@ -373,6 +376,7 @@ export default {
       };
 
       document.onmousemove = mouseEvent => {
+        console.log(11);
         this.dragging = true;
         // 设置当前组件的状态,防止拖动的情况更新组件
         if (this.dragging && this.$store.state.board.currentComState === 'stop') {
@@ -388,12 +392,13 @@ export default {
         endStyle = {
           ...result,
         };
-
-        this.$store.commit(boardMutaion.SET_SHAPE_STYLE, {
-          style: {
-            ...endStyle,
-          },
-        });
+        if (this.dragging && this.$store.state.board.currentComState !== 'stop') {
+          this.$store.commit(boardMutaion.SET_SHAPE_STYLE, {
+            style: {
+              ...endStyle,
+            },
+          });
+        }
       };
 
       // 鼠标放开的时候移除并重置相关事件

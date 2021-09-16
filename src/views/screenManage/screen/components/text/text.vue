@@ -392,8 +392,9 @@ export default {
           ...this.options.data,
         };
         this.shapeUnit.changeLodingChart(true);
-        const res = await this.$server.common.getData('/screen/graph/v2/getData', parmas);
-        this.shapeUnit.changeLodingChart(false);
+        const res = await this.$server.common.getData('/screen/graph/v2/getData', parmas).finally(() => {
+          this.shapeUnit.changeLodingChart(false);
+        });
         if (res.code === 500) {
           return res.msg;
         }
