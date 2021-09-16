@@ -161,21 +161,36 @@ export default {
         measures, // 拼装度量
       };
       this.shapeUnit.changeLodingChart(true);
-      const res = await this.$server.common.getData('/screen/graph/v2/getData', params);
-      this.shapeUnit.changeLodingChart(false);
+      const res = await this.$server.common.getData('/screen/graph/v2/getData', params).finally(() => {
+        this.shapeUnit.changeLodingChart(false);
+      });
       if (res.code === 200) {
         this.isEmpty = res.data && res.data.length ? false : true;
         if (this.isEmpty) {
           return;
         }
         const data = res.data[0];
+        // 处理主指标
         const { totalQuotaTitle, totalQuotaValue } = this.doWithTotal(data);
+        // 主指标自定义，数据改动才重置
+        const customTotalTitle =
+          !this.serverData || this.serverData.data.totalQuotaTitle !== totalQuotaTitle ? totalQuotaTitle : null;
+        // 处理次指标
         let secondaryQuotas = [];
         let customSecTitles = [];
-        this.options.data.secondaryQuota.forEach(quota => {
+        this.options.data.secondaryQuota.forEach((quota, index) => {
           const alias = quota.alias;
           secondaryQuotas.push({ secondaryQuotasTitle: alias, secondaryQuotasValue: data[alias].toString() });
-          customSecTitles.push(alias);
+          // 数据有变动才重置自定义标题
+          if (
+            !this.serverData ||
+            !this.serverData.data.secondaryQuotas[index] ||
+            this.serverData.data.secondaryQuotas[index].secondaryQuotasTitle !== alias
+          ) {
+            customSecTitles[index] = alias;
+          } else {
+            customSecTitles[index] = this.options.style.echart.secondaryQuatoTitle.text[index];
+          }
         });
         this.serverData = {
           data: {
@@ -185,14 +200,21 @@ export default {
           },
         };
         this.doWithData(this.serverData);
+        let mergetEchart = {
+          secondaryQuatoTitle: Object.assign({}, this.options.style.echart.secondaryQuatoTitle, {
+            text: customSecTitles,
+          }),
+        };
+        if (customTotalTitle) {
+          mergetEchart.totalQuatoTitle = { text: customTotalTitle };
+        }
         // 获取数据之后需要更改限制
         this.$store.commit(boardMutation.SET_STYLE, {
           style: {
-            echart: {
-              totalQuatoTitle: { text: totalQuotaTitle },
-              secondaryQuatoTitle: { text: customSecTitles },
-            },
+            echart: mergetEchart,
           },
+          replaceMerge: ['secondaryQuatoTitle'],
+          updateCom: this.shapeUnit.component,
         });
       } else {
         this.$message.error(res.msg);
@@ -234,6 +256,17 @@ export default {
       this.serverData = null;
       this.isEmpty = false;
       this.doWithData(defaultData);
+      // 获取数据之后需要更改限制
+      this.$store.commit(boardMutation.SET_STYLE, {
+        style: {
+          echart: {
+            totalQuatoTitle: { text: '总获取量' },
+            secondaryQuatoTitle: Object.assign({}, this.options.style.echart.secondaryQuatoTitle, { text: [] }),
+          },
+        },
+        replaceMerge: ['secondaryQuatoTitle'],
+        updateCom: this.shapeUnit.component,
+      });
     },
     /**
      * @description 获取数据

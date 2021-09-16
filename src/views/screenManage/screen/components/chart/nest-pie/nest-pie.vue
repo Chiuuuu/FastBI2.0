@@ -172,14 +172,17 @@ export default {
         data: { measures, outerIng, innerIng },
       } = this.options;
       this.shapeUnit.changeLodingChart(true);
-      const res = await this.$server.common.getData('/screen/graph/v2/getData', {
-        id: this.shapeUnit.component.id,
-        tabId: this.shapeUnit.component.tabId,
-        type: this.shapeUnit.component.type,
-        ...omit(this.options.data, ['expands', 'outerIng', 'innerIng']),
-        dimensions: [].concat(outerIng).concat(innerIng),
-      });
-      this.shapeUnit.changeLodingChart(false);
+      const res = await this.$server.common
+        .getData('/screen/graph/v2/getData', {
+          id: this.shapeUnit.component.id,
+          tabId: this.shapeUnit.component.tabId,
+          type: this.shapeUnit.component.type,
+          ...omit(this.options.data, ['expands', 'outerIng', 'innerIng']),
+          dimensions: [].concat(outerIng).concat(innerIng),
+        })
+        .finally(() => {
+          this.shapeUnit.changeLodingChart(false);
+        });
       if (res.code === 500) {
         this.$message.error('isChange');
         return;

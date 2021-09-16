@@ -8,7 +8,6 @@ import maxBy from 'lodash/maxBy';
 import mergeWith from 'lodash/mergeWith';
 import Node from './node';
 import { setLinkageData, resetOriginData } from '@/utils/setDataLink';
-import omit from 'lodash/omit';
 /**
  * @description 矩形树图
  */
@@ -321,8 +320,6 @@ export default {
               },
               roam: false, // 缩放
               data: this.treeRoot.children,
-              label: omit(echart.customSeries.label, ['formatter']),
-              tooltip: omit(echart.customSeries.tooltip, ['formatter']),
             },
           ],
         },
@@ -357,7 +354,6 @@ export default {
       }
       this.isEmpty = res.data && res.data.length ? false : true;
       if (this.isEmpty) {
-        this.chartInstane.clear();
         return;
       }
       this.serverData = { data: res.data };
@@ -389,6 +385,7 @@ export default {
         updateCom: this.shapeUnit.component,
       });
     },
+    // TODO:优化，目前会触发两次
     /**
      * @description 更新图表样式
      */
@@ -403,6 +400,7 @@ export default {
         newOptions = this.doWithOptions(this.serverData, this.options.data.dimensions, this.options.data.measures);
       } else {
         newOptions = this.doWithOptions(defaultData, this.defaultDimensions, this.defaultMeasures);
+        debugger;
       }
       this.updateSaveChart(newOptions);
       this.doWithLabel(this.options.style.echart);

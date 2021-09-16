@@ -2,8 +2,8 @@
 import BoardType from '@/views/screenManage/screen/setting/default-type';
 import BaseChart from '../base';
 import defaultData from './default-data';
-import omit from 'lodash/omit';
 import merge from 'lodash/merge';
+import omit from 'lodash/omit';
 
 const GAUGE = 'gauge';
 
@@ -29,21 +29,36 @@ export default {
       return data.progress && data.progress.length;
     },
     /**
+     * @description 拼接度量数据
+     */
+    handleMeasures() {
+      return ['progress', 'target', 'max', 'min'].reduce((pre, current) => {
+        if (Array.isArray(this.options.data[current])) {
+          return pre.concat(this.options.data[current]);
+        }
+        return pre;
+      }, []);
+    },
+    /**
      * @description 图表获取服务端数据
      */
     async getServerData() {
       const {
-        data: { progress },
+        data: { progress, targe, max, min },
       } = this.options;
+      const measures = this.handleMeasures();
       this.shapeUnit.changeLodingChart(true);
-      const res = await this.$server.common.getData('/screen/graph/v2/getData', {
-        id: this.shapeUnit.component.id,
-        tabId: this.shapeUnit.component.tabId,
-        type: this.shapeUnit.component.type,
-        ...omit(this.options.data, ['expands', 'progress']),
-        measures: [].concat(progress),
-      });
-      this.shapeUnit.changeLodingChart(false);
+      const res = await this.$server.common
+        .getData('/screen/graph/v2/getData', {
+          id: this.shapeUnit.component.id,
+          tabId: this.shapeUnit.component.tabId,
+          type: this.shapeUnit.component.type,
+          ...this.options.data,
+          measures,
+        })
+        .finally(() => {
+          this.shapeUnit.changeLodingChart(false);
+        });
       if (res.code === 500) {
         this.$message.error('isChange');
         return;
@@ -58,9 +73,9 @@ export default {
           value: datas[0][progress[0].alias],
           name: progress[0].alias,
         },
-        min: !Array.isArray(this.options.data.min) ? this.options.data.min : 0,
-        max: !Array.isArray(this.options.data.max) ? this.options.data.max : 90,
-        target: !Array.isArray(this.options.data.targe) ? this.options.data.targe : 80,
+        min: !Array.isArray(min) ? min : datas[0][min[0].alias],
+        max: !Array.isArray(max) ? max : datas[0][max[0].alias],
+        target: !Array.isArray(targe) ? targe : datas[0][targe[0].alias],
       };
       const options = this.doWithOptions(this.serverData);
       this.updateSaveChart(options);
