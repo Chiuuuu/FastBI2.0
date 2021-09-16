@@ -228,7 +228,7 @@ export default {
       this.chartInstane.setOption(options);
       // 记录当前选择数据的index
       this.currentIndex = e.dataIndex;
-      setLinkageData([e.name], this.shapeUnit.component);
+      setLinkageData(e.name, this.shapeUnit.component);
     },
     /**
      * @description 处理图表点击事件(点击非数据区域重置)
