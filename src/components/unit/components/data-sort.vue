@@ -294,9 +294,6 @@ export default {
       } else if (dataModelId !== selected.tableId && method !== 'dele') {
         this.$message.error('一个图表只能拖入一个数据模型的字段');
         return;
-      } else if (method === 'dele' && this.isEmptyChart()) {
-        // 清空了图表的所有字段, 清空
-        result.dataModelId = '';
       }
       return result;
     },

@@ -329,7 +329,7 @@ export default {
       // 设置轴名称内边距的默认值
       if (this.type === 'xAxis') {
         value == 'middle' && (padding = [30, 0, 0, 0]);
-        value == 'end' && (padding = [60, 0, 0, 0]);
+        value == 'end' && (padding = [40, 10, 0, 0]);
       } else {
         value == 'middle' && (padding = [0, 0, 40, 0]);
         value == 'end' && (padding = [0, 0, 0, 0]);

@@ -304,7 +304,6 @@ export default {
         return console.error(`There is no method: [${echart.customShowWay}]`);
       }
       fn();
-      debugger;
 
       // 这里不能设置label，因为如果当label.show为false会报错
       const options = mergeWith(
@@ -342,13 +341,16 @@ export default {
      */
     async getServerData() {
       this.shapeUnit.changeLodingChart(true);
-      const res = await this.$server.common.getData('/screen/graph/v2/getData', {
-        id: this.shapeUnit.component.id,
-        tabId: this.shapeUnit.component.tabId,
-        type: this.shapeUnit.component.type,
-        ...this.options.data,
-      });
-      this.shapeUnit.changeLodingChart(false);
+      const res = await this.$server.common
+        .getData('/screen/graph/v2/getData', {
+          id: this.shapeUnit.component.id,
+          tabId: this.shapeUnit.component.tabId,
+          type: this.shapeUnit.component.type,
+          ...this.options.data,
+        })
+        .finally(() => {
+          this.shapeUnit.changeLodingChart(false);
+        });
       if (res.code === 500) {
         this.$message.error('isChange');
         return;
@@ -377,7 +379,6 @@ export default {
       this.serverData = null;
       this.treeRoot = '';
       this.isEmpty = false;
-
       // 获取数据之后需要重置配色方案
       this.$store.commit(boardMutation.SET_STYLE, {
         style: {

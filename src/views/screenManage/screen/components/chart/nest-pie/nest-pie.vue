@@ -141,12 +141,12 @@ export default {
       const seriesData = { ...omit(echart.customSeries, ['']) };
       return {
         type: 'pie',
+        zlevel: index === 0 ? 2 : 1,
         center: this.doWithCenter(echart.customCenter),
         radius: radius,
         // label: this.doWithLabel(echart.customSeries.label),
         // labelLayout: this.doWithLabelLayout.bind(this, echart.customSeries.labelLayout, this.chartInstane.getWidth()),
         labelLine: {
-          showAbove: true,
           length: echart.customlabelLineLen[index],
         },
         data: data,

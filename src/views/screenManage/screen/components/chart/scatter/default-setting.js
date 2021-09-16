@@ -66,7 +66,8 @@ export default merge(cloneDeep(BASE), {
           nameTextStyle: {
             color: '#fff',
             fontSize: '12',
-            align: 'center',
+            align: 'right',
+            verticalAlign: 'top',
             padding: [30, 0, 0, 0],
           },
           axisLabel: {

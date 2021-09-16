@@ -74,10 +74,7 @@ export default {
     'options.style': {
       deep: true,
       immediate: false,
-      handler(opt, c) {
-        console.log(c);
-        // debugger;
-
+      handler(opt) {
         // 1. 状态要是是停止（移动或者缩放情况下不更变）
         // 2. 配置项发生改变
         if (opt && this.currentComState && this.currentComState === 'stop') {
