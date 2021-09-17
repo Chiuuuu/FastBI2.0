@@ -103,6 +103,32 @@ export default {
       return this.options.style.echart.tbody.autoWrap;
     },
   },
+  watch: {
+    'options.data.fields': {
+      deep: true,
+      immediate: false,
+      handler(val, oldVal) {
+        // 1.刷新页面oldVal为undefined
+        // 2.左上角刷新按钮，val和oldVal长度一样
+        if (!oldVal || val.length === oldVal.length) return;
+
+        let tableWidth = 3 * 100; //默认数据宽度
+        if (val.length > 1) {
+          tableWidth = val.length * 100; //表格每列宽度为100
+        }
+        // 随着拖入列，根据表格宽度改变尺寸宽度
+        // 2为外层边框
+        this.$store.commit(boardMutation.SET_STYLE, {
+          style: {
+            size: {
+              width: tableWidth + 2,
+            },
+          },
+          updateCom: this.shapeUnit.component,
+        });
+      },
+    },
+  },
   methods: {
     /**
      * @description 切割当前展示的表格
@@ -131,25 +157,10 @@ export default {
         this.cols = this.$refs['js-tbody'].handleGetColWidth(this.maxCols);
         // 设置列宽度固定为100
         this.cols = this.cols.map(() => 100);
-        let tableWidth = this.cols.reduce((sum, current) => {
-          return sum + current;
-        }, 0);
+
         this.tableStyle = Object.assign({}, this.tableStyle, {
-          width: `${tableWidth}px`,
+          width: `${this.options.style.size.width - 2}px`,
         });
-        // debugger
-        // 随着拖入列，根据表格宽度改变尺寸宽度
-        // 2为外层边框
-        if (tableWidth && tableWidth + 2 !== this.options.style.size.width) {
-          this.$store.commit(boardMutation.SET_STYLE, {
-            style: {
-              size: {
-                width: tableWidth + 2,
-              },
-            },
-            updateCom: this.shapeUnit.component,
-          });
-        }
         this.doWithThead();
         this.doWithTbody();
       });
