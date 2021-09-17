@@ -61,6 +61,11 @@ export default {
         },
       },
       echart: {
+        tooltip: {
+          textStyle: {
+            align: 'left',
+          },
+        },
         color: DEFAULT_COLORS,
       }, // 图表插件的配置
     },

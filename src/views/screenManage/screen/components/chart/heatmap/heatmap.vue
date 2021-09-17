@@ -129,7 +129,7 @@ export default {
       customTooltipFormatter.forEach(item => {
         label.push(fieldName[item] + '：' + param[0].value[item]);
       });
-      return `${param[0].marker}<br/>` + label.join('<br/>');
+      return label.join('<br/>');
     },
     /**
      * @description 处理图表配置项
