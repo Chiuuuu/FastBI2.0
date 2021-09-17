@@ -352,19 +352,31 @@ export default {
         this.$message.error('isChange');
         return;
       }
+      // 在isEmpty改变前判断维度度量数据有没有变
+      let needChangeFormatterList = this.isEmpty !== '';
       this.isEmpty = res.data && res.data.length ? false : true;
       if (this.isEmpty) {
         return;
       }
-      this.serverData = { data: res.data };
+      // 记录维度度量给下一次获取数据判断有没有变动
+      this.serverData = {
+        data: res.data,
+      };
       this.treeRoot = '';
+
+      const formatterList = res.data[0] ? Object.keys(res.data[0]) : [];
+      let mergeEchart = {
+        customPiecesIndex: 0,
+      };
+      if (needChangeFormatterList) {
+        mergeEchart.customFormatterTooltip = mergeEchart.customFormatterLabel = formatterList;
+      }
       // 获取数据之后需要重置配色方案
       this.$store.commit(boardMutation.SET_STYLE, {
         style: {
-          echart: {
-            customPiecesIndex: 0,
-          },
+          echart: mergeEchart,
         },
+        replaceMerge: needChangeFormatterList ? ['customFormatterLabel', 'customFormatterTooltip'] : null,
         updateCom: this.shapeUnit.component,
       });
     },
@@ -374,18 +386,25 @@ export default {
     getDefaultData() {
       this.serverData = null;
       this.treeRoot = '';
+      // 在isEmpty改变前判断维度度量数据有没有变
+      let needChangeFormatterList = this.isEmpty !== '';
       this.isEmpty = false;
+      let mergeEchart = {
+        customPiecesIndex: 0,
+      };
+      if (needChangeFormatterList) {
+        (mergeEchart.customFormatterLabel = ['bumenTableid']),
+          (mergeEchart.customFormatterTooltip = ['员工姓名', '部门名称', '公司', 'bumenTableid']);
+      }
       // 获取数据之后需要重置配色方案
       this.$store.commit(boardMutation.SET_STYLE, {
         style: {
-          echart: {
-            customPiecesIndex: 0,
-          },
+          echart: mergeEchart,
         },
+        replaceMerge: needChangeFormatterList ? ['customFormatterLabel', 'customFormatterTooltip'] : null,
         updateCom: this.shapeUnit.component,
       });
     },
-    // TODO:优化，目前会触发两次
     /**
      * @description 更新图表样式
      */
@@ -400,7 +419,6 @@ export default {
         newOptions = this.doWithOptions(this.serverData, this.options.data.dimensions, this.options.data.measures);
       } else {
         newOptions = this.doWithOptions(defaultData, this.defaultDimensions, this.defaultMeasures);
-        debugger;
       }
       this.updateSaveChart(newOptions);
       this.doWithLabel(this.options.style.echart);

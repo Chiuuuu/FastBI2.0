@@ -8,7 +8,6 @@ import { mutationTypes as boardMutation } from '@/store/modules/board';
 import guangzhou from '@/utils/guangzhou.json';
 import reverseAddressResolution from './reverseAddressResolution';
 import omit from 'lodash/omit';
-// import includes from 'lodash/includes';
 const mapSeries = 0;
 const scatterSeries = 1;
 
@@ -232,13 +231,14 @@ export default {
       });
       let pointShowList = [];
       let tooltipList = [];
-      //   if (!includes(datas[0], ...pointShowList) || !includes(datas[0], ...pointShowList)) {
-      //     pointShowList = [`地区名/${dimensionAlias}`];
-      //     tooltipList = [dimensionAlias, measureAlias];
-      //   } else {
-      //     pointShowList = [].concat(this.options.style.echart.mapStyle.customPointShowList);
-      //     tooltipList = [].concat(this.options.style.echart.mapStyle.customTooltipShowList);
-      //   }
+      // 非初始化才重置格式
+      if (this.isEmpty !== '') {
+        pointShowList = [`地区名/${dimensionAlias}`];
+        tooltipList = [dimensionAlias, measureAlias];
+      } else {
+        pointShowList = [].concat(this.options.style.echart.mapStyle.customPointShowList);
+        tooltipList = [].concat(this.options.style.echart.mapStyle.customTooltipShowList);
+      }
       return {
         fillList: datas,
         fillName: measureAlias,
@@ -282,11 +282,21 @@ export default {
       if (fillList.length && !datas.length) {
         this.$message.error('经纬度解析失败');
       }
+      let pointShowList = [];
+      let tooltipList = [];
+      // 非初始化才重置格式
+      if (this.isEmpty !== '') {
+        pointShowList = [`地区名`];
+        tooltipList = [longitude[0].alias, latitude[0].alias, measureAlias];
+      } else {
+        pointShowList = [].concat(this.options.style.echart.mapStyle.customPointShowList);
+        tooltipList = [].concat(this.options.style.echart.mapStyle.customTooltipShowList);
+      }
       return {
         fillList: datas,
         fillName: measureAlias,
-        fillCustomPointShowList: [`地区名`],
-        fillCustomTooltipShowList: [longitude[0].alias, latitude[0].alias, measureAlias],
+        fillCustomPointShowList: pointShowList,
+        fillCustomTooltipShowList: tooltipList,
       };
     },
     /**
@@ -362,11 +372,21 @@ export default {
           this.$message.error(`图表${title}数据量过大, 已截取前50条展示`);
         }
       }
+      let pointShowList = [];
+      let tooltipList = [];
+      // 非初始化才重置格式
+      if (this.isEmpty !== '') {
+        pointShowList = [`地区名/${dimensionAlias}`];
+        tooltipList = [dimensionAlias, measureAlias];
+      } else {
+        pointShowList = [].concat(this.options.style.echart.scatterStyle.customPointShowList);
+        tooltipList = [].concat(this.options.style.echart.scatterStyle.customTooltipShowList);
+      }
       return {
         labelList: datas,
         labelName: measureAlias,
-        labelCustomPointShowList: [`地区名/${dimensionAlias}`],
-        labelCustomTooltipShowList: [dimensionAlias, measureAlias],
+        labelCustomPointShowList: pointShowList,
+        labelCustomTooltipShowList: tooltipList,
       };
     },
     /**
@@ -413,11 +433,21 @@ export default {
           this.$message.error(`图表${title}数据量过大, 已截取前50条展示`);
         }
       }
+      let pointShowList = [];
+      let tooltipList = [];
+      // 非初始化才重置格式
+      if (this.isEmpty !== '') {
+        pointShowList = [`地区名`];
+        tooltipList = [labelLongitude[0].alias, labelLatitude[0].alias, measureAlias];
+      } else {
+        pointShowList = [].concat(this.options.style.echart.scatterStyle.customPointShowList);
+        tooltipList = [].concat(this.options.style.echart.scatterStyle.customTooltipShowList);
+      }
       return {
         labelList: datas,
         labelName: measureAlias,
-        labelCustomPointShowList: [`地区名`],
-        labelCustomTooltipShowList: [labelLongitude[0].alias, labelLatitude[0].alias, measureAlias],
+        labelCustomPointShowList: pointShowList,
+        labelCustomTooltipShowList: tooltipList,
       };
     },
     /**
@@ -453,6 +483,9 @@ export default {
         ]);
         const { fillList, fillName, fillCustomPointShowList, fillCustomTooltipShowList } = fillResult;
         const { labelList, labelName, labelCustomPointShowList, labelCustomTooltipShowList } = labelResult;
+
+        // 地图没有数据不影响显示，只用来判断初始化
+        this.isEmpty = false;
 
         const data = defaultData.series;
         this.serverData = {
@@ -501,6 +534,7 @@ export default {
      */
     getDefaultData() {
       this.serverData = null;
+      this.isEmpty = false;
       const options = this.doWithOptions(defaultData);
       this.updateSaveChart(options);
     },

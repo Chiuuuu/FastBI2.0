@@ -1140,6 +1140,7 @@ export default {
             this.$message.success('发布成功');
             // 状态改为已发布
             this.release.status = 'publish';
+            this.shareObj.valid = true;
           }
         });
       } else {
@@ -1148,6 +1149,7 @@ export default {
         this.$server.screenManage.reShareScreen(params).then(res => {
           if (res.code === 200) {
             this.$message.success('发布成功');
+            this.release.status = 'publish';
             this.shareObj.valid = true;
           }
         });

@@ -165,6 +165,8 @@ export default {
         this.shapeUnit.changeLodingChart(false);
       });
       if (res.code === 200) {
+        // 在isEmpty改变前判断维度度量数据有没有变
+        let needChangeFormatterList = this.isEmpty !== '';
         this.isEmpty = res.data && res.data.length ? false : true;
         if (this.isEmpty) {
           return;
@@ -174,7 +176,9 @@ export default {
         const { totalQuotaTitle, totalQuotaValue } = this.doWithTotal(data);
         // 主指标自定义，数据改动才重置
         const customTotalTitle =
-          !this.serverData || this.serverData.data.totalQuotaTitle !== totalQuotaTitle ? totalQuotaTitle : null;
+          needChangeFormatterList && (!this.serverData || this.serverData.data.totalQuotaTitle !== totalQuotaTitle)
+            ? totalQuotaTitle
+            : null;
         // 处理次指标
         let secondaryQuotas = [];
         let customSecTitles = [];
@@ -183,9 +187,10 @@ export default {
           secondaryQuotas.push({ secondaryQuotasTitle: alias, secondaryQuotasValue: data[alias].toString() });
           // 数据有变动才重置自定义标题
           if (
-            !this.serverData ||
-            !this.serverData.data.secondaryQuotas[index] ||
-            this.serverData.data.secondaryQuotas[index].secondaryQuotasTitle !== alias
+            needChangeFormatterList &&
+            (!this.serverData ||
+              !this.serverData.data.secondaryQuotas[index] ||
+              this.serverData.data.secondaryQuotas[index].secondaryQuotasTitle !== alias)
           ) {
             customSecTitles[index] = alias;
           } else {
@@ -254,13 +259,17 @@ export default {
      */
     getDefaultData() {
       this.serverData = null;
+      // 在isEmpty改变前判断维度度量数据有没有变
+      let needChangeFormatterList = this.isEmpty !== '';
       this.isEmpty = false;
       this.doWithData(defaultData);
       // 获取数据之后需要更改限制
       this.$store.commit(boardMutation.SET_STYLE, {
         style: {
           echart: {
-            totalQuatoTitle: { text: '总获取量' },
+            totalQuatoTitle: {
+              text: needChangeFormatterList ? '总获取量' : this.options.style.echart.totalQuatoTitle.text,
+            },
             secondaryQuatoTitle: Object.assign({}, this.options.style.echart.secondaryQuatoTitle, { text: [] }),
           },
         },
