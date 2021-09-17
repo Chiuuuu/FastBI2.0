@@ -400,7 +400,6 @@ export default {
         newOptions = this.doWithOptions(this.serverData, this.options.data.dimensions, this.options.data.measures);
       } else {
         newOptions = this.doWithOptions(defaultData, this.defaultDimensions, this.defaultMeasures);
-        debugger;
       }
       this.updateSaveChart(newOptions);
       this.doWithLabel(this.options.style.echart);

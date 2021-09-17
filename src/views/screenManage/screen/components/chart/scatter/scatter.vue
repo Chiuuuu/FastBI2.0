@@ -160,8 +160,7 @@ export default {
         if (val.length < 6) {
           return '';
         }
-        return `${params.marker}<br/>
-                ${val[5]}：${val[2]}<br/>
+        return `${val[5]}：${val[2]}<br/>
                 ${val[3]}：${val[0]}<br/>
                 ${val[4]}：${val[1]}<br/>
                 `;
