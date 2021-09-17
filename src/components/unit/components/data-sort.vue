@@ -268,28 +268,32 @@ export default {
       }
 
       let selected = '';
+      let resourceType;
       if (this.boardSettingRightInstance.tabAcitve === 'model') {
         if (this.boardSettingRightInstance.modelSelected) {
           selected = this.boardSettingRightInstance.modelSelected;
-          result.resourceType = this.resourceType[this.boardSettingRightInstance.tabAcitve];
+          resourceType = this.resourceType[this.boardSettingRightInstance.tabAcitve];
         }
       } else if (this.boardSettingRightInstance.tabAcitve === 'access') {
         if (this.boardSettingRightInstance.accessSelected) {
           selected = this.boardSettingRightInstance.accessSelected;
-          result.resourceType = this.resourceType[this.boardSettingRightInstance.tabAcitve];
+          resourceType = this.resourceType[this.boardSettingRightInstance.tabAcitve];
         }
       }
 
       if (!dataModelId && selected) {
         // 如果图表模型id为空并且有数据，则添加
         result.dataModelId = selected.tableId;
+        result.resourceType = resourceType;
       } else if (dataModelId && !selected) {
         // 如果图表模型id有，但是没有数据，则清空
         result.dataModelId = '';
+        result.resourceType = '';
         return result;
       } else if (method === 'dele' && this.isEmptyChart()) {
         // 清空了图表的所有字段, 清空
         result.dataModelId = '';
+        result.resourceType = '';
         return result;
       } else if (dataModelId !== selected.tableId && method !== 'dele') {
         this.$message.error('一个图表只能拖入一个数据模型的字段');
