@@ -355,7 +355,7 @@ export default {
   },
   watch: {
     'currentCom.setting.data': {
-      handler(val, oldVal) {
+      handler(val) {
         let { dimensions, measures } = val;
         let list = dimensions.concat(measures);
         // 指标内容/鼠标移入显示内容 下拉选择
@@ -363,23 +363,6 @@ export default {
           list = [{ alias: '员工姓名' }, { alias: '部门名称' }, { alias: '公司' }, { alias: 'bumenTableid' }];
         }
         this.tooltipFormatterList = this.labelFormatterList = list;
-
-        if (oldVal) {
-          // 当拖入的维度、度量发生变化时，指标内容字段、鼠标移入提示内容字段需相应改动
-          if (val.dimensions.length > 0 && val.measures.length > 0) {
-            // 1.当都拖入维度和度量时，则“指标内容”默认选择度量，“鼠标移入提示内容”默认选择全部
-            this.handleChange('echart', {
-              customFormatterLabel: measures.map(item => item.alias), // 指标内容
-              customFormatterTooltip: list.map(item => item.alias), // 鼠标移入提示内容
-            });
-          } else if (val.dimensions.length === 0 || val.measures.length === 0) {
-            // 2.当维度删除为0，或者度量删除为0,则恢复为初始默认选择
-            this.handleChange('echart', {
-              customFormatterLabel: ['bumenTableid'], // 指标内容
-              customFormatterTooltip: ['员工姓名', '部门名称', '公司', 'bumenTableid'], // 鼠标移入提示内容
-            });
-          }
-        }
       },
       immediate: true,
       deep: true,

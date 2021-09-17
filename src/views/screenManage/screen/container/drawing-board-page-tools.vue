@@ -151,7 +151,10 @@ export default {
       if (val) {
         window.removeEventListener('resize', this.handleResize);
       } else {
-        window.addEventListener('resize', this.handleResize);
+        this.$nextTick(() => {
+          this.handleShowTableList('resize');
+          window.addEventListener('resize', this.handleResize);
+        });
       }
     },
   },
@@ -263,12 +266,9 @@ export default {
      * @description 统一处理tab栏状态
      */
     handleShowTableList(type) {
-      const obj = this.handleTableListPosition(type);
-      if (!obj) {
-        return;
-      }
-      this.rightBtnDisabled = obj.disabled;
-      this.tabAreaPositionLeft += obj.offset;
+      const { disabled, offset } = this.handleTableListPosition(type);
+      this.rightBtnDisabled = disabled;
+      this.tabAreaPositionLeft += offset;
     },
     /**
      * @description 重新计算tab页区域宽度, 并处理显示的tab
