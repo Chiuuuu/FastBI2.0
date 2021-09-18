@@ -109,7 +109,11 @@ export default class DragDrop {
         };
 
         document.addEventListener('mousemove', onMouseMove);
-        document.onmouseup = function () {
+        document.onmouseup = () => {
+          if (this.placeholder) {
+            this.placeholder.onmouseup = null;
+            document.body.removeChild(this.placeholder);
+          }
           document.removeEventListener('mousemove', onMouseMove);
           document.onmouseup = null;
         };

@@ -376,7 +376,6 @@ export default {
       };
 
       document.onmousemove = mouseEvent => {
-        console.log(11);
         this.dragging = true;
         // 设置当前组件的状态,防止拖动的情况更新组件
         if (this.dragging && this.$store.state.board.currentComState === 'stop') {
