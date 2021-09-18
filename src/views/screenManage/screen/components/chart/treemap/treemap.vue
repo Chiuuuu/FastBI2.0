@@ -270,10 +270,15 @@ export default {
       } = this.options;
 
       const cache = [].concat(originDimensions);
+      // 将当前选中的颜色提到最高父级
+      const pop = cache.splice(echart.customPiecesIndex, 1)[0];
+      cache.unshift(pop);
       this.isRenderMeasure = echart.customPiecesIndex > originDimensions.length - 1;
 
       // 如果是按度量分配颜色就从维度的最后开始
-      const dimensions = cache.slice(this.isRenderMeasure ? originDimensions.length - 1 : echart.customPiecesIndex);
+      // 当前维度提到最高层级, index为0
+      const cachePiecesIndex = 0;
+      const dimensions = cache.slice(this.isRenderMeasure ? originDimensions.length - 1 : cachePiecesIndex);
 
       this.conversionTree(this.treeRoot, fetchData.data, {
         dimensions, // 维度
@@ -287,12 +292,12 @@ export default {
 
       const showWay = {
         measure: () => {
-          const dimensionIndex = originDimensions.length - echart.customPiecesIndex - 1;
+          const dimensionIndex = originDimensions.length - cachePiecesIndex - 1;
           visualMap = this.doWithVisualMap(dimensionIndex, pieces);
         },
         average: () => {
-          const dimensionIndex = originDimensions.length - echart.customPiecesIndex;
-          const currentDimension = dimensions[echart.customPiecesIndex];
+          const dimensionIndex = originDimensions.length - cachePiecesIndex;
+          const currentDimension = dimensions[cachePiecesIndex];
           this.changeToAverage(this.treeRoot.children, pieces, dimensions, currentDimension, 0);
           visualMap = this.doWithVisualMap(dimensionIndex, pieces);
         },
