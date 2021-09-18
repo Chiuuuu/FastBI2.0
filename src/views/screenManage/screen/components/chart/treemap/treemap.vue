@@ -130,7 +130,7 @@ export default {
           // 自身值始终为一个数组（除了根节点）
           // 并且第一个表示为自身当前值
           if (typeof parent.parentValue[0] !== 'undefined') {
-            parent.setField('value', [selfValue, parent.parentValue[0]]);
+            parent.setField('value', [selfValue, ...parent.parentValue]);
           } else {
             parent.setField('value', [selfValue]);
           }
@@ -138,7 +138,6 @@ export default {
           if (!isEnd) {
             parent.add(node);
           }
-
           nodeChild.push(parent);
         } else {
           // 存在则继续添加
