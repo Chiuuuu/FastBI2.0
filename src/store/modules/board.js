@@ -64,7 +64,7 @@ const mergeStyle = function (state, style, replaceMerge, updateCom = null) {
 
 const mutations = {
   RESETSTATE(state, { components, page }) {
-    Object.assign(state, omit(getDefaultState(), 'scale'), {
+    Object.assign(state, omit(getDefaultState(), ['scale', 'model']), {
       components: components || [],
       page: page || cloneDeep(boardSetting['Page']),
     });

@@ -185,13 +185,6 @@ export default {
           components: result.screenGraphs,
           page: result.setting,
         });
-
-        // 解决：编辑大屏-预览，切换tab页后，变回edit状态
-        if (this.$route.query.model) {
-          this.$store.commit(boardMutaion.SET_BOARD_MODEL, {
-            model: this.$route.query.model,
-          });
-        }
       }
     },
     async handleSave(callback, errorMsg) {
@@ -248,7 +241,6 @@ export default {
             query: {
               id: this.screenInfo.screenId,
               tabId: params.tabId,
-              model: this.$store.state.board.model,
             },
           });
         }, '切换失败');
