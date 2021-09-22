@@ -165,10 +165,10 @@ export default {
         this.shapeUnit.changeLodingChart(false);
       });
       if (res.code === 200) {
-        // 在isEmpty改变前判断维度度量数据有没有变
-        let needChangeFormatterList = this.isEmpty !== '';
-        this.isEmpty = res.data && res.data.length ? false : true;
-        if (this.isEmpty) {
+        // 判断是否初始化
+        let needChangeFormatterList = this.dataState !== 'default';
+        this.dataState = res.data && res.data.length ? 'normal' : 'empty';
+        if (this.dataState === 'empty') {
           return;
         }
         const data = res.data[0];
@@ -259,9 +259,9 @@ export default {
      */
     getDefaultData() {
       this.serverData = null;
-      // 在isEmpty改变前判断维度度量数据有没有变
-      let needChangeFormatterList = this.isEmpty !== '';
-      this.isEmpty = false;
+      // 判断是否初始化
+      let needChangeFormatterList = this.dataState !== 'default';
+      this.dataState = 'default';
       this.doWithData(defaultData);
       // 获取数据之后需要更改限制
       this.$store.commit(boardMutation.SET_STYLE, {
@@ -317,7 +317,7 @@ export default {
      * @description 更新图表样式
      */
     updateChartStyle() {
-      if (this.isEmpty) {
+      if (this.dataState === 'empty') {
         return;
       }
       this.doWithOptions();

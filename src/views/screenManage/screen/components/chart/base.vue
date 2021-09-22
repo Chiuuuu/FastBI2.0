@@ -3,7 +3,7 @@
     <div class="board-chart-unit-title" :style="titleStyle" v-if="options.style.title.show">
       {{ options.style.title.text }}
     </div>
-    <div class="board-chart-unit" :style="chartStyle" ref="js-board-chart-unit" v-show="!isEmpty"></div>
+    <div class="board-chart-unit" :style="chartStyle" ref="js-board-chart-unit" v-show="dataState !== 'empty'"></div>
   </div>
 </template>
 <script>
@@ -18,7 +18,7 @@ export default {
     return {
       chartInstane: null, // 图表实例
       serverData: null, // 服务端数据
-      isEmpty: '', // 数据列表是否为空，有数据是false,服务器返回[]的时候true,初始设置''标识是否初始化，用来判断要不要重置格式选择列表(树图，地图，指标卡自定义标题)
+      dataState: 'default', //  // 数据状态("empty":数据为空(服务器返回[])|'default':初始化| 'normal':有数据)
     };
   },
   inject: ['shapeUnit'],

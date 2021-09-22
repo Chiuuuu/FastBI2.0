@@ -328,8 +328,8 @@ export default {
         this.$message.error('isChange');
         return;
       }
-      this.isEmpty = res.data && res.data.length ? false : true;
-      if (this.isEmpty) {
+      this.dataState = res.data && res.data.length ? 'normal' : 'empty';
+      if (this.dataState === 'empty') {
         return;
       }
       let datas = res.data || [];
@@ -364,7 +364,7 @@ export default {
      */
     getDefaultData() {
       this.serverData = null;
-      this.isEmpty = false;
+      this.isEmpty = 'normal';
       const options = this.doWithOptions(defaultData);
       this.updateSaveChart(options);
     },
@@ -372,7 +372,7 @@ export default {
      * @description 更新图表样式
      */
     updateChartStyle() {
-      if (this.isEmpty || !this.chartInstane) return;
+      if (this.dataState === 'empty' || !this.chartInstane) return;
       // 解决：已拖入维度/度量的图表，退出编辑大屏，再次进入时先显示默认图表数据，之后再显示已拖入的图表数据
       if (this.isServerData() && !this.serverData) {
         return;

@@ -252,8 +252,8 @@ export default {
         this.shapeUnit.changeLodingChart(false);
       });
       if (res.code === 200) {
-        this.isEmpty = res.data && res.data.length ? false : true;
-        if (this.isEmpty) {
+        this.dataState = res.data && res.data.length ? 'normal' : 'empty';
+        if (this.dataState === 'empty') {
           return;
         }
         const data = res.data[0];
@@ -293,7 +293,7 @@ export default {
      */
     getDefaultData() {
       this.serverData = null;
-      this.isEmpty = false;
+      this.dataState = 'normal';
       const result = this.doWithData(defaultData);
       this.progressStyle = Object.assign({}, this.progressStyle, {
         width: `${result.percent}%`,
@@ -304,7 +304,7 @@ export default {
      * @description 更新图表样式
      */
     updateChartStyle() {
-      if (this.isEmpty) {
+      if (this.dataState === 'empty') {
         return;
       }
       this.doWithOptions();

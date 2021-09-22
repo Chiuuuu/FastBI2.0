@@ -28,7 +28,8 @@ const app = {
       setting: {}, // 画布样式配置(背景, 宽高)
       resourceType: '', // 数据类型，文本框请求用
     },
-    modelMeasures: [], // 度量列表，文本框插入用
+    modelMeasures: [], // 度量列表，文本框插入用，校验保存的图表数据
+    modelDimensions: [], // 维度列表，用来校验保存的图表数据
     resourceTypeStr: '', // 数据类型，文本框请求用
     polymerizeType: [
       // 聚合方式及中文映射
@@ -85,6 +86,9 @@ const app = {
     },
     SET_MODEL_MEASURE(state, measures) {
       state.modelMeasures = measures;
+    },
+    SET_MODEL_DIMENSION(state, dimensions) {
+      state.modelDimensions = dimensions;
     },
     SET_RESOURCE_TYPE(state, resourceType) {
       state.resourceTypeStr = resourceType;
@@ -144,6 +148,9 @@ const app = {
     },
     SetModelMeasures({ commit }, measures) {
       commit('SET_MODEL_MEASURE', measures);
+    },
+    SetModelDimensions({ commit }, dimensions) {
+      commit('SET_MODEL_DIMENSION', dimensions);
     },
     SetResourceType({ commit }, resourceType) {
       commit('SET_RESOURCE_TYPE', resourceType);

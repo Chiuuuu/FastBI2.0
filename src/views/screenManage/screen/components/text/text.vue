@@ -145,6 +145,7 @@ export default {
         this.$nextTick(() => {
           this.dataModelId = val.dataModelId;
           this.resourceType = val.resourceType;
+          this.usedMeasures = val.measures; // 初始化成已有度量，如果有插入就替换插入的列表
           this.$refs['js-board-text-unit'].innerHTML = val.htmlText;
           // 非聚焦(可拖)下还要做转换
           if (this.shapeUnit.isShowShapMover) {
@@ -398,7 +399,6 @@ export default {
         if (res.code === 500) {
           return res.msg;
         }
-        // todo:要后台配合改成按id对应,保存的alias不是最新的，可能对应不上getdata的数据
         resultStr = resultStr.replace(reg, (match, id, alias) => {
           return `<span>${res.data[0][alias]}</span>`;
         });
@@ -458,6 +458,9 @@ export default {
         if (!measure) {
           return;
         }
+        span.innerHTML = span.innerHTML.replace(/\[(.*?)\(/, () => {
+          return `[${measure.alias}(`;
+        });
         span.addEventListener('click', e => this.clickMeasure(e, measure));
         span.addEventListener('contextmenu', e => this.clickMeasure(e, measure));
         // 度量不存在飘红

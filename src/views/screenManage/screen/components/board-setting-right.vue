@@ -170,6 +170,9 @@ export default {
         // this.tabAcitve = 'model';
       }
     },
+    dimension(val) {
+      this.$store.dispatch('SetModelDimensions', val);
+    },
     // 保存当前度量列表，文本框插入
     measure(val) {
       this.$store.dispatch('SetModelMeasures', val);

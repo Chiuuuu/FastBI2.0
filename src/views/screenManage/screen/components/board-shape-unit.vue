@@ -167,6 +167,8 @@ export default {
       boardScale: state => state.board.scale,
       model: state => state.board.model,
       componentsOrigin: state => state.board.components,
+      modelMeasures: state => state.app.modelMeasures,
+      modelDimensions: state => state.app.modelDimensions,
     }),
     isActive() {
       // 是否处于活动状态
@@ -192,12 +194,42 @@ export default {
     },
   },
   mounted() {
+    // 检查保存的图表数据和新维度度量是否对应
+    this.handleNewData();
     this.initContextMenu();
   },
   beforeDestroy() {
     this.destoryContextMenu();
   },
   methods: {
+    /**
+     * @description 检查保存的图表数据和新维度度量是否对应
+     */
+    handleNewData() {
+      // 替换alias
+      function replaceAlias(data, list) {
+        list.forEach(item => {
+          if (item.id === data.id) {
+            data = item;
+          }
+        });
+      }
+      let options = this.$slots.default[0].componentInstance.options;
+      Object.keys(options.data).forEach(key => {
+        const datas = options.data[key];
+        if (key === 'filter') {
+          datas.fileList.forEach(data => {
+            replaceAlias(data, data.role === 1 ? this.modelDimensions : this.modelMeasures);
+          });
+          return;
+        }
+        if (Array.isArray(datas)) {
+          datas.forEach(data => {
+            replaceAlias(data, data.role === 1 ? this.modelDimensions : this.modelMeasures);
+          });
+        }
+      });
+    },
     /**
      * @description 初始化右键菜单
      */

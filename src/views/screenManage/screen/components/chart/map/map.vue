@@ -232,7 +232,7 @@ export default {
       let pointShowList = [];
       let tooltipList = [];
       // 非初始化才重置格式
-      if (this.isEmpty !== '') {
+      if (this.dataState !== 'default') {
         pointShowList = [`地区名/${dimensionAlias}`];
         tooltipList = [dimensionAlias, measureAlias];
       } else {
@@ -285,7 +285,7 @@ export default {
       let pointShowList = [];
       let tooltipList = [];
       // 非初始化才重置格式
-      if (this.isEmpty !== '') {
+      if (this.dataState !== 'default') {
         pointShowList = [`地区名`];
         tooltipList = [longitude[0].alias, latitude[0].alias, measureAlias];
       } else {
@@ -375,7 +375,7 @@ export default {
       let pointShowList = [];
       let tooltipList = [];
       // 非初始化才重置格式
-      if (this.isEmpty !== '') {
+      if (this.dataState !== 'default') {
         pointShowList = [`地区名/${dimensionAlias}`];
         tooltipList = [dimensionAlias, measureAlias];
       } else {
@@ -436,7 +436,7 @@ export default {
       let pointShowList = [];
       let tooltipList = [];
       // 非初始化才重置格式
-      if (this.isEmpty !== '') {
+      if (this.dataState !== 'default') {
         pointShowList = [`地区名`];
         tooltipList = [labelLongitude[0].alias, labelLatitude[0].alias, measureAlias];
       } else {
@@ -484,8 +484,8 @@ export default {
         const { fillList, fillName, fillCustomPointShowList, fillCustomTooltipShowList } = fillResult;
         const { labelList, labelName, labelCustomPointShowList, labelCustomTooltipShowList } = labelResult;
 
-        // 地图没有数据不影响显示，只用来判断初始化
-        this.isEmpty = false;
+        // 修改状态
+        this.dataState = 'normal';
 
         const data = defaultData.series;
         this.serverData = {
@@ -534,7 +534,7 @@ export default {
      */
     getDefaultData() {
       this.serverData = null;
-      this.isEmpty = false;
+      this.dataState = 'normal';
       const options = this.doWithOptions(defaultData);
       this.updateSaveChart(options);
     },

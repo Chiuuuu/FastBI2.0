@@ -356,12 +356,13 @@ export default {
         this.$message.error('isChange');
         return;
       }
-      // 在isEmpty改变前判断维度度量数据有没有变
-      let needChangeFormatterList = this.isEmpty !== '';
-      this.isEmpty = res.data && res.data.length ? false : true;
-      if (this.isEmpty) {
+      // 判断是否初始化
+      let needChangeFormatterList = this.dataState !== 'default';
+      this.dataState = res.data && res.data.length ? 'normal' : 'empty';
+      if (this.dataState === 'empty') {
         return;
       }
+
       // 记录维度度量给下一次获取数据判断有没有变动
       this.serverData = {
         data: res.data,
@@ -390,9 +391,9 @@ export default {
     getDefaultData() {
       this.serverData = null;
       this.treeRoot = '';
-      // 在isEmpty改变前判断维度度量数据有没有变
-      let needChangeFormatterList = this.isEmpty !== '';
-      this.isEmpty = false;
+      // 判断是否初始化
+      let needChangeFormatterList = this.dataState !== 'default';
+      this.dataState = 'normal';
       let mergeEchart = {
         customPiecesIndex: 0,
       };
@@ -413,7 +414,7 @@ export default {
      * @description 更新图表样式
      */
     updateChartStyle() {
-      if (this.isEmpty || !this.chartInstane) return;
+      if (this.dataState === 'empty' || !this.chartInstane) return;
       // 解决：已拖入维度/度量的图表，退出编辑大屏，再次进入时先显示默认图表数据，之后再显示已拖入的图表数据
       if (this.isServerData() && !this.serverData) {
         return;

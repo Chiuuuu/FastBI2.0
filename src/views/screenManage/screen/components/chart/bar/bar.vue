@@ -151,8 +151,8 @@ export default {
         this.$message.error('isChange');
         return;
       }
-      this.isEmpty = res.data && res.data.length ? false : true;
-      if (this.isEmpty) {
+      this.dataState = res.data && res.data.length ? 'normal' : 'empty';
+      if (this.dataState === 'empty') {
         return;
       }
       const datas = res.data;
@@ -176,7 +176,7 @@ export default {
      */
     getDefaultData() {
       this.serverData = null;
-      this.isEmpty = false;
+      this.dataState = 'normal';
       const options = this.doWithOptions(defaultData);
       this.updateSaveChart(options);
     },
@@ -184,7 +184,7 @@ export default {
      * @description 更新图表样式
      */
     updateChartStyle() {
-      if (this.isEmpty || !this.chartInstane) return;
+      if (this.dataState === 'empty' || !this.chartInstane) return;
       const options = this.chartInstane.getOption();
 
       const data = {
