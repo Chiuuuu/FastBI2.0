@@ -355,9 +355,6 @@ export default {
         });
       if (res.code === 200) {
         this.dataState = res.data && res.data.length ? 'normal' : 'empty';
-        if (this.dataState === 'empty') {
-          return;
-        }
         this.serverData = { data: res.data };
         const keys = this.options.data.fields.map(item => item.alias);
         this.fields = keys.map(key => {

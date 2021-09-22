@@ -184,7 +184,10 @@ export default {
         let customSecTitles = [];
         this.options.data.secondaryQuota.forEach((quota, index) => {
           const alias = quota.alias;
-          secondaryQuotas.push({ secondaryQuotasTitle: alias, secondaryQuotasValue: data[alias].toString() });
+          secondaryQuotas.push({
+            secondaryQuotasTitle: alias,
+            secondaryQuotasValue: data[alias] ? data[alias].toString() : '',
+          });
           // 数据有变动才重置自定义标题
           if (
             needChangeFormatterList &&
@@ -233,7 +236,7 @@ export default {
       if (this.options.data['totalQuota'].length) {
         const totalAlias = this.options.data['totalQuota'][0].alias;
         totalQuotaTitle = totalAlias;
-        totalQuotaValue = data[totalAlias].toString();
+        totalQuotaValue = data[totalAlias] ? data[totalAlias].toString() : '';
       }
       return { totalQuotaTitle, totalQuotaValue };
     },
@@ -305,6 +308,9 @@ export default {
      * @description 格式化数值
      */
     handleValue(value) {
+      if (!value) {
+        return '';
+      }
       const arr = value.split('.');
       let str = +arr[0];
       str = str.toLocaleString();

@@ -73,6 +73,8 @@ export default {
       screenInfo: state => state.app.screenInfo,
       components: state => state.board.components,
       page: state => state.board.page,
+      // 当前组件
+      currentCom: state => state.board.currentCom,
     }),
     drawingBoardClass() {
       if (this.$store.state.board.model === this.parameter.EDIT) {
@@ -81,17 +83,19 @@ export default {
         return 'drawing-board-preview';
       }
     },
-    // 被图表引用的图表id集合
+    // 被图表引用的图表id集合(只针对当前表)
     beUsedDataIds() {
       let beUsedDataIds = [];
-      this.components.forEach(chart => {
-        const keys = Object.keys(chart.setting.data);
-        keys.forEach(key => {
-          if (Array.isArray(chart.setting.data[key])) {
-            const dataIds = chart.setting.data[key].map(data => data.id);
-            beUsedDataIds = beUsedDataIds.concat(dataIds);
-          }
-        });
+      if (!this.currentCom) {
+        return beUsedDataIds;
+      }
+      const data = this.currentCom.setting.data;
+      const keys = Object.keys(data);
+      keys.forEach(key => {
+        if (Array.isArray(data[key])) {
+          const dataIds = data[key].map(data => data.id);
+          beUsedDataIds = beUsedDataIds.concat(dataIds);
+        }
       });
       return [...new Set(beUsedDataIds)];
     },
