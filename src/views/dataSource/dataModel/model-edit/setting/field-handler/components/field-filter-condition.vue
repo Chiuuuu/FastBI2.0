@@ -1,7 +1,7 @@
 <template>
   <div>
     <div v-if="!isNumber">
-      <a-radio-group v-model="conditionData.modeType">
+      <a-radio-group v-model="conditionData.modeType" @change="checkedData = []">
         <a-radio :value="1">列表</a-radio>
         <a-radio :value="2">手动</a-radio>
       </a-radio-group>

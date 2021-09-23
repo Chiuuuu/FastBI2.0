@@ -73,6 +73,7 @@ export default {
       this.detailInfo.pivotSchema.measures = [];
       this.$parent.cacheDimensions = [];
       this.$parent.cacheMeasures = [];
+      this.$parent.handleSameName();
       this.$parent.handleDimensions();
       this.$parent.handleMeasures();
       this.$parent.handleFilterSort();
@@ -186,6 +187,7 @@ export default {
       if (result.code === 200) {
         this.detailInfo.config = result.data.config;
         this.detailInfo.pivotSchema = result.data.pivotSchema;
+        this.$parent.handleSameName();
         this.$parent.handleDimensions();
         this.$parent.handleMeasures();
         this.$parent.handleFilterSort();
@@ -207,6 +209,7 @@ export default {
       this.detailInfo.config.tables.push(table);
       this.detailInfo.pivotSchema.dimensions = [...this.detailInfo.pivotSchema.dimensions, ...dimensions];
       this.detailInfo.pivotSchema.measures = [...this.detailInfo.pivotSchema.measures, ...measures];
+      this.$parent.handleSameName();
       this.$parent.handleDimensions();
       this.$parent.handleMeasures();
       this.$parent.handleFilterSort();

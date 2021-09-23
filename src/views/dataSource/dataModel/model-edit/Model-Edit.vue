@@ -675,6 +675,7 @@ export default {
           this.detailInfo.pivotSchema.dimensions.push(data);
         }
       }
+      this.handleSameName();
       this.handleDimensions();
       this.handleMeasures();
       this.handleGroupField();
@@ -708,10 +709,12 @@ export default {
         newField.alias = this.handleAddCustomField(arry, newField, newField.alias);
         if (isDimension) {
           this.cacheDimensions.push(newField);
+          this.handleSameName();
           this.handleDimensions();
           this.handleGroupField();
         } else if (isMeasures) {
           this.cacheMeasures.push(newField);
+          this.handleSameName();
           this.handleMeasures();
           this.handleGroupField();
         } else {
@@ -746,13 +749,15 @@ export default {
     /**
      * 同字段名处理
      */
-    handleSameName(list) {
+    handleSameName() {
+      const list = [].concat(this.handleConcatDimensions(), this.handleConcatMeasures());
       if (Array.isArray(list) && list.length > 1) {
         const map = new Map();
-        const cacheFields = [].concat(this.cacheDimensions, this.cacheMeasures).map(item => item.alias);
+        const cacheFields = list.map(item => item.alias);
         list.forEach(element => {
           if (element.tableNo !== 0) {
-            this.changeAlias(map, element.alias, element, cacheFields);
+            // this.changeAlias(map, element.alias, element, cacheFields)
+            this.renameAlias(map, element.alias, element, cacheFields);
           }
         });
       }
@@ -803,6 +808,37 @@ export default {
         });
       }
     },
+    renameAlias(map, alias, element, cacheFields) {
+      if (map.has(alias)) {
+        const target = map.get(alias);
+        let value = target.value;
+        if (target.tableName === element.tableName) {
+          // 同表名同字段, 直接+1
+          let newAlias = `${alias}(${value++})`;
+          // 先检验自定义表有没有重名, 重名再+1
+          while (cacheFields.includes(newAlias)) {
+            newAlias = `${alias}(${value++})`;
+          }
+          element.alias = newAlias;
+          map.set(alias, {
+            value,
+            tableName: element.tableName,
+          });
+        } else if (target.tableName !== element.tableName) {
+          // 不同表名同字段, 后面跟表名
+          const newAlias = `${alias}(${element.tableName})`;
+          // 若还有重复则再+1, 没重复则录入map
+          this.renameAlias(map, newAlias, element, cacheFields);
+        }
+      } else {
+        // 未出现重复, 则直接重写alias
+        element.alias = alias;
+        map.set(element.alias, {
+          value: 1,
+          tableName: element.tableName,
+        });
+      }
+    },
     /**
      * 合并维度数据
      */
@@ -814,7 +850,7 @@ export default {
      */
     handleDimensions() {
       const arry = this.handleConcatDimensions();
-      this.handleSameName(arry);
+      // this.handleSameName(arry);
       this.dimensions = groupBy(arry, 'tableNo');
       this.dimensionsActiveKey = keys(this.dimensions);
     },
@@ -829,7 +865,7 @@ export default {
      */
     handleMeasures() {
       const arry = this.handleConcatMeasures();
-      this.handleSameName(arry);
+      // this.handleSameName(arry);
       this.measures = groupBy(arry, 'tableNo');
       this.measuresActiveKey = keys(this.measures);
     },
@@ -845,6 +881,18 @@ export default {
     // 判断字段是否为数值类型
     isNumber(data) {
       return this.NUMBER_LIST.includes(data.convertType || data.dataType);
+    },
+    // 判断字段是否为时间日期类型
+    isDate(data) {
+      return (data.convertType || data.dataType) === 'DATE';
+    },
+    // 判断字段是否为时间日期类型
+    isTimestamp(data) {
+      return (data.convertType || data.dataType) === 'TIMESTAMP';
+    },
+    // 判断字段是否为文本类型
+    isVarchar(data) {
+      return (data.convertType || data.dataType) === 'VARCHAR';
     },
     /**
      * 表格变更时, 处理筛选排序的列表
@@ -889,8 +937,13 @@ export default {
               if (field.visible === false) {
                 // visible为false(不可见)字段要置灰
                 item.status = 2;
-              } else if (this.isNumber(item) !== this.isNumber(field)) {
-                // 字段类型修改, 数值->非数值 or 非数值->数值, 需标黄
+              } else if (
+                this.isNumber(item) !== this.isNumber(field) ||
+                this.isDate(item) !== this.isDate(field) ||
+                this.isTimestamp(item) !== this.isTimestamp(field) ||
+                this.isVarchar(item) !== this.isVarchar(field)
+              ) {
+                // 字段类型修改, 不是转成同类型的, 需标黄
                 item.status = 3;
               } else {
                 item.status = 0;
@@ -984,6 +1037,7 @@ export default {
 
         this.$store.commit('common/SET_PRIVILEGES', result.data.privileges || []);
 
+        this.handleSameName();
         this.handleDimensions();
         this.handleMeasures();
         this.handleGroupField();
@@ -1181,6 +1235,7 @@ export default {
         data.form.name,
       );
 
+      this.handleSameName();
       this.handleDimensions();
       this.handleMeasures();
       this.handleFilterSort();
@@ -1206,6 +1261,7 @@ export default {
         // 将自定义维度度量剥离处理
         this.detailInfo.pivotSchema.dimensions = this.handlePeelCustom(cacheDimensions, this.cacheDimensions);
         this.detailInfo.pivotSchema.measures = this.handlePeelCustom(cacheMeasures, this.cacheMeasures);
+        this.handleSameName();
         this.handleDimensions();
         this.handleMeasures();
         this.handleFilterSort();
@@ -1225,6 +1281,7 @@ export default {
       } else {
         list.splice(index, 1, data);
       }
+      this.handleSameName();
       this.handleDimensions();
       this.handleMeasures();
       this.handleGroupField();

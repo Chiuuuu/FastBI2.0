@@ -60,7 +60,7 @@
             <a-select default-value="BIGINT" style="width: 100px" v-model="modalForm.convertType">
               <a-select-option value="BIGINT">整数</a-select-option>
               <a-select-option value="DOUBLE">小数</a-select-option>
-              <a-select-option value="DECIMAL">数值</a-select-option>
+              <!-- <a-select-option value="DECIMAL">数值</a-select-option> -->
               <a-select-option value="VARCHAR">字符串</a-select-option>
               <a-select-option value="DATE">日期</a-select-option>
               <a-select-option value="TIMESTAMP">日期时间</a-select-option>
