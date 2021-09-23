@@ -353,7 +353,7 @@ export default {
           this.shapeUnit.changeLodingChart(false);
         });
       if (res.code === 500) {
-        this.$message.error('isChange');
+        this.$message.error(res.msg);
         return;
       }
       // 判断是否初始化

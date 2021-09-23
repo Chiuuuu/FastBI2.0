@@ -354,7 +354,6 @@ export default {
           this.shapeUnit.changeLodingChart(false);
         });
       if (res.code === 200) {
-        this.dataState = res.data && res.data.length ? 'normal' : 'empty';
         this.serverData = { data: res.data };
         const keys = this.options.data.fields.map(item => item.alias);
         this.fields = keys.map(key => {
@@ -371,7 +370,6 @@ export default {
      */
     getDefaultData() {
       this.serverData = null;
-      this.dataState = 'normal';
       this.fields = this.$options.data().fields;
       this.doWithOptions(defaultData);
       this.refreshCount += 1;
@@ -380,9 +378,6 @@ export default {
      * @description 更新图表样式
      */
     updateChartStyle() {
-      if (this.dataState === 'empty') {
-        return;
-      }
       this.doWithThead();
       this.doWithTbody();
     },

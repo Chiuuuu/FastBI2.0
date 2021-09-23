@@ -148,7 +148,7 @@ export default {
         });
 
       if (res.code === 500) {
-        this.$message.error('isChange');
+        this.$message.error(res.msg);
         return;
       }
       this.dataState = res.data && res.data.length ? 'normal' : 'empty';
