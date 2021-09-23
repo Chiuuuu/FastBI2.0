@@ -19,7 +19,13 @@ export default {
      */
     getFieldList() {
       const { data } = this.options;
-      return [].concat(data.progress);
+      let list = [];
+      Object.keys(data).forEach(key => {
+        if (key !== 'dataLink' && Array.isArray(data[key])) {
+          list = list.concat(data[key]);
+        }
+      });
+      return list;
     },
     /**
      * @description 判断是否获取服务端数据

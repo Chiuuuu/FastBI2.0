@@ -128,8 +128,8 @@ export default {
           name: '查看数据',
           readonly: true,
           children: [
-            { name: '填充层', key: 'fillList', onClick: this.handleChartDataComponent },
-            { name: '标记层', key: 'labelList', onClick: this.handleChartDataComponent },
+            { name: '填充层', key: 'fillList', onClick: this.handleChartDataComponentForMap.bind(this, 'fill') },
+            { name: '标记层', key: 'labelList', onClick: this.handleChartDataComponentForMap.bind(this, 'label') },
           ],
         },
         ...baseContextMenu,

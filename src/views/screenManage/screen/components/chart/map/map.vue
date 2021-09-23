@@ -34,11 +34,19 @@ export default {
      */
     isServerData() {
       const { data } = this.options;
+      return data.dataModelId && (this.isFillData() || this.isLabelData());
+    },
+    isFillData() {
+      const { data } = this.options;
       const isFillArea = data.dimensions.length && data.measures.length;
       const isFillDot = data.longitude.length && data.latitude.length && data.measures.length;
+      return isFillArea || isFillDot;
+    },
+    isLabelData() {
+      const { data } = this.options;
       const isLabelArea = data.labelDimensions.length && data.labelMeasures.length;
       const isLabelDot = data.labelLongitude.length && data.labelLatitude && data.labelMeasures;
-      return data.dataModelId && (isFillArea || isFillDot || isLabelArea || isLabelDot);
+      return isLabelArea || isLabelDot;
     },
     /**
      * @description 处理图例

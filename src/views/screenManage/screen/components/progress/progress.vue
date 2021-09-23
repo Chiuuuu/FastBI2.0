@@ -314,6 +314,19 @@ export default {
       });
       this.result = this.doWithFormatter(result);
     },
+    /**
+     * @description 获取拖入的维度度量列数据
+     */
+    getFieldList() {
+      const { data } = this.options;
+      let list = [];
+      Object.keys(data).forEach(key => {
+        if (Array.isArray(data[key])) {
+          list = list.concat(data[key]);
+        }
+      });
+      return list;
+    },
   },
 };
 </script>
