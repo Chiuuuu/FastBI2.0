@@ -66,6 +66,10 @@ export default {
           this.shapeUnit.changeLodingChart(false);
         });
       if (res.code === 500) {
+        if (res.msg === 'IsChanged') {
+          const keys = ['progress', 'targe', 'min', 'max', 'filter'];
+          this.handleRedList(res.data, keys);
+        }
         this.$message.error(res.msg);
         return;
       }

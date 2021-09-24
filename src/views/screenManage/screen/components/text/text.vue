@@ -106,7 +106,7 @@ export default {
       }
       let list = [];
       this.measures.forEach(item => {
-        if (item.status === 0) {
+        if (item.status === 0 && item.visible) {
           list.push(Object.assign(item, { name: item.alias }));
         }
       });
@@ -161,6 +161,9 @@ export default {
      */
     setText(data) {
       this.getContent(data.measures).then(resStr => {
+        if (typeof resStr === 'undefined') {
+          return;
+        }
         this.$refs['js-board-text-unit'].innerHTML = resStr;
         if (!data.htmlText) {
           this.$refs['js-board-text-unit'].classList.add('medium-editor-placeholder');
@@ -397,6 +400,10 @@ export default {
           this.shapeUnit.changeLodingChart(false);
         });
         if (res.code === 500) {
+          if (res.msg === 'IsChanged') {
+            const keys = ['filter'];
+            this.handleRedList(res.data, keys);
+          }
           return res.msg;
         }
         resultStr = resultStr.replace(reg, (match, id, alias) => {

@@ -251,25 +251,29 @@ export default {
       const res = await this.$server.common.getData('/screen/graph/v2/getData', params).finally(() => {
         this.shapeUnit.changeLodingChart(false);
       });
-      if (res.code === 200) {
-        this.dataState = res.data && res.data.length ? 'normal' : 'empty';
-        if (this.dataState === 'empty') {
-          return;
+      if (res.code === 500) {
+        if (res.msg === 'IsChanged') {
+          const keys = ['targe', 'min', 'max', 'filter'];
+          this.handleRedList(res.data, keys);
         }
-        const data = res.data[0];
-        this.serverData = {
-          current: handleList.includes('targe') ? data[this.options.data.targe[0].alias] : this.options.data.targe,
-          max: handleList.includes('max') ? data[this.options.data.max[0].alias] : this.options.data.max,
-          min: handleList.includes('min') ? data[this.options.data.min[0].alias] : this.options.data.min,
-        };
-        const result = this.doWithData(this.serverData);
-        this.progressStyle = Object.assign({}, this.progressStyle, {
-          width: `${result.percent}%`,
-        });
-        this.result = this.doWithFormatter(result);
-      } else {
         this.$message.error(res.msg);
       }
+
+      this.dataState = res.data && res.data.length ? 'normal' : 'empty';
+      if (this.dataState === 'empty') {
+        return;
+      }
+      const data = res.data[0];
+      this.serverData = {
+        current: handleList.includes('targe') ? data[this.options.data.targe[0].alias] : this.options.data.targe,
+        max: handleList.includes('max') ? data[this.options.data.max[0].alias] : this.options.data.max,
+        min: handleList.includes('min') ? data[this.options.data.min[0].alias] : this.options.data.min,
+      };
+      const result = this.doWithData(this.serverData);
+      this.progressStyle = Object.assign({}, this.progressStyle, {
+        width: `${result.percent}%`,
+      });
+      this.result = this.doWithFormatter(result);
     },
     /**
      * @description 拼装维度度量

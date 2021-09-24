@@ -355,6 +355,14 @@ const screenManage = {
       data,
     });
   },
+  /**
+   * @description 根据获取alias
+   * @param {*} params
+   * @returns
+   */
+  getAlias(id) {
+    return $axios.get(`/screen/pivotschema/${id}`);
+  },
 };
 
 export default screenManage;
