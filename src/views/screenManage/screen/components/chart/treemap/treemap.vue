@@ -353,7 +353,11 @@ export default {
           this.shapeUnit.changeLodingChart(false);
         });
       if (res.code === 500) {
-        this.$message.error('isChange');
+        if (res.msg === 'IsChanged') {
+          const keys = ['dimensions', 'measures', 'filter'];
+          this.handleRedList(res.data, keys);
+        }
+        this.$message.error(res.msg);
         return;
       }
       // 判断是否初始化

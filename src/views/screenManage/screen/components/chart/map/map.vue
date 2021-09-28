@@ -34,11 +34,19 @@ export default {
      */
     isServerData() {
       const { data } = this.options;
+      return data.dataModelId && (this.isFillData() || this.isLabelData());
+    },
+    isFillData() {
+      const { data } = this.options;
       const isFillArea = data.dimensions.length && data.measures.length;
       const isFillDot = data.longitude.length && data.latitude.length && data.measures.length;
+      return isFillArea || isFillDot;
+    },
+    isLabelData() {
+      const { data } = this.options;
       const isLabelArea = data.labelDimensions.length && data.labelMeasures.length;
       const isLabelDot = data.labelLongitude.length && data.labelLatitude && data.labelMeasures;
-      return data.dataModelId && (isFillArea || isFillDot || isLabelArea || isLabelDot);
+      return isLabelArea || isLabelDot;
     },
     /**
      * @description 处理图例
@@ -476,58 +484,71 @@ export default {
         .finally(() => {
           this.shapeUnit.changeLodingChart(false);
         });
-      if (res.code === 200) {
-        const [fillResult, labelResult] = await Promise.all([
-          this.handleFillList(res.data.fillList),
-          this.handleLabelList(res.data.labelList),
-        ]);
-        const { fillList, fillName, fillCustomPointShowList, fillCustomTooltipShowList } = fillResult;
-        const { labelList, labelName, labelCustomPointShowList, labelCustomTooltipShowList } = labelResult;
-
-        // 修改状态
-        this.dataState = 'normal';
-
-        const data = defaultData.series;
-        this.serverData = {
-          series: [
-            Object.assign({}, data[mapSeries], {
-              name: fillName,
-              data: fillList,
-            }),
-            Object.assign({}, data[scatterSeries], {
-              name: labelName,
-              data: labelList,
-            }),
-          ],
-        };
-        // 获取数据之后需要更改visualMap范围
-        const valueList = fillList.map(item => item.value);
-        this.$store.commit(boardMutation.SET_STYLE, {
-          style: {
-            echart: {
-              visualMap: Object.assign({}, this.options.style.echart.visualMap, {
-                max: Math.max(...valueList),
-                min: Math.min(...valueList),
-              }),
-              mapStyle: Object.assign({}, this.options.style.echart.mapStyle, {
-                customPointShowList: fillCustomPointShowList,
-                customTooltipShowList:
-                  fillCustomTooltipShowList || this.options.style.echart.mapStyle.customTooltipShowList,
-              }),
-              scatterStyle: Object.assign({}, this.options.style.echart.scatterStyle, {
-                customPointShowList:
-                  labelCustomPointShowList || this.options.style.echart.scatterStyle.customPointShowLis,
-                customTooltipShowList:
-                  labelCustomTooltipShowList || this.options.style.echart.scatterStyle.customTooltipShowList,
-              }),
-            },
-            replaceMerge: ['mapStyle', 'scatterStyle'],
-          },
-          updateCom: this.shapeUnit.component,
-        });
-      } else {
+      if (res.code === 500) {
+        if (res.msg === 'IsChanged') {
+          const keys = [
+            'dimensions',
+            'measures',
+            'longitude',
+            'latitude',
+            'labelDimensions',
+            'labelMeasures',
+            'labelLongitude',
+            'labelLatitude',
+          ];
+          this.handleRedList(res.data, keys);
+        }
         this.$message.error(res.msg);
       }
+
+      const [fillResult, labelResult] = await Promise.all([
+        this.handleFillList(res.data.fillList),
+        this.handleLabelList(res.data.labelList),
+      ]);
+      const { fillList, fillName, fillCustomPointShowList, fillCustomTooltipShowList } = fillResult;
+      const { labelList, labelName, labelCustomPointShowList, labelCustomTooltipShowList } = labelResult;
+
+      // 修改状态
+      this.dataState = 'normal';
+
+      const data = defaultData.series;
+      this.serverData = {
+        series: [
+          Object.assign({}, data[mapSeries], {
+            name: fillName,
+            data: fillList,
+          }),
+          Object.assign({}, data[scatterSeries], {
+            name: labelName,
+            data: labelList,
+          }),
+        ],
+      };
+      // 获取数据之后需要更改visualMap范围
+      const valueList = fillList.map(item => item.value);
+      this.$store.commit(boardMutation.SET_STYLE, {
+        style: {
+          echart: {
+            visualMap: Object.assign({}, this.options.style.echart.visualMap, {
+              max: Math.max(...valueList),
+              min: Math.min(...valueList),
+            }),
+            mapStyle: Object.assign({}, this.options.style.echart.mapStyle, {
+              customPointShowList: fillCustomPointShowList,
+              customTooltipShowList:
+                fillCustomTooltipShowList || this.options.style.echart.mapStyle.customTooltipShowList,
+            }),
+            scatterStyle: Object.assign({}, this.options.style.echart.scatterStyle, {
+              customPointShowList:
+                labelCustomPointShowList || this.options.style.echart.scatterStyle.customPointShowLis,
+              customTooltipShowList:
+                labelCustomTooltipShowList || this.options.style.echart.scatterStyle.customTooltipShowList,
+            }),
+          },
+          replaceMerge: ['mapStyle', 'scatterStyle'],
+        },
+        updateCom: this.shapeUnit.component,
+      });
     },
     /*
      * 处理默认数据

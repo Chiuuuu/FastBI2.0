@@ -353,25 +353,26 @@ export default {
         .finally(() => {
           this.shapeUnit.changeLodingChart(false);
         });
-      if (res.code === 200) {
-        this.dataState = res.data && res.data.length ? 'normal' : 'empty';
-        this.serverData = { data: res.data };
-        const keys = this.options.data.fields.map(item => item.alias);
-        this.fields = keys.map(key => {
-          return { name: key };
-        });
-        this.doWithOptions();
-        this.refreshCount += 1;
-      } else {
+      if (res.code === 500) {
+        if (res.msg === 'IsChanged') {
+          const keys = ['fields', 'filter', 'sort'];
+          this.handleRedList(res.data, keys);
+        }
         this.$message.error(res.msg);
       }
+      this.serverData = { data: res.data };
+      const keys = this.options.data.fields.map(item => item.alias);
+      this.fields = keys.map(key => {
+        return { name: key };
+      });
+      this.doWithOptions();
+      this.refreshCount += 1;
     },
     /**
      * @description 图表获取默认数据
      */
     getDefaultData() {
       this.serverData = null;
-      this.dataState = 'normal';
       this.fields = this.$options.data().fields;
       this.doWithOptions(defaultData);
       this.refreshCount += 1;
@@ -380,9 +381,6 @@ export default {
      * @description 更新图表样式
      */
     updateChartStyle() {
-      if (this.dataState === 'empty') {
-        return;
-      }
       this.doWithThead();
       this.doWithTbody();
     },

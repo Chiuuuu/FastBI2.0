@@ -9,7 +9,12 @@
               <div
                 class="pilly-item mb-6"
                 :style="{
-                  backgroundColor: judgeFiledType(item.role) === 'dimensions' ? '#4a90e2' : '#40c0a8',
+                  backgroundColor:
+                    item.status === 1 || item.IsChanged
+                      ? 'red'
+                      : judgeFiledType(item.role) === 'dimensions'
+                      ? '#4a90e2'
+                      : '#40c0a8',
                   color: '#fff',
                 }"
                 v-for="item in list"

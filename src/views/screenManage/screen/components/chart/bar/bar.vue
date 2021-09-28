@@ -148,7 +148,11 @@ export default {
         });
 
       if (res.code === 500) {
-        this.$message.error('isChange');
+        if (res.msg === 'IsChanged') {
+          const keys = ['dimensions', 'measures', 'filter', 'sort'];
+          this.handleRedList(res.data, keys);
+        }
+        this.$message.error(res.msg);
         return;
       }
       this.dataState = res.data && res.data.length ? 'normal' : 'empty';

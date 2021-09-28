@@ -19,7 +19,13 @@ export default {
      */
     getFieldList() {
       const { data } = this.options;
-      return [].concat(data.progress);
+      let list = [];
+      Object.keys(data).forEach(key => {
+        if (key !== 'dataLink' && Array.isArray(data[key])) {
+          list = list.concat(data[key]);
+        }
+      });
+      return list;
     },
     /**
      * @description 判断是否获取服务端数据
@@ -60,7 +66,11 @@ export default {
           this.shapeUnit.changeLodingChart(false);
         });
       if (res.code === 500) {
-        this.$message.error('isChange');
+        if (res.msg === 'IsChanged') {
+          const keys = ['progress', 'targe', 'min', 'max', 'filter'];
+          this.handleRedList(res.data, keys);
+        }
+        this.$message.error(res.msg);
         return;
       }
       this.dataState = res.data && res.data.length ? 'normal' : 'empty';

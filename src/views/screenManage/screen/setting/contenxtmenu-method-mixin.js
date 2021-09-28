@@ -257,6 +257,29 @@ const ContenxtmenuMethodMixin = {
 
       return dataList;
     },
+    /**
+     * @description 右键菜单——查看图表数据
+     */
+    async handleChartDataComponentForMap(type, e, item, component, index, vm) {
+      const chartNode = this.$slots.default[0].componentInstance;
+      let hasData = type === 'fill' ? chartNode.isFillData() : chartNode.isLabelData();
+
+      // 判断当前图表数据为服务数据
+      if (!hasData) {
+        let dom = document.querySelector('.board-canvas');
+        this.$message.config({
+          getContainer: () => dom,
+        });
+        this.$message.error('该图表没有拖入图表数据');
+        return;
+      }
+
+      let dataList = await this.getChartData(component, vm, item.key);
+      // 查看数据弹出展示窗 -- 在board-shape-unit.vue
+      this.showChartData(this.chartData);
+
+      return dataList;
+    },
     // 查看/导出数据 -- 构造数据
     async getChartData(component, vm, mapKey) {
       const chartNode = this.$slots.default[0].componentInstance;

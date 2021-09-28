@@ -203,6 +203,31 @@ export default {
       // return [].concat(data.dimensions).concat(data.measures);
     },
     /**
+     * @description 处理isChanged标红
+     */
+    handleRedList(list, keys) {
+      // 如果存在对应列表id，替换成红色
+      if (list) {
+        keys.forEach(key => {
+          if (key === 'filter') {
+            this.options.data[key].fileList.forEach(item => {
+              if (list.includes(item.id)) {
+                item.IsChanged = true;
+              }
+            });
+            return;
+          }
+          if (Array.isArray(this.options.data[key])) {
+            this.options.data[key].forEach(item => {
+              if (list.includes(item.id)) {
+                item.IsChanged = true;
+              }
+            });
+          }
+        });
+      }
+    },
+    /**
      * @description 处理表头名字显示
      * @param {*} item 当前列
      */
