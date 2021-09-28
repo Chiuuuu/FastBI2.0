@@ -199,37 +199,6 @@ export default {
   },
   methods: {
     /**
-     * @description 检查保存的图表数据和新维度度量是否对应
-     */
-    async handleNewData() {
-      let options = this.$slots.default[0].componentInstance.options;
-      const keys = Object.keys(options.data);
-      for (let key of keys) {
-        const datas = options.data[key];
-        if (key === 'filter') {
-          for (let data of datas.fileList) {
-            data.alias = await this.getNewAlias(data);
-          }
-          continue;
-        }
-        if (Array.isArray(datas)) {
-          for (let data of datas) {
-            data.alias = await this.getNewAlias(data);
-          }
-        }
-      }
-    },
-    /**
-     * @description 获取新的alias
-     */
-    async getNewAlias(data) {
-      if (this.$server.screenManage.getAlias) {
-        const resAlias = await this.$server.screenManage.getAlias(data.id);
-        return resAlias.data || data.alias;
-      }
-      return data.alias;
-    },
-    /**
      * @description 初始化右键菜单
      */
     initContextMenu() {
@@ -454,9 +423,6 @@ export default {
         document.onmousemove = null;
         // 预防鼠标弹起来后还会循环（即预防鼠标放上去的时候还会移动）
         document.onmouseup = null;
-
-        // 检查保存的图表数据和新维度度量是否对应
-        this.handleNewData();
       };
     },
     /**

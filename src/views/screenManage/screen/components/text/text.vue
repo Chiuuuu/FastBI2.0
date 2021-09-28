@@ -14,7 +14,9 @@ import { parameter } from '@/store/modules/board';
 import debounce from 'lodash/debounce';
 import { getStyle } from '@/utils';
 import { mutationTypes as historyMutation } from '@/store/modules/history';
-const reg = /<span data-id="(.*?)" contenteditable="false" class="anchor-measure">\[(.*?)\(.*?\)(&nbsp;){3}]<\/span>/g;
+const reg =
+  /<span data-id="(.*?)" contenteditable="false" class="anchor-measure">\[(.*?)\((.{2})\)(&nbsp;){3}]<\/span>/g;
+const innerReg = /\[(.*?)\((.{2})\)(&nbsp;){3}]/;
 const polymerizationData = {
   // 数字
   num: [
@@ -286,6 +288,7 @@ export default {
               return item;
             }),
             target: event,
+            showMenuScroll: true,
             handleMarkCancel: function () {
               self.clearAnchor();
               that.menu = '';
@@ -425,7 +428,7 @@ export default {
       if (measureList.length) {
         for (let measureEle of measureList) {
           const measureId = measureEle.dataset.id;
-          const [, aggregator] = measureEle.innerHTML.match(/\[.*?\((.*?)\)(&nbsp;){3}]/);
+          const [, , aggregator] = measureEle.innerHTML.match(innerReg);
           // 验重
           if (!measures.find(item => item.id === measureId)) {
             // 添加度量到图表数据
@@ -465,9 +468,6 @@ export default {
         if (!measure) {
           return;
         }
-        span.innerHTML = span.innerHTML.replace(/\[(.*?)\(/, () => {
-          return `[${measure.alias}(`;
-        });
         span.addEventListener('click', e => this.clickMeasure(e, measure));
         span.addEventListener('contextmenu', e => this.clickMeasure(e, measure));
         // 度量不存在飘红
@@ -498,7 +498,9 @@ export default {
         return {
           ...aggregatorData,
           onClick: (event, handler, vm, measureEle) => {
-            measureEle.innerHTML = measureEle.innerHTML.replace(/\(.*?\)/, '(' + handler.name + ')');
+            measureEle.innerHTML = measureEle.innerHTML.replace(innerReg, (match, alias) => {
+              return `[${alias}(${handler.name})&nbsp;&nbsp;&nbsp;]`;
+            });
           },
         };
       });

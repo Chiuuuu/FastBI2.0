@@ -180,6 +180,7 @@ export default {
       const data = res.data[0];
       // 处理主指标
       const { totalQuotaTitle, totalQuotaValue } = this.doWithTotal(data);
+
       // 主指标自定义，数据改动才重置
       const customTotalTitle =
         needChangeFormatterList && (!this.serverData || this.serverData.data.totalQuotaTitle !== totalQuotaTitle)
@@ -267,7 +268,7 @@ export default {
       this.serverData = null;
       // 判断是否初始化
       let needChangeFormatterList = this.dataState !== 'default';
-      this.dataState = 'default';
+      this.dataState = 'normal';
       this.doWithData(defaultData);
       // 获取数据之后需要更改限制
       this.$store.commit(boardMutation.SET_STYLE, {

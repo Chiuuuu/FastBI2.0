@@ -1,13 +1,13 @@
 <template>
   <div v-if="renderMenus.length > 0" class="m-overlay m-overlay-shadow" id="js-context-menu" :style="styleObj">
     <div class="m-ctxMenu" ref="ctxMenuRef">
-      <ul>
+      <ul :class="{ 'show-scroll': showMenuScroll }">
         <li class="z-clickable" v-for="item in renderMenus" :key="item.name" @click="handleItemClick($event, item)">
           <span>
             {{ item.name }}
             <a-icon type="right" class="icon-cart" v-if="hasChildren(item)" />
           </span>
-          <ul :class="['sub', subPosition === 'right' ? 'show-right' : '']" v-if="hasChildren(item)">
+          <ul :class="['sub', { 'show-right': subPosition === 'right' }]" v-if="hasChildren(item)">
             <li
               class="z-clickable"
               v-for="subitem in item.children"
@@ -55,6 +55,11 @@ export default {
       type: String,
       required: false,
       default: 'left',
+    },
+    showMenuScroll: {
+      type: Boolean,
+      required: false,
+      default: false,
     },
   },
   data() {
@@ -145,6 +150,11 @@ export default {
   border-radius: 2px;
   ul {
     margin: 0;
+  }
+  .show-scroll {
+    overflow-x: hidden;
+    overflow-y: scroll;
+    max-height: 200px;
   }
   li {
     cursor: default;

@@ -407,7 +407,8 @@ export default {
     conversionArry(key, data, method, validKey) {
       let arry = [].concat(this.currentCom.setting.data[key]);
       arry = this.handleList(arry, data, method, validKey);
-      return arry;
+      // 返回不能拖入同字段array设置null，返回原数组，防止concat监听到data变化
+      return arry || this.currentCom.setting.data[key];
     },
     /**
      * @description 列表公共处理方法
@@ -439,7 +440,7 @@ export default {
         }
         if (roleList.map(item => item.pivotschemaId).includes(data.pivotschemaId)) {
           this.$message.error('同属性区域无法拖入相同字段');
-          return list;
+          return null;
         }
 
         // 1. 是否开启限制

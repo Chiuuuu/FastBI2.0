@@ -72,6 +72,7 @@ import DataModelMenu from './data-access-model/data-model-menu';
 import DataAccessMenu from './data-access-model/data-access-menu';
 import DataModelListPanel from './data-access-model/data-model-list-panel';
 import DataAccessListPanel from './data-access-model/data-access-list-panel';
+import { mapState } from 'vuex';
 /**
  * @description 编辑大屏配置区的最右侧数据模型
  */
@@ -131,6 +132,10 @@ export default {
         return [].concat(this.measure) || [];
       }
     },
+    ...mapState({
+      // 当前组件
+      currentCom: state => state.board.currentCom,
+    }),
   },
   watch: {
     modelList(list) {
@@ -320,8 +325,36 @@ export default {
         this.searchList = [].concat(result.data.dimensions, result.data.measures);
         this.dimension = [].concat(result.data.dimensions) || [];
         this.measure = [].concat(result.data.measures) || [];
+
+        // 检查保存的图表数据和新维度度量是否对应
+        this.handleNewData();
       } else {
         this.$message.error(result.msg || '获取维度度量失败');
+      }
+    },
+    /**
+     * @description 检查保存的图表数据和新维度度量是否对应
+     */
+    handleNewData() {
+      if (!this.currentCom) {
+        return;
+      }
+      const options = this.currentCom.setting;
+      const newList = this.dimension.concat(this.measure);
+      const keys = Object.keys(options.data);
+      for (let key of keys) {
+        const datas = options.data[key];
+        const actualDatas = key === 'filter' ? datas.fileList : datas;
+        if (Array.isArray(actualDatas)) {
+          for (let data of actualDatas) {
+            // 更新最新拖入数据
+            newList.forEach(item => {
+              if (item.pivotschemaId === data.pivotschemaId) {
+                data = item;
+              }
+            });
+          }
+        }
       }
     },
     /**
