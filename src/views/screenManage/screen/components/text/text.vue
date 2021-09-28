@@ -164,6 +164,7 @@ export default {
     setText(data) {
       this.getContent(data.measures).then(resStr => {
         if (typeof resStr === 'undefined') {
+          this.$refs['js-board-text-unit'].innerHTML = '请求失败';
           return;
         }
         this.$refs['js-board-text-unit'].innerHTML = resStr;
@@ -409,8 +410,8 @@ export default {
           }
           return res.msg;
         }
-        resultStr = resultStr.replace(reg, (match, id, alias) => {
-          return `<span>${res.data[0][alias]}</span>`;
+        resultStr = resultStr.replace(reg, (match, id, alias, aggregator) => {
+          return `<span>${res.data[0][`${polymerizationMap[aggregator]}_${alias}`]}</span>`;
         });
       }
       return resultStr;
@@ -432,8 +433,9 @@ export default {
           // 验重
           if (!measures.find(item => item.id === measureId)) {
             // 添加度量到图表数据
-            let measure = this.usedMeasures.find(item => item.id === measureId);
-            if (measure) {
+            let measureOrigin = this.usedMeasures.find(item => item.id === measureId);
+            if (measureOrigin) {
+              let measure = Object.assign({}, measureOrigin);
               // 添加聚合方式值
               measure.defaultAggregator = polymerizationMap[aggregator];
               measures.push(measure);

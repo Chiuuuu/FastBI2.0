@@ -361,9 +361,12 @@ export default {
         this.$message.error(res.msg);
       }
       this.serverData = { data: res.data };
-      const keys = this.options.data.fields.map(item => item.alias);
+      const keys = this.options.data.fields.map(item =>
+        item.role === 2 ? `${item.defaultAggregator}_${item.alias}` : item.alias,
+      );
       this.fields = keys.map(key => {
-        return { name: key };
+        let showKey = key.split('_')[1];
+        return showKey ? { name: key, showName: showKey } : { name: key, showName: key };
       });
       this.doWithOptions();
       this.refreshCount += 1;

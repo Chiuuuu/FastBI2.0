@@ -76,7 +76,7 @@ export default {
         fieldName: {
           xaxis: xaxis[0].alias,
           yaxis: yaxis[0].alias,
-          measures: measures[0].alias,
+          measures: `${measures[0].defaultAggregator}_${measures[0].alias}`,
         },
         data: datas,
       };

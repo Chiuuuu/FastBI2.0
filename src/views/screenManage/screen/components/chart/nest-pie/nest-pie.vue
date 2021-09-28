@@ -211,10 +211,10 @@ export default {
           datas.forEach(datas => {
             series[series.length - 1].push({
               name: datas[outerInnerIng.alias],
-              value: datas[measures[0].alias],
+              value: datas[`${measures[0].defaultAggregator}_${measures[0].alias}`],
               origin: {
-                [outerInnerIng.alias]: datas[outerInnerIng.alias],
-                [measures[0].alias]: datas[measures[0].alias],
+                [outerInnerIng.alias]: datas[`${outerInnerIng.defaultAggregator}_${outerInnerIng.alias}`],
+                [measures[0].alias]: datas[`${measures[0].defaultAggregator}_${measures[0].alias}`],
               },
             });
           });

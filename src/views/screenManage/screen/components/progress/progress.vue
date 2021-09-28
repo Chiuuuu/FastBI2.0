@@ -264,10 +264,13 @@ export default {
         return;
       }
       const data = res.data[0];
+      const { targe, max, min } = this.options.data;
       this.serverData = {
-        current: handleList.includes('targe') ? data[this.options.data.targe[0].alias] : this.options.data.targe,
-        max: handleList.includes('max') ? data[this.options.data.max[0].alias] : this.options.data.max,
-        min: handleList.includes('min') ? data[this.options.data.min[0].alias] : this.options.data.min,
+        current: handleList.includes('targe')
+          ? data[`${targe[0].defaultAggregator}_${targe[0].alias}`]
+          : this.options.data.targe,
+        max: handleList.includes('max') ? data[`${max[0].defaultAggregator}_${max[0].alias}`] : this.options.data.max,
+        min: handleList.includes('min') ? data[`${min[0].defaultAggregator}_${min[0].alias}`] : this.options.data.min,
       };
       const result = this.doWithData(this.serverData);
       this.progressStyle = Object.assign({}, this.progressStyle, {

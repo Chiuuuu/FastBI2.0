@@ -212,6 +212,9 @@ const ContenxtmenuMethodMixin = {
      * @description 导出csv
      */
     async handleExportCsv(e, item, component, index, vm) {
+      if (!this.judgeHasData()) {
+        return;
+      }
       this.handleSpinning(true, '正在导出...');
       const dataList = await this.getChartData(component, vm);
       this.handleSpinning(false);
@@ -223,6 +226,9 @@ const ContenxtmenuMethodMixin = {
      * @description 导出excel
      */
     async handleExportExcel(e, item, component) {
+      if (!this.judgeHasData()) {
+        return;
+      }
       const params = {
         id: component.id,
         graphName: component.name,
@@ -240,14 +246,7 @@ const ContenxtmenuMethodMixin = {
      * @description 右键菜单——查看图表数据
      */
     async handleChartDataComponent(e, item, component, index, vm) {
-      const chartNode = this.$slots.default[0].componentInstance;
-      // 判断当前图表数据为服务数据
-      if (!chartNode.isServerData()) {
-        let dom = document.querySelector('.board-canvas');
-        this.$message.config({
-          getContainer: () => dom,
-        });
-        this.$message.error('该图表没有拖入图表数据');
+      if (!this.judgeHasData()) {
         return;
       }
 
@@ -279,6 +278,22 @@ const ContenxtmenuMethodMixin = {
       this.showChartData(this.chartData);
 
       return dataList;
+    },
+    /**
+     * @description 判断图表是否存在服务器数据
+     */
+    judgeHasData() {
+      const chartNode = this.$slots.default[0].componentInstance;
+      // 判断当前图表数据为服务数据
+      if (!chartNode.isServerData()) {
+        let dom = document.querySelector('.board-canvas');
+        this.$message.config({
+          getContainer: () => dom,
+        });
+        this.$message.error('该图表没有拖入图表数据');
+        return false;
+      }
+      return true;
     },
     // 查看/导出数据 -- 构造数据
     async getChartData(component, vm, mapKey) {

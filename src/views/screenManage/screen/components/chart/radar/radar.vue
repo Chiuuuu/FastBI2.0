@@ -121,7 +121,10 @@ export default {
         this.$message.error(`图表${title}数据量过大, 已截取前50条展示`);
       }
       measures.forEach(measure => {
-        data.push({ name: measure.alias, value: datas.map(row => row[measure.alias]) });
+        data.push({
+          name: measure.alias,
+          value: datas.map(row => row[`${measure.defaultAggregator}_${measure.alias}`]),
+        });
       });
       this.serverData = { indicator, data };
       const options = this.doWithOptions(this.serverData);

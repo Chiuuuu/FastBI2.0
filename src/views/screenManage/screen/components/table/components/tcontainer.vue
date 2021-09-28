@@ -8,7 +8,7 @@
         <tr>
           <th v-for="th in data" :key="th.name">
             <p class="content-wrap" :style="theadStyle.font" :title="th.name">
-              {{ th.name }}
+              {{ th.showName }}
             </p>
           </th>
         </tr>

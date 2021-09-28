@@ -169,7 +169,11 @@ export default {
       const categoryData = datas.map(row => row[dimensions[0].alias]);
       let series = [];
       measures.forEach(measure => {
-        series.push({ type: 'bar', name: measure.alias, data: datas.map(row => row[measure.alias]) });
+        series.push({
+          type: 'bar',
+          name: measure.alias,
+          data: datas.map(row => row[`${measure.defaultAggregator}_${measure.alias}`]),
+        });
       });
       this.serverData = { categoryData, series };
       const options = this.doWithOptions(this.serverData);

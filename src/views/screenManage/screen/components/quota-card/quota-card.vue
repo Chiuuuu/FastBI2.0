@@ -190,10 +190,10 @@ export default {
       let secondaryQuotas = [];
       let customSecTitles = [];
       this.options.data.secondaryQuota.forEach((quota, index) => {
-        const alias = quota.alias;
+        const { alias, defaultAggregator: aggregator } = quota;
         secondaryQuotas.push({
           secondaryQuotasTitle: alias,
-          secondaryQuotasValue: data[alias] ? data[alias].toString() : '',
+          secondaryQuotasValue: data[`${aggregator}_${alias}`] ? data[`${aggregator}_${alias}`].toString() : '',
         });
         // 数据有变动才重置自定义标题
         if (
@@ -238,9 +238,9 @@ export default {
     doWithTotal(data) {
       let { totalQuotaTitle, totalQuotaValue } = Object.assign({}, defaultData.data);
       if (this.options.data['totalQuota'].length) {
-        const totalAlias = this.options.data['totalQuota'][0].alias;
+        const { alias: totalAlias, defaultAggregator: aggregator } = this.options.data['totalQuota'][0];
         totalQuotaTitle = totalAlias;
-        totalQuotaValue = data[totalAlias] ? data[totalAlias].toString() : '';
+        totalQuotaValue = data[`${aggregator}_${totalAlias}`] ? data[`${aggregator}_${totalAlias}`].toString() : '';
       }
       return { totalQuotaTitle, totalQuotaValue };
     },

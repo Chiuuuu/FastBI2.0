@@ -225,7 +225,7 @@ export default {
      */
     handleFillArea(fillList) {
       const { dimensions, measures } = this.options.data;
-      const measureAlias = measures[0].alias;
+      const measureAlias = `${measures[0].defaultAggregator}_${measures[0].alias}`;
       const dimensionAlias = dimensions[0].alias;
       let datas = fillList.map(data => {
         return {
@@ -259,7 +259,7 @@ export default {
      */
     async handleFillDot(fillList) {
       const { latitude, longitude, measures } = this.options.data;
-      const measureAlias = measures[0].alias;
+      const measureAlias = `${measures[0].defaultAggregator}_${measures[0].alias}`;
       //经纬度
       let datas = [];
       for (let data of fillList) {
@@ -348,7 +348,7 @@ export default {
     handleLabelArea(labelList) {
       const { labelDimensions, labelMeasures } = this.options.data;
       const dimensionAlias = labelDimensions[0].alias;
-      const measureAlias = labelMeasures[0].alias;
+      const measureAlias = `${labelMeasures[0].defaultAggregator}_${labelMeasures[0].alias}`;
       let datas = [];
       for (let data of labelList) {
         // 抓取区域坐标
@@ -402,7 +402,7 @@ export default {
      */
     async handleLabelDot(labelList) {
       const { labelLatitude, labelLongitude, labelMeasures } = this.options.data;
-      const measureAlias = labelMeasures[0].alias;
+      const measureAlias = `${labelMeasures[0].defaultAggregator}_${labelMeasures[0].alias}`;
       //经纬度
       let datas = [];
       for (let data of labelList) {

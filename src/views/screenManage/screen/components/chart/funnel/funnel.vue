@@ -350,14 +350,21 @@ export default {
       let rate = [];
       const data = datas.map((row, index) => {
         if (index !== 0) {
-          const preRowData = datas[index - 1][measures[0].alias];
+          const preRowData = datas[index - 1][`${measures[0].defaultAggregator}_${measures[0].alias}`];
           const firstRowData = datas[0][measures[0].alias];
           rate.push({
-            converse: preRowData === 0 ? '100%' : ((row[measures[0].alias] / preRowData) * 100).toFixed(2) + '%',
-            arrive: firstRowData === 0 ? '100%' : ((row[measures[0].alias] / firstRowData) * 100).toFixed(2) + '%',
+            converse:
+              preRowData === 0
+                ? '100%'
+                : ((row[`${measures[0].defaultAggregator}_${measures[0].alias}`] / preRowData) * 100).toFixed(2) + '%',
+            arrive:
+              firstRowData === 0
+                ? '100%'
+                : ((row[`${measures[0].defaultAggregator}_${measures[0].alias}`] / firstRowData) * 100).toFixed(2) +
+                  '%',
           });
         }
-        return { name: row[dimensions[0].alias], value: row[measures[0].alias] };
+        return { name: row[dimensions[0].alias], value: row[`${measures[0].defaultAggregator}_${measures[0].alias}`] };
       });
       this.serverData = { data, rate };
       const options = this.doWithOptions(this.serverData);

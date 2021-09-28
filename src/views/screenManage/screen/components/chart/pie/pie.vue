@@ -168,7 +168,7 @@ export default {
       const data = datas.map(row => {
         return {
           name: row[dimensions[0].alias],
-          value: row[measures[0].alias],
+          value: row[`${measures[0].defaultAggregator}_${measures[0].alias}`],
           origin: row, //原数据，鼠标移入显示内容有用
         };
       });

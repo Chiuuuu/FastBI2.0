@@ -71,10 +71,14 @@ export default {
         this.$message.error(`图表${title}数据量过大, 已截取前50条展示`);
       }
       this.serverData = {
-        fieidName: [xaxis[0].alias, yaxis[0].alias, dimensions[0].alias],
+        fieidName: [
+          `${xaxis[0].defaultAggregator}_${xaxis[0].alias}`,
+          `${yaxis[0].defaultAggregator}_${yaxis[0].alias}`,
+          dimensions[0].alias,
+        ],
         data: datas,
-        xMax: Math.max(...datas.map(item => item[xaxis[0].alias])),
-        yMax: Math.max(...datas.map(item => item[yaxis[0].alias])),
+        xMax: Math.max(...datas.map(item => item[`${xaxis[0].defaultAggregator}_${xaxis[0].alias}`])),
+        yMax: Math.max(...datas.map(item => item[`${yaxis[0].defaultAggregator}_${yaxis[0].alias}`])),
       };
       const options = this.doWithOptions(this.serverData);
       this.updateSaveChart(options);
@@ -113,8 +117,12 @@ export default {
 
       const series = [];
       let fieidName = fetchData.fieidName;
+      const fieidAlias = fieidName.map(item => {
+        let alias = item.split('_')[1];
+        return alias ? alias : item;
+      });
       fetchData.data.forEach(data => {
-        const ary = [data[fieidName[0]], data[fieidName[1]], data[fieidName[2]]].concat(fetchData.fieidName);
+        const ary = [data[fieidName[0]], data[fieidName[1]], data[fieidName[2]]].concat(fieidAlias);
         const item = this.createScatterUnit(data[fieidName[2]], [ary], echart);
 
         // 处理散点大小

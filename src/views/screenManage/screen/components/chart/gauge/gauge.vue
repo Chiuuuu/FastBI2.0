@@ -80,12 +80,12 @@ export default {
       const datas = res.data || [];
       this.serverData = {
         current: {
-          value: datas[0][progress[0].alias],
+          value: datas[0][`${progress[0].defaultAggregator}_${progress[0].alias}`],
           name: progress[0].alias,
         },
-        min: !Array.isArray(min) ? min : datas[0][min[0].alias],
-        max: !Array.isArray(max) ? max : datas[0][max[0].alias],
-        target: !Array.isArray(targe) ? targe : datas[0][targe[0].alias],
+        min: !Array.isArray(min) ? min : datas[0][`${min[0].defaultAggregator}_${min[0].alias}`],
+        max: !Array.isArray(max) ? max : datas[0][`${max[0].defaultAggregator}_${max[0].alias}`],
+        target: !Array.isArray(targe) ? targe : datas[0][`${targe[0].defaultAggregator}_${targe[0].alias}`],
       };
       const options = this.doWithOptions(this.serverData);
       this.updateSaveChart(options);
@@ -109,21 +109,25 @@ export default {
      */
     doWithGauge(cur, min, max) {
       const { customOptions, customValue, customFixed } = this.options.style.echart;
+      let current = Object.assign({}, cur);
 
-      // 如果没有最大值，则设置为2倍的进度值
       if (customValue === 'percentage') {
+        // 开启百分比显示, 计算数值百分比
+        const totalProgress = max - min;
+        if (totalProgress <= 0) {
+          current.value = 100;
+        } else {
+          current.value = (current.value - min) / totalProgress;
+        }
         // 开启百分比显示, 最大值恒为100
         max = 100;
-      } else {
-        max = max || 2 * cur.value;
-      }
-
-      // 如果没有最大值，则设置为2倍的进度值
-      if (customValue === 'percentage') {
         // 开启百分比显示, 最小值恒为0
         min = 0;
       } else {
-        max = max || 0;
+        // 如果没有最大值，则设置为2倍的进度值
+        max = max || 2 * cur.value;
+        // 如果没有最小值，则设置为0
+        min = min || 0;
       }
 
       const options = merge({}, customOptions, {
@@ -151,7 +155,7 @@ export default {
         },
       });
 
-      options.data = [cur];
+      options.data = [current];
       return options;
     },
     /**

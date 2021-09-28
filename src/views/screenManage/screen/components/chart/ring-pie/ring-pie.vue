@@ -216,17 +216,17 @@ export default {
         data: this.options.style.echart.customTarge
           ? [
               {
-                value: datas[0][progress[0].alias],
+                value: datas[0][`${progress[0].defaultAggregator}_${progress[0].alias}`],
                 name: progress[0].alias,
               },
               {
-                value: datas[0][targe[0].alias],
+                value: datas[0][`${targe[0].defaultAggregator}_${targe[0].alias}`],
                 name: targe[0].alias,
               },
             ]
           : [
               {
-                value: datas[0][progress[0].alias],
+                value: datas[0][`${progress[0].defaultAggregator}_${progress[0].alias}`],
                 name: progress[0].alias,
               },
             ],
