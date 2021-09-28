@@ -6,7 +6,12 @@
         <a-radio :value="2">手动</a-radio>
       </a-radio-group>
       <template v-if="+conditionData.modeType === 1">
-        <a-input v-model="searchWord" class="input-area" placeholder="请输入搜索的关键词" @keyup.enter.stop="onSearch">
+        <a-input
+          v-model="searchWord"
+          class="input-area"
+          placeholder="请输入搜索的关键词(如: A,B,C)"
+          @keyup.enter.stop="onSearch"
+        >
           <a-button style="height: 30px" type="primary" slot="addonAfter" @click="onSearch">查询</a-button>
         </a-input>
         <a-spin :spinning="spinning" class="condition-list hasBorder scrollbar">
@@ -148,7 +153,16 @@ export default {
     // },
     onSearch() {
       const keyword = (this.searchWord || '').toLowerCase();
-      this.dataRowsResult = this.dataRows.filter(item => (item || '').toLowerCase().indexOf(keyword) > -1);
+      const list = keyword.split(',');
+      this.dataRowsResult = this.dataRows.filter(item => {
+        let match = false;
+        list.forEach(k => {
+          if ((item || '').indexOf(k) > -1) {
+            match = true;
+          }
+        });
+        return match;
+      });
     },
     onCheckAllChange(e) {
       const value = e.target.checked;

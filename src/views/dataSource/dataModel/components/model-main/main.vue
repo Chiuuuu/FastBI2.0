@@ -236,8 +236,10 @@ export default {
       // 第一个数据库id
       const datsource = await this.$server.dataModel.getDataSourceList(this.modelId);
       console.log('根据modelId获取数据源', datsource);
-      this.$store.dispatch('dataModel/setDatasourceId', datsource.data[0].datasourceId);
-      return datsource.data[0].datasourceId;
+      const data = datsource.data[0];
+      const datasourceId = data ? data.datasourceId : '';
+      this.$store.dispatch('dataModel/setDatasourceId', datasourceId);
+      return datasourceId;
     },
     // 打开模态框
     openModal() {

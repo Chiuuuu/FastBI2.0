@@ -198,7 +198,7 @@ export default {
         alias: data.alias,
         rule: { ruleFilterList: [] },
         ruleType: 1,
-        modeType: 1,
+        modeType: this.isNumber(data) ? 0 : 1,
         isInclude: 2,
         displayOrder: 0,
         status: 0,
@@ -218,7 +218,7 @@ export default {
       this.conditionData.convertType = field.convertType || field.dataType;
       if (field && this.isNumber(record) !== this.isNumber(field)) {
         this.conditionData.rule.ruleFilterList = [];
-        this.conditionData.modeType = 1;
+        this.conditionData.modeType = this.isNumber(field) ? 0 : 1;
       }
 
       this.fieldData = null;

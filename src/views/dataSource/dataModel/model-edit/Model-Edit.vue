@@ -541,6 +541,7 @@ export default {
       this.handleGroupField();
     },
     async handleGetDatabaseList() {
+      if (!this.$route.query.datasourceId) return (this.datasourceName = '');
       const result = await this.$server.dataModel.getDatabaseList(this.$route.query.datasourceId);
       if (result.code === 200) {
         const baseBalck = [11, 12]; // 黑名单
@@ -582,6 +583,11 @@ export default {
       let tableId = '';
       if (len > 0) {
         tableId = this.detailInfo.config.tables[len - 1].tableId;
+      }
+      if (!this.$route.query.datasourceId) {
+        this.databaseList = [];
+        this.databaseName = '';
+        return;
       }
       const result = await this.$server.dataModel.getDataBaseDataInfoList(this.$route.query.datasourceId, tableId);
 
@@ -1442,6 +1448,7 @@ export default {
     },
     handleGetFetchParams() {
       if (this.modalName === 'sql-setting') {
+        if (!this.$route.query.datasourceId) return;
         this.$refs.componentRef.pushFetchParam({
           sourceId: this.$route.query.datasourceId,
           databaseName: this.databaseName,
