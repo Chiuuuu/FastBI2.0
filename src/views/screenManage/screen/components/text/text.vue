@@ -15,8 +15,8 @@ import debounce from 'lodash/debounce';
 import { getStyle } from '@/utils';
 import { mutationTypes as historyMutation } from '@/store/modules/history';
 const reg =
-  /<span data-id="(.*?)" contenteditable="false" class="anchor-measure">\[(.*?)\((.{2})\)(&nbsp;){3}]<\/span>/g;
-const innerReg = /\[(.*?)\((.{2})\)(&nbsp;){3}]/;
+  /<span data-id="(.*?)" contenteditable="false" class="anchor-measure">\[(.*?)\((.{2,4})\)(&nbsp;){3}]<\/span>/g;
+const innerReg = /\[(.*?)\((.{2,4})\)(&nbsp;){3}]/;
 const polymerizationData = {
   // 数字
   num: [
@@ -429,17 +429,15 @@ export default {
       if (measureList.length) {
         for (let measureEle of measureList) {
           const measureId = measureEle.dataset.id;
-          const [, , aggregator] = measureEle.innerHTML.match(innerReg);
-          // 验重
-          if (!measures.find(item => item.id === measureId)) {
-            // 添加度量到图表数据
-            let measureOrigin = this.usedMeasures.find(item => item.id === measureId);
-            if (measureOrigin) {
-              let measure = Object.assign({}, measureOrigin);
-              // 添加聚合方式值
-              measure.defaultAggregator = polymerizationMap[aggregator];
-              measures.push(measure);
-            }
+          const matchArr = measureEle.innerHTML.match(innerReg);
+          const aggregator = matchArr[2];
+          // 添加度量到图表数据
+          let measureOrigin = this.usedMeasures.find(item => item.id === measureId);
+          if (measureOrigin) {
+            let measure = Object.assign({}, measureOrigin);
+            // 添加聚合方式值
+            measure.defaultAggregator = polymerizationMap[aggregator];
+            measures.push(measure);
           }
         }
       }

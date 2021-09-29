@@ -346,14 +346,14 @@ export default {
         const datas = options.data[key];
         const actualDatas = key === 'filter' ? datas.fileList : datas;
         if (Array.isArray(actualDatas)) {
-          for (let data of actualDatas) {
+          actualDatas.forEach((data, index) => {
             // 更新最新拖入数据
             newList.forEach(item => {
-              if (item.pivotschemaId === data.pivotschemaId) {
-                data = item;
+              if (item.pivotschemaId === data.pivotschemaId && item.id !== data.id) {
+                this.$set(actualDatas, index, item);
               }
             });
-          }
+          });
         }
       }
     },
