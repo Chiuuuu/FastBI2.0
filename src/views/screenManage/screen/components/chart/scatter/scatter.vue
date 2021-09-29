@@ -117,9 +117,9 @@ export default {
 
       const series = [];
       let fieidName = fetchData.fieidName;
-      const fieidAlias = fieidName.map(item => {
-        let alias = item.split('_')[1];
-        return alias ? alias : item;
+      const fieidAlias = fieidName.map((item, index) => {
+        // 最后一个是维度，没有聚合区分
+        return index === 2 ? item.replace(/(.*?)_/, '') : item;
       });
       fetchData.data.forEach(data => {
         const ary = [data[fieidName[0]], data[fieidName[1]], data[fieidName[2]]].concat(fieidAlias);

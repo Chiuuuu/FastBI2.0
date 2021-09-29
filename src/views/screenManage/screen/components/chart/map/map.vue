@@ -499,6 +499,11 @@ export default {
           this.handleRedList(res.data, keys);
         }
         this.$message.error(res.msg);
+        return;
+      }
+      if (res.code === 80002) {
+        this.$message.error(res.msg);
+        return;
       }
 
       const [fillResult, labelResult] = await Promise.all([

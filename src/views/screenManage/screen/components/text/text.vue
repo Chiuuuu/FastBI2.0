@@ -109,7 +109,8 @@ export default {
       let list = [];
       this.measures.forEach(item => {
         if (item.status === 0 && item.visible) {
-          list.push(Object.assign(item, { name: item.alias }));
+          // 这里改变了原name会有问题，要先记录name，在构造measure的时候还原回去
+          list.push(Object.assign({}, item, { name: item.alias }));
         }
       });
       return list;
@@ -405,8 +406,7 @@ export default {
         });
         if (res.code === 500) {
           if (res.msg === 'IsChanged') {
-            const keys = ['filter'];
-            this.handleRedList(res.data, keys);
+            this.handleRedList(res.data);
           }
           return res.msg;
         }
@@ -415,6 +415,19 @@ export default {
         });
       }
       return resultStr;
+    },
+    /**
+     * @description 处理isChanged标红
+     */
+    handleRedList(list) {
+      // 如果存在对应列表id，替换成红色
+      if (list) {
+        this.options.data.filter.fileList.forEach(item => {
+          if (list.includes(item.id)) {
+            item.IsChanged = true;
+          }
+        });
+      }
     },
     /**
      * @description 度量数据添加进data

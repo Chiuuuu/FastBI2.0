@@ -246,11 +246,13 @@ export default {
      */
     handleTableColumns(keys, mapKey) {
       let fieldList = this.getFieldList(mapKey);
+      // 度量key要加上聚合前缀
       const column = [];
       fieldList.map(item => {
-        if (keys.includes(item.alias)) {
+        const alias = item.role === 2 ? `${item.defaultAggregator}_${item.alias}` : item.alias;
+        if (keys.includes(alias)) {
           column.push({
-            alias: item.alias,
+            alias: alias,
             colName: this.formatAggregator(item),
             role: item.role,
           });

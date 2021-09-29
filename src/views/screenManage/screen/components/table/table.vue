@@ -364,9 +364,10 @@ export default {
       const keys = this.options.data.fields.map(item =>
         item.role === 2 ? `${item.defaultAggregator}_${item.alias}` : item.alias,
       );
-      this.fields = keys.map(key => {
-        let showKey = key.split('_')[1];
-        return showKey ? { name: key, showName: showKey } : { name: key, showName: key };
+      this.fields = keys.map((key, index) => {
+        return this.options.data.fields[index].role === 2
+          ? { name: key, showName: key.replace(/(.*?)_/, '') }
+          : { name: key, showName: key };
       });
       this.doWithOptions();
       this.refreshCount += 1;

@@ -345,7 +345,7 @@ export default {
       }
       // 默认排序为降序
       if (sort.length === 0) {
-        datas.sort(this.sortBy(measures[0].alias, false));
+        datas.sort(this.sortBy(`${measures[0].defaultAggregator}_${measures[0].alias}`, false));
       }
       let rate = [];
       const data = datas.map((row, index) => {

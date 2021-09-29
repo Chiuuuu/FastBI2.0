@@ -113,7 +113,7 @@ export default {
         const node = new Node(props);
 
         // 获取拖拽进来的维度名称
-        const key = node.props[dimensions[level].name];
+        const key = node.props[dimensions[level].alias] || node.props[dimensions[level].name];
         const selfValue =
           node.props[`${measures[0].defaultAggregator}_${measures[0].alias}`] || node.props[measures[0].name];
 

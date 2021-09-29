@@ -327,7 +327,7 @@ export default {
         this.measure = [].concat(result.data.measures) || [];
 
         // 检查保存的图表数据和新维度度量是否对应
-        this.handleNewData();
+        // this.handleNewData();
       } else {
         this.$message.error(result.msg || '获取维度度量失败');
       }
