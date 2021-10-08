@@ -13,7 +13,7 @@
         ref="imgUpload"
         type="file"
         name
-        accept="image/png, image/jpg image/jpeg, image/gif, image/jfif, image/pjp"
+        accept="image/png,image/jpg,image/jpeg,image/gif,image/jfif,image/pjp"
         style="display: none"
         @change="handleSelectPhoto"
       />
