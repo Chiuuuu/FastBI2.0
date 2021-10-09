@@ -21,7 +21,7 @@
                 class="content-wrap"
                 :style="tbodyStyle.font"
                 :title="autoWrap ? '' : td"
-                @click.stop="dataLink(td, i)"
+                @click.stop="dataLink(td, tdI)"
               >
                 {{ td }}
               </p>
