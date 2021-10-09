@@ -2,7 +2,7 @@
   <div class="drawing-board-wrapper" :class="drawingBoardClass">
     <div class="drawing-board-app">
       <!-- 头部 start -->
-      <DrawingBoardHeader :screenInfo="screenInfo" @changeName="changeName"></DrawingBoardHeader>
+      <DrawingBoardHeader @changeName="changeName"></DrawingBoardHeader>
       <!-- 头部 end -->
 
       <!-- 侧边栏 start -->
@@ -11,12 +11,7 @@
       <!-- 侧边栏 end -->
 
       <!-- 内容编辑区 start -->
-      <DrawingBoardContent
-        ref="boardContent"
-        :components="components"
-        :type="parameter.EDIT"
-        :screenName="screenInfo.screenName"
-      ></DrawingBoardContent>
+      <DrawingBoardContent ref="boardContent" :components="components" :type="parameter.EDIT"></DrawingBoardContent>
       <!-- 内容编辑区 end -->
 
       <!-- 内容编辑区工具栏 start -->
@@ -121,6 +116,9 @@ export default {
     },
   },
   mounted() {
+    this.$store.commit(boardMutaion.SET_BOARD_MODEL, {
+      model: this.parameter.EDIT,
+    });
     const {
       query: { id, tabId },
     } = this.$route;

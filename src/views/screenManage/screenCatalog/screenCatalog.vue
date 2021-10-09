@@ -570,9 +570,6 @@ export default {
      * @description 编辑大屏
      */
     handleEditScreen() {
-      this.$store.commit(boardMutaion.SET_BOARD_MODEL, {
-        model: this.parameter.EDIT,
-      });
       this.$router.push({
         name: 'screenEdit',
         query: {
