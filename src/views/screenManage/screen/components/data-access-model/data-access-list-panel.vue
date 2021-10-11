@@ -137,7 +137,7 @@ export default {
       const params = {
         screenId: this.screenInstance.screenInfo.screenId,
         tabId: this.screenInstance.screenInfo.tabId,
-        resourceName: data.name,
+        resourceName: data.alias,
         datasourceId: this.accessSelect.id,
         databaseId: this.popoverInstance.databaseSelect.id,
         tableId: data.id,
@@ -147,7 +147,7 @@ export default {
         this.popoverInstance.remove();
 
         data.tableId = data.id;
-        data.resourceName = data.name;
+        data.resourceName = data.alias;
 
         this.$emit('select', data);
         this.handleClose();
