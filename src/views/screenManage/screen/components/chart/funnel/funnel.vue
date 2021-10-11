@@ -351,7 +351,7 @@ export default {
       const data = datas.map((row, index) => {
         if (index !== 0) {
           const preRowData = datas[index - 1][`${measures[0].defaultAggregator}_${measures[0].alias}`];
-          const firstRowData = datas[0][measures[0].alias];
+          const firstRowData = datas[0][`${measures[0].defaultAggregator}_${measures[0].alias}`];
           rate.push({
             converse:
               preRowData === 0
