@@ -80,10 +80,11 @@ export default {
       let percent = 0;
 
       if (this.options.style.echart.customTarge && data.length > 1) {
-        percent = (+((data[dataIndex].value / (data[0].value + data[1].value)) * 100)).toFixed(customFixed);
+        // 使用abs()函数取绝对值
+        percent = Math.abs((data[dataIndex].value / data[1].value) * 100).toFixed(customFixed);
       } else {
         // 如果不开启目标值设置，以1为基准
-        percent = (+((1 / 1) * 100)).toFixed(customFixed);
+        percent = Math.abs((1 / 1) * 100).toFixed(customFixed);
       }
       const name = data[dataIndex].name;
       const value = data[dataIndex].value;
@@ -114,7 +115,6 @@ export default {
       label = this.doWithLabel(label);
       data = [].concat(data);
       const radius = this.doWithRadius(customInRadius, customOutRadius);
-      // const formatter = this.doWithFormatter(data, customFormatterWay, customFixed, 0);
       const center = this.doWithCenter(customCenter);
       const seriesData = { ...omit(customSeries, ['label']) };
 
@@ -125,8 +125,9 @@ export default {
         }
       } else {
         // 2.不开启目标值只需要一个数据
+        // 默认数组第一是进度值、第二是目标值
         if (data.length > 1) {
-          data.shift();
+          data.pop();
         }
       }
 
@@ -137,7 +138,6 @@ export default {
           radius,
           label: Object.assign({}, label, {
             formatter: param => {
-              // return `${this.doWithFormatter(data, customFormatterWay, customFixed, param.dataIndex)}`;
               if (label.position === 'center') {
                 // 固定中间显示为目标值 -- 目前数据长度等于2时，数组下标为0的暂定为目标值
                 return `${this.doWithFormatter(data, customFormatterWay, customFixed, 0)}`;
@@ -213,23 +213,16 @@ export default {
       }
       const datas = res.data || [];
       this.serverData = {
-        data: this.options.style.echart.customTarge
-          ? [
-              {
-                value: datas[0][`${progress[0].defaultAggregator}_${progress[0].alias}`],
-                name: progress[0].alias,
-              },
-              {
-                value: datas[0][`${targe[0].defaultAggregator}_${targe[0].alias}`],
-                name: targe[0].alias,
-              },
-            ]
-          : [
-              {
-                value: datas[0][`${progress[0].defaultAggregator}_${progress[0].alias}`],
-                name: progress[0].alias,
-              },
-            ],
+        data: [
+          {
+            value: datas[0][`${progress[0].defaultAggregator}_${progress[0].alias}`],
+            name: progress[0].alias,
+          },
+          {
+            value: datas[0][`${targe[0].defaultAggregator}_${targe[0].alias}`],
+            name: targe[0].alias,
+          },
+        ],
       };
 
       if (!this.options.style.echart.customTarge) {
