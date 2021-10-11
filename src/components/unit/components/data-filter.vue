@@ -21,7 +21,7 @@
                 :key="item.id"
                 @click="showModel(item, true)"
               >
-                <p class="text">{{ item.name }}</p>
+                <p class="text">{{ item.alias }}</p>
                 <div class="suffix-btn" @click.stop="handleFiledOps($event, item)"></div>
               </div>
             </div>
