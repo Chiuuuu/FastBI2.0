@@ -236,7 +236,7 @@ export default {
           // 构造映射数据，给指标提示框内容显示
           [`地区名/${dimensionAlias}`]: data[dimensionAlias], // 地区名/维度
           [dimensionAlias]: data[dimensionAlias], // 维度
-          [measureAlias]: data[measureAlias], // 度量
+          [measureAlias.replace(/(.*?)_/, '')]: data[measureAlias], // 度量
         };
       });
       let pointShowList = [];
@@ -244,14 +244,14 @@ export default {
       // 非初始化才重置格式
       if (this.dataState !== 'default') {
         pointShowList = [`地区名/${dimensionAlias}`];
-        tooltipList = [dimensionAlias, measureAlias];
+        tooltipList = [dimensionAlias, measureAlias.replace(/(.*?)_/, '')];
       } else {
         pointShowList = [].concat(this.options.style.echart.mapStyle.customPointShowList);
         tooltipList = [].concat(this.options.style.echart.mapStyle.customTooltipShowList);
       }
       return {
         fillList: datas,
-        fillName: measureAlias,
+        fillName: measureAlias.replace(/(.*?)_/, ''),
         fillCustomPointShowList: pointShowList,
         fillCustomTooltipShowList: tooltipList,
       };
@@ -275,7 +275,7 @@ export default {
             [latitude[0].alias]: data[latitude[0].alias], // 经度
             [longitude[0].alias]: data[longitude[0].alias], // 维度
             地区名: positionMsg.district, // 地区名
-            [measureAlias]: data[measureAlias], // 度量
+            [measureAlias.replace(/(.*?)_/, '')]: data[measureAlias], // 度量
           };
           // 已有地图数据直接累加
           let areaData = datas.find(item => item.name === datacontent.name);
@@ -297,14 +297,14 @@ export default {
       // 非初始化才重置格式
       if (this.dataState !== 'default') {
         pointShowList = [`地区名`];
-        tooltipList = [longitude[0].alias, latitude[0].alias, measureAlias];
+        tooltipList = [longitude[0].alias, latitude[0].alias, measureAlias.replace(/(.*?)_/, '')];
       } else {
         pointShowList = [].concat(this.options.style.echart.mapStyle.customPointShowList);
         tooltipList = [].concat(this.options.style.echart.mapStyle.customTooltipShowList);
       }
       return {
         fillList: datas,
-        fillName: measureAlias,
+        fillName: measureAlias.replace(/(.*?)_/, ''),
         fillCustomPointShowList: pointShowList,
         fillCustomTooltipShowList: tooltipList,
       };
@@ -365,7 +365,7 @@ export default {
           // 构造映射数据，给指标提示框内容显示
           [`地区名/${dimensionAlias}`]: data[dimensionAlias], // 地区名/维度
           [dimensionAlias]: data[dimensionAlias], // 维度
-          [measureAlias]: data[measureAlias], // 度量
+          [measureAlias.replace(/(.*?)_/, '')]: data[measureAlias], // 度量
         });
       }
       // 每个区域标记点超过20个要进行截取
@@ -387,14 +387,14 @@ export default {
       // 非初始化才重置格式
       if (this.dataState !== 'default') {
         pointShowList = [`地区名/${dimensionAlias}`];
-        tooltipList = [dimensionAlias, measureAlias];
+        tooltipList = [dimensionAlias, measureAlias.replace(/(.*?)_/, '')];
       } else {
         pointShowList = [].concat(this.options.style.echart.scatterStyle.customPointShowList);
         tooltipList = [].concat(this.options.style.echart.scatterStyle.customTooltipShowList);
       }
       return {
         labelList: datas,
-        labelName: measureAlias,
+        labelName: measureAlias.replace(/(.*?)_/, ''),
         labelCustomPointShowList: pointShowList,
         labelCustomTooltipShowList: tooltipList,
       };
@@ -420,7 +420,7 @@ export default {
             [labelLatitude[0].alias]: data[labelLatitude[0].alias], // 经度
             [labelLongitude[0].alias]: data[labelLongitude[0].alias], // 维度
             地区名: positionMsg.district, // 地区名
-            [measureAlias]: data[measureAlias], // 度量
+            [measureAlias.replace(/(.*?)_/, '')]: data[measureAlias], // 度量
           });
         } catch (err) {
           continue;
@@ -448,14 +448,14 @@ export default {
       // 非初始化才重置格式
       if (this.dataState !== 'default') {
         pointShowList = [`地区名`];
-        tooltipList = [labelLongitude[0].alias, labelLatitude[0].alias, measureAlias];
+        tooltipList = [labelLongitude[0].alias, labelLatitude[0].alias, measureAlias.replace(/(.*?)_/, '')];
       } else {
         pointShowList = [].concat(this.options.style.echart.scatterStyle.customPointShowList);
         tooltipList = [].concat(this.options.style.echart.scatterStyle.customTooltipShowList);
       }
       return {
         labelList: datas,
-        labelName: measureAlias,
+        labelName: measureAlias.replace(/(.*?)_/, ''),
         labelCustomPointShowList: pointShowList,
         labelCustomTooltipShowList: tooltipList,
       };
@@ -552,8 +552,8 @@ export default {
                 labelCustomTooltipShowList || this.options.style.echart.scatterStyle.customTooltipShowList,
             }),
           },
-          replaceMerge: ['mapStyle', 'scatterStyle'],
         },
+        replaceMerge: ['mapStyle', 'scatterStyle'],
         updateCom: this.shapeUnit.component,
       });
     },
