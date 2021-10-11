@@ -52,7 +52,9 @@ export default {
      * @description 处理图例
      */
     doWithlegend(series) {
-      return series[scatterSeries] ? [series[scatterSeries].name] : [];
+      return series[scatterSeries] && series[scatterSeries].name
+        ? [series[scatterSeries].name.replace(/(.*?)_/, '')]
+        : [];
     },
     /**
      * @description 根据key处理value值

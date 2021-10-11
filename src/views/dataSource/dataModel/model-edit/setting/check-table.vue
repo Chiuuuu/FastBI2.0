@@ -148,7 +148,7 @@ export default {
 
       if (result.code === 200) {
         this.columnsList = result.data.columnNameList;
-        this.data = result.data.rows;
+        this.data = result.data.rows.filter(item => item);
         this.$nextTick(() => {
           this.loading = false;
         });

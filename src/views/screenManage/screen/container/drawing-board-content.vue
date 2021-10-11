@@ -116,11 +116,6 @@ export default {
         return [parameter.PREVIEW, parameter.EDIT].indexOf(value) !== -1;
       },
     },
-    screenName: {
-      type: String,
-      required: false,
-      default: '大屏',
-    },
   },
   provide() {
     return {
@@ -149,6 +144,7 @@ export default {
       boardScale: state => state.board.scale, // 比例
       boardModel: state => state.board.model, // 模式
       boardPage: state => state.board.page, // 页面
+      screenInfo: state => state.app.screenInfo,
     }),
     boardGridStyle() {
       if (!this.boardPage.size || !this.boardPage.background) return {};

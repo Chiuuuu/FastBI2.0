@@ -1,7 +1,7 @@
 <template>
   <a-row :gutter="16" class="screen-manage">
     <a-col class="gutter-row screen-manage" :span="5">
-      <Menu @on-menuChange-componet="handleMenuChangeComponet"></Menu>
+      <Menu ref="menu" @on-menuChange-componet="handleMenuChangeComponet"></Menu>
     </a-col>
     <a-col class="gutter-row screen-manage" :span="19">
       <component
@@ -28,6 +28,11 @@ export default {
       showWhat: 'Main',
       tabindex: '1',
       fieldInfo: {},
+    };
+  },
+  provide() {
+    return {
+      accessInstance: this,
     };
   },
   watch: {

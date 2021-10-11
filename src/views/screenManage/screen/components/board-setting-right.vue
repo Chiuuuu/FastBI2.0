@@ -327,7 +327,7 @@ export default {
         this.measure = [].concat(result.data.measures) || [];
 
         // 检查保存的图表数据和新维度度量是否对应
-        // this.handleNewData();
+        this.handleNewData();
       } else {
         this.$message.error(result.msg || '获取维度度量失败');
       }
@@ -342,6 +342,7 @@ export default {
       const options = this.currentCom.setting;
       const newList = this.dimension.concat(this.measure);
       const keys = Object.keys(options.data);
+      let pivotschemaIdMap = {};
       for (let key of keys) {
         const datas = options.data[key];
         const actualDatas = key === 'filter' ? datas.fileList : datas;
@@ -351,10 +352,24 @@ export default {
             newList.forEach(item => {
               if (item.pivotschemaId === data.pivotschemaId && item.id !== data.id) {
                 this.$set(actualDatas, index, item);
+                // 文本框记录pivotschemaId对应的数据
+                if (this.currentCom.type === 'BoardText') {
+                  pivotschemaIdMap[item.pivotschemaId] = item;
+                }
               }
             });
           });
         }
+      }
+      // 文本框富文本里的度量信息更新
+      if (this.currentCom.type === 'BoardText' && Object.keys(pivotschemaIdMap).length) {
+        const reg =
+          /<span data-id="(.*?)" data-pivotschemaid="(.*?)" contenteditable="false" class="anchor-measure">\[(.*?)\((.{2,4})\)(&nbsp;){3}]<\/span>/g;
+        let str = options.data.htmlText.replace(reg, (match, id, pivotschemaId, alias, aggregator) => {
+          const pivotschemaIdData = pivotschemaIdMap[pivotschemaId];
+          return `<span data-id="${pivotschemaIdData.id}" data-pivotschemaid="${pivotschemaId}" contenteditable="false" class="anchor-measure">[${pivotschemaIdData.alias}(${aggregator})&nbsp;&nbsp;&nbsp;]</span>`;
+        });
+        this.$set(options.data, 'htmlText', str);
       }
     },
     /**

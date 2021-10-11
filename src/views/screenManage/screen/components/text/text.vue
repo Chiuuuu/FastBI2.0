@@ -15,7 +15,7 @@ import debounce from 'lodash/debounce';
 import { getStyle } from '@/utils';
 import { mutationTypes as historyMutation } from '@/store/modules/history';
 const reg =
-  /<span data-id="(.*?)" contenteditable="false" class="anchor-measure">\[(.*?)\((.{2,4})\)(&nbsp;){3}]<\/span>/g;
+  /<span data-id="(.*?)" data-pivotschemaid="(.*?)" contenteditable="false" class="anchor-measure">\[(.*?)\((.{2,4})\)(&nbsp;){3}]<\/span>/g;
 const innerReg = /\[(.*?)\((.{2,4})\)(&nbsp;){3}]/;
 const polymerizationData = {
   // 数字
@@ -263,6 +263,7 @@ export default {
                     range.deleteContents();
                     const span = document.createElement('span');
                     span.setAttribute('data-id', item.id);
+                    span.setAttribute('data-pivotschemaid', item.pivotschemaId);
                     span.setAttribute('contenteditable', false);
                     span.setAttribute('class', 'anchor-measure');
                     span.innerHTML = `[${vm.formatAggregator(item)}&nbsp;&nbsp;&nbsp;]`;
@@ -410,7 +411,7 @@ export default {
           }
           return res.msg;
         }
-        resultStr = resultStr.replace(reg, (match, id, alias, aggregator) => {
+        resultStr = resultStr.replace(reg, (match, id, pivotschemaId, alias, aggregator) => {
           return `<span>${res.data[0][`${polymerizationMap[aggregator]}_${alias}`]}</span>`;
         });
       }

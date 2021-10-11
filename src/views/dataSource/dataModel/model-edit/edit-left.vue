@@ -10,9 +10,9 @@
         @mousedown.stop="handleMouseDown"
         @dragstart.stop="handleLeftDragStart($event, item)"
         @dragend.stop="handleLeftDragEnd"
-        :title="item.name"
+        :title="item.alias"
       >
-        <span>{{ item.name }}</span>
+        <span>{{ item.alias }}</span>
         <template v-if="type === 'sql'">
           <div class="u-icon eye"><a-icon type="eye" @click="handleOpenTableInfo(item)" /></div>
           <div class="u-icon edit"><a-icon type="edit" @click="handleSQLEdit(item)" /></div>
@@ -31,7 +31,7 @@
 </template>
 <script>
 import assign from 'lodash/assign';
-import RenderTableInfo from './setting/render-table-info.vue';
+import RenderTableInfo from './setting/renderTableInfo.vue';
 export default {
   name: 'model-edit-left',
   inject: ['nodeStatus'],

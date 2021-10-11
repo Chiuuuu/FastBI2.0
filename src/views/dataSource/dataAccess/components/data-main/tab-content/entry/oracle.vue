@@ -286,7 +286,7 @@ export default {
             this.$message.success('保存成功，可抽取库表');
             const formInfo = Object.assign({}, this.form);
             delete formInfo.sid;
-            this.$store.dispatch('dataAccess/getMenuList');
+            this.$store.dispatch('dataAccess/getMenuList', this.accessInstance.$refs.menu);
             this.$store.dispatch('dataAccess/setFirstFinished', true);
             this.$store.dispatch('dataAccess/setModelInfo', formInfo);
             this.$store.dispatch('dataAccess/setModelName', this.form.name);

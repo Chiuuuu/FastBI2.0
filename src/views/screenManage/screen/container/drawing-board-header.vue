@@ -195,12 +195,6 @@ import MapSelectView from '../mapSelectView';
  */
 export default {
   name: 'DrawingBoardHeader',
-  props: {
-    screenInfo: {
-      type: Object,
-      required: true,
-    },
-  },
   data() {
     return {
       parameter,
@@ -221,6 +215,7 @@ export default {
       // 组件列表
       components: state => state.board.components,
       page: state => state.board.page,
+      screenInfo: state => state.app.screenInfo,
     }),
     undoDisable() {
       // 是否可用撤销

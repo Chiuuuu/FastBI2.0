@@ -59,13 +59,13 @@
             <ul class="scrollbar" style="overflow-y: auto; height: calc(100% - 38px)">
               <li
                 class="preview-tab-item"
-                :title="sheet.name"
+                :title="sheet.alias"
                 :class="{ active: currentSheetIndex === index }"
                 v-for="(sheet, index) in sheetList"
                 :key="index"
                 @click="handleChangeTab(sheet, index)"
               >
-                {{ sheet.name }}
+                {{ sheet.alias }}
               </li>
             </ul>
           </div>
@@ -97,6 +97,7 @@ export default {
   components: {
     FileTable,
   },
+  inject: ['accessInstance'],
   data() {
     return {
       btnPermission: [this.$PERMISSION_CODE.OPERATOR.edit, this.$PERMISSION_CODE.OPERATOR.add],
@@ -455,28 +456,28 @@ export default {
       }
 
       // 校验大小
-      if (isValid && file.size > 50 * 1024 * 1024) {
+      if (isValid && file.size > 200 * 1024 * 1024) {
         isValid = false;
-        this.$message.error('文件大于50M, 无法上传');
+        this.$message.error('文件大于200M, 无法上传');
       }
 
       // 校验中文名
-      if (isValid && /[\u4E00-\u9FA5\uF900-\uFA2D]/.test(name)) {
-        isValid = false;
-        this.$message.error('暂不支持中文表名文件');
-      }
+      // if (isValid && /[\u4E00-\u9FA5\uF900-\uFA2D]/.test(name)) {
+      //   isValid = false;
+      //   this.$message.error('暂不支持中文表名文件');
+      // }
 
       // 校验命名规则(中英数字下划线)
-      if (isValid && !/^[0-9a-zA-Z_\u4E00-\u9FA5\uF900-\uFA2D]*$/g.test(name)) {
-        isValid = false;
-        this.$message.error('命名存在非法字符');
-      }
+      // if (isValid && !/^[0-9a-zA-Z_\u4E00-\u9FA5\uF900-\uFA2D]*$/g.test(name)) {
+      //   isValid = false;
+      //   this.$message.error('命名存在非法字符');
+      // }
 
       // 校验重名
-      if (isValid && !this.replaceFile.isReplace && this.fileInfoList.some(file => file.name === name)) {
-        isValid = false;
-        this.$message.error('文件命名重复, 请重新添加');
-      }
+      // if (isValid && !this.replaceFile.isReplace && this.fileInfoList.some(file => file.name === name)) {
+      //   isValid = false;
+      //   this.$message.error('文件命名重复, 请重新添加');
+      // }
       if (!isValid) {
         this.clearReplaceFile();
         return;
@@ -796,7 +797,7 @@ export default {
             .then(result => {
               if (result.code === 200) {
                 this.$message.success('保存成功');
-                this.$store.dispatch('dataAccess/getMenuList');
+                this.$store.dispatch('dataAccess/getMenuList', this.accessInstance.$refs.menu);
                 this.$store.dispatch('dataAccess/setFirstFinished', true);
                 this.$store.dispatch('dataAccess/setModelName', this.form.name);
                 // this.$store.dispatch('dataAccess/setParentId', 0)

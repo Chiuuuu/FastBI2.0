@@ -386,9 +386,9 @@ export default {
       }
 
       // 校验大小
-      if (isValid && file.size > 50 * 1024 * 1024) {
+      if (isValid && file.size > 200 * 1024 * 1024) {
         isValid = false;
-        this.$message.error('文件大于50M, 无法上传');
+        this.$message.error('文件大于200M, 无法上传');
       }
 
       // 校验重名
@@ -398,16 +398,16 @@ export default {
       }
 
       // 校验中文名
-      if (isValid && /[\u4E00-\u9FA5\uF900-\uFA2D]/.test(name)) {
-        isValid = false;
-        this.$message.error('暂不支持中文表名文件');
-      }
+      // if (isValid && /[\u4E00-\u9FA5\uF900-\uFA2D]/.test(name)) {
+      //   isValid = false;
+      //   this.$message.error('暂不支持中文表名文件');
+      // }
 
       // 校验数字命名
-      if (isValid && /^[0-9]/.test(name)) {
-        isValid = false;
-        this.$message.error('不支持命名以数字开头的文件');
-      }
+      // if (isValid && /^[0-9]/.test(name)) {
+      //   isValid = false;
+      //   this.$message.error('不支持命名以数字开头的文件');
+      // }
 
       if (!isValid) {
         this.clearReplaceFile();
@@ -814,7 +814,7 @@ export default {
             .then(result => {
               if (result.code === 200) {
                 this.$message.success('保存成功');
-                this.$store.dispatch('dataAccess/getMenuList');
+                this.$store.dispatch('dataAccess/getMenuList', this.accessInstance.$refs.menu);
                 this.$store.dispatch('dataAccess/setFirstFinished', true);
                 this.$store.dispatch('dataAccess/setModelName', this.form.name);
                 this.$store.dispatch('dataAccess/setModelId', result.data.datasource.id);
