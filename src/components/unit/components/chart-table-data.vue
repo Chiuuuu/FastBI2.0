@@ -29,7 +29,7 @@
         <table class="chartdata-table">
           <tr class="table-tr js-table-tr">
             <th class="table-td" v-for="(item, subIndex) in chartData.columns" :key="subIndex">
-              {{ item.role === 2 ? item.colName.replace(/(.*?)_/, '') : item.colName }}
+              {{ item.colName }}
             </th>
           </tr>
           <tr class="table-tr" v-for="(subItem, subIndex) in tableData" :key="subIndex">

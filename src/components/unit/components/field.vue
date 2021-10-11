@@ -408,7 +408,7 @@ export default {
       let arry = [].concat(this.currentCom.setting.data[key]);
       arry = this.handleList(arry, data, method, validKey);
       // 返回不能拖入同字段array设置null，返回原数组，防止concat监听到data变化
-      return arry || this.currentCom.setting.data[key];
+      return arry || arry === '' ? arry : this.currentCom.setting.data[key];
     },
     /**
      * @description 列表公共处理方法

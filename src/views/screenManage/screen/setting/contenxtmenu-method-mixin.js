@@ -217,6 +217,9 @@ const ContenxtmenuMethodMixin = {
       }
       this.handleSpinning(true, '正在导出...');
       const dataList = await this.getChartData(component, vm);
+      if (!dataList) {
+        return;
+      }
       this.handleSpinning(false);
       const result = json2csv.parse(dataList, null);
       const csvContent = 'data:text/csv;charset=utf-8,\uFEFF' + result;
@@ -251,6 +254,9 @@ const ContenxtmenuMethodMixin = {
       }
 
       let dataList = await this.getChartData(component, vm, item.key);
+      if (!dataList) {
+        return;
+      }
       // 查看数据弹出展示窗 -- 在board-shape-unit.vue
       this.showChartData(this.chartData);
 
@@ -274,6 +280,9 @@ const ContenxtmenuMethodMixin = {
       }
 
       let dataList = await this.getChartData(component, vm, item.key);
+      if (!dataList) {
+        return;
+      }
       // 查看数据弹出展示窗 -- 在board-shape-unit.vue
       this.showChartData(this.chartData);
 
@@ -312,7 +321,7 @@ const ContenxtmenuMethodMixin = {
       this.handleSpinning(false);
       if (res.code !== 200) {
         this.$message.error(res.msg || '请重新操作');
-        return;
+        return null;
       }
 
       let source = res.data || [];
@@ -387,6 +396,10 @@ const ContenxtmenuMethodMixin = {
         }
       } else {
         // 处理空数据
+        if (!source.length) {
+          this.$message.error('该图表没有拖入图表数据');
+          return;
+        }
         columns = chartNode.handleTableColumns(Object.keys(source[0]));
         rows = source;
         exportList = source;
