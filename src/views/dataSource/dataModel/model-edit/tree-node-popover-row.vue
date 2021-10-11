@@ -10,7 +10,7 @@
           @change="value => handlePopoverSelectChange('left', value, row)"
         >
           <a-select-option v-for="item in popoverLeftList" :key="item.id" :valule="item.id">
-            {{ item.name }}
+            {{ item.alias }}
           </a-select-option>
         </a-select>
       </a-col>
@@ -26,7 +26,7 @@
           @change="value => handlePopoverSelectChange('right', value, row)"
         >
           <a-select-option v-for="item in popoverRightList" :key="item.id" :valule="item.id">
-            {{ item.name }}
+            {{ item.alias }}
           </a-select-option>
         </a-select>
       </a-col>

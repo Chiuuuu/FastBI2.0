@@ -282,6 +282,7 @@ export default {
           pivotSchema: {
             ...this.rootInstance.handleConcat(), // 处理维度度量
           },
+          modelTableId: data.modelTableId,
           resourceJson: params,
         })
         .finally(() => {

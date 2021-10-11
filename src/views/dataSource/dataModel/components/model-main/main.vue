@@ -29,7 +29,7 @@
                   v-for="(item, index) in renderTables"
                   :key="index"
                   :node-data="item"
-                  title="name"
+                  title="alias"
                 ></tree-node>
               </template>
             </div>

@@ -57,7 +57,7 @@ import FieldSelect from '@/components/dataSource/field-select/select';
 const column = [
   {
     title: '原名',
-    dataIndex: 'name',
+    dataIndex: 'originName',
   },
   {
     title: '别名',

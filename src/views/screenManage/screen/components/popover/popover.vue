@@ -28,7 +28,7 @@
                 @click="$event => handleItemClick($event, item)"
               >
                 <div class="title">
-                  <span>{{ item.name }}</span>
+                  <span>{{ item.alias }}</span>
                 </div>
               </li>
             </ul>
