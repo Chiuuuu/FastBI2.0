@@ -95,7 +95,7 @@ export default {
         nv: `${value}\n\n{sub|${name}}`,
         np: `${percent}%\n\n{sub|${name}}`,
         vp: `${percent}%\n\n{sub|${value}}`,
-        all: `${percent}%\n\n{sub|${name}}\n{sub|${value}}`,
+        all: `${percent}%\n\n{sub|${name}}\n\n{sub|${value}}`,
       };
       const formatter = ways[way] || `${percent}%\n\n{sub|${name}}`;
       return formatter;

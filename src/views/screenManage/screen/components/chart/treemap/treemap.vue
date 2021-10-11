@@ -330,7 +330,6 @@ export default {
         },
         this.customizer,
       );
-      console.log(options);
       return options;
     },
     customizer(objValue, srcValue) {
