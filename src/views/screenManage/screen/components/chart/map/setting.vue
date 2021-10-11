@@ -367,25 +367,6 @@
                         </a-col>
                         <!-- 图例间隔 end -->
                       </a-row>
-                      <!-- 图例形状 start -->
-                      <a-row class="unit-show-block mb-8">
-                        <a-col :span="6">
-                          <div class="unit-block-title">图例形状</div>
-                        </a-col>
-                        <a-col :span="16" :offset="2">
-                          <a-select
-                            style="width: 100%"
-                            :value="currentCom.setting.style.echart.legend.icon"
-                            @change="icon => handleSelect('legend', 'icon', icon)"
-                          >
-                            <a-select-option value="circle">圆形</a-select-option>
-                            <a-select-option value="rect">矩形</a-select-option>
-                            <a-select-option value="roundRect">圆矩形</a-select-option>
-                            <a-select-option value="diamond">菱形</a-select-option>
-                          </a-select>
-                        </a-col>
-                        <!-- 图例形状 end -->
-                      </a-row>
                       <!-- 图标位置 start -->
                       <a-row class="unit-show-block mb-8">
                         <a-col :span="10" class="unit-show-block position">
