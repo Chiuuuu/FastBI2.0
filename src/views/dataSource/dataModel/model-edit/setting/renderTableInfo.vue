@@ -2,7 +2,7 @@
   <a-modal
     class="widthModal"
     :visible="isShow"
-    :title="item.name"
+    :title="item.alias"
     :bodyStyle="bodyStyle"
     width="1000px"
     @cancel="handleClose"
@@ -115,7 +115,10 @@ export default {
 
         if (result.code === 200) {
           this.colPagination.config.total = result.data.total;
-          this.colPagination.handleColCache(result.data.columnNameList, result.data.rows);
+          this.colPagination.handleColCache(
+            result.data.columnNameList,
+            result.data.rows.filter(item => item),
+          );
           this.$nextTick(() => {
             this.loading = false;
           });

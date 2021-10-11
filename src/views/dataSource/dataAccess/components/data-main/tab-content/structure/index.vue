@@ -81,7 +81,7 @@
         :scroll="{ y: 'calc(100vh - 440px)', x: 960 }"
         @change="handleChangeTable"
       >
-        <span slot="name" slot-scope="text, record">
+        <span slot="alias" slot-scope="text, record">
           <a @click="handleCheckTable($event, record.id)">{{ text }}</a>
         </span>
         <span slot="set" slot-scope="set">
@@ -371,11 +371,11 @@ export default {
       const columns = [
         {
           title: '表名',
-          dataIndex: 'name',
+          dataIndex: 'alias',
           ellipsis: true,
           width: 200,
-          key: 'name',
-          scopedSlots: { customRender: 'name' },
+          key: 'alias',
+          scopedSlots: { customRender: 'alias' },
         },
         {
           title: '是否设置过字段',

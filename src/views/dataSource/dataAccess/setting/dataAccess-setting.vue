@@ -2,7 +2,7 @@
   <div class="data-access-setting">
     <div class="set-main">
       <div class="header">
-        <span class="data_con">{{ fieldInfo.name }}</span>
+        <span class="data_con">{{ fieldInfo.alias }}</span>
         <a-button class="data_btn" v-on:click="back">返回</a-button>
       </div>
       <div class="scrollable scrollbar">
@@ -164,7 +164,7 @@ const columns = [
     title: '原名',
     ellipsis: true,
     width: 200,
-    dataIndex: 'name',
+    dataIndex: 'originName',
   },
   {
     title: '别名',

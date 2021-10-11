@@ -1212,7 +1212,7 @@ export default {
     },
     doWithUnionSetting(data) {
       const tables = this.detailInfo.config.tables;
-      this.unionNode.setField('name', data.form.name);
+      this.unionNode.setField('alias', data.form.name);
       this.unionNode.setField('type', 2);
       this.unionNode.setField('union', data.union);
 
@@ -1358,10 +1358,6 @@ export default {
           return;
         }
       }
-
-      this.detailInfo.config.tables.map(table => {
-        table.alias = table.name;
-      });
 
       const { dimensions, measures } = this.handleConcat(); // 处理维度度量
       const params = {

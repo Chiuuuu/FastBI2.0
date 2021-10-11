@@ -39,7 +39,7 @@ export class MapSheet {
     if (this.isNewFile) {
       list.map(([key]) => {
         sheetList.push({
-          name: key,
+          alias: key,
         });
       });
     } else {

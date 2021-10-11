@@ -20,8 +20,8 @@
       </a-form-model-item>
     </a-form-model>
     <div class="union-list" @dragover.prevent.stop @drop.stop="handleDrop">
-      <div class="union-table" :title="table.name" v-for="(table, index) in unionList" :key="table.id">
-        <span>{{ table.name }}</span>
+      <div class="union-table" :title="table.alias" v-for="(table, index) in unionList" :key="table.id">
+        <span>{{ table.alias }}</span>
         <a-icon v-if="index !== 0" type="delete" @click.stop="handleDeleteUnion(table, index)"></a-icon>
       </div>
     </div>
@@ -65,10 +65,10 @@ export default {
           const nodeProps = this.unionData.getProps();
           if (nodeProps.type !== 2) {
             // 不是合并类型
-            this.form.name = nodeProps.name + '_Union';
+            this.form.name = nodeProps.alias + '_Union';
             this.unionList = [].concat([omit(nodeProps, 'union')]);
           } else {
-            this.form.name = nodeProps.name;
+            this.form.name = nodeProps.alias;
             const { connectType, tableList } = nodeProps.union;
             this.form.uniq = connectType;
             this.unionList = [...tableList];
@@ -83,6 +83,7 @@ export default {
       const data = {
         tableId: nodeData.id,
         name: nodeData.name,
+        alias: nodeData.alias,
         datamodelId: this.unionList[0].datamodelId,
         type: nodeData.type,
       };
