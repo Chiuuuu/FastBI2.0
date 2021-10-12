@@ -393,8 +393,8 @@ export default {
         innerIng = [],
       } = this.currentCom.setting.data;
       const list = [].concat(dimensions, measures, labelDimensions, labelMeasures, xaxis, yaxis, outerIng, innerIng);
-      const target = list.find(item => item.id === data.id);
-      if (target && target.role !== data.role) {
+      const target = list.find(item => item.pivotschemaId === data.pivotschemaId);
+      if (target && target.role === data.role) {
         this.$message.error('该字段属性已修改，请先删除之前的字段');
         return false;
       } else {
@@ -425,7 +425,7 @@ export default {
          */
         if (!this.validSameField(data)) {
           console.error(`There is already a same field: [${data.alias}]`);
-          return list;
+          return null;
         }
         // 如果数据有重复则直接返回
         let roleList = list;
@@ -438,7 +438,7 @@ export default {
             roleList = roleList.concat(this.currentCom.setting.data[validKey] || []);
           }
         }
-        if (roleList.map(item => item.pivotschemaId).includes(data.pivotschemaId)) {
+        if (roleList.map(item => item.id).includes(data.id)) {
           this.$message.error('同属性区域无法拖入相同字段');
           return null;
         }

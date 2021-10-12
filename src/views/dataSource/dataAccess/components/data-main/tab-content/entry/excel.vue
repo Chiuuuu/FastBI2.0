@@ -785,7 +785,7 @@ export default {
                 const database = item[key];
                 const params = {};
                 database.sheetList.map((item, index) => {
-                  params[item.name] = database.tableList[index].headerList;
+                  params[item.alias] = database.tableList[index].headerList;
                 });
                 formData.append('excelDatabaseList[' + index + '].sheetsHeaderJson', JSON.stringify(params));
               }
