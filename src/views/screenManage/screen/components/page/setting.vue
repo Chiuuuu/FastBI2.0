@@ -45,10 +45,18 @@
                 <!-- 标签是否显示 end -->
                 <a-row class="unit-show-block mb-8">
                   <a-col :span="11">
-                    <a-input-number v-model="boardPage.refresh.frequency" :min="1" />
+                    <a-input-number
+                      :value="boardPage.refresh.frequency"
+                      @change="val => handleChange('refresh', { frequency: val })"
+                    />
                   </a-col>
                   <a-col :span="11" :offset="2">
-                    <a-select v-model="boardPage.refresh.unit" placeholder="请选择" class="select-input">
+                    <a-select
+                      :value="boardPage.refresh.unit"
+                      placeholder="请选择"
+                      class="select-input"
+                      @change="val => handleChange('refresh', { unit: val })"
+                    >
                       <a-select-option v-for="(item, index) in refreshList" :key="index" :value="item.value">
                         {{ item.name }}
                       </a-select-option>
