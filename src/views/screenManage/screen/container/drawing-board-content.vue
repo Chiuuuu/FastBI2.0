@@ -136,6 +136,7 @@ export default {
         // 右键菜单
         { name: '取消' },
       ],
+      timer: null, //定时器
     };
   },
   computed: {
@@ -164,6 +165,15 @@ export default {
       handler(val) {
         if (val) {
           this.doWithBoardFrameStyle();
+        }
+      },
+    },
+    'boardPage.refresh': {
+      immediate: false,
+      deep: true,
+      handler(val) {
+        if (val) {
+          this.setTimer(val);
         }
       },
     },
@@ -264,6 +274,25 @@ export default {
             width: `${Math.ceil(this.boardPage.size.width * this.boardScale) + SPACE}px`, // 1920 => 1135
             height: `${Math.ceil(this.boardPage.size.height * this.boardScale) + SPACE + 5}px`, // 1080 => 661 高比宽多5像素
           };
+    },
+    // 设置定时器
+    setTimer(refresh) {
+      //   if (this.timer) {
+      //     clearInterval(this.timer);
+      //     this.timer = null;
+      //   }
+      if (refresh.isRefresh && refresh.unit && refresh.frequency > 0) {
+        let count = 0;
+        if (refresh.unit === 'min') {
+          count = refresh.frequency * 60 * 1000;
+        } else if (refresh.unit === 'hour') {
+          count = refresh.frequency * 60 * 60 * 1000;
+        }
+        setTimeout(() => {
+          const { id, tabId } = this.$route.query;
+          this.$parent.getScreenDetailByTabId(id, tabId);
+        }, count);
+      }
     },
     /**
      * @description 处理画板比例
