@@ -48,6 +48,7 @@ export default merge(cloneDeep(BASE), {
           position: 'left-top',
           left: 'left',
           top: 'top',
+          selectedMode: false, //取消图例上的点击事件
         },
         // 系列
         customSeries: {
