@@ -15,7 +15,7 @@ import debounce from 'lodash/debounce';
 import { getStyle } from '@/utils';
 import { mutationTypes as historyMutation } from '@/store/modules/history';
 const reg =
-  /<span data-id="(.*?)" data-pivotschemaid="(.*?)" contenteditable="false" class="anchor-measure">\[(.*?)\((.{2,4})\)(&nbsp;){3}]<\/span>/g;
+  /<span data-id="(.*?)" contenteditable="false" class="anchor-measure">\[(.*?)\((.{2,4})\)(&nbsp;){3}]<\/span>/g;
 const innerReg = /\[(.*?)\((.{2,4})\)(&nbsp;){3}]/;
 const polymerizationData = {
   // 数字
@@ -251,6 +251,15 @@ export default {
           t.addRange(e);
           e.select && e.select();
         },
+        validSameField: function (vm, data) {
+          const { measures } = vm.options.data;
+          const target = measures.find(item => item.pivotschemaId === data.pivotschemaId);
+          if (target) {
+            vm.$message.error('该字段属性已修改，请先删除之前的字段');
+            return false;
+          }
+          return true;
+        },
         createMenuWithAnchor: function (event, wrap, anchor) {
           const measureList = that.modelMeasures.map(item => {
             return item.onClick
@@ -258,12 +267,14 @@ export default {
               : {
                   ...item,
                   onClick: (event, item, vm) => {
+                    if (!this.validSameField(vm, item)) {
+                      return;
+                    }
                     var range = document.createRange();
                     range.selectNode(anchor);
                     range.deleteContents();
                     const span = document.createElement('span');
                     span.setAttribute('data-id', item.id);
-                    span.setAttribute('data-pivotschemaid', item.pivotschemaId);
                     span.setAttribute('contenteditable', false);
                     span.setAttribute('class', 'anchor-measure');
                     span.innerHTML = `[${vm.formatAggregator(item)}&nbsp;&nbsp;&nbsp;]`;
@@ -411,7 +422,7 @@ export default {
           }
           return res.msg;
         }
-        resultStr = resultStr.replace(reg, (match, id, pivotschemaId, alias, aggregator) => {
+        resultStr = resultStr.replace(reg, (match, id, alias, aggregator) => {
           return `<span>${res.data[0][`${polymerizationMap[aggregator]}_${alias}`]}</span>`;
         });
       }
