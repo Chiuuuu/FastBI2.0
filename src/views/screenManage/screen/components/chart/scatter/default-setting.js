@@ -27,6 +27,7 @@ export default merge(cloneDeep(BASE), {
           borderColor: 'transparent',
         },
         tooltip: {
+          show: true,
           trigger: 'item',
         },
         legend: {
@@ -161,6 +162,7 @@ export default merge(cloneDeep(BASE), {
         customScatterLabel: ['{@2}', '({@0},{@1})'], // 指标-显示内容
         customArrange: 'horizontal', // 指标-排列 horizontal水平  vertical垂直
         customScatterTargetColor: '0', // 0使用图例 1：自定义
+        customTooltipFormatter: ['dimensions', 'xaxis', 'yaxis'], //鼠标移入内容显示
         customIsOpenDataLink: false, // 是否开启图表联动
         customInteractive: {}, // 保存联动数据
       },

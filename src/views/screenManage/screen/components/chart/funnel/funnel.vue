@@ -6,7 +6,9 @@
     <div class="board-chart-unit" :style="chartStyle" ref="js-board-chart-unit"></div>
     <!-- 转化率、到达率 -->
     <div class="board-rate" :style="rateStyle.boardRate">
+      <!-- 顶层，展示环节：内容空，无转化率、到达率 -->
       <div class="board-rate-item" :style="rateStyle.boardRateItem"></div>
+
       <div class="board-rate-item" :style="rateStyle.boardRateItem" v-for="(item, index) in rateList" :key="index">
         <span :style="rateStyle.line"></span>
         <!-- 维度 -->
@@ -201,7 +203,9 @@ export default {
       };
     },
     /**
-     * @description 漏斗图
+     * @description 漏斗图升降序
+     * @param {Array} data 数据
+     * 数组第一个值和最后一个值作比较，确定漏斗图的升降序
      */
     dowithSeriesFunnelSort(data) {
       if (data[0].value > data[data.length - 1].value) {

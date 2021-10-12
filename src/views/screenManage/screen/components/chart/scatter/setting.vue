@@ -282,6 +282,34 @@
                     </a-row>
                   </div>
                 </CollapsePanel>
+                <CollapsePanel class="content-item" panel="chartStyle" header="鼠标移入提示">
+                  <!-- 鼠标移入提示 start -->
+                  <div class="setting-unit-content">
+                    <UnitCheckbox
+                      class="show-btn"
+                      label="显示"
+                      :value="currentCom.setting.style.echart.tooltip.show"
+                      @change="show => handleChange('echart', { tooltip: { show } })"
+                    ></UnitCheckbox>
+                    <a-row class="unit-show-block mb-8">
+                      <a-col :span="24" class="unit-show-block">
+                        <div class="unit-block-title">显示内容</div>
+                      </a-col>
+                      <a-col :span="24">
+                        <a-select
+                          mode="tags"
+                          :value="currentCom.setting.style.echart.customTooltipFormatter"
+                          style="width: 100%"
+                          @change="customTooltipFormatter => handleChange('echart', { customTooltipFormatter })"
+                        >
+                          <a-select-option v-for="item in concatDimAndMea" :key="item.value" :value="item.value">
+                            {{ item.name }}
+                          </a-select-option>
+                        </a-select>
+                      </a-col>
+                    </a-row>
+                  </div>
+                </CollapsePanel>
                 <CollapsePanel class="content-item" panel="legend" header="图例设置">
                   <UnitLegend
                     :legend="currentCom.setting.style.echart.legend"
@@ -453,6 +481,23 @@ export default {
         scatterSizeList[2].label = '按' + this.currentCom.setting.data.yaxis[0].alias; //度量2
       }
       return scatterSizeList;
+    },
+    // 维度度量合并列表
+    concatDimAndMea() {
+      const { dimensions = [], xaxis = [], yaxis = [] } = this.currentCom.setting.data;
+      if (dimensions.concat(xaxis, yaxis).length >= 3) {
+        return [
+          { name: dimensions[0].alias, value: 'dimensions' },
+          { name: xaxis[0].alias, value: 'xaxis' },
+          { name: yaxis[0].alias, value: 'yaxis' },
+        ];
+      } else {
+        return [
+          { name: '维度', value: 'dimensions' },
+          { name: '度量1', value: 'xaxis' },
+          { name: '度量2', value: 'yaxis' },
+        ];
+      }
     },
   },
   methods: {

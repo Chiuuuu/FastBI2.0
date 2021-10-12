@@ -122,6 +122,7 @@ export default {
         return index === 2 ? item.replace(/(.*?)_/, '') : item;
       });
       fetchData.data.forEach(data => {
+        // 每组数据格式：[度量1值，度量2值，维度值，度量1字段名，度量2字段名，维度字段名]
         const ary = [data[fieidName[0]], data[fieidName[1]], data[fieidName[2]]].concat(fieidAlias);
         const item = this.createScatterUnit(data[fieidName[2]], [ary], echart);
 
@@ -136,7 +137,7 @@ export default {
           data: legend,
         },
         tooltip: {
-          formatter: this.hanleTooltipFormatter(),
+          formatter: this.hanleTooltipFormatter(echart.customTooltipFormatter),
         },
         series,
       });
@@ -166,16 +167,23 @@ export default {
     /**
      * @description 处理鼠标移入提示
      */
-    hanleTooltipFormatter() {
+    hanleTooltipFormatter(customTooltipFormatter = []) {
       return function (params) {
         let val = params.value;
         if (val.length < 6) {
           return '';
         }
-        return `${val[5]}：${val[2]}<br/>
-                ${val[3]}：${val[0]}<br/>
-                ${val[4]}：${val[1]}<br/>
-                `;
+        let ways = {
+          // 格式: 字段名：值
+          dimensions: `${val[5]}：${val[2]}<br/>`, // 维度
+          xaxis: `${val[3]}：${val[0]}<br/>`, //度量1
+          yaxis: `${val[4]}：${val[1]}<br/>`, //度量2
+        };
+        let formatter = [];
+        customTooltipFormatter.forEach(item => {
+          formatter.push(ways[item]);
+        });
+        return formatter.join('');
       };
     },
     /**
