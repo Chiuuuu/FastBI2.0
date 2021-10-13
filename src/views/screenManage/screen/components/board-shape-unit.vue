@@ -225,6 +225,9 @@ export default {
     handleCreateMenu(e) {
       e.stopPropagation();
       const isFullScreen = checkFullScreen();
+      if (!isFullScreen && this.model === parameter.PREVIEW) {
+        return;
+      }
       if (isFullScreen && !this.isNeedExport) {
         return;
       }

@@ -288,6 +288,7 @@ export default {
         } else if (refresh.unit === 'hour') {
           count = refresh.frequency * 60 * 60 * 1000;
         }
+        // 刷新以后大屏信息文件都会更新触发延时器，改用settimeout
         setTimeout(() => {
           const { id, tabId } = this.$route.query;
           this.$parent.getScreenDetailByTabId(id, tabId);
