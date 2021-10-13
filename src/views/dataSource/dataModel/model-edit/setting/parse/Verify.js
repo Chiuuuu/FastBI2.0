@@ -217,7 +217,7 @@ export class Verify {
      * @returns
      */
     function isInteger(item) {
-      return item.convertType === 'BIGINT' || item.dataType === 'BIGINT';
+      return (item.convertType || item.dataType) === 'BIGINT';
     }
 
     /**
@@ -226,7 +226,7 @@ export class Verify {
      * @returns
      */
     function isDecimal(item) {
-      return item.convertType === 'DECIMAL' || item.dataType === 'DECIMAL';
+      return (item.convertType || item.dataType) === 'DECIMAL';
     }
 
     /**
@@ -235,7 +235,7 @@ export class Verify {
      * @returns
      */
     function isString(item) {
-      return item.convertType === 'VARCHAR' || item.dataType === 'VARCHAR';
+      return (item.convertType || item.dataType) === 'VARCHAR';
     }
 
     /**
