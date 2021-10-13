@@ -138,23 +138,29 @@ export default {
     },
     /** 模态窗口确定 */
     handleModalSubmit() {
-      this.confirmLoading = true;
-      this.visible = false;
-      this.$server.projectCenter
-        .addRoleUser({
-          userIds: this.modalForm.users,
-          roleId: this.roleId,
-        })
-        .then(res => {
-          if (res.code === 200) {
-            this.$message.success('添加成功');
-            this.handleGetData();
-          }
-        })
-        .finally(() => {
-          this.confirmLoading = false;
-          this.handleModalCancel();
-        });
+      this.$refs.modalForm.validate(ok => {
+        if (ok) {
+          this.confirmLoading = true;
+          this.$server.projectCenter
+            .addRoleUser({
+              userIds: this.modalForm.users,
+              roleId: this.roleId,
+            })
+            .then(res => {
+              if (res.code === 200) {
+                this.visible = false;
+                this.$message.success('添加成功');
+                this.handleGetData();
+              } else {
+                this.$message.error(res.msg);
+              }
+            })
+            .finally(() => {
+              this.confirmLoading = false;
+              this.handleModalCancel();
+            });
+        }
+      });
     },
     /** 模态窗口取消 */
     handleModalCancel() {
