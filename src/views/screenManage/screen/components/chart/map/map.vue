@@ -477,7 +477,7 @@ export default {
       const res = await this.$server.common
         .getData('/screen/graph/v2/getData', {
           id: this.shapeUnit.component.id,
-          tabId: this.tabId,
+          tabId: this.shapeUnit.component.tabId || this.tabId,
           type: this.shapeUnit.component.type,
           ...this.options.data,
         })
