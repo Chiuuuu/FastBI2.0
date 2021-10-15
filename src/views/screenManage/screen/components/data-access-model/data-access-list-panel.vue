@@ -139,7 +139,7 @@ export default {
         tabId: this.screenInstance.screenInfo.tabId,
         resourceName: data.alias,
         datasourceId: this.accessSelect.id,
-        databaseId: this.popoverInstance.databaseSelect.id,
+        databaseId: this.popoverInstance.databaseSelect,
         tableId: data.id,
       };
       const result = await this.$server.screenManage.saveScreenSelectAccess(params);

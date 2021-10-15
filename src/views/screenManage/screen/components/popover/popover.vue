@@ -9,7 +9,7 @@
               <div class="change-table">切换表:</div>
             </a-col>
             <a-col :span="16">
-              <a-select class="table-list" :value="databaseSelect.id" @change="handleChangeTable">
+              <a-select class="table-list" v-model="databaseSelect" @change="handleSelectDatabase">
                 <a-select-option :value="item.id" v-for="item in databaseList" :key="item.id">
                   {{ item.name }}
                 </a-select-option>
@@ -85,12 +85,6 @@ export default {
   },
   methods: {
     /**
-     * @description 切换数据库
-     */
-    handleChangeTable(value) {
-      this.getSelectDataSourceList({ id: value });
-    },
-    /**
      * @description 数据搜索
      */
     handleSearch: debounce(function (event) {
@@ -110,12 +104,13 @@ export default {
      * @description 获取数据库列表
      */
     async getSelectDataSourceList(item) {
+      if (!item) return;
       const result = await this.$server.dataModel.getDataBaseDataInfoList(item.id, '');
       if (result && result.code === 200) {
         this.databaseList = [].concat(result.data);
         if (this.databaseList && this.databaseList.length) {
-          this.databaseSelect = this.databaseList[0];
-          this.handleSelectDatabase(this.databaseSelect.id);
+          this.databaseSelect = this.databaseList[0] ? this.databaseList[0].id : '';
+          this.handleSelectDatabase(this.databaseSelect);
         }
       } else {
         this.$message.error(result.msg || '获取数据源失败');
@@ -124,15 +119,13 @@ export default {
     /**
      * @description 选中数据库
      */
-    handleSelectDatabase(id) {
-      this.$nextTick(async () => {
-        const result = await this.$server.dataModel.getTableListById(id);
-        if (result && result.code === 200) {
-          this.tableList = [].concat(result.data);
-        } else {
-          this.$message.error(result.msg || '获取数据表失败');
-        }
-      });
+    async handleSelectDatabase(id) {
+      const result = await this.$server.dataModel.getTableListById(id);
+      if (result && result.code === 200) {
+        this.tableList = [].concat(result.data);
+      } else {
+        this.$message.error(result.msg || '获取数据表失败');
+      }
     },
     handleItemClick(event, item) {
       this.callback(event, item);
