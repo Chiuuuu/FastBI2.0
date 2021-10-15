@@ -412,6 +412,8 @@ export default {
     async handleOk() {
       if (this.dataTypeObj['num'].includes(this.dataType) && !this.handleNumData()) {
         return;
+      } else if (!this.dataTypeObj['num'].includes(this.dataType) && this.currentFile.value.length < 1) {
+        return this.$message.error('筛选条件为空');
       }
       this.visible = false;
       this.currentData = Object.assign({}, this.currentData, omit(this.currentFile, ['searchList', 'originList']));
@@ -424,6 +426,10 @@ export default {
      * @description 数值类型数据处理
      */
     handleNumData() {
+      if (this.currentFile.rules.length < 1) {
+        this.$message.error('请添加筛选条件');
+        return false;
+      }
       // 判断数值是否输入，排除0
       function isNoInput(value) {
         return !value && value !== 0;
