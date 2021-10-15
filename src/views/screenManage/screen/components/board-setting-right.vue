@@ -132,6 +132,9 @@ export default {
         return [].concat(this.measure) || [];
       }
     },
+    resourceType() {
+      return this.tabAcitve === 'model' ? 8 : 3;
+    },
     ...mapState({
       // 当前组件
       currentCom: state => state.board.currentCom,

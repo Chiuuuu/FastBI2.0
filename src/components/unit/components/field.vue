@@ -394,7 +394,7 @@ export default {
       } = this.currentCom.setting.data;
       const list = [].concat(dimensions, measures, labelDimensions, labelMeasures, xaxis, yaxis, outerIng, innerIng);
       const target = list.find(item => item.pivotschemaId === data.pivotschemaId);
-      if (target && target.role === data.role) {
+      if (target && target.role !== data.role) {
         this.$message.error('该字段属性已修改，请先删除之前的字段');
         return false;
       } else {

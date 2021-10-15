@@ -45,8 +45,15 @@
           </a-radio-group>
           <!-- 列表 -->
           <div class="item" v-if="currentFile.operation === 'list'">
-            <a-input type="text" :class="['pick-input']" placeholder="请输入搜索内容"></a-input>
-            <a-button type="primary">查询</a-button>
+            <a-input
+              v-model="listValue"
+              class="pick-search-area"
+              style="margin: 10px 0"
+              placeholder="请输入搜索的关键词(如: A,B,C)"
+              @keyup.enter.stop="search"
+            >
+              <a-button style="height: 30px" type="primary" slot="addonAfter" @click="search">查询</a-button>
+            </a-input>
             <br />
             <div class="pick-checkbox-box hasborder">
               <div class="scrollbar">
@@ -68,8 +75,15 @@
           </div>
           <!--手动-->
           <div class="item" v-if="currentFile.operation === 'manual'">
-            <a-input type="text" :class="['pick-input']" placeholder="请输入内容" v-model="inputCon"></a-input>
-            <a-button type="primary" @click="handleAddCon">添加</a-button>
+            <a-input
+              v-model="manualValue"
+              class="pick-search-area"
+              style="margin: 10px 0"
+              placeholder="请输入条件名称"
+              @keyup.enter.stop="addManualProperty"
+            >
+              <a-button style="height: 30px" type="primary" slot="addonAfter" @click="addManualProperty">添加</a-button>
+            </a-input>
             <br />
             <div class="pick-checkbox-box">
               <div class="scrollbar">
@@ -184,6 +198,8 @@ export default {
     return {
       visible: false, // 是否显示弹窗
       screenVisible: false,
+      listValue: '', // 列表模糊查询输入值
+      manualValue: '', // 手动输入值
       searchList: [],
       conditionOptions: [
         { label: '范围', op: 'range' },
@@ -195,7 +211,6 @@ export default {
         { label: '不等于', op: 'notEqual' },
       ], // 条件选项
       currentFile: {},
-      inputCon: '', // 度量
       currentType: '', //当前选中的类型
       currentData: {}, //当前弹框字段数据
       dataType: '', //数据类型
@@ -247,6 +262,43 @@ export default {
   },
   methods: {
     /**
+     * @description 列表模糊查询
+     */
+    search() {
+      if (!this.listValue) {
+        this.currentFile.searchList = this.currentFile.originList;
+        // 不强制刷新的话, 不会触发updated()
+        return this.$forceUpdate();
+      }
+      const keyword = (this.listValue || '').toLowerCase();
+      const list = keyword.split(',');
+      this.currentFile.searchList = [].concat(
+        this.currentFile.originList.filter(item => {
+          let match = false;
+          list.forEach(k => {
+            if ((item || '').indexOf(k) > -1) {
+              match = true;
+            }
+          });
+          return match;
+        }),
+      );
+      // 不强制刷新的话, 不会触发updated()
+      this.$forceUpdate();
+    },
+    /**
+     * @description 手动，添加字段
+     */
+    addManualProperty() {
+      // 本身不存在就添加进去
+      if (this.currentFile.value.indexOf(this.manualValue) === -1) {
+        this.currentFile.value.push(this.manualValue);
+        this.manualValue = '';
+      } else {
+        this.$message.error(`${this.manualValue}已存在`);
+      }
+    },
+    /**
      * @description 判断字段类型
      * @param {Number} role 字段类型 1维度，2度量
      */
@@ -260,7 +312,8 @@ export default {
       this.currentFile = {
         // 当前选中的维度/度量数据
         operation: 'list', //list列表，manual手动
-        searchList: [],
+        searchList: [], // 根据关键字搜索
+        originList: [], // 查询数据
         indeterminate: false, //全选 -- 样式控制
         checkAll: false,
         filterType: 1, //1只显示 2排除
@@ -337,6 +390,7 @@ export default {
         if (hasNull) list.unshift('');
         this.dataRows = list;
       }
+      this.currentFile.originList = this.dataRows || [];
       this.currentFile.searchList = this.dataRows || [];
     },
     /**
@@ -360,7 +414,7 @@ export default {
         return;
       }
       this.visible = false;
-      this.currentData = Object.assign({}, this.currentData, omit(this.currentFile, ['searchList']));
+      this.currentData = Object.assign({}, this.currentData, omit(this.currentFile, ['searchList', 'originList']));
       this.handleDropField({
         dropType: this.type,
         data: this.currentData,
@@ -696,7 +750,7 @@ export default {
      * @description 维度-列表 选择
      */
     onCheckChange(value) {
-      this.currentFile.indeterminate = !!value.length && value.length < this.currentFile.value.length;
+      this.currentFile.indeterminate = !!value.length && value.length < this.currentFile.searchList.length;
       this.currentFile.checkAll = value.length === this.currentFile.searchList.length;
     },
     /**
@@ -708,13 +762,6 @@ export default {
         checkAll: e.target.checked,
         indeterminate: false,
       });
-    },
-    /**
-     * @description 维度-手动添加内容
-     */
-    handleAddCon() {
-      this.currentFile.value.push(this.inputCon);
-      this.inputCon = '';
     },
     /**
      * @description 度量-添加条件
@@ -802,6 +849,11 @@ export default {
   .f-flexcolumn {
     display: flex;
     flex-direction: column;
+  }
+  .pick-search-area {
+    @{deep} .ant-input-group-addon {
+      padding: 0;
+    }
   }
   .pick-property {
     padding: 0 3px;
