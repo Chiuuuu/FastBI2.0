@@ -1173,6 +1173,7 @@ export default {
      * @description 切换tab页面
      */
     handleTabChange(params) {
+      this.$store.dispatch('SetTabId', params.tabId);
       this.$router.push({
         query: {
           id: params.screenId,

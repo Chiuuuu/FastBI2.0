@@ -76,7 +76,7 @@ const app = {
       state.screenInfo.setting = { ...setting };
     },
     SET_SCREEN_INFO: (state, screenInfo) => {
-      state.screenInfo = screenInfo;
+      state.screenInfo = Object.assign({}, state.screenInfo, screenInfo);
     },
     SET_SCREEN_ID(state, res) {
       state.screenInfo.screenId = res;
