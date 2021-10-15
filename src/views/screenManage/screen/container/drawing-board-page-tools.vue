@@ -393,6 +393,7 @@ export default {
         const params = {
           name: copyName,
           orderNo: tab.orderNo,
+          id: tab.id,
         };
         this.$emit('copy', params, () => {
           this.$nextTick(() => {

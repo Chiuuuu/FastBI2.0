@@ -280,7 +280,6 @@ export default {
         const result = await this.$server.screenManage.copyScreenTab({
           ...params,
           screenId: this.screenInfo.screenId,
-          id: this.screenInfo.tabId,
           graphs: this.components,
           setting: this.page,
         });
