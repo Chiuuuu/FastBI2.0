@@ -52,7 +52,7 @@
                   </a-col>
                   <a-col :span="11" :offset="2">
                     <a-select
-                      :value="boardPage.refresh.unit"
+                      v-model="boardPage.refresh.unit"
                       placeholder="请选择"
                       class="select-input"
                       @change="val => handleChange('refresh', { unit: val })"
