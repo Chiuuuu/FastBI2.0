@@ -692,6 +692,7 @@ export default {
       if (!this.openAggre) {
         return item.alias;
       }
+      // TODO:默认字段的defaultAggregator中, CNT和DCNT没有改成COUNT和COUNTD, 这里有问题
       const fun = this.contextmenuMap[this.getDataType(item.dataType)][0].children.find(
         x => x.value === item.defaultAggregator,
       );

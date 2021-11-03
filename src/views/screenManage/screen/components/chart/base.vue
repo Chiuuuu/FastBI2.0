@@ -233,7 +233,7 @@ export default {
      */
     formatAggregator(item) {
       const fun = this.polymerizeType.find(x => x.value === item.defaultAggregator);
-      if (item.role === 2) {
+      if (item.role === 2 && fun) {
         return `${item.alias} (${fun.name})`;
       } else {
         return item.alias;

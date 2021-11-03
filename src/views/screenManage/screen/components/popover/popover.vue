@@ -95,7 +95,7 @@ export default {
       }
       this.keyword = typeof value === 'string' ? value.trim() : value;
       this.tableList.forEach(item => {
-        if (item.name.toLowerCase().indexOf(this.keyword.toLowerCase()) > -1) {
+        if (item.alias.toLowerCase().indexOf(this.keyword.toLowerCase()) > -1) {
           this.searchList.push(item);
         }
       });

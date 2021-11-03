@@ -112,7 +112,11 @@ export default class DragDrop {
         document.onmouseup = () => {
           if (this.placeholder) {
             this.placeholder.onmouseup = null;
-            document.body.removeChild(this.placeholder);
+            try {
+              document.body.removeChild(this.placeholder);
+            } catch (error) {
+              console.log(error);
+            }
           }
           document.removeEventListener('mousemove', onMouseMove);
           document.onmouseup = null;

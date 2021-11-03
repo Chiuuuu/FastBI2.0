@@ -214,6 +214,9 @@ export default {
 
           const drops = {
             [this.boardSettingWrapper.DROG_TYPE.LIST]: () => {
+              if (this.screenInstance.beUsedDataIds.includes(this.data.id)) {
+                return this.$message.error('该字段已被图表引用，请先清楚引用字段');
+              }
               const type = this.type === 'dimension' ? 'measure' : 'dimension';
               this.$EventBus.$emit(`drop:${type}-list`, this.data);
             },
