@@ -46,16 +46,16 @@ export default {
         boardRateItem: {},
         line: {},
       },
+      dataRate: defaultData,
+      legendSelected: {},
     };
   },
   computed: {
     // 展示环节聚合
     rateList() {
       const { data } = this.options;
-      let rate = this.isServerData() ? (this.serverData && this.serverData.rate) || [] : defaultData.rate;
-      rate = cloneDeep(rate);
-      let seriesData = this.isServerData() ? (this.serverData && this.serverData.data) || [] : defaultData.data;
-      seriesData = cloneDeep(seriesData);
+      let rate = cloneDeep(this.dataRate.rate);
+      let seriesData = cloneDeep(this.dataRate.data);
 
       rate.forEach((item, index) => {
         item['dimensions'] = {
@@ -95,6 +95,28 @@ export default {
     },
   },
   methods: {
+    /**
+     * @description 初始化Echart图表
+     */
+    initChart() {
+      const dom = this.$refs['js-board-chart-unit'];
+      this.chartInstane = this.$echarts.init(dom);
+      if (!this.chartInstane) return console.error(`echart init fail`);
+      const {
+        style: { echart },
+      } = this.options;
+      this.chartInstane.setOption(echart);
+      // 注册图例点击事件, 修改转化率
+      this.chartInstane.on('legendselectchanged', params => {
+        this.legendSelected = params.selected;
+        this.dataRate = this.handleDataRate(this.isServerData() ? this.serverData : defaultData.data);
+        this.$nextTick(() => {
+          this.dowithRateStyle(this.rateList);
+        });
+      });
+      this.screenAdapter();
+      this.addClick();
+    },
     /**
      * @description 获取拖入的维度度量列数据
      */
@@ -315,7 +337,7 @@ export default {
      */
     async getServerData() {
       const {
-        data: { dimensions, measures, sort },
+        data: { measures, sort },
       } = this.options;
       this.shapeUnit.changeLodingChart(true);
       const res = await this.$server.common
@@ -351,28 +373,58 @@ export default {
       if (sort.length === 0) {
         datas.sort(this.sortBy(`${measures[0].defaultAggregator}_${measures[0].alias}`, false));
       }
-      let rate = [];
+      this.serverData = datas;
+      this.dataRate = this.handleDataRate(datas);
+      const options = this.doWithOptions(this.dataRate);
+      this.updateSaveChart(options);
+    },
+    /**
+     * 处理服务数据格式
+     */
+    handleDataRate(datas) {
+      const {
+        data: { dimensions, measures },
+      } = this.options;
+      const rate = [];
+      // 初始数据的key改了这里也要改
+      let nameKey = 'name';
+      let valueKey = 'value';
+      if (this.isServerData() && dimensions[0]) {
+        nameKey = dimensions[0].alias;
+        valueKey = `${measures[0].defaultAggregator}_${measures[0].alias}`;
+      }
+      let interval = 1; // legend之间的间隔
+      let firstIndex = 0; // 起始legend的位置
       const data = datas.map((row, index) => {
-        if (index !== 0) {
-          const preRowData = datas[index - 1][`${measures[0].defaultAggregator}_${measures[0].alias}`];
-          const firstRowData = datas[0][`${measures[0].defaultAggregator}_${measures[0].alias}`];
+        const result = {
+          name: row[nameKey],
+          value: row[valueKey],
+        };
+        const unselectedLegend = row[nameKey] in this.legendSelected && !this.legendSelected[row[nameKey]];
+        // 从未隐藏的第一个legend开始计算转化率
+        if (index === firstIndex) {
+          if (unselectedLegend) {
+            firstIndex++;
+            return result;
+          }
+        } else {
+          const preRowData = datas[index - interval][valueKey];
+          const firstRowData = datas[0][valueKey];
+          // 当前legend被隐藏, 间隔+1后跳过
+          if (unselectedLegend) {
+            interval++;
+            return result;
+          } else {
+            interval = 1;
+          }
           rate.push({
-            converse:
-              preRowData === 0
-                ? '100%'
-                : ((row[`${measures[0].defaultAggregator}_${measures[0].alias}`] / preRowData) * 100).toFixed(2) + '%',
-            arrive:
-              firstRowData === 0
-                ? '100%'
-                : ((row[`${measures[0].defaultAggregator}_${measures[0].alias}`] / firstRowData) * 100).toFixed(2) +
-                  '%',
+            converse: preRowData === 0 ? '100%' : ((row[valueKey] / preRowData) * 100).toFixed(2) + '%',
+            arrive: firstRowData === 0 ? '100%' : ((row[valueKey] / firstRowData) * 100).toFixed(2) + '%',
           });
         }
-        return { name: row[dimensions[0].alias], value: row[`${measures[0].defaultAggregator}_${measures[0].alias}`] };
+        return result;
       });
-      this.serverData = { data, rate };
-      const options = this.doWithOptions(this.serverData);
-      this.updateSaveChart(options);
+      return { data, rate };
     },
     /*
      * 处理默认数据
@@ -392,7 +444,7 @@ export default {
       if (this.isServerData() && !this.serverData) {
         return;
       }
-      const newOptions = this.doWithOptions(this.serverData ? this.serverData : defaultData);
+      const newOptions = this.doWithOptions(this.serverData ? this.dataRate : defaultData);
       this.updateSaveChart(newOptions);
     },
     /**
