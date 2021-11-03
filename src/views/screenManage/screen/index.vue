@@ -38,6 +38,7 @@
 <script>
 import { mapState } from 'vuex';
 import isFunction from 'lodash/isFunction';
+import merge from 'lodash/merge';
 import { parameter, mutationTypes as boardMutaion } from '@/store/modules/board';
 import DrawingBoardHeader from './container/drawing-board-header';
 import DrawingBoardSide from './container/drawing-board-side';
@@ -341,10 +342,7 @@ export default {
      * @description 更新大屏信息
      */
     handleUpdateScreenInfo(data) {
-      this.$store.dispatch('SetScreenInfo', {
-        ...this.screenInfo,
-        ...data,
-      });
+      this.$store.dispatch('SetScreenInfo', merge(this.screenInfo, data));
     },
   },
 };

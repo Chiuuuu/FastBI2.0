@@ -1,5 +1,6 @@
 import screenManage from '../../api/modules/screenManage';
 import { message } from 'ant-design-vue';
+import merge from 'lodash/merge';
 // import { handleRefreshData } from '@/utils/handleRefreshData';
 // import { deepClone } from '@/utils/deepClone';
 
@@ -73,7 +74,7 @@ const app = {
       state.coverageExpand = !state.coverageExpand;
     },
     SET_PAGE_SETTING: (state, setting) => {
-      state.screenInfo.setting = { ...setting };
+      state.screenInfo.setting = merge(state.screenInfo.setting, setting);
     },
     SET_SCREEN_INFO: (state, screenInfo) => {
       state.screenInfo = Object.assign({}, state.screenInfo, screenInfo);

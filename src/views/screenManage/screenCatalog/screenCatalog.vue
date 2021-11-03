@@ -563,6 +563,7 @@ export default {
           privileges: result.privileges,
         };
         this.components = [].concat(result.screenGraphs);
+        this.$store.dispatch('SetScreenInfo', result);
         this.$store.commit('board/SET_BOARD_SETTING', result.setting);
       }
     },

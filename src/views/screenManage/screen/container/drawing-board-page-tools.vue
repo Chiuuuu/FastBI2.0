@@ -129,7 +129,14 @@ export default {
   computed: {
     ...mapState({
       boardScale: state => {
-        return (state.board.scale * 100).toFixed(0);
+        const size = state.app.screenInfo.setting.size;
+        if (size) {
+          const scale = size.scale;
+          if (scale !== undefined && scale !== null) {
+            return (scale * 100).toFixed(0);
+          }
+        }
+        return 100;
       },
     }),
     tabIndex() {
@@ -230,24 +237,30 @@ export default {
      * @description 比例设置
      */
     handleChangeScale(type, step) {
-      let scale = this.$store.state.board.scale;
+      let scale = this.$store.state.app.screenInfo.setting.size.scale;
       if (type === 'add') {
-        scale = +(this.$store.state.board.scale + step).toFixed(2);
+        scale = +(scale + step).toFixed(2);
         scale = Math.min(1, scale);
       } else {
-        scale = +(this.$store.state.board.scale - step).toFixed(2);
+        scale = +(scale - step).toFixed(2);
         scale = Math.max(0, scale);
       }
       this.$store.commit(boardMutaion.SET_BOARD_SCALE, {
         scale,
       });
+      this.$store.commit('SET_PAGE_SETTING', {
+        size: { scale },
+      });
     },
     /**
      * @description 滑块改变之后
      */
-    handleAfaterSliderChange(value) {
+    handleAfaterSliderChange(scale) {
       this.$store.commit(boardMutaion.SET_BOARD_SCALE, {
-        scale: value,
+        scale,
+      });
+      this.$store.commit('SET_PAGE_SETTING', {
+        size: { scale },
       });
     },
     /**
