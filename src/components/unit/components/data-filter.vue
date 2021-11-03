@@ -611,7 +611,10 @@ export default {
         result.resourceType = '';
         return result;
       } else if (dataModelId !== selected.tableId && method !== 'dele') {
-        this.$message.error('一个图表只能拖入一个数据模型的字段');
+        this.$message.error({
+          content: '一个图表只能拖入一个数据模型的字段',
+          duration: 0.5,
+        });
         return;
       }
       return result;
