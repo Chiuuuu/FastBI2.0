@@ -178,7 +178,7 @@ export default {
       this.$store.commit(boardMutation.SET_STYLE, {
         style: {
           echart: {
-            customLimit: this.serverData.data.length,
+            // customLimit: this.serverData.data.length,
           },
         },
         updateCom: this.shapeUnit.component,
