@@ -214,7 +214,7 @@ export default {
       model: state => state.board.model,
       // 组件列表
       components: state => state.board.components,
-      page: state => state.app.screenInfo.setting,
+      page: state => state.board.page,
       screenInfo: state => state.app.screenInfo,
     }),
     undoDisable() {

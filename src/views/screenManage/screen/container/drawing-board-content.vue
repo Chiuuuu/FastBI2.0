@@ -142,7 +142,7 @@ export default {
   computed: {
     ...mapState({
       currentCom: state => state.board.currentCom, // 当前图表
-      boardScale: state => state.board.scale, // 比例
+      boardScale: state => state.board.page.size.scale, // 比例
       boardModel: state => state.board.model, // 模式
       boardPage: state => state.board.page, // 页面
       screenInfo: state => state.app.screenInfo,
@@ -410,7 +410,7 @@ export default {
   },
   mounted() {
     this.$nextTick(() => {
-      this.doWithRect();
+      // this.doWithRect();
       window.addEventListener('resize', this.doWithRect);
       window.addEventListener('keyup', this.handleDeleteChart);
       this.listenerFullScreen();

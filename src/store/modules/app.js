@@ -1,6 +1,8 @@
 import screenManage from '../../api/modules/screenManage';
 import { message } from 'ant-design-vue';
 import merge from 'lodash/merge';
+import boardSetting from '@/views/screenManage/screen/setting';
+import cloneDeep from 'lodash/cloneDeep';
 // import { handleRefreshData } from '@/utils/handleRefreshData';
 // import { deepClone } from '@/utils/deepClone';
 
@@ -26,7 +28,7 @@ const app = {
       modelList: [], // 数据模型列表
       privileges: [], // 大屏权限
       screenGraphs: [], // 大屏图表
-      setting: {}, // 画布样式配置(背景, 宽高)
+      setting: cloneDeep(boardSetting['Page']), // 画布样式配置(背景, 宽高)
       resourceType: '', // 数据类型，文本框请求用
     },
     modelMeasures: [], // 度量列表，文本框插入用，校验保存的图表数据

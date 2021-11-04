@@ -159,7 +159,7 @@ const mutations = {
    * @param {number | string} Playload.scale 比例
    */
   SET_BOARD_SCALE(state, { scale }) {
-    state.scale = scale;
+    state.page.size.scale = scale;
   },
   /**
    * 设置屏幕模式
