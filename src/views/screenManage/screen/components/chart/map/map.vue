@@ -239,8 +239,8 @@ export default {
       });
       let pointShowList = [];
       let tooltipList = [];
-      // 非初始化才重置格式
-      if (this.dataState !== 'default') {
+      // 非初始化才重置格式(TODO:这里应该是初始化的时候才要重置格式?)
+      if (this.dataState === 'default') {
         pointShowList = [`地区名/${dimensionAlias}`];
         tooltipList = [dimensionAlias, measureAlias.replace(/(.*?)_/, '')];
       } else {
@@ -382,8 +382,8 @@ export default {
       }
       let pointShowList = [];
       let tooltipList = [];
-      // 非初始化才重置格式
-      if (this.dataState !== 'default') {
+      // 非初始化才重置格式(TODO:这里应该是初始化的时候才要重置格式?)
+      if (this.dataState === 'default') {
         pointShowList = [`地区名/${dimensionAlias}`];
         tooltipList = [dimensionAlias, measureAlias.replace(/(.*?)_/, '')];
       } else {
@@ -506,15 +506,15 @@ export default {
         return;
       }
 
+      // 修改状态
+      this.dataState = 'normal';
+
       const [fillResult, labelResult] = await Promise.all([
         this.handleFillList(res.data.fillList),
         this.handleLabelList(res.data.labelList),
       ]);
       const { fillList, fillName, fillCustomPointShowList, fillCustomTooltipShowList } = fillResult;
       const { labelList, labelName, labelCustomPointShowList, labelCustomTooltipShowList } = labelResult;
-
-      // 修改状态
-      this.dataState = 'normal';
 
       const data = defaultData.series;
       this.serverData = {
@@ -545,7 +545,7 @@ export default {
             }),
             scatterStyle: Object.assign({}, this.options.style.echart.scatterStyle, {
               customPointShowList:
-                labelCustomPointShowList || this.options.style.echart.scatterStyle.customPointShowLis,
+                labelCustomPointShowList || this.options.style.echart.scatterStyle.customPointShowList,
               customTooltipShowList:
                 labelCustomTooltipShowList || this.options.style.echart.scatterStyle.customTooltipShowList,
             }),
