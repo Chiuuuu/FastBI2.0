@@ -164,7 +164,7 @@ export default {
   },
   computed: {
     ...mapState({
-      boardScale: state => state.board.scale,
+      boardScale: state => state.board.page.size.scale,
       model: state => state.board.model,
       componentsOrigin: state => state.board.components,
     }),
