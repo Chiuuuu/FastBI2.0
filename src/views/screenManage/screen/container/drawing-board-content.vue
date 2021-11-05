@@ -277,10 +277,13 @@ export default {
     },
     // 设置定时器
     setTimer(refresh) {
-      //   if (this.timer) {
-      //     clearInterval(this.timer);
-      //     this.timer = null;
-      //   }
+      if (this.timer) {
+        clearTimeout(this.timer);
+        this.timer = null;
+      }
+      if (!refresh) {
+        refresh = this.boardPage.refresh;
+      }
       if (refresh.isRefresh && refresh.unit && refresh.frequency > 0) {
         let count = 0;
         if (refresh.unit === 'min') {
@@ -289,10 +292,14 @@ export default {
           count = refresh.frequency * 60 * 60 * 1000;
         }
         // 刷新以后大屏信息文件都会更新触发延时器，改用settimeout
-        setTimeout(() => {
+        this.timer = setTimeout(() => {
           const { id, tabId } = this.$route.query;
           this.$parent.getScreenDetailByTabId(id, tabId);
         }, count);
+        this.$once('hook:beforeDestroy', () => {
+          clearTimeout(this.timer);
+          this.timer = null;
+        });
       }
     },
     /**
