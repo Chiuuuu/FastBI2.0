@@ -24,9 +24,9 @@ export default {
     getFieldList(type) {
       const { data } = this.options;
       if (type === 'fillList') {
-        return [].concat(data.dimensions).concat(data.measures);
+        return [].concat(data.dimensions, data.measures);
       } else if (type === 'labelList') {
-        return [].concat(data.labelDimensions).concat(data.labelMeasures);
+        return [].concat(data.labelLongitude, data.labelLatitude, data.labelMeasures);
       }
     },
     /**
