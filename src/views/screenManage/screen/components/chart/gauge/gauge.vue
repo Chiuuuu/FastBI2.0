@@ -117,7 +117,12 @@ export default {
         if (totalProgress <= 0) {
           current.value = 100;
         } else {
-          current.value = (current.value - min) / totalProgress;
+          // 如果展示值小于最小值, 显示为0
+          if (cur.value < min) {
+            current.value = 0;
+          } else {
+            current.value = ((current.value - min) / totalProgress) * 100;
+          }
         }
         // 开启百分比显示, 最大值恒为100
         max = 100;
@@ -128,6 +133,8 @@ export default {
         max = max || 2 * cur.value;
         // 如果没有最小值，则设置为0
         min = min || 0;
+        // 如果展示值小于最小值, 显示为0
+        if (cur.value < min) current.value = 0;
       }
 
       const options = merge({}, customOptions, {
