@@ -187,6 +187,10 @@ export default {
           components: result.screenGraphs,
           page: result.setting,
         });
+        // 如果没有页面配置(新增页面), 则自适应缩放比
+        if (!result.setting) {
+          this.$refs.boardContent && this.$refs.boardContent.doWithRect();
+        }
       }
     },
     async handleSave(callback, errorMsg) {
