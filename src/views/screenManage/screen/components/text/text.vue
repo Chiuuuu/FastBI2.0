@@ -267,9 +267,10 @@ export default {
               : {
                   ...item,
                   onClick: (event, item, vm) => {
-                    if (!this.validSameField(vm, item)) {
-                      return;
-                    }
+                    // TODO:先去掉这层校验, 允许输入重复字段
+                    // if (!this.validSameField(vm, item)) {
+                    //   return;
+                    // }
                     var range = document.createRange();
                     range.selectNode(anchor);
                     range.deleteContents();
