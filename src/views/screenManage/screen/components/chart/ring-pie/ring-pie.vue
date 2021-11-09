@@ -70,18 +70,32 @@ export default {
      * @description 处理数据的占比
      */
     doWithData(data) {
+      const value = data[1].value - data[0].value;
+      return {
+        value: value > 0 ? 0 : value,
+        name: data[1].name,
+      };
+    },
+    /**
+     * @description 处理数据的占比
+     */
+    doWithLabelData(data) {
       return {
         value: data[1].value - data[0].value,
         name: data[1].name,
       };
     },
     doWithFormatter(data, way, customFixed, dataIndex) {
-      // debugger
       let percent = 0;
 
       if (this.options.style.echart.customTarge && data.length > 1) {
+        const labelData = [data[0], this.doWithLabelData(data)];
         // 使用abs()函数取绝对值
-        percent = Math.abs((data[dataIndex].value / data[1].value) * 100).toFixed(customFixed);
+        if (labelData[1].value === 0) {
+          percent = 100;
+        } else {
+          percent = Math.abs((labelData[dataIndex].value / labelData[1].value) * 100).toFixed(customFixed);
+        }
       } else {
         // 如果不开启目标值设置，以1为基准
         percent = Math.abs((1 / 1) * 100).toFixed(customFixed);
@@ -117,17 +131,18 @@ export default {
       const radius = this.doWithRadius(customInRadius, customOutRadius);
       const center = this.doWithCenter(customCenter);
       const seriesData = { ...omit(customSeries, ['label']) };
+      let echartsData = data;
 
       if (customTarge) {
         // 1.开启目标值需要处理数据
         if (data.length > 1) {
-          data.splice(1, 1, this.doWithData(data));
+          echartsData = [data[0], this.doWithData(data)];
         }
       } else {
         // 2.不开启目标值只需要一个数据
         // 默认数组第一是进度值、第二是目标值
         if (data.length > 1) {
-          data.pop();
+          echartsData.pop();
         }
       }
 
@@ -147,7 +162,7 @@ export default {
             },
           }),
           color: customColors,
-          data: data,
+          data: echartsData,
           ...seriesData, // series其他配置
           emphasis: {
             scale: false,
