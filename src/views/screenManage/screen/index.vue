@@ -182,6 +182,9 @@ export default {
           modelList,
           accessList,
         });
+        this.$store.commit(boardMutaion.SET_BOARD_SCALE, {
+          scale: result.setting.size.scale || 1,
+        });
 
         this.$store.commit(boardMutaion.RESETSTATE, {
           components: result.screenGraphs,

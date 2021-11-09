@@ -142,7 +142,7 @@ export default {
   computed: {
     ...mapState({
       currentCom: state => state.board.currentCom, // 当前图表
-      boardScale: state => state.board.page.size.scale, // 比例
+      boardScale: state => state.board.scale, // 比例
       boardModel: state => state.board.model, // 模式
       boardPage: state => state.board.page, // 页面
       screenInfo: state => state.app.screenInfo,
@@ -237,6 +237,9 @@ export default {
         const SCALE = this.setRatio(boardContentRect);
         this.$store.commit(boardMutaion.SET_BOARD_SCALE, {
           scale: SCALE,
+        });
+        this.$store.commit('SET_PAGE_SETTING', {
+          size: { scale: SCALE },
         });
       });
     },
@@ -345,6 +348,9 @@ export default {
           // 从全屏退出还原比例
           this.$store.commit(boardMutaion.SET_BOARD_SCALE, {
             scale: this.cacheBoardScale,
+          });
+          this.$store.commit('SET_PAGE_SETTING', {
+            size: { scale: this.cacheBoardScale },
           });
         }
       }

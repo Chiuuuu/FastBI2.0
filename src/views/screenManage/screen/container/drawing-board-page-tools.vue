@@ -129,7 +129,8 @@ export default {
   computed: {
     ...mapState({
       boardScale: state => {
-        return (state.board.page.size.scale * 100).toFixed(0);
+        const scale = state.board.scale;
+        return (scale * 100).toFixed(0);
       },
     }),
     tabIndex() {
@@ -230,7 +231,7 @@ export default {
      * @description 比例设置
      */
     handleChangeScale(type, step) {
-      let scale = this.$store.state.board.page.size.scale;
+      let scale = this.$store.state.board.page.size.scale || 1;
       if (type === 'add') {
         scale = +(scale + step).toFixed(2);
         scale = Math.min(1, scale);

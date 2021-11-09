@@ -564,6 +564,9 @@ export default {
         };
         this.components = [].concat(result.screenGraphs);
         this.$store.dispatch('SetScreenInfo', result);
+        this.$store.commit(boardMutaion.SET_BOARD_SCALE, {
+          scale: result.setting.size.scale || 1,
+        });
         this.$store.commit('board/SET_BOARD_SETTING', result.setting);
       }
     },

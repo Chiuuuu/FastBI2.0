@@ -160,6 +160,7 @@ const mutations = {
    */
   SET_BOARD_SCALE(state, { scale }) {
     state.page.size.scale = scale;
+    state.scale = scale;
   },
   /**
    * 设置屏幕模式
@@ -175,6 +176,9 @@ const mutations = {
    * @param {number | string} Playload.model 模式
    */
   SET_BOARD_SETTING(state, page) {
+    if (page.size && !('scale' in page.size)) {
+      page.size.scale = 1;
+    }
     state.page = Object.assign(state.page, page);
   },
 };
