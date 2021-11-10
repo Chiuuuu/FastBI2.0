@@ -226,6 +226,7 @@
                 </CollapsePanel>
                 <CollapsePanel class="content-item" panel="legend" header="图例设置">
                   <UnitLegend
+                    :except="['icon']"
                     :legend="currentCom.setting.style.echart.visualMap"
                     @change="(key, value) => handleVisulMap(key, value)"
                   >
