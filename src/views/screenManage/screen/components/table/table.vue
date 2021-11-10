@@ -40,7 +40,6 @@ import BaseChart from '../chart/base';
 import defaultData from './default-data';
 import Tcontainer from './components/tcontainer';
 import { getStyle } from '@/utils';
-import { mutationTypes as boardMutation } from '@/store/modules/board';
 import { setLinkageData, resetOriginData } from '@/utils/setDataLink';
 
 /**
@@ -103,32 +102,6 @@ export default {
       return this.options.style.echart.tbody.autoWrap;
     },
   },
-  watch: {
-    'options.data.fields': {
-      deep: true,
-      immediate: false,
-      handler(val, oldVal) {
-        // 1.刷新页面oldVal为undefined
-        // 2.左上角刷新按钮，val和oldVal长度一样
-        if (!oldVal || val.length === oldVal.length) return;
-
-        let tableWidth = 3 * 100; //默认数据宽度
-        if (val.length > 1) {
-          tableWidth = val.length * 100; //表格每列宽度为100
-        }
-        // 随着拖入列，根据表格宽度改变尺寸宽度
-        // 2为外层边框
-        this.$store.commit(boardMutation.SET_STYLE, {
-          style: {
-            size: {
-              width: tableWidth + 2,
-            },
-          },
-          updateCom: this.shapeUnit.component,
-        });
-      },
-    },
-  },
   methods: {
     /**
      * @description 切割当前展示的表格
@@ -155,11 +128,13 @@ export default {
       this.$nextTick(() => {
         this.$refs['js-tbody'].initScrollData();
         this.cols = this.$refs['js-tbody'].handleGetColWidth(this.maxCols);
+        // TODO:设置最小宽度, 不设上限
         // 设置列宽度固定为100
-        this.cols = this.cols.map(() => 100);
+        // this.cols = this.cols.map(() => 100);
 
         this.tableStyle = Object.assign({}, this.tableStyle, {
           width: `${this.options.style.size.width - 2}px`,
+          minWidth: 100,
         });
         this.doWithThead();
         this.doWithTbody();
@@ -385,6 +360,7 @@ export default {
      * @description 更新图表样式
      */
     updateChartStyle() {
+      this.doWithWidth();
       this.doWithThead();
       this.doWithTbody();
     },

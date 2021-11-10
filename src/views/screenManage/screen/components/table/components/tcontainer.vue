@@ -163,7 +163,8 @@ export default {
       return list.map((max, index) => {
         const tr = this.$refs[`js-tr-${max}`];
         const width = Math.ceil(tr[0].children[`${index}`].children[0].offsetWidth) + 22;
-        return width;
+        // 最小宽度100
+        return width > 101 ? width : 101;
       });
     },
     /**
