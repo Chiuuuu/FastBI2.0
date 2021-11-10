@@ -6,11 +6,13 @@
       </colgroup>
       <thead v-if="type !== 'tbody'" :style="theadStyle.thead">
         <tr>
-          <th v-for="th in data" :key="th.name">
-            <p class="content-wrap" :style="theadStyle.font" :title="th.name">
-              {{ th.showName || th.name }}
-            </p>
-          </th>
+          <template v-for="(th, index) in data">
+            <th :key="th.name" :ref="`js-th-${index}`">
+              <p class="content-wrap" :style="theadStyle.font" :title="th.name">
+                {{ th.showName || th.name }}
+              </p>
+            </th>
+          </template>
         </tr>
       </thead>
       <tbody v-else :style="tbodyStyle.tbody">
@@ -162,9 +164,13 @@ export default {
     handleGetColWidth(list) {
       return list.map((max, index) => {
         const tr = this.$refs[`js-tr-${max}`];
-        const width = Math.ceil(tr[0].children[`${index}`].children[0].offsetWidth) + 22;
+        let width = Math.ceil(tr[0].children[`${index}`].children[0].offsetWidth) + 22;
         // 最小宽度100
-        return width > 101 ? width : 101;
+        width = width > 101 ? width : 101;
+        const th = this.$parent.$refs['js-thead'].$refs[`js-th-${index}`][0];
+        if (!th) return width;
+        const headWidth = th.offsetWidth + 22;
+        return Math.max(width, headWidth);
       });
     },
     /**

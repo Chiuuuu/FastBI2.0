@@ -259,7 +259,7 @@ export default {
         const result = [];
         keys.forEach(key => {
           const value = item[key];
-          const len = value ? value.length : 0;
+          const len = value ? String(value).length : 0;
           result.push(value);
           if (!map.has(key)) {
             map.set(key, {
