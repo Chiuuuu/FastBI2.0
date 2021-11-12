@@ -164,7 +164,7 @@ export default {
   },
   computed: {
     ...mapState({
-      boardScale: state => state.board.page.size.scale,
+      boardScale: state => state.board.scale,
       model: state => state.board.model,
       componentsOrigin: state => state.board.components,
     }),
@@ -328,7 +328,7 @@ export default {
       });
 
       // 设置画板的比例
-      const BOARD_SCALE = this.boardScale;
+      const BOARD_SCALE = this.boardScale || 1;
 
       const SHAPE = 'shape';
 

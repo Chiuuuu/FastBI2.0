@@ -216,7 +216,7 @@ export default {
       dataType: '', //数据类型
       dataTypeObj: {
         // 数值
-        num: ['BIGINT', 'DECIMAL', 'DOUBLE'], //除却这些，其他为文本
+        num: ['Int64', 'Decimal64', 'Float64'], //除却这些，其他为文本
       },
     };
   },

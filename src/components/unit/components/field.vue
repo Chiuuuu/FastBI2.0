@@ -686,7 +686,7 @@ export default {
      * @description 判断数值类型
      */
     getDataType(type) {
-      return ['BIGINT', 'DECIMAL', 'DOUBLE'].includes(type) ? 'num' : 'str';
+      return ['Int64', 'Decimal64', 'Float64'].includes(type) ? 'num' : 'str';
     },
     /**
      * @description 字段聚合方式

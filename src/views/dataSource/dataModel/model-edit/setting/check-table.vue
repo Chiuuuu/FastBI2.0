@@ -113,17 +113,17 @@ export default {
     setColumnsType(item) {
       const type = item.convertType.toUpperCase();
       switch (type) {
-        case 'VARCHAR':
+        case 'String':
           return '字符串';
-        case 'TIMESTAMP':
+        case 'DateTime':
           return '日期时间';
-        case 'DATE':
+        case 'Date':
           return '日期';
-        case 'BIGINT':
+        case 'Int64':
           return '整数';
-        case 'DECIMAL':
+        case 'Decimal64':
           return '数值';
-        case 'DOUBLE':
+        case 'Float64':
           return '小数';
         default:
           return '未知类型';

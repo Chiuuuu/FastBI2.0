@@ -98,13 +98,13 @@
             <template v-if="setType === 'convertType'">
               <a-form-model :model="modalForm" :label-col="{ span: 5 }" :wrapper-col="{ span: 12 }">
                 <a-form-model-item label="字段类型" prop="convertType" required>
-                  <a-select default-value="BIGINT" style="width: 100px" v-model="modalForm.convertType">
-                    <a-select-option value="BIGINT">整数</a-select-option>
-                    <a-select-option value="DOUBLE">小数</a-select-option>
-                    <a-select-option value="DECIMAL">数值</a-select-option>
-                    <a-select-option value="VARCHAR">字符串</a-select-option>
-                    <a-select-option value="DATE">日期</a-select-option>
-                    <a-select-option value="TIMESTAMP">日期时间</a-select-option>
+                  <a-select default-value="Int64" style="width: 100px" v-model="modalForm.convertType">
+                    <a-select-option value="Int64">整数</a-select-option>
+                    <a-select-option value="Float64">小数</a-select-option>
+                    <!-- <a-select-option value="Decimal64">数值</a-select-option> -->
+                    <a-select-option value="String">字符串</a-select-option>
+                    <a-select-option value="Date">日期</a-select-option>
+                    <a-select-option value="DateTime">日期时间</a-select-option>
                   </a-select>
                 </a-form-model-item>
               </a-form-model>
@@ -226,7 +226,7 @@ export default {
       showSetting: false,
       setType: '',
       modalForm: {
-        convertType: 'BIGINT',
+        convertType: 'Int64',
         role: 1,
         visible: 'true',
       },
@@ -241,32 +241,32 @@ export default {
       fieldContenxtMenu: [
         {
           name: '转换为整数',
-          dataType: 'BIGINT',
+          dataType: 'Int64',
           onClick: this.switchFieldType,
         },
         {
           name: '转换为小数',
-          dataType: 'DOUBLE',
+          dataType: 'Float64',
           onClick: this.switchFieldType,
         },
         // {
         //   name: '转换为数值',
-        //   dataType: 'DECIMAL',
+        //   dataType: 'Decimal64',
         //   onClick: this.switchFieldType
         // },
         {
           name: '转换为字符串',
-          dataType: 'VARCHAR',
+          dataType: 'String',
           onClick: this.switchFieldType,
         },
         {
           name: '转换为日期',
-          dataType: 'DATE',
+          dataType: 'Date',
           onClick: this.switchFieldType,
         },
         {
           name: '转换为日期时间',
-          dataType: 'TIMESTAMP',
+          dataType: 'DateTime',
           onClick: this.switchFieldType,
         },
       ],
@@ -316,22 +316,22 @@ export default {
   filters: {
     formatField(value) {
       switch (value) {
-        case 'BIGINT':
+        case 'Int64':
           value = '整数';
           break;
-        case 'TIMESTAMP':
+        case 'DateTime':
           value = '日期时间';
           break;
-        case 'DATE':
+        case 'Date':
           value = '日期';
           break;
-        case 'DOUBLE':
+        case 'Float64':
           value = '小数';
           break;
-        case 'DECIMAL':
+        case 'Decimal64':
           value = '数值';
           break;
-        case 'VARCHAR':
+        case 'String':
           value = '字符串';
           break;
         default:

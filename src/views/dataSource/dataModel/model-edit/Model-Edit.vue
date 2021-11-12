@@ -319,7 +319,7 @@ export default {
   },
   data() {
     return {
-      NUMBER_LIST: ['BIGINT', 'DOUBLE', 'DECIMAL'],
+      NUMBER_LIST: ['Int64', 'Float64', 'Decimal64'],
       DimensionsIcon,
       MeasureIcon,
       modelForm: this.$form.createForm(this, { name: 'modelForm' }),
@@ -454,32 +454,32 @@ export default {
           children: [
             {
               name: '转换为整数',
-              dataType: 'BIGINT',
+              dataType: 'Int64',
               onClick: this.switchFieldType,
             },
             {
               name: '转换为小数',
-              dataType: 'DOUBLE',
+              dataType: 'Float64',
               onClick: this.switchFieldType,
             },
             // {
             //   name: '转换为数值',
-            //   dataType: 'DECIMAL',
+            //   dataType: 'Decimal64',
             //   onClick: this.switchFieldType
             // },
             {
               name: '转换为字符串',
-              dataType: 'VARCHAR',
+              dataType: 'String',
               onClick: this.switchFieldType,
             },
             {
               name: '转换为日期',
-              dataType: 'DATE',
+              dataType: 'Date',
               onClick: this.switchFieldType,
             },
             {
               name: '转换为日期时间',
-              dataType: 'TIMESTAMP',
+              dataType: 'DateTime',
               onClick: this.switchFieldType,
             },
           ],
@@ -890,15 +890,15 @@ export default {
     },
     // 判断字段是否为时间日期类型
     isDate(data) {
-      return (data.convertType || data.dataType) === 'DATE';
+      return (data.convertType || data.dataType) === 'Date';
     },
     // 判断字段是否为时间日期类型
     isTimestamp(data) {
-      return (data.convertType || data.dataType) === 'TIMESTAMP';
+      return (data.convertType || data.dataType) === 'DateTime';
     },
     // 判断字段是否为文本类型
     isVarchar(data) {
-      return (data.convertType || data.dataType) === 'VARCHAR';
+      return (data.convertType || data.dataType) === 'String';
     },
     /**
      * 表格变更时, 处理筛选排序的列表

@@ -22,32 +22,32 @@ export default {
       contextmenus: [
         {
           name: '转换为整数',
-          dataType: 'BIGINT',
+          dataType: 'Int64',
           onClick: this.switchFieldType,
         },
         {
           name: '转换为小数',
-          dataType: 'DOUBLE',
+          dataType: 'Float64',
           onClick: this.switchFieldType,
         },
         // {
         //   name: '转换为数值',
-        //   dataType: 'DECIMAL',
+        //   dataType: 'Decimal64',
         //   onClick: this.switchFieldType
         // },
         {
           name: '转换为字符串',
-          dataType: 'VARCHAR',
+          dataType: 'String',
           onClick: this.switchFieldType,
         },
         {
           name: '转换为日期',
-          dataType: 'DATE',
+          dataType: 'Date',
           onClick: this.switchFieldType,
         },
         {
           name: '转换为日期时间',
-          dataType: 'TIMESTAMP',
+          dataType: 'DateTime',
           onClick: this.switchFieldType,
         },
       ],
@@ -61,22 +61,22 @@ export default {
     },
     formatField(value) {
       switch (value) {
-        case 'BIGINT':
+        case 'Int64':
           value = '整数';
           break;
-        case 'TIMESTAMP':
+        case 'DateTime':
           value = '日期时间';
           break;
-        case 'DATE':
+        case 'Date':
           value = '日期';
           break;
-        case 'DOUBLE':
+        case 'Float64':
           value = '小数';
           break;
-        case 'DECIMAL':
+        case 'Decimal64':
           value = '数值';
           break;
-        case 'VARCHAR':
+        case 'String':
           value = '字符串';
           break;
         default:
