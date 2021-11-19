@@ -222,6 +222,8 @@ export default {
       this.fileList = [];
       this.fileInfoList = [];
       this.databaseList = [];
+      this.saveLoading = false;
+      this.saveTip = '保存中, 请勿进行其他操作';
       this.handleClearTable();
       this.clearReplaceFile();
     },
