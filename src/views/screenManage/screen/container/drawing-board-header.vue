@@ -216,6 +216,7 @@ export default {
       components: state => state.board.components,
       page: state => state.board.page,
       screenInfo: state => state.app.screenInfo,
+      historyRecordIndex: state => state.history.historyRecordIndex,
     }),
     undoDisable() {
       // 是否可用撤销
@@ -355,6 +356,7 @@ export default {
       const result = await this.$server.screenManage.saveScreenTab(param);
       if (result && result.code === 200) {
         this.$message.success('保存成功');
+        return true;
       } else {
         this.$message.error(result.msg);
       }
@@ -373,6 +375,25 @@ export default {
      * @description 大屏退出
      */
     handleOutEdit() {
+      if (this.historyRecordIndex > -1) {
+        this.$confirm({
+          title: '提示',
+          content: '是否保存已编辑的内容？',
+          okText: '保存并退出',
+          cancelText: '直接退出',
+          onOk: async () => {
+            const res = await this.handleSave();
+            if (res) this.handleCloseBoard();
+          },
+          onCancel: () => {
+            this.handleCloseBoard();
+          },
+        });
+      } else {
+        this.handleCloseBoard();
+      }
+    },
+    handleCloseBoard() {
       const query = this.$route.query;
       this.$router.push({
         name: 'catalog',
