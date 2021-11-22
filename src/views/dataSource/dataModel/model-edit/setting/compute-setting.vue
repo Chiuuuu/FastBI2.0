@@ -297,7 +297,7 @@ export default {
           this.errorMessage = '';
           this.dimensions = this.getDM(this.sourceDimensions);
           this.measures = this.getDM(this.sourceMeasures);
-          this.textareaValue = this.renameData.raw_expr;
+          this.textareaValue = this.doWithAlias(this.renameData);
           this.form = Object.assign(this.form, {
             name: this.renameData.alias,
           });
@@ -396,6 +396,23 @@ export default {
     },
     filterOption(value, option) {
       return option.componentOptions.children[0].text.toLowerCase().indexOf(value.toLowerCase()) >= 0;
+    },
+    // 更新字段重命名后编辑器内的显示
+    doWithAlias(field) {
+      if (!field.expr) return '';
+      // 根据id判断字段是否还存在
+      const matchs = field.expr.match(/(?<=\$\$)(\d)+/g);
+      const matchAlias = field.raw_expr.match(/(\[)(.*?)(\])/g);
+      if (matchs) {
+        matchs.forEach((value, index) => {
+          const pairList = [...this.sourceDimensions, ...this.sourceMeasures];
+          const missing = pairList.filter(item => item.id === value).pop();
+          if (missing) {
+            field.raw_expr = field.raw_expr.replace(matchAlias[index], `[${missing.alias}]`);
+          }
+        });
+      }
+      return field.raw_expr;
     },
     // 暂时使用的方法，把原生表达式的[]替换掉
     reverse(str) {
