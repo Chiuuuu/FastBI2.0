@@ -346,6 +346,7 @@ export default {
       measuresActiveKey: [],
       dimensions: '',
       cacheDimensions: [], // 缓存自定义维度
+      cacheFields: [], // 缓存操作过的维度度量字段(每次增删表的时候, 将获取的字段替换为该数组里的字段)
       dimensionsActiveKey: [],
       panelData: {}, // 选中的维度或度量
       customStyle: 'border: 0',
@@ -498,9 +499,36 @@ export default {
       this.panelData = {};
       this.openModal('compute-setting', type);
     },
+    // 将新的维度度量列表和缓存的已修改字段做替换
+    handleReplaceCacheFields(pivotSchema) {
+      pivotSchema.dimensions.forEach((item, index) => {
+        const target = this.cacheFields.find(f => f.id === item.id);
+        if (target) {
+          pivotSchema.dimensions.splice(index, 1, target);
+        }
+      });
+      pivotSchema.measures.forEach((item, index) => {
+        const target = this.cacheFields.find(f => f.id === item.id);
+        if (target) {
+          pivotSchema.measures.splice(index, 1, target);
+        }
+      });
+      // this.cacheFields = []
+      return pivotSchema;
+    },
+    // 存储修改过的字段
+    handleCacheFields(field) {
+      const index = this.cacheFields.findIndex(item => item.id === field.id);
+      if (index > -1) {
+        this.cacheFields.splice(index, 1, field);
+      } else {
+        this.cacheFields.push(field);
+      }
+    },
     switchFieldType(e, item, vm) {
       let dataType = item.dataType;
       vm.itemData.convertType = dataType;
+      this.handleCacheFields(vm.itemData);
       // 转换类型后, 需要同步更新筛选排序列表的状态
       this.handleFilterSort();
     },
@@ -681,6 +709,7 @@ export default {
           this.detailInfo.pivotSchema.dimensions.push(data);
         }
       }
+      this.handleCacheFields(vm.itemData);
       this.handleSameName();
       this.handleDimensions();
       this.handleMeasures();
@@ -926,6 +955,8 @@ export default {
                 item.status = 0;
               }
               item.expr = field.expr;
+              item.alias = field.alias;
+              item.role = field.role;
               result.push(item);
             }
           });
@@ -955,6 +986,8 @@ export default {
                 item.status = 0;
               }
               item.expr = field.expr;
+              item.alias = field.alias;
+              item.role = field.role;
               result.push(item);
             }
           });
@@ -1254,6 +1287,7 @@ export default {
         Object.keys(data).forEach(item => {
           const list = data[item];
           list.forEach(field => {
+            this.handleCacheFields(field);
             if (field.role === 1) {
               cacheDimensions.push(field);
             } else if (field.role === 2) {

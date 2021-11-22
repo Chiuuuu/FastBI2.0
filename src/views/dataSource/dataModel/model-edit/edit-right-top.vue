@@ -186,7 +186,8 @@ export default {
 
       if (result.code === 200) {
         this.detailInfo.config = result.data.config;
-        this.detailInfo.pivotSchema = result.data.pivotSchema;
+        // 需要和当前缓存的已变动过的字段作对比覆盖
+        this.detailInfo.pivotSchema = this.$parent.handleReplaceCacheFields(result.data.pivotSchema);
         this.$parent.handleSameName();
         this.$parent.handleDimensions();
         this.$parent.handleMeasures();

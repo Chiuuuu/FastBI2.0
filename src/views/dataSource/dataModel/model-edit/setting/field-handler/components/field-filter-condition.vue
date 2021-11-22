@@ -157,7 +157,7 @@ export default {
       this.dataRowsResult = this.dataRows.filter(item => {
         let match = false;
         list.forEach(k => {
-          if ((item || '').indexOf(k) > -1) {
+          if ((item || '').toLowerCase().indexOf(k) > -1) {
             match = true;
           }
         });

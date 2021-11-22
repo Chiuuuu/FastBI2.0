@@ -70,6 +70,7 @@ export default {
 
             this.renameData.alias = this.form.rename;
             this.$message.success('修改成功');
+            this.$parent.handleCacheFields(this.renameData);
             this.handleClose();
           } else {
             this.$message.error('存在同名字段, 请重新命名');
