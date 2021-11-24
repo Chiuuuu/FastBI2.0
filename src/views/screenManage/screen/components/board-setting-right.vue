@@ -142,6 +142,8 @@ export default {
   },
   watch: {
     modelList(list) {
+      // 先清空当前选择模型
+      this.modelSelected = null;
       if (list && list.length) {
         // 如果模型菜单没有选中，初始化的时候默认选中第一个
         if (!this.modelSelected || !this.modelSelected.tableId) {
@@ -149,8 +151,6 @@ export default {
         }
         this.handleGetPivoSchemaList(this.modelSelected.tableId);
       } else {
-        // 没有数据列表清空当前选择模型
-        this.modelSelected = null;
         // 清空对应类型下模型数据
         if (this.tabAcitve === 'model') {
           this.dimension = [];
@@ -160,6 +160,8 @@ export default {
       }
     },
     accessList(list) {
+      // 先清空当前选择接入
+      this.accessSelected = null;
       if (list && list.length && this.tabAcitve === 'access') {
         // 如果模型菜单没有数据
         // 并且接入菜单没有选中，初始化的时候默认选中第一个
@@ -168,8 +170,6 @@ export default {
         }
         this.handleGetPivoSchemaList(this.accessSelected.tableId);
       } else {
-        // 没有数据列表清空当前选择模型
-        this.accessSelected = null;
         // 清空对应类型下模型数据
         if (this.tabAcitve === 'access') {
           this.dimension = [];
