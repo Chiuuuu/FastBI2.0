@@ -24,8 +24,8 @@ export default {
     getFieldList(type) {
       const { data } = this.options;
       if (type === 'fillList') {
-        if (data.labelLongitude.length && data.labelLatitude.length) {
-          return [].concat(data.labelLongitude, data.labelLatitude, data.measures);
+        if (data.longitude.length && data.latitude.length) {
+          return [].concat(data.longitude, data.latitude, data.measures);
         } else {
           return [].concat(data.dimensions, data.measures);
         }
@@ -33,7 +33,7 @@ export default {
         if (data.labelLongitude.length && data.labelLatitude.length) {
           return [].concat(data.labelLongitude, data.labelLatitude, data.labelMeasures);
         } else {
-          return [].concat(data.dimensions, data.measures);
+          return [].concat(data.labelDimensions, data.labelMeasures);
         }
       }
     },
