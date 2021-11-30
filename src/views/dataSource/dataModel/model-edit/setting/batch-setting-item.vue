@@ -132,7 +132,7 @@ export default {
         },
         // {
         //   name: '转换为数值',
-        //   dataType: 'Decimal64',
+        //   dataType: 'Decimal64(2)',
         //   onClick: this.switchFieldType
         // },
         {
@@ -188,7 +188,7 @@ export default {
         case 'Float64':
           value = '小数';
           break;
-        case 'Decimal64':
+        case 'Decimal64(2)':
           value = '数值';
           break;
         case 'String':

@@ -559,7 +559,7 @@ export default {
      * @description 判断数值类型，返回聚合类型
      */
     judgeDataType(dataType) {
-      return dataType === 'Int64' || dataType === 'Decimal64' || dataType === 'Float64' ? 'num' : 'str';
+      return dataType === 'Int64' || dataType === 'Decimal64(2)' || dataType === 'Float64' ? 'num' : 'str';
     },
   },
 };

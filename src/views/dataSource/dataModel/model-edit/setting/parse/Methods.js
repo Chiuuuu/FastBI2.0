@@ -31,7 +31,7 @@ function isString(item) {
  * @returns
  */
 // function isDecimal(item) {
-//   return (item.convertType || item.dataType) === 'Decimal64';
+//   return (item.convertType || item.dataType) === 'Decimal64(2)';
 // }
 export class Methods {
   constructor(dmType) {

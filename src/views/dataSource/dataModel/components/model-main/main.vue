@@ -122,7 +122,7 @@ export default {
   },
   data() {
     return {
-      NUMBER_LIST: ['Int64', 'Float64', 'Decimal64'],
+      NUMBER_LIST: ['Int64', 'Float64', 'Decimal64(2)'],
       spinning: false, // 获取数据loading
       visible: false,
       detailInfo: '', // 详情信息

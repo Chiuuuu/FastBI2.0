@@ -73,7 +73,7 @@ export default {
         case 'Int64':
         case 'INT':
           return '整数';
-        case 'Decimal64':
+        case 'Decimal64(2)':
           return '数值';
         case 'DateTime':
         case 'TIME':

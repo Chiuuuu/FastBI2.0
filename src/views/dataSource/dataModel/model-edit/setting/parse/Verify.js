@@ -181,7 +181,7 @@ export class Verify {
     }
     if (left.type === 'alias') {
       const type = left.value.convertType || left.value.dataType;
-      if (type !== 'Int64' && type !== 'Float64' && type !== 'Decimal64') {
+      if (type !== 'Int64' && type !== 'Float64' && type !== 'Decimal64(2)') {
         throw Error(`等式左边表达式结果必须为数字类型`);
       }
     }
@@ -191,7 +191,7 @@ export class Verify {
     }
     if (right.type === 'alias') {
       const type = right.value.convertType || right.value.dataType;
-      if (type !== 'Int64' && type !== 'Float64' && type !== 'Decimal64') {
+      if (type !== 'Int64' && type !== 'Float64' && type !== 'Decimal64(2)') {
         throw Error(`等式右边表达式结果必须为数字类型`);
       }
     }
@@ -226,7 +226,7 @@ export class Verify {
      * @returns
      */
     function isDecimal(item) {
-      return (item.convertType || item.dataType) === 'Decimal64';
+      return (item.convertType || item.dataType) === 'Decimal64(2)';
     }
 
     /**
@@ -249,7 +249,7 @@ export class Verify {
           return 'string';
         case 'Int64':
           return 'integer';
-        case 'Decimal64':
+        case 'Decimal64(2)':
           return 'decimal';
         case 'Float64':
           return 'float';
@@ -274,7 +274,7 @@ export class Verify {
         case 'Float64':
         case 'float':
           return '小数';
-        case 'Decimal64':
+        case 'Decimal64(2)':
         case 'decimal':
           return '数值';
         case 'DateTime':
@@ -308,7 +308,7 @@ export class Verify {
      * @returns
      */
     function isWhiteList(item, operator = '+') {
-      const list = ['String', 'Float64', 'Int64', 'Decimal64'];
+      const list = ['String', 'Float64', 'Int64', 'Decimal64(2)'];
       if (operator === '+') {
         return list.includes(item.convertType || item.dataType);
       } else {
@@ -748,7 +748,7 @@ export class Verify {
       case '!=': {
         // 等式判断两边仅支持数字类型
         const whiteList = ['integer', 'float', 'decimal', 'neg', 'alias'];
-        const numberList = ['Int64', 'Float64', 'Decimal64'];
+        const numberList = ['Int64', 'Float64', 'Decimal64(2)'];
         if (!whiteList.includes(rightType) || !whiteList.includes(leftType)) {
           throw new Error(`等式判断两边仅支持数字类型`);
         } else {

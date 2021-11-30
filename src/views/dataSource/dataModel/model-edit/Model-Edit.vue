@@ -319,7 +319,7 @@ export default {
   },
   data() {
     return {
-      NUMBER_LIST: ['Int64', 'Float64', 'Decimal64'],
+      NUMBER_LIST: ['Int64', 'Float64', 'Decimal64(2)'],
       DimensionsIcon,
       MeasureIcon,
       modelForm: this.$form.createForm(this, { name: 'modelForm' }),
@@ -465,7 +465,7 @@ export default {
             },
             // {
             //   name: '转换为数值',
-            //   dataType: 'Decimal64',
+            //   dataType: 'Decimal64(2)',
             //   onClick: this.switchFieldType
             // },
             {

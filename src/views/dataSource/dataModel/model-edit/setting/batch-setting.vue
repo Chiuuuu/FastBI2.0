@@ -60,7 +60,7 @@
             <a-select default-value="Int64" style="width: 100px" v-model="modalForm.convertType">
               <a-select-option value="Int64">整数</a-select-option>
               <a-select-option value="Float64">小数</a-select-option>
-              <!-- <a-select-option value="Decimal64">数值</a-select-option> -->
+              <!-- <a-select-option value="Decimal64(2)">数值</a-select-option> -->
               <a-select-option value="String">字符串</a-select-option>
               <a-select-option value="Date">日期</a-select-option>
               <a-select-option value="DateTime">日期时间</a-select-option>
