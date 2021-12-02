@@ -176,6 +176,7 @@ const mutations = {
    * @param {number | string} Playload.model 模式
    */
   SET_BOARD_SETTING(state, page) {
+    if (!page) return;
     if (page.size && !('scale' in page.size)) {
       page.size.scale = 1;
     }
