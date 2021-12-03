@@ -126,9 +126,7 @@ export default {
       this.getFieldData();
     }
     // 列表赋值
-    if (!this.isNumber) {
-      this.checkedData = [].concat(this.conditionData.rule.ruleFilterList || []);
-    } else {
+    if (this.isNumber) {
       this.customData = [].concat(this.conditionData.rule.ruleFilterList || []);
     }
   },
@@ -311,6 +309,10 @@ export default {
         }); // 维度全字段列表
         if (hasNull) list.unshift('');
         this.dataRows = list;
+        // 从最新数据中过滤掉被删除的行数据
+        const checkedData = this.conditionData.rule.ruleFilterList.filter(item => this.dataRows.includes(item)) || [];
+        this.checkedData = checkedData;
+        this.conditionData.rule.ruleFilterList = checkedData;
       }
       this.dataRowsResult = this.dataRows || [];
     },
