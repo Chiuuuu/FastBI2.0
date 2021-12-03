@@ -138,12 +138,16 @@ export default {
     ...mapState({
       // 当前组件
       currentCom: state => state.board.currentCom,
+      tabId: state => state.app.screenInfo.tabId,
     }),
   },
   watch: {
-    modelList(list) {
-      // 先清空当前选择模型
+    tabId() {
+      // 切换tab页清空选中项
       this.modelSelected = null;
+      this.accessSelected = null;
+    },
+    modelList(list) {
       if (list && list.length) {
         // 如果模型菜单没有选中，初始化的时候默认选中第一个
         if (!this.modelSelected || !this.modelSelected.tableId) {
@@ -155,15 +159,12 @@ export default {
         if (this.tabAcitve === 'model') {
           this.dimension = [];
           this.measure = [];
+          this.modelSelected = null;
         }
-        // this.tabAcitve = 'access';
       }
     },
     accessList(list) {
-      // 先清空当前选择接入
-      this.accessSelected = null;
       if (list && list.length && this.tabAcitve === 'access') {
-        // 如果模型菜单没有数据
         // 并且接入菜单没有选中，初始化的时候默认选中第一个
         if (!this.accessSelected || !this.accessSelected.tableId) {
           this.accessSelected = list[0];
@@ -174,8 +175,8 @@ export default {
         if (this.tabAcitve === 'access') {
           this.dimension = [];
           this.measure = [];
+          this.accessSelected = null;
         }
-        // this.tabAcitve = 'model';
       }
     },
     dimension(val) {
