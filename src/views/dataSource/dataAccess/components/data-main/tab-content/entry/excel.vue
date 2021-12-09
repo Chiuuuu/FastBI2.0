@@ -283,7 +283,7 @@ export default {
         }
       }
       const tableList = this.databaseList[this.currentFileIndex].tableList;
-      const sheetName = this.sheetList[this.currentSheetIndex].name;
+      const sheetName = this.sheetList[this.currentSheetIndex].alias;
       const head = {
         [sheetName]: this.currentColumns.slice(1).map(item => ({
           name: item.title,

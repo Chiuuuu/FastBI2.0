@@ -148,7 +148,7 @@ export default {
       this.accessSelected = null;
     },
     modelList(list) {
-      if (list && list.length) {
+      if (list && list.length && this.tabAcitve === 'model') {
         // 如果模型菜单没有选中，初始化的时候默认选中第一个
         if (!this.modelSelected || !this.modelSelected.tableId) {
           this.modelSelected = list[0];
