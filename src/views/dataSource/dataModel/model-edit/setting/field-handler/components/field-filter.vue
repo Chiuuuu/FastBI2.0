@@ -191,7 +191,7 @@ export default {
         pivotschemaId: data.id,
         datamodelId: data.datamodelId,
         modelTableId: data.modelTableId,
-        convertType: data.convertType,
+        convertType: data.convertType || data.dataType,
         dataType: data.dataType,
         expr: data.expr,
         field: data.name,
