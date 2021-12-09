@@ -1,10 +1,18 @@
 <template>
   <li
-    class="js-field-item field-item text-item clearfix"
     ref="js-field-item"
+    :class="[
+      'js-field-item',
+      'field-item',
+      'text-item',
+      'clearfix',
+      {
+        selected: selected,
+        invisible: !data.visible,
+      },
+    ]"
     :tabindex="100"
     :data-index="fieldIndex"
-    :class="selected ? 'selected' : ''"
     @click="handleClick"
   >
     <div :class="['prefix-icon bi-data', icon]"></div>

@@ -436,7 +436,7 @@ export default {
       // 如果存在对应列表id，替换成红色
       if (list) {
         this.options.data.filter.fileList.forEach(item => {
-          if (list.includes(item.id)) {
+          if (list.includes(item.pivotschemaId)) {
             item.IsChanged = true;
           }
         });

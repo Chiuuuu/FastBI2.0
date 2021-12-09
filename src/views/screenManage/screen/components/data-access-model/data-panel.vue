@@ -419,6 +419,13 @@ export default {
           font-size: 18px;
           margin-top: 2px;
         }
+        &.invisible {
+          pointer-events: none;
+          & > p {
+            text-decoration: line-through;
+            color: #bbb;
+          }
+        }
         > p {
           margin: 0;
           display: block;

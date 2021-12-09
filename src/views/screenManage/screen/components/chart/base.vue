@@ -212,7 +212,7 @@ export default {
         keys.forEach(key => {
           if (key === 'filter') {
             this.options.data[key].fileList.forEach(item => {
-              if (list.includes(item.id)) {
+              if (list.includes(item.pivotschemaId)) {
                 item.IsChanged = true;
               }
             });
@@ -220,7 +220,7 @@ export default {
           }
           if (Array.isArray(this.options.data[key])) {
             this.options.data[key].forEach(item => {
-              if (list.includes(item.id)) {
+              if (list.includes(item.pivotschemaId)) {
                 item.IsChanged = true;
               }
             });
