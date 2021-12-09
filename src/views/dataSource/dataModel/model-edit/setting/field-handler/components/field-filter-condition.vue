@@ -15,15 +15,26 @@
           <a-button style="height: 30px" type="primary" slot="addonAfter" @click="onSearch">查询</a-button>
         </a-input>
         <a-spin :spinning="spinning" class="condition-list hasBorder scrollbar">
-          <a-checkbox
-            :indeterminate="checkedData.length > 0 && checkedData.length < dataRowsResult.length"
-            :checked="checkedData.length === dataRowsResult.length"
-            @change="onCheckAllChange"
-          >
-            全选
-          </a-checkbox>
-          <br />
-          <a-checkbox-group class="block-checkbox" v-model="checkedData" :options="dataRowsResult" />
+          <ScrollPage :rows="dataRowsResult" :row-height="22" @change="v => (pageDataRows = v)">
+            <a-checkbox
+              :indeterminate="checkedData.length > 0 && checkedData.length < dataRowsResult.length"
+              :checked="checkedData.length === dataRowsResult.length"
+              @change="onCheckAllChange"
+            >
+              全选
+            </a-checkbox>
+            <br />
+            <!-- <a-checkbox-group class="block-checkbox" v-model="checkedData" :options="dataRowsResult" /> -->
+            <a-checkbox
+              class="block-checkbox"
+              v-for="item in pageDataRows"
+              :key="item"
+              :checked="checkedData.includes(item)"
+              @change="onCheckChange($event, item)"
+            >
+              {{ item }}
+            </a-checkbox>
+          </ScrollPage>
         </a-spin>
       </template>
       <!--手动筛选-->
@@ -84,9 +95,13 @@
 </template>
 
 <script>
+import ScrollPage from '@/components/scroll';
 export default {
   name: '',
   inject: ['rootInstance', 'NUMBER_LIST', 'conditionOptions'],
+  components: {
+    ScrollPage,
+  },
   props: {
     fieldData: {
       // 字段对象, 用于获取数据
@@ -119,6 +134,7 @@ export default {
       customData: [], // 手动添加的列表
       dataRows: [], // 该字段查询出来的数据
       dataRowsResult: [], // 搜索筛选的数据
+      pageDataRows: [], // 当前分页展示的数据
     };
   },
   created() {
@@ -149,6 +165,20 @@ export default {
     //   const field = this.pivotSchema.find(item => item.alias === data.alias)
     //   return field || data
     // },
+    onCheckChange(e, value) {
+      const checked = e.target.checked;
+      if (checked) {
+        this.checkedData.push(value);
+      } else {
+        for (let i = 0; i < this.checkedData.length; i++) {
+          const item = this.checkedData[i];
+          if (item === value) {
+            this.checkedData.splice(i, 1);
+            break;
+          }
+        }
+      }
+    },
     onSearch() {
       const checkAll = this.checkedData.length === this.dataRowsResult.length;
       const keyword = (this.searchWord || '').toLowerCase();
@@ -164,7 +194,7 @@ export default {
       });
       // 如果是全选状态, 选中当前所有筛选项
       if (checkAll) {
-        this.checkedData = this.dataRowsResult;
+        this.checkedData = [].concat(this.dataRowsResult);
       } else {
         // 不是全选状态, 过滤掉非当前搜索结果
         this.checkedData = this.dataRowsResult.filter(item => this.checkedData.includes(item));
@@ -173,7 +203,7 @@ export default {
     onCheckAllChange(e) {
       const value = e.target.checked;
       if (value) {
-        this.checkedData = this.dataRowsResult;
+        this.checkedData = [].concat(this.dataRowsResult);
       } else {
         this.checkedData = [];
       }
@@ -319,7 +349,7 @@ export default {
         this.dataRows = list;
         // 从最新数据中过滤掉被删除的行数据
         const checkedData = this.conditionData.rule.ruleFilterList.filter(item => this.dataRows.includes(item)) || [];
-        this.checkedData = checkedData;
+        this.checkedData = [].concat(checkedData);
         this.conditionData.rule.ruleFilterList = checkedData;
       }
       this.dataRowsResult = this.dataRows || [];
@@ -344,6 +374,10 @@ export default {
 }
 .input-area {
   margin: 10px 0;
+}
+.block-checkbox {
+  display: block;
+  margin-left: 0 !important;
 }
 .block-checkbox @{deep} .ant-checkbox-group-item {
   display: block;

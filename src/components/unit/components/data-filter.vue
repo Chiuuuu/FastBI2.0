@@ -56,7 +56,7 @@
             </a-input>
             <br />
             <div class="pick-checkbox-box hasborder">
-              <div class="scrollbar">
+              <ScrollPage :rows="currentFile.searchList" :row-height="22" @change="v => (pageDataRows = v)">
                 <a-checkbox
                   :checked="currentFile.value.length === currentFile.searchList.length"
                   :indeterminate="
@@ -68,13 +68,22 @@
                 >
                   全选
                 </a-checkbox>
-                <a-checkbox-group
+                <!-- <a-checkbox-group
                   class="f-flexcolumn"
                   v-model="currentFile.value"
-                  :options="currentFile.searchList"
+                  :options="pageDataRows"
                   @change="onCheckChange"
-                />
-              </div>
+                /> -->
+                <a-checkbox
+                  class="block-checkbox"
+                  v-for="item in pageDataRows"
+                  :key="item"
+                  :checked="currentFile.value.includes(item)"
+                  @change="onCheckChange($event, item)"
+                >
+                  {{ item }}
+                </a-checkbox>
+              </ScrollPage>
             </div>
           </div>
           <!--手动-->
@@ -169,6 +178,7 @@ import { DROG_TYPE } from '@/views/screenManage/screen/container/drawing-board-s
 import omit from 'lodash/omit';
 import pick from 'lodash/pick';
 import cloneDeep from 'lodash/cloneDeep';
+import ScrollPage from '@/components/scroll';
 
 /**
  * @description 数据筛选设置
@@ -176,6 +186,9 @@ import cloneDeep from 'lodash/cloneDeep';
 export default {
   name: 'UnitDataFilter',
   inject: ['boardSettingWrapper'],
+  components: {
+    ScrollPage,
+  },
   props: {
     type: {
       // 类型
@@ -215,6 +228,7 @@ export default {
         { label: '不等于', op: 'notEqual' },
       ], // 条件选项
       currentFile: {},
+      pageDataRows: [], // 当前页的可选数据
       currentType: '', //当前选中的类型
       currentData: {}, //当前弹框字段数据
       dataType: '', //数据类型
@@ -290,7 +304,7 @@ export default {
       );
       // 如果是全选状态, 选中当前所有筛选项
       if (checkAll) {
-        this.currentFile.value = this.currentFile.searchList;
+        this.currentFile.value = [].concat(this.currentFile.searchList);
       } else {
         // 不是全选状态, 过滤掉非当前搜索结果
         this.currentFile.value = this.currentFile.searchList.filter(item => this.currentFile.value.includes(item));
@@ -771,18 +785,32 @@ export default {
     /**
      * @description 维度-列表 选择
      */
-    onCheckChange(value) {
+    onCheckChange(e, value) {
       this.currentFile.checkAll = value.length === this.currentFile.searchList.length;
+      const checked = e.target.checked;
+      if (checked) {
+        this.currentFile.value.push(value);
+      } else {
+        const len = this.currentFile.value.length;
+        for (let i = 0; i < len; i++) {
+          const item = this.currentFile.value[i];
+          if (item === value) {
+            this.currentFile.value.splice(i, 1);
+            break;
+          }
+        }
+      }
     },
     /**
      * @description 维度-列表 全选
      */
     onCheckAllChange(e) {
-      Object.assign(this.currentFile, {
-        value: e.target.checked ? this.currentFile.searchList : [],
-        checkAll: e.target.checked,
-        indeterminate: false,
-      });
+      const value = e.target.checked;
+      if (value) {
+        this.currentFile.value = [].concat(this.currentFile.searchList);
+      } else {
+        this.currentFile.value = [];
+      }
     },
     /**
      * @description 度量-添加条件
@@ -870,6 +898,10 @@ export default {
   .f-flexcolumn {
     display: flex;
     flex-direction: column;
+  }
+  .block-checkbox {
+    display: block;
+    margin: 0 !important;
   }
   .pick-search-area {
     @{deep} .ant-input-group-addon {
