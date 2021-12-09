@@ -35,7 +35,7 @@
     </div>
     <slot name="tip"></slot>
     <!-- 数据筛选 弹窗 -->
-    <a-modal v-model="visible" title="数据筛选" @ok="handleOk">
+    <a-modal v-model="visible" title="数据筛选" @ok="handleOk" destroyOnClose @cancel="listValue = ''">
       <div class="data-filter-modal">
         <!-- 维度 start -->
         <div v-if="!dataTypeObj['num'].includes(dataType)">
@@ -58,8 +58,12 @@
             <div class="pick-checkbox-box hasborder">
               <div class="scrollbar">
                 <a-checkbox
-                  :checked="currentFile.checkAll"
-                  :indeterminate="currentFile.indeterminate"
+                  :checked="currentFile.value.length === currentFile.searchList.length"
+                  :indeterminate="
+                    currentFile.value &&
+                    currentFile.value.length > 0 &&
+                    currentFile.value.length < currentFile.searchList.length
+                  "
                   @change="onCheckAllChange"
                 >
                   全选
@@ -265,6 +269,7 @@ export default {
      * @description 列表模糊查询
      */
     search() {
+      const checkAll = this.currentFile.value.length === this.currentFile.searchList.length;
       if (!this.listValue) {
         this.currentFile.searchList = this.currentFile.originList;
         // 不强制刷新的话, 不会触发updated()
@@ -283,6 +288,13 @@ export default {
           return match;
         }),
       );
+      // 如果是全选状态, 选中当前所有筛选项
+      if (checkAll) {
+        this.currentFile.value = this.currentFile.searchList;
+      } else {
+        // 不是全选状态, 过滤掉非当前搜索结果
+        this.currentFile.value = this.currentFile.searchList.filter(item => this.currentFile.value.includes(item));
+      }
       // 不强制刷新的话, 不会触发updated()
       this.$forceUpdate();
     },
@@ -416,6 +428,7 @@ export default {
         return this.$message.error('筛选条件为空');
       }
       this.visible = false;
+      this.listValue = '';
       this.currentData = Object.assign({}, this.currentData, omit(this.currentFile, ['searchList', 'originList']));
       this.handleDropField({
         dropType: this.type,
@@ -759,7 +772,6 @@ export default {
      * @description 维度-列表 选择
      */
     onCheckChange(value) {
-      this.currentFile.indeterminate = !!value.length && value.length < this.currentFile.searchList.length;
       this.currentFile.checkAll = value.length === this.currentFile.searchList.length;
     },
     /**

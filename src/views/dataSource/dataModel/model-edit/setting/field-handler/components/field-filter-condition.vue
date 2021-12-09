@@ -16,8 +16,8 @@
         </a-input>
         <a-spin :spinning="spinning" class="condition-list hasBorder scrollbar">
           <a-checkbox
-            :indeterminate="checkedData.length > 0 && checkedData.length < dataRows.length"
-            :checked="checkedData.length === dataRows.length"
+            :indeterminate="checkedData.length > 0 && checkedData.length < dataRowsResult.length"
+            :checked="checkedData.length === dataRowsResult.length"
             @change="onCheckAllChange"
           >
             全选
@@ -150,6 +150,7 @@ export default {
     //   return field || data
     // },
     onSearch() {
+      const checkAll = this.checkedData.length === this.dataRowsResult.length;
       const keyword = (this.searchWord || '').toLowerCase();
       const list = keyword.split(',');
       this.dataRowsResult = this.dataRows.filter(item => {
@@ -161,11 +162,18 @@ export default {
         });
         return match;
       });
+      // 如果是全选状态, 选中当前所有筛选项
+      if (checkAll) {
+        this.checkedData = this.dataRowsResult;
+      } else {
+        // 不是全选状态, 过滤掉非当前搜索结果
+        this.checkedData = this.dataRowsResult.filter(item => this.checkedData.includes(item));
+      }
     },
     onCheckAllChange(e) {
       const value = e.target.checked;
       if (value) {
-        this.checkedData = this.dataRows;
+        this.checkedData = this.dataRowsResult;
       } else {
         this.checkedData = [];
       }
