@@ -504,13 +504,27 @@ export default {
       pivotSchema.dimensions.forEach((item, index) => {
         const target = this.cacheFields.find(f => f.id === item.id);
         if (target) {
-          pivotSchema.dimensions.splice(index, 1, target);
+          // 判断维度还是度量, 要进行插入和删除操作
+          if (target.role === 1) {
+            pivotSchema.dimensions.splice(index, 1, target);
+          } else if (target.role === 2) {
+            // 上次转为了度量, 则将维度字段插入到度量
+            pivotSchema.dimensions.splice(index, 1);
+            pivotSchema.measures.push(target);
+          }
         }
       });
       pivotSchema.measures.forEach((item, index) => {
         const target = this.cacheFields.find(f => f.id === item.id);
         if (target) {
-          pivotSchema.measures.splice(index, 1, target);
+          // 判断维度还是度量, 要进行插入和删除操作
+          if (target.role === 2) {
+            pivotSchema.measures.splice(index, 1, target);
+          } else if (target.role === 1) {
+            // 上次转为了维度, 则将度量字段插入到维度
+            pivotSchema.measures.splice(index, 1);
+            pivotSchema.dimensions.push(target);
+          }
         }
       });
       // this.cacheFields = []
@@ -709,7 +723,7 @@ export default {
           this.detailInfo.pivotSchema.dimensions.push(data);
         }
       }
-      this.handleCacheFields(vm.itemData);
+      this.handleCacheFields(data);
       this.handleSameName();
       this.handleDimensions();
       this.handleMeasures();
