@@ -4,6 +4,7 @@ import html2canvas from 'html2canvas';
 import JSPDF from 'jspdf';
 import { mapState } from 'vuex';
 import json2csv from 'json2csv';
+import BoardType from '@/views/screenManage/screen/setting/default-type';
 /**
  * @description 下载图片
  */
@@ -96,17 +97,27 @@ const ContenxtmenuMethodMixin = {
   },
   data() {
     return {
+      scrolling: false,
       curCom: {}, // 当前图表对象
       curDataKey: '', // 当前数据类型(地图专用: fill | label)
       pagination: {
         // 分页参数
-        pageSize: 500, // 单次查询500条
+        pageSize: 50, // 单次查询50条
         pageNo: 1,
         rowsNum: 0,
       },
+      pageData: [],
     };
   },
   methods: {
+    resetPagination() {
+      this.pagination = {
+        // 分页参数
+        pageSize: 50, // 单次查询50条
+        pageNo: 1,
+        rowsNum: 0,
+      };
+    },
     /**
      * @description 右键菜单——复制图表
      */
@@ -227,8 +238,10 @@ const ContenxtmenuMethodMixin = {
       }
       this.handleSpinning(true, '正在导出...');
       this.curCom = component;
-      const dataList = await this.getChartData(component);
+      // 导出第一页数据
+      const dataList = await this.getChartData(component, '', 1);
       if (!dataList) {
+        this.handleSpinning(false);
         return;
       }
       this.handleSpinning(false);
@@ -267,6 +280,7 @@ const ContenxtmenuMethodMixin = {
 
       this.curCom = component;
       this.curDataKey = item.key;
+      this.resetPagination();
       let dataList = await this.getChartData(component, item.key);
       if (!dataList) {
         return;
@@ -295,6 +309,7 @@ const ContenxtmenuMethodMixin = {
 
       this.curCom = component;
       this.curDataKey = item.key;
+      this.resetPagination();
       let dataList = await this.getChartData(component, item.key);
       if (!dataList) {
         return;
@@ -321,10 +336,18 @@ const ContenxtmenuMethodMixin = {
       return true;
     },
     // 查看/导出数据 -- 构造数据
-    async getChartData(component = this.curCom, mapKey = this.curDataKey) {
-      if (this.boardContentInstance.isSpinning) return;
+    async getChartData(component = this.curCom, mapKey = this.curDataKey, pageNo = this.pagination.pageNo) {
       const chartNode = this.$slots.default[0].componentInstance;
       const contentInstance = this.$parent.$parent;
+      // 表格特殊处理, 1000条
+      if (component.type === BoardType.ChartTable) {
+        this.pagination.pageSize = 1000;
+        // } else if (component.type === BoardType.ChartPie) {
+        //   this.pagination.pageSize = component.setting.style.echart.customLimit;
+        // } else {
+      } else {
+        this.pagination.pageSize = 50;
+      }
       let params = {
         id: component.id,
         type: component.type,
@@ -332,6 +355,7 @@ const ContenxtmenuMethodMixin = {
         tabName: contentInstance.screenInfo.tabName,
         graphName: component.name,
         ...this.pagination,
+        pageNo,
       };
 
       this.handleSpinning(true, '请求数据...');
@@ -343,6 +367,7 @@ const ContenxtmenuMethodMixin = {
       }
 
       let source = res.data || [];
+      this.pagination.rowsNum = res.rowsNum || 0;
 
       let columns = [];
       let rows = [];

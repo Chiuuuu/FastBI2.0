@@ -108,6 +108,7 @@ export default {
         const result = await this.$server.dataModel.getTableDetailInfo({
           tableName: this.item.name,
           tableId: this.item.id,
+          tableType: +this.item.type,
           databaseId: this.item.databaseId,
           current: page,
           columnSize: size,

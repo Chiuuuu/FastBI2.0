@@ -1,5 +1,5 @@
 <template>
-  <div class="scroll-page scrollbar" @scroll="handleScroll">
+  <div :class="{ 'scroll-page': !fit }" class="o-s scrollbar" @scroll="handleScroll">
     <slot />
   </div>
 </template>
@@ -8,21 +8,33 @@
 export default {
   name: 'scrollPage',
   props: {
+    fit: {
+      // 是否自适应宽高
+      type: Boolean,
+      default: false,
+    },
+    fetch: {
+      // 异步方法
+      type: Function,
+    },
+    pagination: {
+      // 分页数据{ pageNo: 页码, pageSize: 单页条数, rowsNum: 从条数 }
+      type: Object,
+      default() {
+        return [];
+      },
+    },
     rows: {
+      // 数据
       type: [Array, Object],
       default() {
         return [];
       },
     },
     rowHeight: {
+      // 行高
       type: [Number, String],
       default: 30,
-    },
-    options: {
-      type: Object,
-      default() {
-        return {};
-      },
     },
   },
   mounted() {
@@ -35,13 +47,9 @@ export default {
   },
   data() {
     return {
-      pagination: {
-        lastScrollTop: 0, // 记录上次滚动位置
-        totalIndex: 0, // 最大页数
-        headIndex: 0, // 头部截取下标
-        footIndex: 4, // 脚部截取下标
-        pageSize: 25, // 每次加载数
-      },
+      totalPage: 0,
+      pageData: [],
+      scrollDirection: '',
     };
   },
   methods: {
@@ -49,71 +57,107 @@ export default {
      * @description 每次数据变化, 初始化滚动数据
      */
     initScrollData() {
-      const len = this.rows.length;
-      // 初始化分页信息
-      this.pagination = Object.assign(
-        {
-          lastScrollTop: 0, // 记录上次滚动位置
-          totalIndex: 0, // 最大页数
-          headIndex: 0, // 头部截取下标
-          footIndex: 4, // 脚部截取下标
-          pageSize: 25, // 每次加载数
-        },
-        this.options,
-      );
-      const { headIndex, footIndex, pageSize } = this.pagination;
-      if (len > (footIndex + 1) * pageSize) {
-        this.pagination.totalIndex = Math.ceil(len / pageSize);
+      const { pageNo, rowsNum, pageSize } = this.pagination;
+      this.totalPage = Math.ceil(rowsNum / pageSize);
+      // 初始化状态
+      if (pageNo === 1 && !this.scrollDirection) {
+        this.pageData = this.doWithPageData(1, this.rows);
       }
-      this.$emit('change', this.rows.slice(headIndex * pageSize, footIndex * pageSize));
+      this.$emit('change', this.pageData);
     },
     /**
      * @description 监听滚动事件处理分页
      */
-    handleScroll(e) {
+    async handleScroll(e) {
+      if (this.scrolling) return;
       const area = e.target;
-      const { scrollTop, scrollHeight, scrollWidth } = area;
+      const { scrollTop, scrollHeight } = area;
       const clientHeight = area.clientHeight;
-      let { totalIndex, headIndex, footIndex, pageSize, lastScrollTop } = this.pagination;
-      // 临界距离取当前高度的1/5或者5个单元格的高
-      const distance = Math.min(clientHeight / 5, this.rowHeight * 5);
+      let { pageNo, pageSize } = this.pagination;
+      let lastScrollTop = this.lastScrollTop;
+      let lastPageNo = pageNo;
+      const cellHeight = this.rowHeight;
+
+      // 临界距离取当前高度的1/3或者10个单元格的高
+      const distance = Math.min(clientHeight / 3, cellHeight * 10);
       // 向上滚动到顶部临界值
       if (lastScrollTop >= scrollTop && scrollTop < distance) {
-        if (--headIndex < 0) {
-          headIndex = 0;
-          footIndex = 4;
+        // 上次向下滚, 则间距+1
+        if (this.scrollDirection === 'down') {
+          pageNo = pageNo - 2;
         } else {
-          footIndex--;
-          this.$emit('change', this.rows.slice(headIndex * pageSize, footIndex * pageSize));
-          // 滚动条回滚
-          area.scrollTo(scrollWidth, scrollTop + this.rowHeight * pageSize);
+          pageNo--;
+        }
+        this.scrollDirection = 'up';
+        if (pageNo < 1) {
+          pageNo = 1;
+        } else {
+          this.scrolling = true;
+          await this.fetch(pageNo);
+          this.scrolling = false;
+          this.$nextTick(() => {
+            this.pageData = this.doWithPageData(lastPageNo, this.rows);
+            this.$emit('change', this.pageData);
+            area.scrollTo(0, pageSize * cellHeight);
+          });
         }
       } else if (lastScrollTop <= scrollTop && scrollHeight - clientHeight - scrollTop < distance) {
         // 向下滚动到底部临界值
-        if (++footIndex > totalIndex) {
-          footIndex = totalIndex;
-          headIndex = totalIndex - 4;
+
+        // 上次向上滚, 则间距+1
+        if (this.scrollDirection === 'up') {
+          pageNo = pageNo + 2;
         } else {
-          headIndex++;
-          this.$emit('change', this.rows.slice(headIndex * pageSize, footIndex * pageSize));
-          // 滚动条回滚
-          area.scrollTo(scrollWidth, scrollTop - this.rowHeight * pageSize);
+          pageNo++;
+        }
+        this.scrollDirection = 'down';
+        if (pageNo > this.totalPage) {
+          pageNo = this.totalPage;
+        } else {
+          this.scrolling = true;
+          await this.fetch(pageNo);
+          this.scrolling = false;
+          this.$nextTick(() => {
+            this.pageData = this.doWithPageData(lastPageNo, this.rows);
+            this.$emit('change', this.pageData);
+            area.scrollTo(0, pageSize * cellHeight);
+          });
         }
       }
-      Object.assign(this.pagination, {
-        headIndex,
-        footIndex,
-        lastScrollTop: scrollTop,
-      });
+      this.lastScrollTop = scrollTop;
+    },
+    /**
+     * @description 处理当前页数(默认保持2页数据上下浮动)
+     * @param {String} lastPageNo 旧页码
+     * @param {Array} data 数据
+     */
+    doWithPageData(lastPageNo, data) {
+      const { pageNo, pageSize } = this.pagination;
+      const rows = [].concat(this.pageData.length ? this.pageData : this.rows || []);
+      // 向上滚动, 截取之前数据的前半部分, 并在头部插入
+      if (pageNo < lastPageNo) {
+        return data.concat(rows.slice(0, pageSize));
+      } else if (pageNo > lastPageNo) {
+        // 特殊情况, 即初次滚动到第2页数据时
+        if (lastPageNo === 1 && rows.length <= pageSize) {
+          return rows.concat(data);
+        }
+        // 向下滚动, 截取之前数据的后半段再插入当前数据
+        return rows.slice(pageSize).concat(data);
+      }
+      // 首页数据直接返回
+      return data;
     },
   },
 };
 </script>
 
 <style scoped>
+.o-s {
+  overflow-y: auto;
+}
 .scroll-page {
   height: 100%;
   width: 100%;
-  overflow-y: auto;
 }
 </style>

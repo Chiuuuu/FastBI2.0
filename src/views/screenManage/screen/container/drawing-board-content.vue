@@ -119,7 +119,6 @@ export default {
   },
   provide() {
     return {
-      boardContentInstance: this,
       handleSpinning: this.handleSpinning,
     };
   },

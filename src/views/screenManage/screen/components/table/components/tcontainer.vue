@@ -1,38 +1,36 @@
 <template>
-  <div :class="type" @scroll="handleScroll" :ref="`${type}-wrap`">
-    <table :style="tableStyle">
-      <colgroup>
-        <col v-for="(col, index) in cols" :key="index" :style="{ width: `${col}px` }" />
-      </colgroup>
-      <thead v-if="type !== 'tbody'" :style="theadStyle.thead">
-        <tr>
-          <template v-for="(th, index) in data">
-            <th :key="th.name" :ref="`js-th-${index}`">
-              <p class="content-wrap" :style="theadStyle.font" :title="th.name">
-                {{ th.showName || th.name }}
-              </p>
-            </th>
-          </template>
-        </tr>
-      </thead>
-      <tbody v-else :style="tbodyStyle.tbody">
-        <template v-for="(tr, index) in data">
-          <tr :key="index" :ref="`js-tr-${index}`" :style="handleSetBackgroundColor(index)">
-            <td v-for="(td, tdI) in tr" :key="tdI">
-              <p
-                class="content-wrap"
-                :style="tbodyStyle.font"
-                :title="autoWrap ? '' : td"
-                @click.stop="dataLink(td, tdI)"
-              >
-                {{ td }}
-              </p>
-            </td>
-          </tr>
+  <table :style="tableStyle" :ref="`${type}-wrap`">
+    <colgroup>
+      <col v-for="(col, index) in cols" :key="index" :style="{ width: `${col}px` }" />
+    </colgroup>
+    <thead v-if="type !== 'tbody'" :style="theadStyle.thead">
+      <tr>
+        <template v-for="(th, index) in data">
+          <th :key="th.name" :ref="`js-th-${index}`">
+            <p class="content-wrap" :style="theadStyle.font" :title="th.name">
+              {{ th.showName || th.name }}
+            </p>
+          </th>
         </template>
-      </tbody>
-    </table>
-  </div>
+      </tr>
+    </thead>
+    <tbody v-else :style="tbodyStyle.tbody">
+      <template v-for="(tr, index) in data">
+        <tr :key="index" :ref="`js-tr-${index}`" :style="handleSetBackgroundColor(index)">
+          <td v-for="(td, tdI) in tr" :key="tdI">
+            <p
+              class="content-wrap"
+              :style="tbodyStyle.font"
+              :title="autoWrap ? '' : td"
+              @click.stop="dataLink(td, tdI)"
+            >
+              {{ td }}
+            </p>
+          </td>
+        </tr>
+      </template>
+    </tbody>
+  </table>
 </template>
 <script>
 export default {
@@ -96,6 +94,7 @@ export default {
       // },
       lastScrollTop: 0, // 记录上次滚动位置
       totalPage: 0, // 总页数
+      scrollDirection: '',
     };
   },
   methods: {
@@ -129,24 +128,39 @@ export default {
       if (!this.$refs['js-tr-0']) return;
       const cellHeight = this.$refs['js-tr-0'][0].clientHeight;
 
-      // 临界距离取当前高度的1/5或者5个单元格的高
-      const distance = Math.min(clientHeight / 5, cellHeight * 5);
+      // 临界距离取当前高度的1/3或者10个单元格的高
+      const distance = Math.min(clientHeight / 3, cellHeight * 10);
       // 向上滚动到顶部临界值
       if (lastScrollTop >= scrollTop && scrollTop < distance) {
-        if (--pageNo < 1) {
+        // 上次向下滚, 则间距+1
+        if (this.scrollDirection === 'down') {
+          pageNo = pageNo - 2;
+        } else {
+          pageNo--;
+        }
+        this.scrollDirection = 'up';
+        if (pageNo < 1) {
           pageNo = 1;
         } else {
           await this.$parent.getServerData(pageNo, cellHeight);
         }
       } else if (lastScrollTop <= scrollTop && scrollHeight - clientHeight - scrollTop < distance) {
         // 向下滚动到底部临界值
-        if (++pageNo > this.totalPage) {
+
+        // 上次向上滚, 则间距+1
+        if (this.scrollDirection === 'up') {
+          pageNo = pageNo + 2;
+        } else {
+          pageNo++;
+        }
+        this.scrollDirection = 'down';
+        if (pageNo > this.totalPage) {
           pageNo = this.totalPage;
         } else {
           await this.$parent.getServerData(pageNo, cellHeight);
         }
       }
-      this.lastScrollTop = lastScrollTop;
+      this.lastScrollTop = scrollTop;
     },
     /**
      * @description 处理奇偶行的背景颜色
@@ -164,10 +178,19 @@ export default {
     handleGetColWidth(list) {
       return list.map((max, index) => {
         const tr = this.$refs[`js-tr-${max}`];
-        let width = Math.ceil(tr[0].children[`${index}`].children[0].offsetWidth) + 22;
+        let width = 101;
+        if (tr) {
+          const td = tr[0].children[`${index}`];
+          const p = td ? td.children[0] : null;
+          if (p) {
+            width = Math.ceil(p.offsetWidth) + 22;
+          }
+        }
+        // let width = Math.ceil(tr[0].children[`${index}`].children[0].offsetWidth) + 22;
         // 最小宽度100
         width = width > 101 ? width : 101;
-        const th = this.$parent.$refs['js-thead'].$refs[`js-th-${index}`][0];
+        const thead = this.$parent.$refs['js-thead'] || this.$parent.$parent.$refs['js-thead'];
+        const th = thead.$refs[`js-th-${index}`][0];
         if (!th) return width;
         const headWidth = th.offsetWidth + 22;
         return Math.max(width, headWidth);

@@ -144,7 +144,7 @@ export default {
       shapeUnit: this,
     };
   },
-  inject: ['boardContentInstance', 'handleSpinning'],
+  inject: ['handleSpinning'],
   props: {
     config: {
       // 配置项信息

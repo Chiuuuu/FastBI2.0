@@ -169,6 +169,7 @@
                       <a-col :span="16">
                         <a-input-number
                           :min="0"
+                          :max="50"
                           :value="currentCom.setting.style.echart.customLimit"
                           @change="customLimit => handleChange('echart', { customLimit })"
                         ></a-input-number>
