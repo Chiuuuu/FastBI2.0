@@ -681,6 +681,11 @@ export default {
             operation: 2,
             database: database,
           });
+        } else {
+          const target = this.operation.find(item => item.name === name);
+          if (target) {
+            target.database = database;
+          }
         }
         this.$nextTick(() => {
           this.handleGetDataBase(currentIndex);
