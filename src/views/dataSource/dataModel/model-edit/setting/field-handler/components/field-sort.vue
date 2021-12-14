@@ -3,7 +3,7 @@
     <a-row style="margin-bottom: 10px" type="flex">
       <a-col flex="auto"></a-col>
       <a-col>
-        <a-button type="primary" icon="plus" :disabled="tableList.length >= 5" @click="showModal"></a-button>
+        <a-button type="primary" icon="plus" :disabled="tableList.length >= 10" @click="showModal"></a-button>
       </a-col>
     </a-row>
     <a-table :columns="columns" :data-source="tableList" :scroll="tableScroll" rowKey="pivotschemaId">
@@ -89,12 +89,12 @@ export default {
   },
   methods: {
     showModal() {
+      if (this.tableList.length >= 10) return this.$message.error('最多支持10个排序字段');
       this.handleTreeData();
       this.showFieldModal = true;
     },
     // 插入新的排序字段
     handleInsertField(nodes) {
-      if (this.tableList.length >= 5) return this.$message.error('最多支持5个排序字段');
       const data = nodes[0];
       const insertData = {
         fieldId: data.fieldId,

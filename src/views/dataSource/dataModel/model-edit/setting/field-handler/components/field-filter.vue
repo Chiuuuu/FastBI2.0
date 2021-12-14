@@ -3,7 +3,7 @@
     <a-row style="margin-bottom: 10px" type="flex">
       <a-col flex="auto"></a-col>
       <a-col>
-        <a-button type="primary" icon="plus" @click="showModal"></a-button>
+        <a-button type="primary" icon="plus" :disabled="tableList.length >= 10" @click="showModal"></a-button>
       </a-col>
     </a-row>
     <a-table :columns="columns" :data-source="tableList" :scroll="tableScroll" rowKey="pivotschemaId">
@@ -178,6 +178,7 @@ export default {
       }
     },
     showModal() {
+      if (this.tableList.length >= 10) return this.$message.error('最多支持10个排序字段');
       this.isEdit = false;
       this.showFieldModal = true;
       this.modalType = 'tree';

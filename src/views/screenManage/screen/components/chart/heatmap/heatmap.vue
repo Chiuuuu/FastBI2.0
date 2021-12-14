@@ -47,6 +47,7 @@ export default {
           id: this.shapeUnit.component.id,
           tabId: this.shapeUnit.component.tabId,
           type: this.shapeUnit.component.type,
+          ...this.pagination,
           ...omit(this.options.data, ['expands', 'xaxis', 'yaxis']),
           dimensions: [].concat(xaxis, yaxis),
         })

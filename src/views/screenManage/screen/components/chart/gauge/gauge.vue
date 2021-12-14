@@ -60,6 +60,7 @@ export default {
           tabId: this.shapeUnit.component.tabId,
           type: this.shapeUnit.component.type,
           ...this.options.data,
+          ...this.pagination,
           measures,
         })
         .finally(() => {

@@ -58,6 +58,11 @@ export default {
       type: Array,
       required: true,
     },
+    pagination: {
+      // 表格样式
+      type: Object,
+      default: () => {},
+    },
     tableStyle: {
       // 表格样式
       type: Object,
@@ -82,13 +87,15 @@ export default {
   data() {
     return {
       // 展示500行数据
-      pagination: {
-        lastScrollTop: 0, // 记录上次滚动位置
-        totalIndex: 0, // 最大页数
-        headIndex: 0, // 头部截取下标
-        footIndex: 4, // 脚部截取下标
-        pageSize: 50, // 每次加载数
-      },
+      // pagination: {
+      //   lastScrollTop: 0, // 记录上次滚动位置
+      //   rowsNum: 0, // 最大页数
+      //   pageNo: 0, // 头部截取下标
+      //   footIndex: 4, // 脚部截取下标
+      //   pageSize: 50, // 每次加载数
+      // },
+      lastScrollTop: 0, // 记录上次滚动位置
+      totalPage: 0, // 总页数
     };
   },
   methods: {
@@ -96,22 +103,27 @@ export default {
      * @description 每次数据变化, 初始化滚动数据
      */
     initScrollData() {
-      const len = this.data.length;
-      const { headIndex, footIndex, pageSize } = this.pagination;
-      if (len > (footIndex + 1) * pageSize) {
-        this.pagination.totalIndex = Math.ceil(len / pageSize);
-      }
-      this.$parent.doWithSliceData(headIndex * pageSize, footIndex * pageSize);
+      const { rowsNum, pageSize } = this.pagination;
+      // const len = this.data.length;
+      // if (len > (footIndex + 1) * pageSize) {
+      // if (len > rowsNum) {
+      //   this.pagination.rowsNum = Math.ceil(len / pageSize);
+      // }
+      // this.$parent.doWithSliceData(pageNo * pageSize, footIndex * pageSize);
+      // this.$parent.doWithSliceData(pageNo);
+      this.totalPage = Math.ceil(rowsNum / pageSize);
     },
     /**
      * @description 监听滚动事件处理分页
      */
-    handleScroll(e) {
+    async handleScroll(e) {
       if (this.type !== 'tbody') return;
       const area = e.target;
-      const { scrollTop, scrollHeight, scrollWidth } = area;
+      const { scrollTop, scrollHeight } = area;
       const clientHeight = area.clientHeight;
-      let { totalIndex, headIndex, footIndex, pageSize, lastScrollTop } = this.pagination;
+      // let { rowsNum, pageNo, footIndex, pageSize, lastScrollTop } = this.pagination;
+      let { pageNo } = this.pagination;
+      let lastScrollTop = this.lastScrollTop;
 
       // 获取任意一行的高度
       if (!this.$refs['js-tr-0']) return;
@@ -121,32 +133,20 @@ export default {
       const distance = Math.min(clientHeight / 5, cellHeight * 5);
       // 向上滚动到顶部临界值
       if (lastScrollTop >= scrollTop && scrollTop < distance) {
-        if (--headIndex < 0) {
-          headIndex = 0;
-          footIndex = 4;
+        if (--pageNo < 1) {
+          pageNo = 1;
         } else {
-          footIndex--;
-          this.$parent.doWithSliceData(headIndex * pageSize, footIndex * pageSize);
-          // 滚动条回滚
-          area.scrollTo(scrollWidth, scrollTop + cellHeight * pageSize);
+          await this.$parent.getServerData(pageNo, cellHeight);
         }
       } else if (lastScrollTop <= scrollTop && scrollHeight - clientHeight - scrollTop < distance) {
         // 向下滚动到底部临界值
-        if (++footIndex > totalIndex) {
-          footIndex = totalIndex;
-          headIndex = totalIndex - 4;
+        if (++pageNo > this.totalPage) {
+          pageNo = this.totalPage;
         } else {
-          headIndex++;
-          this.$parent.doWithSliceData(headIndex * pageSize, footIndex * pageSize);
-          // 滚动条回滚
-          area.scrollTo(scrollWidth, scrollTop - cellHeight * pageSize);
+          await this.$parent.getServerData(pageNo, cellHeight);
         }
       }
-      Object.assign(this.pagination, {
-        headIndex,
-        footIndex,
-        lastScrollTop: scrollTop,
-      });
+      this.lastScrollTop = lastScrollTop;
     },
     /**
      * @description 处理奇偶行的背景颜色

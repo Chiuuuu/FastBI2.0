@@ -119,6 +119,7 @@ export default {
   },
   provide() {
     return {
+      boardContentInstance: this,
       handleSpinning: this.handleSpinning,
     };
   },
@@ -156,6 +157,9 @@ export default {
         backgroundColor: `${this.boardPage.background.color}`,
         backgroundImage: `${this.boardPage.background.image}`,
       };
+    },
+    isSpinning() {
+      return this.spinning;
     },
   },
   watch: {

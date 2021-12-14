@@ -144,7 +144,7 @@ export default {
       shapeUnit: this,
     };
   },
-  inject: ['handleSpinning'],
+  inject: ['boardContentInstance', 'handleSpinning'],
   props: {
     config: {
       // 配置项信息
@@ -178,6 +178,9 @@ export default {
     // 是否需要导出
     isNeedExport() {
       return this.component.type.includes('Chart');
+    },
+    isSpinning() {
+      return this.spinningChart;
     },
   },
   watch: {

@@ -208,6 +208,7 @@ export default {
           id: this.shapeUnit.component.id,
           tabId: this.shapeUnit.component.tabId,
           type: this.shapeUnit.component.type,
+          ...this.pagination,
           ...omit(this.options.data, ['expands', 'progress', 'targe']),
           measures: [].concat(progress).concat(targe),
         })

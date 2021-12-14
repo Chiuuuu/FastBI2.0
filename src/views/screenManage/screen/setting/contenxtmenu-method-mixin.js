@@ -94,6 +94,18 @@ const ContenxtmenuMethodMixin = {
       screenInfo: state => state.app.screenInfo.setting,
     }),
   },
+  data() {
+    return {
+      curCom: {}, // 当前图表对象
+      curDataKey: '', // 当前数据类型(地图专用: fill | label)
+      pagination: {
+        // 分页参数
+        pageSize: 500, // 单次查询500条
+        pageNo: 1,
+        rowsNum: 0,
+      },
+    };
+  },
   methods: {
     /**
      * @description 右键菜单——复制图表
@@ -149,9 +161,6 @@ const ContenxtmenuMethodMixin = {
       this.handleSpinning(true, '导出图表...');
       const clone = vm.$el.cloneNode(true);
       clone.style.position = 'relative';
-      const chartDom = clone.querySelector('.ant-spin-container');
-      chartDom.removeChild(chartDom.childNodes[0]);
-      chartDom.removeChild(chartDom.childNodes[0]);
       const canvas = vm.$el.querySelector('canvas');
       if (canvas) {
         const cloneCanvas = clone.querySelector('canvas');
@@ -210,13 +219,15 @@ const ContenxtmenuMethodMixin = {
     },
     /**
      * @description 导出csv
+     * 剩余参数index, vm
      */
-    async handleExportCsv(e, item, component, index, vm) {
+    async handleExportCsv(e, item, component) {
       if (!this.judgeHasData()) {
         return;
       }
       this.handleSpinning(true, '正在导出...');
-      const dataList = await this.getChartData(component, vm);
+      this.curCom = component;
+      const dataList = await this.getChartData(component);
       if (!dataList) {
         return;
       }
@@ -247,13 +258,16 @@ const ContenxtmenuMethodMixin = {
     },
     /**
      * @description 右键菜单——查看图表数据
+     * 剩余参数 index, vm
      */
-    async handleChartDataComponent(e, item, component, index, vm) {
+    async handleChartDataComponent(e, item, component) {
       if (!this.judgeHasData()) {
         return;
       }
 
-      let dataList = await this.getChartData(component, vm, item.key);
+      this.curCom = component;
+      this.curDataKey = item.key;
+      let dataList = await this.getChartData(component, item.key);
       if (!dataList) {
         return;
       }
@@ -263,9 +277,9 @@ const ContenxtmenuMethodMixin = {
       return dataList;
     },
     /**
-     * @description 右键菜单——查看图表数据
+     * 剩余参数 index, vm
      */
-    async handleChartDataComponentForMap(type, e, item, component, index, vm) {
+    async handleChartDataComponentForMap(type, e, item, component) {
       const chartNode = this.$slots.default[0].componentInstance;
       let hasData = type === 'fill' ? chartNode.isFillData() : chartNode.isLabelData();
 
@@ -279,7 +293,9 @@ const ContenxtmenuMethodMixin = {
         return;
       }
 
-      let dataList = await this.getChartData(component, vm, item.key);
+      this.curCom = component;
+      this.curDataKey = item.key;
+      let dataList = await this.getChartData(component, item.key);
       if (!dataList) {
         return;
       }
@@ -305,7 +321,8 @@ const ContenxtmenuMethodMixin = {
       return true;
     },
     // 查看/导出数据 -- 构造数据
-    async getChartData(component, vm, mapKey) {
+    async getChartData(component = this.curCom, mapKey = this.curDataKey) {
+      if (this.boardContentInstance.isSpinning) return;
       const chartNode = this.$slots.default[0].componentInstance;
       const contentInstance = this.$parent.$parent;
       let params = {
@@ -314,6 +331,7 @@ const ContenxtmenuMethodMixin = {
         screenName: contentInstance.screenInfo.screenName,
         tabName: contentInstance.screenInfo.tabName,
         graphName: component.name,
+        ...this.pagination,
       };
 
       this.handleSpinning(true, '请求数据...');

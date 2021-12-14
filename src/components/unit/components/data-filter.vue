@@ -236,6 +236,12 @@ export default {
         // 数值
         num: ['Int64', 'Decimal64(2)', 'Float64'], //除却这些，其他为文本
       },
+      pagination: {
+        // 分页参数
+        pageSize: 0, // TODO: 先传0查所有数据, 后续再改
+        pageNo: 1,
+        rowsNum: 0,
+      },
     };
   },
   computed: {
@@ -360,6 +366,7 @@ export default {
       if (!item) {
         return;
       }
+      if (this.list.length >= 10) return this.$message.error('最多支持拖入10个字段');
       if (this.currentCom.setting.data.filter.fileList.map(item => item.id).includes(item.id) && !flag) return;
       this.currentType = this.judgeFiledType(item.role);
       this.dataType = item.dataType;
@@ -388,6 +395,7 @@ export default {
         dataModelId: selected.tableId,
         dimensions: [this.currentData],
         type: this.currentCom.type,
+        ...this.pagination,
       };
       // this.spinning = true;
       const res = await this.$server.screenManage.getDataPick(params).finally(() => {

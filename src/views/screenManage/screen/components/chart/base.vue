@@ -19,6 +19,12 @@ export default {
       chartInstane: null, // 图表实例
       serverData: null, // 服务端数据
       dataState: 'default', //  // 数据状态("empty":数据为空(服务器返回[])|'default':初始化| 'normal':有数据)
+      pagination: {
+        // 分页参数
+        pageSize: 50,
+        pageNo: 1,
+        rowsNum: 0,
+      },
     };
   },
   inject: ['shapeUnit'],
@@ -74,12 +80,11 @@ export default {
     'options.style': {
       deep: true,
       immediate: false,
-      handler(opt, old) {
+      handler(opt) {
         // 1. 状态要是是停止（移动或者缩放情况下不更变）
         // 2. 配置项发生改变
         if (opt && this.currentComState && this.currentComState === 'stop') {
           this.$nextTick(() => {
-            console.log(opt, old);
             this.updateChartStyle();
             this.screenAdapter();
           });

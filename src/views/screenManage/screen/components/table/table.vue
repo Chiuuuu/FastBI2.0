@@ -11,6 +11,7 @@
           :cols="cols"
           :tableStyle="tableStyle"
           :theadStyle="theadStyle"
+          :pagination="pagination"
           type="thead"
           :key="refreshCount"
           v-if="showHead"
@@ -24,6 +25,7 @@
           :cols="cols"
           :tableStyle="tableStyle"
           :tbodyStyle="tbodyStyle"
+          :pagination="pagination"
           :key="refreshCount + 1"
           :autoWrap="tbody_autoWrap"
           @hook:mounted="doWithWidth"
@@ -80,6 +82,12 @@ export default {
       refreshCount: 0, // 用来重置组件 https://cn.vuejs.org/v2/api/#key => 完整地触发组件的生命周期钩子
       bodyScrollRight: 0, // 计算滚动长度定位纵向滚动轴
       headHeight: '38px', //表头高度
+      pagination: {
+        // 分页参数
+        pageSize: 500, // 单次查询500条
+        pageNo: 1,
+        rowsNum: 0,
+      },
     };
   },
   destroyed() {},
@@ -300,12 +308,19 @@ export default {
      * @description 图表获取数据
      */
     getChartData() {
+      this.pagination = this.$options.data().pagination;
       this.isServerData() ? this.getServerData() : this.getDefaultData();
     },
     /**
      * @description 图表获取服务端数据
+     * @param {String} pageNo 自定义请求页码(针对滚动分页时传入的参数)
+     * @param {String} cellHeight 单元格高度(针对滚动分页时传入的参数)
      */
-    async getServerData() {
+    async getServerData(pageNo, cellHeight) {
+      if (this.shapeUnit.isSpinning) return;
+      // 记录上次的页码
+      let lastPageNo = this.pagination.pageNo;
+      if (pageNo) this.pagination.pageNo = pageNo;
       let dimensions = [];
       let measures = [];
       this.options.data.fields.forEach(item => {
@@ -321,6 +336,7 @@ export default {
           id: this.shapeUnit.component.id,
           tabId: this.shapeUnit.component.tabId,
           type: this.shapeUnit.component.type,
+          ...this.pagination,
           ...this.options.data,
           dimensions, // 拼装维度
           measures, // 拼装度量
@@ -335,7 +351,8 @@ export default {
         }
         this.$message.error(res.msg);
       }
-      this.serverData = { data: res.data };
+      this.pagination.rowsNum = res.rowsNum;
+      this.serverData = { data: this.doWithPageData(lastPageNo, res.data) };
       const keys = this.options.data.fields.map(item =>
         item.role === 2 ? `${item.defaultAggregator}_${item.alias}` : item.alias,
       );
@@ -346,6 +363,35 @@ export default {
       });
       this.doWithOptions();
       this.refreshCount += 1;
+
+      // 数据更新后的页面回滚
+      if (pageNo) {
+        this.$nextTick(() => {
+          this.$refs['js-tbody'].$el.scrollTo(0, cellHeight * this.pagination.pageSize);
+        });
+      }
+    },
+    /**
+     * @description 处理当前页数(默认保持2页数据上下浮动)
+     * @param {String} lastPageNo 旧页码
+     * @param {Array} data 数据
+     */
+    doWithPageData(lastPageNo, data) {
+      const { pageNo, pageSize } = this.pagination;
+      const rows = [].concat(this.serverData ? this.serverData.data : []);
+      // 向上滚动, 截取之前数据的前半部分, 并在头部插入
+      if (pageNo < lastPageNo) {
+        return data.concat(rows.slice(0, pageSize));
+      } else if (pageNo > lastPageNo) {
+        // 特殊情况, 即初次滚动到第2页数据时
+        if (lastPageNo === 1 && rows.length <= pageSize) {
+          return rows.concat(data);
+        }
+        // 向下滚动, 截取之前数据的后半段再插入当前数据
+        return rows.slice(pageSize - 1).concat(data);
+      }
+      // 首页数据直接返回
+      return data;
     },
     /**
      * @description 图表获取默认数据
