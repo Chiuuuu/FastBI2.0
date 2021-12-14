@@ -497,10 +497,10 @@ export default {
       // }
 
       // 校验重名
-      // if (isValid && !this.replaceFile.isReplace && this.fileInfoList.some(file => file.name === name)) {
-      //   isValid = false;
-      //   this.$message.error('文件命名重复, 请重新添加');
-      // }
+      if (isValid && !this.replaceFile.isReplace && this.fileInfoList.some(file => file.name === name)) {
+        isValid = false;
+        this.$message.error('文件命名重复, 请重新添加');
+      }
       if (!isValid) {
         this.clearReplaceFile();
         return;
