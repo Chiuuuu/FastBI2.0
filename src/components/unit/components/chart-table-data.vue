@@ -95,7 +95,7 @@ export default {
     },
     async getPageData(pageNo) {
       this.$parent.pagination.pageNo = pageNo;
-      await this.$parent.handlePageData(pageNo);
+      await this.$parent.getChartData();
     },
     // 内容挂在.board-canvas元素下可显示，默认挂在body下
     getContainer() {

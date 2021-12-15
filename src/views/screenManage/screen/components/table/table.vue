@@ -99,7 +99,7 @@ export default {
       headHeight: '38px', //表头高度
       pagination: {
         // 分页参数
-        pageSize: 50, // 单次查询1000条
+        pageSize: 1000, // 单次查询1000条
         pageNo: 1,
         rowsNum: 0,
       },
