@@ -244,9 +244,10 @@ const ContenxtmenuMethodMixin = {
         return;
       }
       this.handleSpinning(true, '正在导出...');
+      this.curDataKey = item.key;
       this.curCom = component;
       // 导出第一页数据
-      const dataList = await this.getChartData(component, '', 1);
+      const dataList = await this.getChartData(component, item.key, 1);
       if (!dataList) {
         this.handleSpinning(false);
         return;
@@ -263,9 +264,15 @@ const ContenxtmenuMethodMixin = {
       if (!this.judgeHasData()) {
         return;
       }
+      const exportTypeMap = {
+        fillList: 1,
+        labelList: 2,
+      };
       const params = {
         id: component.id,
         graphName: component.name,
+        type: component.type,
+        exportType: exportTypeMap[item.key || ''] || 0,
       };
       this.handleSpinning(true, '正在导出...');
       let res = await this.$server.screenManage.exportExcel(params);
@@ -379,71 +386,35 @@ const ContenxtmenuMethodMixin = {
       let columns = [];
       let rows = [];
       let tableName = [];
-      let exportList = [];
+      // let exportList = [];
 
       if (component.type === 'ChartMap') {
         // 查看数据已拆分成查看填充层or标记层(方便表格分页)
-        if (mapKey) {
-          let aliasKeys = chartNode.handleTableColumns(Object.keys(source[mapKey][0]), mapKey);
-          columns = aliasKeys;
-          let type = '填充';
-          let row = [];
-          if (mapKey === 'fillList') {
-            row = source[mapKey];
-            type = '填充';
-          } else if (mapKey === 'labelList') {
-            row = source[mapKey];
-          }
-          rows = row;
-          let aliasObj = {};
-          aliasKeys.forEach((alias, index) => {
-            aliasObj['name' + index] = alias['colName'];
-          });
-          let cunstomRow = source[mapKey].map(row => {
-            let obj = {};
-            aliasKeys.forEach((alias, index) => {
-              obj['name' + index] = row[alias['colName']];
-            });
-            return obj;
-          });
-          let titleRow = { name0: type, name1: '', name2: '' };
-          cunstomRow = [titleRow, aliasObj].concat(cunstomRow);
-          exportList = cunstomRow.concat(exportList);
-        } else {
-          // 导出数据照旧
-          await Promise.all(
-            Object.keys(source).map(async item => {
-              if (source[item]) {
-                let aliasKeys = chartNode.handleTableColumns(Object.keys(source[item][0]), item);
-                columns.push(aliasKeys);
-                let type = '填充';
-                let row = [];
-                if (item === 'fillList') {
-                  row = source[item];
-                  type = '填充';
-                } else if (item === 'labelList') {
-                  row = source[item];
-                }
-                rows.push(row);
-                tableName.push(type);
-                let aliasObj = {};
-                aliasKeys.forEach((alias, index) => {
-                  aliasObj['name' + index] = alias['colName'];
-                });
-                let cunstomRow = source[item].map(row => {
-                  let obj = {};
-                  aliasKeys.forEach((alias, index) => {
-                    obj['name' + index] = row[alias['colName']];
-                  });
-                  return obj;
-                });
-                let titleRow = { name0: type, name1: '', name2: '' };
-                cunstomRow = [titleRow, aliasObj].concat(cunstomRow);
-                exportList = cunstomRow.concat(exportList);
-              }
-            }),
-          );
+        let aliasKeys = chartNode.handleTableColumns(Object.keys(source[mapKey][0]), mapKey);
+        columns = aliasKeys;
+        // let type = '填充';
+        let row = [];
+        if (mapKey === 'fillList') {
+          row = source[mapKey];
+          // type = '填充';
+        } else if (mapKey === 'labelList') {
+          row = source[mapKey];
         }
+        rows = row;
+        let aliasObj = {};
+        aliasKeys.forEach((alias, index) => {
+          aliasObj['name' + index] = alias['colName'];
+        });
+        // let cunstomRow = source[mapKey].map(row => {
+        //   let obj = {};
+        //   aliasKeys.forEach((alias, index) => {
+        //     obj['name' + index] = row[alias['colName']];
+        //   });
+        //   return obj;
+        // });
+        // let titleRow = { name0: type, name1: '', name2: '' };
+        // cunstomRow = [titleRow, aliasObj].concat(cunstomRow);
+        // exportList = cunstomRow.concat(exportList);
       } else {
         // 处理空数据
         if (!source.length) {
@@ -452,14 +423,14 @@ const ContenxtmenuMethodMixin = {
         }
         columns = chartNode.handleTableColumns(Object.keys(source[0]));
         rows = source;
-        exportList = source;
+        // exportList = source;
       }
       this.chartData = {
         columns,
         rows,
         tableName,
       };
-      return exportList;
+      return rows;
     },
   },
 };

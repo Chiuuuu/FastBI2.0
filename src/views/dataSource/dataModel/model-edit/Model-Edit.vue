@@ -670,6 +670,7 @@ export default {
      * 切换数据库
      */
     async handleChangeDatabase(value, data) {
+      this.tableSearch = '';
       this.handleGetDatabaseTable(data.key);
       this.$store.dispatch('dataModel/setDatabaseId', data.key);
     },
