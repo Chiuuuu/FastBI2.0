@@ -1,4 +1,4 @@
-import { mutationTypes as boardMutaion } from '@/store/modules/board';
+import { parameter, mutationTypes as boardMutaion } from '@/store/modules/board';
 import cloneDeep from 'lodash/cloneDeep';
 import html2canvas from 'html2canvas';
 import JSPDF from 'jspdf';
@@ -172,6 +172,13 @@ const ContenxtmenuMethodMixin = {
       this.handleSpinning(true, '导出图表...');
       const clone = vm.$el.cloneNode(true);
       clone.style.position = 'relative';
+      if (this.$store.state.board.model === parameter.EDIT) {
+        const chartDom = clone.querySelector('.ant-spin-container');
+        // 删除.shape-resize
+        chartDom.removeChild(chartDom.childNodes[0]);
+        // 删除.shape-mover
+        chartDom.removeChild(chartDom.childNodes[0]);
+      }
       const canvas = vm.$el.querySelector('canvas');
       if (canvas) {
         const cloneCanvas = clone.querySelector('canvas');
