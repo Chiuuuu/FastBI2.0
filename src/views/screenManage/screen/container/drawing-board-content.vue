@@ -427,14 +427,14 @@ export default {
   mounted() {
     this.$nextTick(() => {
       // this.doWithRect();
-      window.addEventListener('resize', this.doWithRect);
+      // window.addEventListener('resize', this.doWithRect);
       window.addEventListener('keyup', this.handleDeleteChart);
       this.listenerFullScreen();
       this.initContextMenuForScreen();
     });
   },
   beforeDestroy() {
-    window.removeEventListener('resize', this.doWithRect);
+    // window.removeEventListener('resize', this.doWithRect);
     window.removeEventListener('keyup', this.handleDeleteChart);
     this.removeListenerFullScreen();
   },
