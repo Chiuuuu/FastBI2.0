@@ -314,7 +314,13 @@ export default {
     },
     // 批量时判断是否可以增量抽取
     isIncreasableTable(table) {
-      const target = this.regData.find(item => item.id === table.id);
+      // 新建任务的时候
+      let target = null;
+      if (!this.regData.length) {
+        target = this.allTable.find(item => item.id === table.target);
+      } else {
+        target = this.regData.find(item => item.id === table.id);
+      }
       if (target && target.extractStatus !== 2) {
         // 假如不能进行增量抽取, 则默认改为全量抽取
         table.extractType = 0;
