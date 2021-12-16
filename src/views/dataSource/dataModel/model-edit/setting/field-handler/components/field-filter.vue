@@ -38,7 +38,12 @@
       </template>
     </a-table>
 
-    <a-modal v-model="showFieldModal" :title="modalType === 'tree' ? '选择字段' : '添加条件'" destroyOnClose>
+    <a-modal
+      v-model="showFieldModal"
+      :title="modalType === 'tree' ? '选择字段' : '添加条件'"
+      :maskClosable="false"
+      destroyOnClose
+    >
       <template #footer>
         <template v-if="modalType === 'condition'">
           <a-button @click="showFieldModal = false">取消</a-button>

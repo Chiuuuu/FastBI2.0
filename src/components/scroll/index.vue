@@ -60,6 +60,7 @@ export default {
     // 总数传入为0会被视为重置数据
     'pagination.rowsNum'(v) {
       if (v === 0) {
+        this.scrollDirection = '';
         this.pageData = [];
         this.$emit('change', this.pageData);
       }
@@ -93,7 +94,7 @@ export default {
       let { pageNo, pageSize } = this.pagination;
       const area = e.target;
       const lastScrollTop = this.lastScrollTop;
-      const cellHeight = this.rowHeight;
+      const cellHeight = parseInt(this.rowHeight);
       const { scrollTop, scrollHeight } = area;
       const clientHeight = area.clientHeight;
       const lastPageNo = pageNo;

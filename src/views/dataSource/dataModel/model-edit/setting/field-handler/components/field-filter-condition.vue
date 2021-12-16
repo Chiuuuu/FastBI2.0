@@ -15,10 +15,17 @@
           <a-button style="height: 30px" type="primary" slot="addonAfter" @click="onSearch">查询</a-button>
         </a-input>
         <a-spin :spinning="spinning" class="condition-list hasBorder scrollbar">
-          <ScrollPage :rows="dataRowsResult" :row-height="22" @change="v => (pageDataRows = v)">
+          <ScrollPage
+            :rows="dataRowsResult"
+            :row-height="22"
+            :pagination="pagination"
+            :fetch="getPageData"
+            :limit="0"
+            @change="handleCheckedList"
+          >
             <a-checkbox
-              :indeterminate="checkedData.length > 0 && checkedData.length < dataRowsResult.length"
-              :checked="checkedData.length === dataRowsResult.length"
+              :indeterminate="checkedData.length > 0 && checkedData.length < pageDataRows.length"
+              :checked="checkAll"
               @change="onCheckAllChange"
             >
               全选
@@ -129,12 +136,19 @@ export default {
     return {
       spinning: false,
       searchWord: '', // 搜索关键字
+      fetchType: 'search', // | scroll 是搜索还是滚动时的异步
       conditionName: '', // 添加的条件名
       checkedData: [], // 选中的列表
       customData: [], // 手动添加的列表
       dataRows: [], // 该字段查询出来的数据
       dataRowsResult: [], // 搜索筛选的数据
       pageDataRows: [], // 当前分页展示的数据
+      pagination: {
+        // 分页参数
+        pageSize: 50,
+        pageNo: 1,
+        rowsNum: 0,
+      },
     };
   },
   created() {
@@ -150,6 +164,9 @@ export default {
     isNumber() {
       const data = this.fieldData || this.conditionData;
       return this.NUMBER_LIST.includes(data.convertType || data.dataType);
+    },
+    checkAll() {
+      return this.checkedData.length > 0 && this.checkedData.length === this.pageDataRows.length;
     },
     // isNumber() {
     //   const field = this.getPivotSchemaData()
@@ -168,6 +185,9 @@ export default {
     onCheckChange(e, value) {
       const checked = e.target.checked;
       if (checked) {
+        if (this.checkedData.length >= 50) {
+          return this.$message.error('最多只能添加50个条件');
+        }
         this.checkedData.push(value);
       } else {
         for (let i = 0; i < this.checkedData.length; i++) {
@@ -179,36 +199,43 @@ export default {
         }
       }
     },
-    onSearch() {
-      const checkAll = this.checkedData.length === this.dataRowsResult.length;
-      const keyword = (this.searchWord || '').toLowerCase();
-      const list = keyword.split(',');
-      this.dataRowsResult = this.dataRows.filter(item => {
-        let match = false;
-        list.forEach(k => {
-          if ((item || '').toLowerCase().indexOf(k) > -1) {
-            match = true;
-          }
-        });
-        return match;
-      });
-      // 如果是全选状态, 选中当前所有筛选项
-      if (checkAll) {
-        this.checkedData = [].concat(this.dataRowsResult);
-      } else {
-        // 不是全选状态, 过滤掉非当前搜索结果
-        this.checkedData = this.dataRowsResult.filter(item => this.checkedData.includes(item));
-      }
+    async onSearch() {
+      // const checkAll = this.checkedData.length === this.dataRowsResult.length;
+      // const keyword = (this.searchWord || '').toLowerCase();
+      // const list = keyword.split(',');
+      // this.dataRowsResult = this.dataRows.filter(item => {
+      //   let match = false;
+      //   list.forEach(k => {
+      //     if ((item || '').toLowerCase().indexOf(k) > -1) {
+      //       match = true;
+      //     }
+      //   });
+      //   return match;
+      // });
+      // // 如果是全选状态, 选中当前所有筛选项
+      // if (checkAll) {
+      //   this.checkedData = [].concat(this.dataRowsResult);
+      // } else {
+      //   // 不是全选状态, 过滤掉非当前搜索结果
+      //   this.checkedData = this.dataRowsResult.filter(item => this.checkedData.includes(item));
+      // }
+      // 重置数据
+      this.fetchType = 'search';
+      this.pagination = this.$options.data().pagination;
+      await this.getFieldData();
     },
     onCheckAllChange(e) {
       const value = e.target.checked;
       if (value) {
-        this.checkedData = [].concat(this.dataRowsResult);
+        this.checkedData = [].concat(this.pageDataRows);
       } else {
         this.checkedData = [];
       }
     },
     addCondition() {
+      if (this.checkedData.length >= 50) {
+        return this.$message.error('最多只能添加50个条件');
+      }
       // 字符类型手动添加
       if (!this.isNumber && +this.conditionData.modeType === 2) {
         if (this.checkedData.indexOf(this.conditionName) > -1) {
@@ -287,6 +314,29 @@ export default {
       }
       return true;
     },
+    async getPageData(pageNo) {
+      this.pagination.pageNo = pageNo;
+      this.fetchType = 'scroll';
+      await this.getFieldData();
+    },
+    // 更新列表数据后, 处理选中项
+    handleCheckedList(list) {
+      // 之前保存的选中项
+      const allList = this.conditionData.rule.ruleFilterList;
+      // 重新赋值前如果是全选状态, 选中当前所有筛选项
+      const checkAll = this.checkedData.length > 0 && this.checkedData.length === this.pageDataRows.length;
+      this.pageDataRows = list;
+      if (checkAll) {
+        this.checkedData = [].concat(this.pageDataRows);
+      } else {
+        // 不是全选状态, 对新的数据进行勾选过滤
+        if (this.fetchType === 'search') {
+          this.checkedData = [].concat(list.filter(item => allList.includes(item)));
+        } else if (this.fetchType === 'scroll') {
+          this.checkedData.push(...list.filter(item => allList.includes(item)));
+        }
+      }
+    },
     async getFieldData() {
       // 获取维度对应字段列表
       const data = {
@@ -314,12 +364,14 @@ export default {
       this.spinning = true;
       const res = await this.$server.dataModel
         .getModelData({
+          ...this.pagination,
           ...this.rootInstance.detailInfo,
           pivotSchema: {
             ...this.rootInstance.handleConcat(), // 处理维度度量
           },
           modelTableId: data.modelTableId,
           resourceJson: params,
+          keyword: this.searchWord,
         })
         .finally(() => {
           this.spinning = false;
@@ -348,11 +400,14 @@ export default {
         if (hasNull) list.unshift('');
         this.dataRows = list;
         // 从最新数据中过滤掉被删除的行数据
-        const checkedData = this.conditionData.rule.ruleFilterList.filter(item => this.dataRows.includes(item)) || [];
-        this.checkedData = [].concat(checkedData);
-        this.conditionData.rule.ruleFilterList = checkedData;
+        // const checkedData = this.conditionData.rule.ruleFilterList.filter(item => this.dataRows.includes(item)) || [];
+        // this.checkedData = [].concat(checkedData);
+        // this.conditionData.rule.ruleFilterList = checkedData;
+        this.pagination.rowsNum = res.rowsNum;
+        this.dataRowsResult = this.dataRows;
+      } else {
+        this.dataRowsResult = [];
       }
-      this.dataRowsResult = this.dataRows || [];
     },
   },
 };

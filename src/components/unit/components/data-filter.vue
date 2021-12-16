@@ -55,15 +55,18 @@
               <a-button style="height: 30px" type="primary" slot="addonAfter" @click="search">查询</a-button>
             </a-input>
             <br />
-            <div class="pick-checkbox-box hasborder">
-              <ScrollPage :rows="currentFile.searchList" :row-height="22" @change="v => (pageDataRows = v)">
+            <a-spin :spinning="spinning" class="pick-checkbox-box hasborder">
+              <ScrollPage
+                :rows="currentFile.searchList"
+                :row-height="22"
+                :pagination="pagination"
+                :fetch="getPageData"
+                :limit="0"
+                @change="handleCheckedList"
+              >
                 <a-checkbox
-                  :checked="currentFile.value.length === currentFile.searchList.length"
-                  :indeterminate="
-                    currentFile.value &&
-                    currentFile.value.length > 0 &&
-                    currentFile.value.length < currentFile.searchList.length
-                  "
+                  :checked="checkAll"
+                  :indeterminate="checkedData && checkedData.length > 0 && checkedData.length < pageDataRows.length"
                   @change="onCheckAllChange"
                 >
                   全选
@@ -78,13 +81,13 @@
                   class="block-checkbox"
                   v-for="item in pageDataRows"
                   :key="item"
-                  :checked="currentFile.value.includes(item)"
+                  :checked="checkedData.includes(item)"
                   @change="onCheckChange($event, item)"
                 >
                   {{ item }}
                 </a-checkbox>
               </ScrollPage>
-            </div>
+            </a-spin>
           </div>
           <!--手动-->
           <div class="item" v-if="currentFile.operation === 'manual'">
@@ -214,8 +217,10 @@ export default {
   data() {
     return {
       visible: false, // 是否显示弹窗
+      spinning: false,
       screenVisible: false,
       listValue: '', // 列表模糊查询输入值
+      fetchType: 'search', // | scroll 是搜索还是滚动时的异步
       manualValue: '', // 手动输入值
       searchList: [],
       conditionOptions: [
@@ -227,8 +232,9 @@ export default {
         { label: '等于', op: 'equal' },
         { label: '不等于', op: 'notEqual' },
       ], // 条件选项
-      currentFile: {},
       pageDataRows: [], // 当前页的可选数据
+      checkedData: [], // 当前选中项
+      currentFile: {},
       currentType: '', //当前选中的类型
       currentData: {}, //当前弹框字段数据
       dataType: '', //数据类型
@@ -238,7 +244,7 @@ export default {
       },
       pagination: {
         // 分页参数
-        pageSize: 0, // TODO: 先传0查所有数据, 后续再改
+        pageSize: 50, // TODO: 先传0查所有数据, 后续再改
         pageNo: 1,
         rowsNum: 0,
       },
@@ -250,6 +256,9 @@ export default {
       dragdropState: state => state.dragdrop,
       resourceType: state => state.app.resourceType,
     }),
+    checkAll() {
+      return this.checkedData.length > 0 && this.checkedData.length === this.pageDataRows.length;
+    },
   },
   watch: {
     dragdropState: {
@@ -286,42 +295,12 @@ export default {
   },
   methods: {
     /**
-     * @description 列表模糊查询
-     */
-    search() {
-      const checkAll = this.currentFile.value.length === this.currentFile.searchList.length;
-      if (!this.listValue) {
-        this.currentFile.searchList = this.currentFile.originList;
-        // 不强制刷新的话, 不会触发updated()
-        return this.$forceUpdate();
-      }
-      const keyword = (this.listValue || '').toLowerCase();
-      const list = keyword.split(',');
-      this.currentFile.searchList = [].concat(
-        this.currentFile.originList.filter(item => {
-          let match = false;
-          list.forEach(k => {
-            if ((item || '').toLowerCase().indexOf(k) > -1) {
-              match = true;
-            }
-          });
-          return match;
-        }),
-      );
-      // 如果是全选状态, 选中当前所有筛选项
-      if (checkAll) {
-        this.currentFile.value = [].concat(this.currentFile.searchList);
-      } else {
-        // 不是全选状态, 过滤掉非当前搜索结果
-        this.currentFile.value = this.currentFile.searchList.filter(item => this.currentFile.value.includes(item));
-      }
-      // 不强制刷新的话, 不会触发updated()
-      this.$forceUpdate();
-    },
-    /**
      * @description 手动，添加字段
      */
     addManualProperty() {
+      if (this.currentFile.value.length >= 50) {
+        return this.$message.error('最多只能添加50个条件');
+      }
       // 本身不存在就添加进去
       if (this.currentFile.value.indexOf(this.manualValue) === -1) {
         this.currentFile.value.push(this.manualValue);
@@ -355,6 +334,7 @@ export default {
         this.currentFile.rules = [];
       } else {
         this.currentFile.value = [];
+        this.checkedData = [];
       }
     },
     /**
@@ -373,11 +353,22 @@ export default {
       this.currentData = item;
       this.initCurrentFile();
       this.currentFile = cloneDeep({ ...this.currentFile, ...pick(item, Object.keys(this.currentFile)) });
+      this.checkedData = [].concat(this.currentFile.value);
       // 非数值类型字段才调接口
       if (!this.dataTypeObj['num'].includes(this.dataType)) {
+        this.pagination = this.$options.data().pagination;
+        this.fetchType = 'search';
         this.getFieldData();
       }
       this.visible = true;
+    },
+    /**
+     * @description 文本类型筛选分页
+     */
+    async getPageData(pageNo) {
+      this.pagination.pageNo = pageNo;
+      this.fetchType = 'scroll';
+      await this.getFieldData();
     },
     /**
      * @description 获取文本类型的数据
@@ -394,12 +385,13 @@ export default {
         resourceType: this.resourceType[this.boardSettingRightInstance.tabAcitve],
         dataModelId: selected.tableId,
         dimensions: [this.currentData],
+        keyword: this.listValue,
         type: this.currentCom.type,
         ...this.pagination,
       };
-      // this.spinning = true;
+      this.spinning = true;
       const res = await this.$server.screenManage.getDataPick(params).finally(() => {
-        // this.spinning = false;
+        this.spinning = false;
       });
       if (res.code === 500 && res.msg === 'IsChanged') {
         this.$message.error('模型数据不存在');
@@ -423,9 +415,11 @@ export default {
         }); // 维度全字段列表
         if (hasNull) list.unshift('');
         this.dataRows = list;
+        this.pagination.rowsNum = res.rowsNum;
       }
       this.currentFile.originList = this.dataRows || [];
       this.currentFile.searchList = this.dataRows || [];
+      return this.currentFile.searchList;
     },
     /**
      * @description 文本数据-列表/手动切换
@@ -441,16 +435,83 @@ export default {
       this.currentFile.checkAll = false;
     },
     /**
+     * @description 列表模糊查询
+     */
+    async search() {
+      // if (!this.listValue) {
+      //   this.currentFile.searchList = this.currentFile.originList;
+      //   // 不强制刷新的话, 不会触发updated()
+      //   return this.$forceUpdate();
+      // }
+      // const keyword = (this.listValue || '').toLowerCase();
+      // const list = keyword.split(',');
+      // this.currentFile.searchList = [].concat(
+      //   this.currentFile.originList.filter(item => {
+      //     let match = false;
+      //     list.forEach(k => {
+      //       if ((item || '').toLowerCase().indexOf(k) > -1) {
+      //         match = true;
+      //       }
+      //     });
+      //     return match;
+      //   }),
+      // );
+      // // 不强制刷新的话, 不会触发updated()
+      // this.$forceUpdate();
+      // 重置数据
+      this.pagination = this.$options.data().pagination;
+      this.fetchType = 'search';
+      await this.getFieldData();
+    },
+    /**
+     * @description 更新列表数据后
+     */
+    handleCheckedList(list) {
+      // 之前保存的选中项
+      const allList = this.currentFile.value;
+      // 重新赋值前如果是全选状态, 选中当前所有筛选项
+      const checkAll = this.checkedData.length > 0 && this.checkedData.length === this.pageDataRows.length;
+      this.pageDataRows = list;
+      if (checkAll) {
+        this.checkedData = [].concat(this.pageDataRows);
+      } else {
+        // 不是全选状态, 对新的数据进行勾选过滤
+        if (this.fetchType === 'search') {
+          this.checkedData = list.filter(item => allList.includes(item));
+        } else if (this.fetchType === 'scroll') {
+          this.checkedData.push(...list.filter(item => allList.includes(item)));
+        }
+      }
+    },
+    /**
      * @description 维度、度量数据筛选弹框 -- 确定
      */
     async handleOk() {
       if (this.dataTypeObj['num'].includes(this.dataType) && !this.handleNumData()) {
         return;
-      } else if (!this.dataTypeObj['num'].includes(this.dataType) && this.currentFile.value.length < 1) {
-        return this.$message.error('筛选条件为空');
+      } else if (!this.dataTypeObj['num'].includes(this.dataType)) {
+        // 列表
+        if (this.currentFile.operation === 'list') {
+          if (this.checkedData.length < 1) {
+            return this.$message.error('筛选条件为空');
+          } else if (!this.checkAll && this.checkedData.length > 50) {
+            return this.$message.error('最多只能添加50个条件');
+          } else {
+            this.currentFile.value = this.checkedData;
+          }
+        } else {
+          // 手动添加
+          if (this.currentFile.value.length < 1) {
+            return this.$message.error('筛选条件为空');
+          } else if (this.currentFile.value.length > 50) {
+            return this.$message.error('最多只能添加50个条件');
+          }
+        }
+        this.currentFile.checkAll = this.checkAll;
       }
       this.visible = false;
       this.listValue = '';
+      this.checkedData = [];
       this.currentData = Object.assign({}, this.currentData, omit(this.currentFile, ['searchList', 'originList']));
       this.handleDropField({
         dropType: this.type,
@@ -794,16 +855,18 @@ export default {
      * @description 维度-列表 选择
      */
     onCheckChange(e, value) {
-      this.currentFile.checkAll = value.length === this.currentFile.searchList.length;
       const checked = e.target.checked;
       if (checked) {
-        this.currentFile.value.push(value);
+        if (this.checkedData.length >= 50) {
+          return this.$message.error('最多只能添加50个条件');
+        }
+        this.checkedData.push(value);
       } else {
-        const len = this.currentFile.value.length;
+        const len = this.checkedData.length;
         for (let i = 0; i < len; i++) {
-          const item = this.currentFile.value[i];
+          const item = this.checkedData[i];
           if (item === value) {
-            this.currentFile.value.splice(i, 1);
+            this.checkedData.splice(i, 1);
             break;
           }
         }
@@ -815,9 +878,9 @@ export default {
     onCheckAllChange(e) {
       const value = e.target.checked;
       if (value) {
-        this.currentFile.value = [].concat(this.currentFile.searchList);
+        this.checkedData = [].concat(this.pageDataRows);
       } else {
-        this.currentFile.value = [];
+        this.checkedData = [];
       }
     },
     /**

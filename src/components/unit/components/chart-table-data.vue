@@ -79,7 +79,7 @@ export default {
       this.$parent.pagination.pageNo = pageNo;
       await this.$parent.getChartData();
     },
-    // 内容挂在.board-canvas元素下可显示，默认挂在body下
+    // 内容挂在.drawing-board-content元素下可显示，默认挂在body下
     getContainer() {
       return document.querySelector('.drawing-board-content');
     },

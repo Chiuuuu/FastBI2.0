@@ -277,8 +277,8 @@ const ContenxtmenuMethodMixin = {
       this.handleSpinning(true, '正在导出...');
       let res = await this.$server.screenManage.exportExcel(params);
       this.handleSpinning(false);
-      if (res['code'] && res['code'] !== 200) {
-        this.$message.error(res.msg);
+      if (res.code && res.code !== 200) {
+        this.$message.error(res.msg || '请重新操作');
         return;
       }
       download(res, component.setting.style.title.text + '.xlsx', 'file');
@@ -386,35 +386,17 @@ const ContenxtmenuMethodMixin = {
       let columns = [];
       let rows = [];
       let tableName = [];
-      // let exportList = [];
 
       if (component.type === 'ChartMap') {
         // 查看数据已拆分成查看填充层or标记层(方便表格分页)
         let aliasKeys = chartNode.handleTableColumns(Object.keys(source[mapKey][0]), mapKey);
         columns = aliasKeys;
-        // let type = '填充';
-        let row = [];
-        if (mapKey === 'fillList') {
-          row = source[mapKey];
-          // type = '填充';
-        } else if (mapKey === 'labelList') {
-          row = source[mapKey];
-        }
+        let row = source[mapKey];
         rows = row;
         let aliasObj = {};
         aliasKeys.forEach((alias, index) => {
           aliasObj['name' + index] = alias['colName'];
         });
-        // let cunstomRow = source[mapKey].map(row => {
-        //   let obj = {};
-        //   aliasKeys.forEach((alias, index) => {
-        //     obj['name' + index] = row[alias['colName']];
-        //   });
-        //   return obj;
-        // });
-        // let titleRow = { name0: type, name1: '', name2: '' };
-        // cunstomRow = [titleRow, aliasObj].concat(cunstomRow);
-        // exportList = cunstomRow.concat(exportList);
       } else {
         // 处理空数据
         if (!source.length) {
@@ -423,7 +405,6 @@ const ContenxtmenuMethodMixin = {
         }
         columns = chartNode.handleTableColumns(Object.keys(source[0]));
         rows = source;
-        // exportList = source;
       }
       this.chartData = {
         columns,

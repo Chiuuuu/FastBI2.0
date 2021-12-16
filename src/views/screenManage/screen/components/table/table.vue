@@ -24,7 +24,7 @@
           fit
           :style="scrollStyle"
           :rows="tbodyData"
-          :row-height="22"
+          :row-height="headHeight"
           :pagination="pagination"
           :fetch="getPageData"
           @change="v => (pageDataRows = v)"
@@ -129,14 +129,6 @@ export default {
     },
   },
   methods: {
-    /**
-     * @description 切割当前展示的表格
-     */
-    doWithSliceData(start, end) {
-      if (!this.serverData) return;
-      const data = this.serverData.data.slice(start, end);
-      this.doWithOptions({ data });
-    },
     /**
      * @description 等子组件挂载完成后处理表头的高度
      */
@@ -425,8 +417,6 @@ export default {
      */
     updateChartStyle() {
       this.doWithWidth();
-      this.doWithThead();
-      this.doWithTbody();
     },
     /**
      * @description 图表联动
