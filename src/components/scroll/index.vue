@@ -1,6 +1,6 @@
 <template>
   <!-- 参数
-    slice: 是否保留之前数据(否则只保存最近2页的数据)
+    limit: 保留多少页数据(传0保留所有)
     fit: 宽高是否自适应
     fetch: 异步方法
     pagination: 分页对象
@@ -16,10 +16,10 @@
 export default {
   name: 'scrollPage',
   props: {
-    slice: {
-      // 是否保留所有数据
-      type: Boolean,
-      default: true,
+    limit: {
+      // 保留几页数据(传0保留所有数据)
+      type: Number,
+      default: 2,
     },
     fit: {
       // 是否自适应宽高
@@ -57,6 +57,7 @@ export default {
     rows() {
       this.initScrollData();
     },
+    // 总数传入为0会被视为重置数据
     'pagination.rowsNum'(v) {
       if (v === 0) {
         this.pageData = [];
@@ -81,32 +82,32 @@ export default {
       // 初始化状态
       if (pageNo === 1 && !this.scrollDirection) {
         this.pageData = this.doWithPageData(1, this.rows);
+        this.$emit('change', this.pageData);
       }
-      this.$emit('change', this.pageData);
     },
     /**
      * @description 监听滚动事件处理分页
      */
     async handleScroll(e) {
       if (this.scrolling) return;
+      let { pageNo, pageSize } = this.pagination;
       const area = e.target;
+      const lastScrollTop = this.lastScrollTop;
+      const cellHeight = this.rowHeight;
       const { scrollTop, scrollHeight } = area;
       const clientHeight = area.clientHeight;
-      let { pageNo, pageSize } = this.pagination;
-      let lastScrollTop = this.lastScrollTop;
-      let lastPageNo = pageNo;
-      const cellHeight = this.rowHeight;
+      const lastPageNo = pageNo;
 
       // 临界距离取当前高度的1/3或者10个单元格的高
       const distance = Math.min(clientHeight / 3, cellHeight * 10);
       // 向上滚动到顶部临界值
       if (lastScrollTop >= scrollTop && scrollTop < distance) {
-        // 截取数据才做操作
-        if (!this.slice) return;
+        // 截取数据才有向上加载数据的操作
+        if (this.limit === 0) return;
 
-        // 上次向下滚, 则间距+1
+        // 上次向下滚, 则间距为limit
         if (this.scrollDirection === 'down') {
-          pageNo = pageNo - 2;
+          pageNo = pageNo - this.limit;
         } else {
           pageNo--;
         }
@@ -126,9 +127,9 @@ export default {
       } else if (lastScrollTop <= scrollTop && scrollHeight - clientHeight - scrollTop < distance) {
         // 向下滚动到底部临界值
 
-        // 上次向上滚, 则间距+1
+        // 上次向上滚, 则间距为limit
         if (this.scrollDirection === 'up') {
-          pageNo = pageNo + 2;
+          pageNo = pageNo + this.limit;
         } else {
           pageNo++;
         }
@@ -142,7 +143,7 @@ export default {
           this.$nextTick(() => {
             this.pageData = this.doWithPageData(lastPageNo, this.rows);
             this.$emit('change', this.pageData);
-            area.scrollTo(0, pageSize * cellHeight);
+            area.scrollTo(0, (this.pageData.length - this.rows.length) * cellHeight);
           });
         }
       }
@@ -161,7 +162,7 @@ export default {
         return data.concat(rows.slice(0, pageSize));
       } else if (pageNo > lastPageNo) {
         // 非切割模式, 直接拼接数据
-        if (!this.slice) {
+        if (this.limit === 0) {
           return rows.concat(data);
         }
         // 特殊情况, 即初次滚动到第2页数据时

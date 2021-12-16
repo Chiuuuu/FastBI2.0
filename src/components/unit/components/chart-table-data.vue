@@ -4,27 +4,12 @@
     title="图表数据"
     width="80vw"
     :footer="null"
-    @cancel="$emit('cancel')"
     :getContainer="getContainer"
+    :bodyStyle="{ height: '70vh' }"
+    destroyOnClose
+    @cancel="$emit('cancel')"
   >
-    <div class="scrollbar" style="width: 100%; height: 80vh">
-      <!-- <div style="margin: 0 0 10px" v-for="(item, index) in chartData.columns" :key="index">
-        <h3 style="margin: 0 0 2px" v-if="chartData.tableName[index]">
-          {{ chartData.tableName[index] }}
-        </h3>
-        <table class="chartdata-table">
-          <tr class="table-tr">
-            <th class="table-td" v-for="(subItem, subIndex) in item" :key="subIndex">
-              {{ subItem.colName }}
-            </th>
-          </tr>
-          <tr class="table-tr" v-for="(subItem2, subIndex2) in chartData.rows[index]" :key="subIndex2">
-            <td class="table-td" v-for="(value, key) in item" :key="key">
-              {{ subItem2[value.alias || value] || '' }}
-            </td>
-          </tr>
-        </table>
-      </div> -->
+    <div class="scrollbar" style="width: 100%; height: 100%">
       <div class="scroll-area">
         <ScrollPage
           :rows="chartData.rows"
@@ -74,17 +59,14 @@ export default {
   watch: {
     show(val) {
       // 获取最大条数
-      if (val) {
-        const { rowsNum, pageSize } = this.$parent.pagination;
-        this.totalPage = Math.ceil(rowsNum / pageSize);
+      if (!val) {
+        this.$parent.resetPagination();
       }
     },
   },
   data() {
     return {
       scrolling: false,
-      totalPage: 0,
-      lastScrollTop: 0,
       pageDataRows: [],
     };
   },
@@ -99,7 +81,7 @@ export default {
     },
     // 内容挂在.board-canvas元素下可显示，默认挂在body下
     getContainer() {
-      return document.querySelector('.board-canvas');
+      return document.querySelector('.drawing-board-content');
     },
   },
 };
