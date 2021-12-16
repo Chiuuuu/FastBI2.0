@@ -374,12 +374,12 @@ export default {
           [measureAlias.replace(/(.*?)_/, '')]: data[measureAlias], // 度量
         });
       }
-      // 每个区域标记点超过20个要进行截取
-      if (datas.length > 20) {
+      // 每个区域标记点超过50个要进行截取
+      if (datas.length >= 50) {
         let overload = false;
         datas.map(item => {
-          if (item.value.length && item.value.length > 20) {
-            datas.length = 20;
+          if (item.value.length && item.value.length > 50) {
+            datas.length = 50;
             overload = true;
           }
         });
@@ -435,12 +435,12 @@ export default {
       if (labelList.length && !datas.length) {
         this.$message.error('经纬度解析失败');
       }
-      // 每个区域标记点超过20个要进行截取
-      if (datas.length > 20) {
+      // 每个区域标记点超过50个要进行截取
+      if (datas.length > 50) {
         let overload = false;
         datas.map(item => {
-          if (item.value.length && item.value.length > 20) {
-            datas.length = 20;
+          if (item.value.length && item.value.length > 50) {
+            datas.length = 50;
             overload = true;
           }
         });

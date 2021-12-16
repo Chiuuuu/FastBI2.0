@@ -66,7 +66,7 @@ export default {
       }
       const datas = res.data || [];
       // 截取前50条数据展示
-      if (datas.length > 50) {
+      if (datas.length >= 50) {
         datas.length = 50;
         const title = this.options.style.title.text;
         this.$message.error(`图表${title}数据量过大, 已截取前50条展示`);

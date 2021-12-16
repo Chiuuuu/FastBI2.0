@@ -192,10 +192,10 @@ export default {
     min-width: 180px;
     background-color: #fff;
     white-space: nowrap;
-    &.has-child:hover {
+    &:hover {
       background-color: #e0e0e0;
 
-      & > ul.sub {
+      &.has-child > ul.sub {
         display: block;
       }
     }
