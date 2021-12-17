@@ -66,7 +66,7 @@
               >
                 <a-checkbox
                   :checked="checkAll"
-                  :indeterminate="checkedData && checkedData.length > 0 && checkedData.length < pageDataRows.length"
+                  :indeterminate="checkedData.length > 0 && !checkAll"
                   @change="onCheckAllChange"
                 >
                   全选
@@ -257,7 +257,8 @@ export default {
       resourceType: state => state.app.resourceType,
     }),
     checkAll() {
-      return this.checkedData.length > 0 && this.checkedData.length === this.pageDataRows.length;
+      // return this.checkedData.length > 0 && this.checkedData.length === this.pageDataRows.length;
+      return this.checkedData.length > 0 && !this.pageDataRows.some(item => !this.checkedData.includes(item));
     },
   },
   watch: {
@@ -468,19 +469,22 @@ export default {
      */
     handleCheckedList(list) {
       // 之前保存的选中项
-      const allList = this.currentFile.value;
+      // const allList = this.currentFile.value;
       // 重新赋值前如果是全选状态, 选中当前所有筛选项
       const checkAll = this.checkedData.length > 0 && this.checkedData.length === this.pageDataRows.length;
       this.pageDataRows = list;
       if (checkAll) {
-        this.checkedData = [].concat(this.pageDataRows);
+        // this.checkedData = [].concat(this.pageDataRows);
+        this.checkedData = this.checkedData
+          .concat(this.pageDataRows)
+          .filter((item, index, arr) => arr.indexOf(item) === index);
       } else {
         // 不是全选状态, 对新的数据进行勾选过滤
-        if (this.fetchType === 'search') {
-          this.checkedData = list.filter(item => allList.includes(item));
-        } else if (this.fetchType === 'scroll') {
-          this.checkedData.push(...list.filter(item => allList.includes(item)));
-        }
+        // if (this.fetchType === 'search') {
+        //   this.checkedData = list.filter(item => allList.includes(item));
+        // } else if (this.fetchType === 'scroll') {
+        //   this.checkedData.push(...list.filter(item => allList.includes(item)));
+        // }
       }
     },
     /**
@@ -494,7 +498,10 @@ export default {
         if (this.currentFile.operation === 'list') {
           if (this.checkedData.length < 1) {
             return this.$message.error('筛选条件为空');
-          } else if (!this.checkAll && this.checkedData.length > 50) {
+            // } else if (!this.checkAll && this.checkedData.length > 50) {
+          } else if (this.checkedData.length > 50) {
+            return this.$message.error('最多只能添加50个条件');
+          } else if (this.checkAll && this.pagination.rowsNum > 50) {
             return this.$message.error('最多只能添加50个条件');
           } else {
             this.currentFile.value = this.checkedData;
@@ -507,7 +514,8 @@ export default {
             return this.$message.error('最多只能添加50个条件');
           }
         }
-        this.currentFile.checkAll = this.checkAll;
+        // this.currentFile.checkAll = this.checkAll;
+        this.currentFile.checkAll = false;
       }
       this.visible = false;
       this.listValue = '';
@@ -878,7 +886,10 @@ export default {
     onCheckAllChange(e) {
       const value = e.target.checked;
       if (value) {
-        this.checkedData = [].concat(this.pageDataRows);
+        // this.checkedData = [].concat(this.pageDataRows);
+        this.checkedData = this.checkedData
+          .concat(this.pageDataRows)
+          .filter((item, index, arr) => arr.indexOf(item) === index);
       } else {
         this.checkedData = [];
       }
@@ -927,15 +938,6 @@ export default {
   .ant-checkbox-wrapper,
   .ant-input {
     font-size: 12px;
-  }
-  .ant-checkbox-indeterminate {
-    .ant-checkbox-inner {
-      background-color: #677cf7;
-      &::after {
-        height: 1px;
-        background-color: #fff;
-      }
-    }
   }
 }
 .pilly-item {

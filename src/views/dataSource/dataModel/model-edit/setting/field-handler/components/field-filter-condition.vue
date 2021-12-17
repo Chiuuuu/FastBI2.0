@@ -24,7 +24,7 @@
             @change="handleCheckedList"
           >
             <a-checkbox
-              :indeterminate="checkedData.length > 0 && checkedData.length < pageDataRows.length"
+              :indeterminate="checkedData.length > 0 && !checkAll"
               :checked="checkAll"
               @change="onCheckAllChange"
             >
@@ -166,7 +166,8 @@ export default {
       return this.NUMBER_LIST.includes(data.convertType || data.dataType);
     },
     checkAll() {
-      return this.checkedData.length > 0 && this.checkedData.length === this.pageDataRows.length;
+      // return this.checkedData.length > 0 && this.checkedData.length === this.pageDataRows.length;
+      return this.checkedData.length > 0 && !this.pageDataRows.some(item => !this.checkedData.includes(item));
     },
     // isNumber() {
     //   const field = this.getPivotSchemaData()
@@ -227,7 +228,10 @@ export default {
     onCheckAllChange(e) {
       const value = e.target.checked;
       if (value) {
-        this.checkedData = [].concat(this.pageDataRows);
+        // this.checkedData = [].concat(this.pageDataRows);
+        this.checkedData = this.checkedData
+          .concat(this.pageDataRows)
+          .filter((item, index, arr) => arr.indexOf(item) === index);
       } else {
         this.checkedData = [];
       }
@@ -292,6 +296,12 @@ export default {
         if (this.checkedData.length < 1) {
           this.$message.error('请添加条件');
           return false;
+        } else if (this.checkedData.length > 50) {
+          this.$message.error('最多只能添加50个条件');
+          return false;
+        } else if (+this.conditionData.modeType === 0 && this.checkAll && this.pagination.rowsNum > 50) {
+          this.$message.error('最多只能添加50个条件');
+          return false;
         }
         this.conditionData.rule.ruleFilterList = this.checkedData;
       } else {
@@ -322,19 +332,22 @@ export default {
     // 更新列表数据后, 处理选中项
     handleCheckedList(list) {
       // 之前保存的选中项
-      const allList = this.conditionData.rule.ruleFilterList;
+      // const allList = this.conditionData.rule.ruleFilterList;
       // 重新赋值前如果是全选状态, 选中当前所有筛选项
       const checkAll = this.checkedData.length > 0 && this.checkedData.length === this.pageDataRows.length;
       this.pageDataRows = list;
       if (checkAll) {
-        this.checkedData = [].concat(this.pageDataRows);
+        // this.checkedData = [].concat(this.pageDataRows);
+        this.checkedData = this.checkedData
+          .concat(this.pageDataRows)
+          .filter((item, index, arr) => arr.indexOf(item) === index);
       } else {
         // 不是全选状态, 对新的数据进行勾选过滤
-        if (this.fetchType === 'search') {
-          this.checkedData = [].concat(list.filter(item => allList.includes(item)));
-        } else if (this.fetchType === 'scroll') {
-          this.checkedData.push(...list.filter(item => allList.includes(item)));
-        }
+        // if (this.fetchType === 'search') {
+        //   this.checkedData = [].concat(list.filter(item => allList.includes(item)));
+        // } else if (this.fetchType === 'scroll') {
+        //   this.checkedData.push(...list.filter(item => allList.includes(item)));
+        // }
       }
     },
     async getFieldData() {
@@ -399,10 +412,11 @@ export default {
         }); // 维度全字段列表
         if (hasNull) list.unshift('');
         this.dataRows = list;
-        // 从最新数据中过滤掉被删除的行数据
+        // 从最新数据中过滤掉被删除的行数据(分页后处理不了)
         // const checkedData = this.conditionData.rule.ruleFilterList.filter(item => this.dataRows.includes(item)) || [];
-        // this.checkedData = [].concat(checkedData);
-        // this.conditionData.rule.ruleFilterList = checkedData;
+        const checkedData = this.conditionData.rule.ruleFilterList;
+        this.checkedData = [].concat(checkedData);
+        this.conditionData.rule.ruleFilterList = checkedData;
         this.pagination.rowsNum = res.rowsNum;
         this.dataRowsResult = this.dataRows;
       } else {
