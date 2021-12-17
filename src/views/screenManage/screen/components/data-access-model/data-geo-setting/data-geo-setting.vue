@@ -57,11 +57,20 @@
           </div>
         </div> -->
         <div class="set-table">
-          <a-table :loading="loading" :columns="colu" :data-source="datas" :pagination="false" class="table-list">
-            <template slot="config" slot-scope="text, record">
-              <a @click="openMatchWindow(record.key)">{{ record.MathedVal || '请选择配置项' }}</a>
-            </template>
-          </a-table>
+          <ScrollPage
+            :rows="datas"
+            :row-height="40"
+            :pagination="pagination"
+            :fetch="getPageData"
+            :limit="0"
+            @change="v => (pageDataRows = v)"
+          >
+            <a-table rowKey="data" :loading="loading" :columns="colu" :data-source="pageDataRows" :pagination="false">
+              <template slot="config" slot-scope="text, record">
+                <a @click="openMatchWindow(record.key)">{{ record.MathedVal || '请选择配置项' }}</a>
+              </template>
+            </a-table>
+          </ScrollPage>
           <match-window
             v-if="visible"
             :visible="visible"
@@ -76,6 +85,7 @@
 </template>
 
 <script>
+import ScrollPage from '@/components/scroll';
 import optionObj from './map-options';
 import * as echarts from 'echarts';
 import guangZhouJson from '@/utils/guangzhou.json';
@@ -89,7 +99,7 @@ const colu = [
   {
     title: '匹配到',
     dataIndex: 'config',
-
+    width: 150,
     scopedSlots: {
       customRender: 'config',
     },
@@ -126,7 +136,7 @@ const areaData = {
   //   杭州市: ['上城区', '下城区', '富阳区']
 };
 export default {
-  components: { matchWindow },
+  components: { matchWindow, ScrollPage },
   name: 'geoSetting',
   inject: ['boardSettingRightInstance'],
   props: {
@@ -168,7 +178,20 @@ export default {
           ],
         },
       ],
-      cityList: [],
+      cityList: [
+        {
+          name: '广州市',
+          adcode: '110000',
+          parentId: '0',
+          level: 1,
+        },
+      ],
+      pageDataRows: [],
+      pagination: {
+        pageNo: 1,
+        pageSize: 50,
+        rowsNum: 0,
+      },
     };
   },
   computed: {
@@ -176,7 +199,7 @@ export default {
       tabId: state => state.app.screenInfo.tabId,
     }),
     unmatchedLen() {
-      let umatcheds = this.datas.filter(item => !item.MathedVal);
+      let umatcheds = this.pageDataRows.filter(item => !item.MathedVal);
       return umatcheds.length;
     },
     resourceType() {
@@ -195,6 +218,10 @@ export default {
         this.provinceList = res.data;
       }
     },
+    async getPageData(pageNo) {
+      this.pagination.pageNo = pageNo;
+      await this.getDimensionsDatas();
+    },
     // 获取维度数据
     async getDimensionsDatas() {
       let params = {
@@ -205,6 +232,7 @@ export default {
         city: '广州市',
         pivotschemaId: this.dimensionsData.pivotschemaId,
         tabId: this.tabId,
+        ...this.pagination,
       };
       this.loading = true;
       let res = await this.$server.screenManage.getGeoData(params);
@@ -216,9 +244,10 @@ export default {
       }
       if (res.code === 200) {
         // 获取所有维度数据列表
-        this.condition = res.data.geoConfig.condition;
+        const condition = res.data.geoConfig.condition;
+        this.condition = Object.assign(this.condition, condition);
         let dataList = [];
-        let keyList = Object.keys(this.condition);
+        let keyList = Object.keys(condition);
         // 构造被匹配数据列表
         keyList.forEach((key, index) => {
           dataList.push({
@@ -228,6 +257,7 @@ export default {
           });
         });
         this.datas = dataList;
+        this.pagination.rowsNum = res.data.rowsNum;
       } else {
         res.msg && this.$message.error(res.msg);
       }
@@ -292,8 +322,9 @@ export default {
     },
     // 匹配赋值
     selectArea(value) {
-      let area = this.datas.find(item => item.key === this.currentKey);
+      let area = this.pageDataRows.find(item => item.key === this.currentKey);
       area.MathedVal = value;
+      debugger;
       this.condition[area.data] = value;
       this.visible = false;
     },
@@ -317,10 +348,6 @@ export default {
     margin: 0;
     cursor: pointer;
   }
-}
-.table-list {
-  height: 269px;
-  overflow-y: scroll;
 }
 .geo-contain {
   display: flex;
@@ -373,8 +400,9 @@ export default {
   }
   .set-table {
     margin-top: 10px;
-    margin-left: 30px;
-    width: 90%;
+    margin-left: 20px;
+    width: 100%;
+    height: 234px;
   }
 }
 </style>

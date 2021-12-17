@@ -308,6 +308,9 @@ export default {
      * @description 创建地理角色
      */
     handleCreateGeoRole(e, item, vm, data) {
+      if (data.dataType !== 'String') {
+        return this.$message.error('仅支持字符串类型');
+      }
       data.modelId = this.resourceId;
       this.createdMapData = data;
       this.createMapVisible = true;

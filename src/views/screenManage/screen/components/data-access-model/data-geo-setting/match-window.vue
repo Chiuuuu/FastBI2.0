@@ -7,7 +7,7 @@
       <a-icon slot="prefix" type="search" />
     </a-input>
     <div class="area-list">
-      <p v-for="(item, index) in searchList" :key="index" @click="selectArea(item)">
+      <p v-for="item in searchList" :key="item" @click="selectArea(item)">
         {{ item }}
       </p>
     </div>
