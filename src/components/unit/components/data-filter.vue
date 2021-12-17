@@ -49,7 +49,7 @@
               v-model="listValue"
               class="pick-search-area"
               style="margin: 10px 0"
-              placeholder="请输入搜索的关键词(如: A,B,C)"
+              placeholder="请输入搜索的关键词"
               @keyup.enter.stop="search"
             >
               <a-button style="height: 30px" type="primary" slot="addonAfter" @click="search">查询</a-button>

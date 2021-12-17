@@ -6,12 +6,7 @@
         <a-radio :value="2">手动</a-radio>
       </a-radio-group>
       <template v-if="+conditionData.modeType === 1">
-        <a-input
-          v-model="searchWord"
-          class="input-area"
-          placeholder="请输入搜索的关键词(如: A,B,C)"
-          @keyup.enter.stop="onSearch"
-        >
+        <a-input v-model="searchWord" class="input-area" placeholder="请输入搜索的关键词" @keyup.enter.stop="onSearch">
           <a-button style="height: 30px" type="primary" slot="addonAfter" @click="onSearch">查询</a-button>
         </a-input>
         <a-spin :spinning="spinning" class="condition-list hasBorder scrollbar">
@@ -315,6 +310,7 @@ export default {
           }
         }
         this.conditionData.rule.ruleFilterList = this.customData;
+        this.conditionData.checkAll = false;
         // const data = this.getPivotSchemaData()
         // this.conditionData.convertType = data.convertType || data.dataType
       }

@@ -8,6 +8,7 @@
 </template>
 <script>
 import { mapState, mapGetters } from 'vuex';
+import { parameter } from '@/store/modules/board';
 
 /**
  * @description chart的公共组件
@@ -16,6 +17,7 @@ export default {
   name: 'BaseChart',
   data() {
     return {
+      parameter,
       chartInstane: null, // 图表实例
       serverData: null, // 服务端数据
       dataState: 'default', //  // 数据状态("empty":数据为空(服务器返回[])|'default':初始化| 'normal':有数据)
@@ -39,9 +41,13 @@ export default {
     ...mapState({
       // 当前组件状态
       currentComState: state => state.board.currentComState,
+      model: state => state.board.model,
       tabId: state => state.app.screenInfo.tabId,
     }),
     ...mapGetters(['polymerizeType']),
+    isEditMode() {
+      return this.model === this.parameter.EDIT;
+    },
     titleStyle() {
       // 标题样式
       const { style } = this.options;

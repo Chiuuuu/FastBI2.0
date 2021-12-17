@@ -375,7 +375,7 @@ export default {
         });
       }
       // 每个区域标记点超过50个要进行截取
-      if (datas.length >= 50) {
+      if (this.isEditMode && datas.length >= 50) {
         let overload = false;
         datas.map(item => {
           if (item.value.length && item.value.length > 50) {
@@ -436,7 +436,7 @@ export default {
         this.$message.error('经纬度解析失败');
       }
       // 每个区域标记点超过50个要进行截取
-      if (datas.length > 50) {
+      if (this.isEditMode && datas.length > 50) {
         let overload = false;
         datas.map(item => {
           if (item.value.length && item.value.length > 50) {
