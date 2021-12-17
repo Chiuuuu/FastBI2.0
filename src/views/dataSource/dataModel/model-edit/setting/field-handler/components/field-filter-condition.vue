@@ -249,14 +249,14 @@ export default {
         this.conditionName = '';
       } else {
         // 数值类型添加条件
-        if (this.customData.length < 5) {
+        if (this.customData.length < 10) {
           this.customData.push({
             condition: 'range', // 条件选择，显示
             startValue: '',
             endValue: '',
           });
         } else {
-          this.$message.error('限制只能添加5个');
+          this.$message.error('限制只能添加10个');
         }
       }
     },

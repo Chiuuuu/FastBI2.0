@@ -324,7 +324,6 @@ export default {
     selectArea(value) {
       let area = this.pageDataRows.find(item => item.key === this.currentKey);
       area.MathedVal = value;
-      debugger;
       this.condition[area.data] = value;
       this.visible = false;
     },

@@ -347,7 +347,7 @@ export default {
       if (!item) {
         return;
       }
-      if (this.list.length >= 10) return this.$message.error('最多支持拖入10个字段');
+      if (this.list.length >= 10) return;
       if (this.currentCom.setting.data.filter.fileList.map(item => item.id).includes(item.id) && !flag) return;
       this.currentType = this.judgeFiledType(item.role);
       this.dataType = item.dataType;
@@ -766,6 +766,10 @@ export default {
      */
     handleList(list, data, method = 'add') {
       if (method === 'add') {
+        if (list.length >= 10) {
+          this.$message.error('最多支持拖入10个字段');
+          return list;
+        }
         // 如果重复数据含value，表示编辑，进行替换
         let oldData = list.find(item => item.id === data.id);
         if (oldData && (oldData.value || oldData.rules)) {
@@ -898,7 +902,7 @@ export default {
      * @description 度量-添加条件
      */
     addDimensionsCondition() {
-      if (this.currentFile.rules.length < 5) {
+      if (this.currentFile.rules.length < 10) {
         this.currentFile.rules.push({
           condition: 'range', // 条件选择，显示
           action: '', // 条件选择，实际
@@ -906,7 +910,7 @@ export default {
           secondValue: '',
         });
       } else {
-        this.$message.error('限制只能添加5个');
+        this.$message.error('限制只能添加10个');
       }
     },
     /**
