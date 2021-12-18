@@ -216,6 +216,17 @@ export default {
         Object.keys(this.cacheTables).forEach(key => {
           this.cacheTables[key].forEach(table => {
             if (item.id === table.id) {
+              if (this.setType === 'convertType') {
+                const numTypeList = ['Int64', 'Float64', 'Decimal64(2)'];
+                let oldType = table[this.setType];
+                // 数值类型转非数值, 修改默认聚合方式为COUNT
+                if (numTypeList.includes(oldType) && !numTypeList.includes(value)) {
+                  table.defaultAggregator = 'COUNT';
+                } else if (!numTypeList.includes(oldType) && numTypeList.includes(value)) {
+                  // 非数值类型转数值, 修改默认聚合方式为SUM
+                  table.defaultAggregator = 'SUM';
+                }
+              }
               table[this.setType] = value;
             }
           });

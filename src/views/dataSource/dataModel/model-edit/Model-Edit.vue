@@ -540,7 +540,16 @@ export default {
       }
     },
     switchFieldType(e, item, vm) {
+      const numTypeList = ['Int64', 'Float64', 'Decimal64(2)'];
       let dataType = item.dataType;
+      let oldType = vm.selectData.convertType;
+      // 数值类型转非数值, 修改默认聚合方式为COUNT
+      if (numTypeList.includes(oldType) && !numTypeList.includes(dataType)) {
+        vm.selectData.defaultAggregator = 'COUNT';
+      } else if (!numTypeList.includes(oldType) && numTypeList.includes(dataType)) {
+        // 非数值类型转数值, 修改默认聚合方式为SUM
+        vm.selectData.defaultAggregator = 'SUM';
+      }
       vm.itemData.convertType = dataType;
       this.handleCacheFields(vm.itemData);
       // 转换类型后, 需要同步更新筛选排序列表的状态

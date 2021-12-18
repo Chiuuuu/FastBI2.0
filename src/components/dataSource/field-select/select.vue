@@ -30,7 +30,6 @@ export default {
       const that = this;
       // 原始数据类型
       let _type = that.selectData.dataType;
-      console.log('原始数据', _type);
       this.contenxtmenu = new ContextMenu({
         vm: that,
         menus: that.contextmenus.map(item => {
