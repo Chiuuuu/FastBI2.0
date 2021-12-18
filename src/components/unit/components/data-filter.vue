@@ -347,7 +347,7 @@ export default {
       if (!item) {
         return;
       }
-      if (this.list.length >= 10) return;
+      if (!flag && this.list.length >= 10) return;
       if (this.currentCom.setting.data.filter.fileList.map(item => item.id).includes(item.id) && !flag) return;
       this.currentType = this.judgeFiledType(item.role);
       this.dataType = item.dataType;
