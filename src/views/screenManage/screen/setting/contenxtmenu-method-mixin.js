@@ -240,6 +240,20 @@ const ContenxtmenuMethodMixin = {
      * 剩余参数index, vm
      */
     async handleExportCsv(e, item, component) {
+      if (item.key) {
+        const chartNode = this.$slots.default[0].componentInstance;
+        let hasData = item.key === 'fillList' ? chartNode.isFillData() : chartNode.isLabelData();
+
+        // 判断当前图表数据为服务数据
+        if (!hasData) {
+          let dom = document.querySelector('.board-canvas');
+          this.$message.config({
+            getContainer: () => dom,
+          });
+          this.$message.error('该图表没有拖入图表数据');
+          return;
+        }
+      }
       if (!this.judgeHasData()) {
         return;
       }
@@ -261,6 +275,20 @@ const ContenxtmenuMethodMixin = {
      * @description 导出excel
      */
     async handleExportExcel(e, item, component) {
+      if (item.key) {
+        const chartNode = this.$slots.default[0].componentInstance;
+        let hasData = item.key === 'fillList' ? chartNode.isFillData() : chartNode.isLabelData();
+
+        // 判断当前图表数据为服务数据
+        if (!hasData) {
+          let dom = document.querySelector('.board-canvas');
+          this.$message.config({
+            getContainer: () => dom,
+          });
+          this.$message.error('该图表没有拖入图表数据');
+          return;
+        }
+      }
       if (!this.judgeHasData()) {
         return;
       }
