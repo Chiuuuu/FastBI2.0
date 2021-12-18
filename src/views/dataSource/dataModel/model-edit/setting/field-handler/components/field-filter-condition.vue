@@ -299,6 +299,7 @@ export default {
           return false;
         }
         this.conditionData.rule.ruleFilterList = this.checkedData;
+        this.conditionData.checkAll = false;
       } else {
         if (this.customData.length < 1) {
           this.$message.error('请添加条件');
@@ -310,7 +311,6 @@ export default {
           }
         }
         this.conditionData.rule.ruleFilterList = this.customData;
-        this.conditionData.checkAll = false;
         // const data = this.getPivotSchemaData()
         // this.conditionData.convertType = data.convertType || data.dataType
       }
