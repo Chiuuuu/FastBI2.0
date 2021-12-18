@@ -249,9 +249,9 @@ export default {
         let dataList = [];
         let keyList = Object.keys(condition);
         // 构造被匹配数据列表
-        keyList.forEach((key, index) => {
+        keyList.forEach(key => {
           dataList.push({
-            key: index + '',
+            key: key,
             data: key,
             MathedVal: this.condition[key],
           });
