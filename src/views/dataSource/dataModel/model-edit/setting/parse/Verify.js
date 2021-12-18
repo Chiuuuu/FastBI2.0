@@ -249,9 +249,8 @@ export class Verify {
           return 'string';
         case 'Int64':
           return 'integer';
-        case 'Decimal64(2)':
-          return 'decimal';
         case 'Float64':
+        case 'Decimal64(2)':
           return 'float';
         default:
           throw new Error(`不支持的类型`);
@@ -273,10 +272,9 @@ export class Verify {
           return '整数';
         case 'Float64':
         case 'float':
-          return '小数';
         case 'Decimal64(2)':
         case 'decimal':
-          return '数值';
+          return '小数';
         case 'DateTime':
         case 'Date':
           return '时间';

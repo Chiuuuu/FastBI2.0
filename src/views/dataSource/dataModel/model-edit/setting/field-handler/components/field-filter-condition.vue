@@ -148,6 +148,8 @@ export default {
   },
   created() {
     if (this.conditionData.modeType !== 0) {
+      const checkedData = this.conditionData.rule.ruleFilterList;
+      this.checkedData = [].concat(checkedData);
       this.getFieldData();
     }
     // 列表赋值
@@ -410,9 +412,8 @@ export default {
         this.dataRows = list;
         // 从最新数据中过滤掉被删除的行数据(分页后处理不了)
         // const checkedData = this.conditionData.rule.ruleFilterList.filter(item => this.dataRows.includes(item)) || [];
-        const checkedData = this.conditionData.rule.ruleFilterList;
-        this.checkedData = [].concat(checkedData);
-        this.conditionData.rule.ruleFilterList = checkedData;
+        // this.checkedData = [].concat(checkedData);
+        // this.conditionData.rule.ruleFilterList = checkedData;
         this.pagination.rowsNum = res.rowsNum;
         this.dataRowsResult = this.dataRows;
       } else {

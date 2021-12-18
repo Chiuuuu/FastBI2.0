@@ -71,10 +71,8 @@ export default {
           value = '日期';
           break;
         case 'Float64':
-          value = '小数';
-          break;
         case 'Decimal64(2)':
-          value = '数值';
+          value = '小数';
           break;
         case 'String':
           value = '字符串';

@@ -116,7 +116,7 @@ export default {
         DateTime: '日期时间',
         Date: '日期',
         Int64: '整数',
-        'Decimal64(2)': '数值',
+        'Decimal64(2)': '小数',
         Float64: '小数',
       };
       return mapChinese[item.convertType] || '未知类型';
