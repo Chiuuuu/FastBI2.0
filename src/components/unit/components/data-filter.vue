@@ -766,14 +766,14 @@ export default {
      */
     handleList(list, data, method = 'add') {
       if (method === 'add') {
-        if (list.length >= 10) {
-          this.$message.error('最多支持拖入10个字段');
-          return list;
-        }
         // 如果重复数据含value，表示编辑，进行替换
         let oldData = list.find(item => item.id === data.id);
         if (oldData && (oldData.value || oldData.rules)) {
           oldData = Object.assign(oldData, data);
+          return list;
+        }
+        if (list.length >= 10) {
+          this.$message.error('最多支持拖入10个字段');
           return list;
         }
         arrayAddData(list, data);
