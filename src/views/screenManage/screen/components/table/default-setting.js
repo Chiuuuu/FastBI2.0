@@ -18,7 +18,7 @@ export default merge(cloneDeep(BASE), {
       },
       background: {
         // 背景
-        color: 'transparent',
+        color: 'rgba(0,0,0)',
       },
       echart: {
         thead: {

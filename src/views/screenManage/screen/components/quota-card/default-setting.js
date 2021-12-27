@@ -14,7 +14,7 @@ export default merge(cloneDeep(BASE), {
     style: {
       size: {
         width: 286,
-        height: 170,
+        height: 260,
       },
       title: {
         marginBottom: 34,

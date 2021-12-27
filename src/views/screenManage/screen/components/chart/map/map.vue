@@ -510,8 +510,8 @@ export default {
         this.$message.error(res.msg);
         return;
       }
-      if (res.code === 80002) {
-        this.$message.error(res.msg);
+      if (res.code !== 200) {
+        this.$message.error(res.msg || ' 地图请求错误');
         return;
       }
 
