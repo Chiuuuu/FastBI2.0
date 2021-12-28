@@ -19,41 +19,27 @@ export class MapSheet {
   constructor(mapSheet) {
     this.sheetList = [];
     this.tableList = [];
-    this.isNewFile = !Array.isArray(mapSheet);
     this.formatMapSheet(mapSheet);
   }
 
   formatMapSheet(mapSheet) {
     if (!mapSheet || Object.keys(mapSheet).length < 1) return;
-    if (this.isNewFile) {
-      const list = Object.entries(mapSheet);
-      this.formatSheet(list);
-      this.formatTable(list);
-    } else {
-      this.formatSheet(mapSheet);
-    }
+    this.formatSheet(mapSheet);
+    this.formatTable(mapSheet);
   }
 
   formatSheet(list) {
-    let sheetList = [];
-    if (this.isNewFile) {
-      list.map(([key]) => {
-        sheetList.push({
-          alias: key,
-        });
-      });
-    } else {
-      sheetList = sheetList.concat(list);
-    }
-    this.sheetList = sheetList;
+    this.sheetList = list.map(item => {
+      item.alias = item.sheetName || item.alias;
+      return item;
+    });
   }
 
   formatTable(list) {
     let tableList = [];
     list.map(item => {
-      const value = item[1];
-      value.originRows = value.rows;
-      tableList.push(value);
+      item.originRows = item.rows;
+      tableList.push(item);
     });
     this.tableList = tableList;
   }

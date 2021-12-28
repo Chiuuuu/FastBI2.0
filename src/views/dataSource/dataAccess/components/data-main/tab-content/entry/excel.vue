@@ -668,7 +668,6 @@ export default {
           }
         }
 
-        // const database = new MapSheet(result.rows[0].mapSheet)
         const database = new MapSheet(result.data);
         this.$set(this.databaseList, currentIndex, database);
 
