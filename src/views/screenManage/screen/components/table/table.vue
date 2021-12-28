@@ -362,7 +362,7 @@ export default {
       }
       this.pagination.rowsNum = res.rowsNum;
       // this.serverData = { data: this.doWithPageData(lastPageNo, res.data) };
-      this.serverData = { data: res.data };
+      this.serverData = { data: res.data || [] };
       const keys = this.options.data.fields.map(item =>
         item.role === 2 ? `${item.defaultAggregator}_${item.alias}` : item.alias,
       );
