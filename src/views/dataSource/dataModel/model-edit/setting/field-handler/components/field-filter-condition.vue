@@ -387,7 +387,7 @@ export default {
         .finally(() => {
           this.spinning = false;
         });
-      if (res.code === 500 && res.msg === 'IsChanged') {
+      if (res.code === 1054) {
         this.$message.error('模型数据不存在');
         this.isdrag = false;
         return;

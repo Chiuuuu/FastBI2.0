@@ -238,7 +238,7 @@ export default {
       let res = await this.$server.screenManage.getGeoData(params);
       this.loading = false;
       // 模型数据被删
-      if (res.code === 500 && res.msg === 'IsChanged') {
+      if (res.code === 1054) {
         this.$message.error('模型数据不存在');
         return;
       }

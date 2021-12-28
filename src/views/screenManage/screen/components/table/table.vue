@@ -332,6 +332,11 @@ export default {
       if (this.shapeUnit.isSpinning) return;
       let dimensions = [];
       let measures = [];
+      const {
+        style: {
+          title: { text },
+        },
+      } = this.options;
       this.options.data.fields.forEach(item => {
         if (item.role === 1) {
           dimensions.push(item);
@@ -353,12 +358,16 @@ export default {
         .finally(() => {
           this.shapeUnit.changeLodingChart(false);
         });
-      if (res.code === 500) {
-        if (res.msg === 'IsChanged') {
+      if (res.code !== 200) {
+        if (res.code === 1054) {
           const keys = ['fields', 'filter', 'sort'];
           this.handleRedList(res.data, keys);
+          if (this.isEditMode) {
+            this.$message.error(`${text}数据异常, 请处理标红字段`);
+          }
+          return;
         }
-        this.$message.error(res.msg);
+        return this.$message.error(res.msg || '请求错误');
       }
       this.pagination.rowsNum = res.rowsNum;
       // this.serverData = { data: this.doWithPageData(lastPageNo, res.data) };

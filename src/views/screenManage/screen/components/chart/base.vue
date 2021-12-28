@@ -215,7 +215,8 @@ export default {
       // return [].concat(data.dimensions).concat(data.measures);
     },
     /**
-     * @description 处理isChanged标红
+     * @description 处理isChanged标红(约定特殊返回码1054)
+     * @description 返回当前模型或源中存在且可见的字段列表, 和图表引用的字段作对比
      */
     handleRedList(list, keys) {
       // 如果存在对应列表id，替换成红色
@@ -223,15 +224,28 @@ export default {
         keys.forEach(key => {
           if (key === 'filter') {
             this.options.data[key].fileList.forEach(item => {
-              if (list.includes(item.pivotschemaId)) {
+              const target = list.find(t => t.pivotschemaId === item.pivotschemaId);
+              // 字段不存在or被隐藏
+              if (!target) {
+                item.IsChanged = true;
+              }
+
+              // 维度度量发生改变
+              if (target && target.role !== item.role) {
                 item.IsChanged = true;
               }
             });
-            return;
           }
           if (Array.isArray(this.options.data[key])) {
             this.options.data[key].forEach(item => {
-              if (list.includes(item.pivotschemaId)) {
+              const target = list.find(t => t.pivotschemaId === item.pivotschemaId);
+              // 字段不存在or被隐藏
+              if (!target) {
+                item.IsChanged = true;
+              }
+
+              // 维度度量发生改变
+              if (target && target.role !== item.role) {
                 item.IsChanged = true;
               }
             });

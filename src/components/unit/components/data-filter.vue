@@ -394,7 +394,7 @@ export default {
       const res = await this.$server.screenManage.getDataPick(params).finally(() => {
         this.spinning = false;
       });
-      if (res.code === 500 && res.msg === 'IsChanged') {
+      if (res.code === 1054) {
         this.$message.error('模型数据不存在');
         return;
       }

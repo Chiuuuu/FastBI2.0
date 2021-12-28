@@ -417,9 +417,15 @@ export default {
         const res = await this.$server.common.getData('/screen/graph/v2/getData', parmas).finally(() => {
           this.shapeUnit.changeLodingChart(false);
         });
-        if (res.code === 500) {
-          if (res.msg === 'IsChanged') {
+        const {
+          style: {
+            title: { text },
+          },
+        } = this.options;
+        if (res.code !== 200) {
+          if (res.code === 1054) {
             this.handleRedList(res.data);
+            return `${text}数据异常, 请处理标红字段`;
           }
           return res.msg;
         }
@@ -430,13 +436,21 @@ export default {
       return resultStr;
     },
     /**
-     * @description 处理isChanged标红
+     * @description 处理isChanged标红(约定特殊返回码1054)
+     * @description 返回当前模型或源中存在且可见的字段列表, 和图表引用的字段作对比
      */
     handleRedList(list) {
       // 如果存在对应列表id，替换成红色
       if (list) {
         this.options.data.filter.fileList.forEach(item => {
-          if (list.includes(item.pivotschemaId)) {
+          const target = list.find(t => t.pivotschemaId === item.pivotschemaId);
+          // 字段不存在or被隐藏
+          if (!target) {
+            item.IsChanged = true;
+          }
+
+          // 维度度量发生改变
+          if (target && target.role !== item.role) {
             item.IsChanged = true;
           }
         });

@@ -37,6 +37,11 @@ export default {
      */
     async getServerData() {
       this.shapeUnit.changeLodingChart(true);
+      const {
+        style: {
+          title: { text },
+        },
+      } = this.options;
       const res = await this.$server.common
         .getData('/screen/graph/v2/getData', {
           id: this.shapeUnit.component.id,
@@ -48,13 +53,16 @@ export default {
         .finally(() => {
           this.shapeUnit.changeLodingChart(false);
         });
-      if (res.code === 500) {
-        if (res.msg === 'IsChanged') {
+      if (res.code !== 200) {
+        if (res.code === 1054) {
           const keys = ['dimensions', 'measures', 'filter'];
           this.handleRedList(res.data, keys);
+          if (this.isEditMode) {
+            this.$message.error(`${text}数据异常, 请处理标红字段`);
+          }
+          return;
         }
-        this.$message.error(res.msg);
-        return;
+        return this.$message.error(res.msg || '请求错误');
       }
       this.dataState = res.data && res.data.length ? 'normal' : 'empty';
       if (this.dataState === 'empty') {

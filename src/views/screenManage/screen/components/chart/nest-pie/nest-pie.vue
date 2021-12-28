@@ -166,10 +166,11 @@ export default {
      * @description 图表获取服务端数据
      */
     async getServerData() {
-      console.log({ id: this.shapeUnit.component.id, type: this.shapeUnit.component.type, data: this.options.data });
-      console.log('从这里获取服务端数据');
       const {
         data: { measures, outerIng, innerIng },
+        style: {
+          title: { text },
+        },
       } = this.options;
       this.shapeUnit.changeLodingChart(true);
       const res = await this.$server.common
@@ -184,13 +185,16 @@ export default {
         .finally(() => {
           this.shapeUnit.changeLodingChart(false);
         });
-      if (res.code === 500) {
-        if (res.msg === 'IsChanged') {
+      if (res.code !== 200) {
+        if (res.code === 1054) {
           const keys = ['outerIng', 'innerIng', 'measures', 'filter', 'sort'];
           this.handleRedList(res.data, keys);
+          if (this.isEditMode) {
+            this.$message.error(`${text}数据异常, 请处理标红字段`);
+          }
+          return;
         }
-        this.$message.error(res.msg);
-        return;
+        return this.$message.error(res.msg || '请求错误');
       }
       this.dataState = res.data && res.data.length ? 'normal' : 'empty';
       if (this.dataState === 'empty') {

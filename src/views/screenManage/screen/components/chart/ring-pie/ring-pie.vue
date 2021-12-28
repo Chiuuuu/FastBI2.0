@@ -201,6 +201,9 @@ export default {
     async getServerData() {
       const {
         data: { progress, targe },
+        style: {
+          title: { text },
+        },
       } = this.options;
       this.shapeUnit.changeLodingChart(true);
       const res = await this.$server.common
@@ -215,13 +218,16 @@ export default {
         .finally(() => {
           this.shapeUnit.changeLodingChart(false);
         });
-      if (res.code === 500) {
-        if (res.msg === 'IsChanged') {
+      if (res.code !== 200) {
+        if (res.code === 1054) {
           const keys = ['progress', 'targe', 'filter', 'sort'];
           this.handleRedList(res.data, keys);
+          if (this.isEditMode) {
+            this.$message.error(`${text}数据异常, 请处理标红字段`);
+          }
+          return;
         }
-        this.$message.error(res.msg);
-        return;
+        return this.$message.error(res.msg || '请求错误');
       }
       this.dataState = res.data && res.data.length ? 'normal' : 'empty';
       if (this.dataState === 'empty') {
