@@ -8,9 +8,7 @@
         <div class="header">
           <span class="data_con">{{ modelName }}</span>
           <div class="data_btn">
-            <a-button v-if="hasEditPermission && !hasLockPermission" type="primary" v-on:click="edit">
-              编辑模型
-            </a-button>
+            <a-button v-if="hasEditPermission" type="primary" v-on:click="edit">编辑模型</a-button>
             <a-button @click="handleGetData">刷新数据</a-button>
           </div>
         </div>
@@ -147,12 +145,6 @@ export default {
     }),
     hasEditPermission() {
       return hasPermission(this.privileges, this.$PERMISSION_CODE.OPERATOR.edit);
-    },
-    hasLockPermission() {
-      if (Array.isArray(this.privileges) && this.privileges.includes(0)) {
-        return false;
-      }
-      return hasPermission(this.privileges, this.$PERMISSION_CODE.OPERATOR.lock);
     },
     disableByDetailInfo() {
       if (this.detailInfo === '') {
