@@ -324,7 +324,7 @@ export default {
     },
     // 勾选发生变化, 触发事件更改文本框内容
     handleGetTreeField(list) {
-      this.checkedFieldList = list;
+      this.checkedFieldList = list.filter(item => item.visible);
       this.changeTextArea();
     },
     handleSave() {

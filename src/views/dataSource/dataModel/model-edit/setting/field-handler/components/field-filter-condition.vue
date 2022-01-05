@@ -6,24 +6,37 @@
         <a-radio :value="2">手动</a-radio>
       </a-radio-group>
       <template v-if="+conditionData.modeType === 1">
-        <a-input
-          v-model="searchWord"
-          class="input-area"
-          placeholder="请输入搜索的关键词(如: A,B,C)"
-          @keyup.enter.stop="onSearch"
-        >
+        <a-input v-model="searchWord" class="input-area" placeholder="请输入搜索的关键词" @keyup.enter.stop="onSearch">
           <a-button style="height: 30px" type="primary" slot="addonAfter" @click="onSearch">查询</a-button>
         </a-input>
         <a-spin :spinning="spinning" class="condition-list hasBorder scrollbar">
-          <a-checkbox
-            :indeterminate="checkedData.length > 0 && checkedData.length < dataRows.length"
-            :checked="checkedData.length === dataRows.length"
-            @change="onCheckAllChange"
+          <ScrollPage
+            :rows="dataRowsResult"
+            :row-height="22"
+            :pagination="pagination"
+            :fetch="getPageData"
+            :limit="0"
+            @change="handleCheckedList"
           >
-            全选
-          </a-checkbox>
-          <br />
-          <a-checkbox-group class="block-checkbox" v-model="checkedData" :options="dataRowsResult" />
+            <a-checkbox
+              :indeterminate="checkedData.length > 0 && !checkAll"
+              :checked="checkAll"
+              @change="onCheckAllChange"
+            >
+              全选
+            </a-checkbox>
+            <br />
+            <!-- <a-checkbox-group class="block-checkbox" v-model="checkedData" :options="dataRowsResult" /> -->
+            <a-checkbox
+              class="block-checkbox"
+              v-for="item in pageDataRows"
+              :key="item"
+              :checked="checkedData.includes(item)"
+              @change="onCheckChange($event, item)"
+            >
+              {{ item }}
+            </a-checkbox>
+          </ScrollPage>
         </a-spin>
       </template>
       <!--手动筛选-->
@@ -84,9 +97,13 @@
 </template>
 
 <script>
+import ScrollPage from '@/components/scroll';
 export default {
   name: '',
   inject: ['rootInstance', 'NUMBER_LIST', 'conditionOptions'],
+  components: {
+    ScrollPage,
+  },
   props: {
     fieldData: {
       // 字段对象, 用于获取数据
@@ -114,15 +131,25 @@ export default {
     return {
       spinning: false,
       searchWord: '', // 搜索关键字
+      fetchType: 'search', // | scroll 是搜索还是滚动时的异步
       conditionName: '', // 添加的条件名
       checkedData: [], // 选中的列表
       customData: [], // 手动添加的列表
       dataRows: [], // 该字段查询出来的数据
       dataRowsResult: [], // 搜索筛选的数据
+      pageDataRows: [], // 当前分页展示的数据
+      pagination: {
+        // 分页参数
+        pageSize: 50,
+        pageNo: 1,
+        rowsNum: 0,
+      },
     };
   },
   created() {
     if (this.conditionData.modeType !== 0) {
+      const checkedData = this.conditionData.rule.ruleFilterList;
+      this.checkedData = [].concat(checkedData);
       this.getFieldData();
     }
     // 列表赋值
@@ -134,6 +161,10 @@ export default {
     isNumber() {
       const data = this.fieldData || this.conditionData;
       return this.NUMBER_LIST.includes(data.convertType || data.dataType);
+    },
+    checkAll() {
+      // return this.checkedData.length > 0 && this.checkedData.length === this.pageDataRows.length;
+      return this.checkedData.length > 0 && !this.pageDataRows.some(item => !this.checkedData.includes(item));
     },
     // isNumber() {
     //   const field = this.getPivotSchemaData()
@@ -149,28 +180,63 @@ export default {
     //   const field = this.pivotSchema.find(item => item.alias === data.alias)
     //   return field || data
     // },
-    onSearch() {
-      const keyword = (this.searchWord || '').toLowerCase();
-      const list = keyword.split(',');
-      this.dataRowsResult = this.dataRows.filter(item => {
-        let match = false;
-        list.forEach(k => {
-          if ((item || '').toLowerCase().indexOf(k) > -1) {
-            match = true;
+    onCheckChange(e, value) {
+      const checked = e.target.checked;
+      if (checked) {
+        if (this.checkedData.length >= 50) {
+          return this.$message.error('最多只能添加50个条件');
+        }
+        this.checkedData.push(value);
+      } else {
+        for (let i = 0; i < this.checkedData.length; i++) {
+          const item = this.checkedData[i];
+          if (item === value) {
+            this.checkedData.splice(i, 1);
+            break;
           }
-        });
-        return match;
-      });
+        }
+      }
+    },
+    async onSearch() {
+      // const checkAll = this.checkedData.length === this.dataRowsResult.length;
+      // const keyword = (this.searchWord || '').toLowerCase();
+      // const list = keyword.split(',');
+      // this.dataRowsResult = this.dataRows.filter(item => {
+      //   let match = false;
+      //   list.forEach(k => {
+      //     if ((item || '').toLowerCase().indexOf(k) > -1) {
+      //       match = true;
+      //     }
+      //   });
+      //   return match;
+      // });
+      // // 如果是全选状态, 选中当前所有筛选项
+      // if (checkAll) {
+      //   this.checkedData = [].concat(this.dataRowsResult);
+      // } else {
+      //   // 不是全选状态, 过滤掉非当前搜索结果
+      //   this.checkedData = this.dataRowsResult.filter(item => this.checkedData.includes(item));
+      // }
+      // 重置数据
+      this.fetchType = 'search';
+      this.pagination = this.$options.data().pagination;
+      await this.getFieldData();
     },
     onCheckAllChange(e) {
       const value = e.target.checked;
       if (value) {
-        this.checkedData = this.dataRows;
+        // this.checkedData = [].concat(this.pageDataRows);
+        this.checkedData = this.checkedData
+          .concat(this.pageDataRows)
+          .filter((item, index, arr) => arr.indexOf(item) === index);
       } else {
         this.checkedData = [];
       }
     },
     addCondition() {
+      if (this.checkedData.length >= 50) {
+        return this.$message.error('最多只能添加50个条件');
+      }
       // 字符类型手动添加
       if (!this.isNumber && +this.conditionData.modeType === 2) {
         if (this.checkedData.indexOf(this.conditionName) > -1) {
@@ -180,14 +246,14 @@ export default {
         this.conditionName = '';
       } else {
         // 数值类型添加条件
-        if (this.customData.length < 5) {
+        if (this.customData.length < 10) {
           this.customData.push({
             condition: 'range', // 条件选择，显示
             startValue: '',
             endValue: '',
           });
         } else {
-          this.$message.error('限制只能添加5个');
+          this.$message.error('限制只能添加10个');
         }
       }
     },
@@ -227,8 +293,15 @@ export default {
         if (this.checkedData.length < 1) {
           this.$message.error('请添加条件');
           return false;
+        } else if (this.checkedData.length > 50) {
+          this.$message.error('最多只能添加50个条件');
+          return false;
+        } else if (+this.conditionData.modeType === 0 && this.checkAll && this.pagination.rowsNum > 50) {
+          this.$message.error('最多只能添加50个条件');
+          return false;
         }
         this.conditionData.rule.ruleFilterList = this.checkedData;
+        this.conditionData.checkAll = false;
       } else {
         if (this.customData.length < 1) {
           this.$message.error('请添加条件');
@@ -248,6 +321,32 @@ export default {
         this.conditionData.status = 0;
       }
       return true;
+    },
+    async getPageData(pageNo) {
+      this.pagination.pageNo = pageNo;
+      this.fetchType = 'scroll';
+      await this.getFieldData();
+    },
+    // 更新列表数据后, 处理选中项
+    handleCheckedList(list) {
+      // 之前保存的选中项
+      // const allList = this.conditionData.rule.ruleFilterList;
+      // 重新赋值前如果是全选状态, 选中当前所有筛选项
+      const checkAll = this.checkedData.length > 0 && this.checkedData.length === this.pageDataRows.length;
+      this.pageDataRows = list;
+      if (checkAll) {
+        // this.checkedData = [].concat(this.pageDataRows);
+        this.checkedData = this.checkedData
+          .concat(this.pageDataRows)
+          .filter((item, index, arr) => arr.indexOf(item) === index);
+      } else {
+        // 不是全选状态, 对新的数据进行勾选过滤
+        // if (this.fetchType === 'search') {
+        //   this.checkedData = [].concat(list.filter(item => allList.includes(item)));
+        // } else if (this.fetchType === 'scroll') {
+        //   this.checkedData.push(...list.filter(item => allList.includes(item)));
+        // }
+      }
     },
     async getFieldData() {
       // 获取维度对应字段列表
@@ -276,17 +375,19 @@ export default {
       this.spinning = true;
       const res = await this.$server.dataModel
         .getModelData({
+          ...this.pagination,
           ...this.rootInstance.detailInfo,
           pivotSchema: {
             ...this.rootInstance.handleConcat(), // 处理维度度量
           },
           modelTableId: data.modelTableId,
           resourceJson: params,
+          keyword: this.searchWord,
         })
         .finally(() => {
           this.spinning = false;
         });
-      if (res.code === 500 && res.msg === 'IsChanged') {
+      if (res.code === 1054) {
         this.$message.error('模型数据不存在');
         this.isdrag = false;
         return;
@@ -309,12 +410,15 @@ export default {
         }); // 维度全字段列表
         if (hasNull) list.unshift('');
         this.dataRows = list;
-        // 从最新数据中过滤掉被删除的行数据
-        const checkedData = this.conditionData.rule.ruleFilterList.filter(item => this.dataRows.includes(item)) || [];
-        this.checkedData = checkedData;
-        this.conditionData.rule.ruleFilterList = checkedData;
+        // 从最新数据中过滤掉被删除的行数据(分页后处理不了)
+        // const checkedData = this.conditionData.rule.ruleFilterList.filter(item => this.dataRows.includes(item)) || [];
+        // this.checkedData = [].concat(checkedData);
+        // this.conditionData.rule.ruleFilterList = checkedData;
+        this.pagination.rowsNum = res.rowsNum;
+        this.dataRowsResult = this.dataRows;
+      } else {
+        this.dataRowsResult = [];
       }
-      this.dataRowsResult = this.dataRows || [];
     },
   },
 };
@@ -336,6 +440,10 @@ export default {
 }
 .input-area {
   margin: 10px 0;
+}
+.block-checkbox {
+  display: block;
+  margin-left: 0 !important;
 }
 .block-checkbox @{deep} .ant-checkbox-group-item {
   display: block;

@@ -2,7 +2,13 @@
   <div v-if="renderMenus.length > 0" class="m-overlay m-overlay-shadow" id="js-context-menu" :style="styleObj">
     <div class="m-ctxMenu" ref="ctxMenuRef">
       <ul :class="{ 'show-scroll': showMenuScroll }">
-        <li class="z-clickable" v-for="item in renderMenus" :key="item.name" @click="handleItemClick($event, item)">
+        <li
+          class="z-clickable"
+          :class="{ 'has-child': hasChildren(item) }"
+          v-for="item in renderMenus"
+          :key="item.name"
+          @click="handleItemClick($event, item)"
+        >
           <span>
             {{ item.name }}
             <a-icon type="right" class="icon-cart" v-if="hasChildren(item)" />
@@ -10,11 +16,25 @@
           <ul :class="['sub', { 'show-right': subPosition === 'right' }]" v-if="hasChildren(item)">
             <li
               class="z-clickable"
+              :class="{ 'has-child': hasChildren(subitem) }"
               v-for="subitem in item.children"
               :key="subitem.name"
               @click="handleItemClick($event, subitem)"
             >
-              {{ subitem.name }}
+              <span>
+                {{ subitem.name }}
+                <a-icon type="right" class="icon-cart" v-if="hasChildren(subitem)" />
+              </span>
+              <ul :class="['sub', { 'show-right': subPosition === 'right' }]" v-if="hasChildren(subitem)">
+                <li
+                  class="z-clickable"
+                  v-for="subitem1 in subitem.children"
+                  :key="subitem1.name"
+                  @click="handleItemClick($event, subitem1)"
+                >
+                  <span>{{ subitem1.name }}</span>
+                </li>
+              </ul>
             </li>
           </ul>
         </li>
@@ -175,7 +195,7 @@ export default {
     &:hover {
       background-color: #e0e0e0;
 
-      ul.sub {
+      &.has-child > ul.sub {
         display: block;
       }
     }

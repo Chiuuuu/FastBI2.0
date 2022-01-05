@@ -109,6 +109,7 @@
         title="定时抽取记录"
         :bodyStyle="bodyStyle"
         :visible="visible1"
+        :footer="null"
         @cancel="handleCloseExtractLog"
       >
         <a-table

@@ -148,7 +148,7 @@ export default {
       this.accessSelected = null;
     },
     modelList(list) {
-      if (list && list.length) {
+      if (list && list.length && this.tabAcitve === 'model') {
         // 如果模型菜单没有选中，初始化的时候默认选中第一个
         if (!this.modelSelected || !this.modelSelected.tableId) {
           this.modelSelected = list[0];
@@ -265,11 +265,15 @@ export default {
         const target = list.find(item => item.tableId === dataModelId);
         if (target) {
           const type = isModel ? 'model' : 'access';
-          this.tabAcitve = type;
-          this.$nextTick(() => {
-            isModel ? this.handleModelMenuSelected(target) : this.handleAccessMenuSelected(target);
-            // this.handleListSelect(target, type);
-          });
+          const selected = isModel ? this.modelSelected : this.accessSelected;
+          // 判断当前右侧维度度量列表是否是当前图表绑定的, 不是则刷新列表
+          if (!selected || selected.id !== target.id) {
+            this.tabAcitve = type;
+            this.$nextTick(() => {
+              isModel ? this.handleModelMenuSelected(target) : this.handleAccessMenuSelected(target);
+              // this.handleListSelect(target, type);
+            });
+          }
         }
       }
     },

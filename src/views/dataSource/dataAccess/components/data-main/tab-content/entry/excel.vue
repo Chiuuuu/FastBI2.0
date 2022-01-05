@@ -283,7 +283,7 @@ export default {
         }
       }
       const tableList = this.databaseList[this.currentFileIndex].tableList;
-      const sheetName = this.sheetList[this.currentSheetIndex].name;
+      const sheetName = this.sheetList[this.currentSheetIndex].alias;
       const head = {
         [sheetName]: this.currentColumns.slice(1).map(item => ({
           name: item.title,
@@ -497,10 +497,10 @@ export default {
       // }
 
       // 校验重名
-      // if (isValid && !this.replaceFile.isReplace && this.fileInfoList.some(file => file.name === name)) {
-      //   isValid = false;
-      //   this.$message.error('文件命名重复, 请重新添加');
-      // }
+      if (isValid && !this.replaceFile.isReplace && this.fileInfoList.some(file => file.name === name)) {
+        isValid = false;
+        this.$message.error('文件命名重复, 请重新添加');
+      }
       if (!isValid) {
         this.clearReplaceFile();
         return;
@@ -668,7 +668,6 @@ export default {
           }
         }
 
-        // const database = new MapSheet(result.rows[0].mapSheet)
         const database = new MapSheet(result.data);
         this.$set(this.databaseList, currentIndex, database);
 
@@ -681,6 +680,11 @@ export default {
             operation: 2,
             database: database,
           });
+        } else {
+          const target = this.operation.find(item => item.name === name);
+          if (target) {
+            target.database = database;
+          }
         }
         this.$nextTick(() => {
           this.handleGetDataBase(currentIndex);

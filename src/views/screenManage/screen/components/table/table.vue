@@ -5,31 +5,45 @@
     </div>
     <div class="board-chart-unit table-unit" :style="chartStyle" ref="js-board-chart-unit">
       <div class="table-wrapper reset-scrollbar" @scroll="getScrollLeft">
-        <Tcontainer
-          ref="js-thead"
-          :data="fields"
-          :cols="cols"
-          :tableStyle="tableStyle"
-          :theadStyle="theadStyle"
-          type="thead"
-          :key="refreshCount"
-          v-if="showHead"
-          @hook:mounted="doWithHeadHeight"
-        ></Tcontainer>
-        <Tcontainer
-          ref="js-tbody"
-          class="reset-scrollbar"
-          :style="{ top: headHeight, right: bodyScrollRight }"
-          :data="tbodyData"
-          :cols="cols"
-          :tableStyle="tableStyle"
-          :tbodyStyle="tbodyStyle"
-          :key="refreshCount + 1"
-          :autoWrap="tbody_autoWrap"
-          @hook:mounted="doWithWidth"
-          type="tbody"
-          @dataLink="dataLink"
-        ></Tcontainer>
+        <div class="thead">
+          <Tcontainer
+            ref="js-thead"
+            :data="fields"
+            :cols="cols"
+            :tableStyle="tableStyle"
+            :theadStyle="theadStyle"
+            :pagination="pagination"
+            type="thead"
+            :key="refreshCount"
+            v-if="showHead"
+            @hook:mounted="doWithHeadHeight"
+          ></Tcontainer>
+        </div>
+        <ScrollPage
+          class="reset-scrollbar tbody"
+          fit
+          :style="scrollStyle"
+          :rows="tbodyData"
+          :row-height="headHeight"
+          :pagination="pagination"
+          :fetch="getPageData"
+          @change="v => (pageDataRows = v)"
+        >
+          <Tcontainer
+            ref="js-tbody"
+            :data="pageDataRows"
+            :cols="cols"
+            :tableStyle="tableStyle"
+            :tbodyStyle="tbodyStyle"
+            :pagination="pagination"
+            :key="refreshCount + 1"
+            :autoWrap="tbody_autoWrap"
+            @hook:mounted="doWithWidth"
+            type="tbody"
+            @dataLink="dataLink"
+            @scroll="getPageData"
+          ></Tcontainer>
+        </ScrollPage>
       </div>
     </div>
   </div>
@@ -41,6 +55,7 @@ import defaultData from './default-data';
 import Tcontainer from './components/tcontainer';
 import { getStyle } from '@/utils';
 import { setLinkageData, resetOriginData } from '@/utils/setDataLink';
+import ScrollPage from '@/components/scroll';
 
 /**
  * @description 表格图表
@@ -51,6 +66,7 @@ export default {
   extends: BaseChart,
   inject: ['shapeUnit'],
   components: {
+    ScrollPage,
     Tcontainer,
   },
   provide() {
@@ -72,6 +88,7 @@ export default {
         },
       ],
       tbodyData: [], // 表格内容数据
+      pageDataRows: [], // 当前分页数据
       maxCols: [], // 表格中每列最大宽度的数据
       cols: [], // 表格列
       tableStyle: {}, // 表格样式
@@ -80,6 +97,12 @@ export default {
       refreshCount: 0, // 用来重置组件 https://cn.vuejs.org/v2/api/#key => 完整地触发组件的生命周期钩子
       bodyScrollRight: 0, // 计算滚动长度定位纵向滚动轴
       headHeight: '38px', //表头高度
+      pagination: {
+        // 分页参数
+        pageSize: 1000, // 单次查询1000条
+        pageNo: 1,
+        rowsNum: 0,
+      },
     };
   },
   destroyed() {},
@@ -88,6 +111,9 @@ export default {
     //   // 距离表头高度
     //   return this.options.style.echart.thead.height + 'px';
     // },
+    scrollStyle() {
+      return { top: this.headHeight, right: this.bodyScrollRight };
+    },
     showHead() {
       // 表头是否显示
       const {
@@ -103,14 +129,6 @@ export default {
     },
   },
   methods: {
-    /**
-     * @description 切割当前展示的表格
-     */
-    doWithSliceData(start, end) {
-      if (!this.serverData) return;
-      const data = this.serverData.data.slice(start, end);
-      this.doWithOptions({ data });
-    },
     /**
      * @description 等子组件挂载完成后处理表头的高度
      */
@@ -300,14 +318,25 @@ export default {
      * @description 图表获取数据
      */
     getChartData() {
+      this.pagination = this.$options.data().pagination;
       this.isServerData() ? this.getServerData() : this.getDefaultData();
+    },
+    async getPageData(pageNo) {
+      this.pagination.pageNo = pageNo;
+      await this.getServerData();
     },
     /**
      * @description 图表获取服务端数据
      */
     async getServerData() {
+      if (this.shapeUnit.isSpinning) return;
       let dimensions = [];
       let measures = [];
+      const {
+        style: {
+          title: { text },
+        },
+      } = this.options;
       this.options.data.fields.forEach(item => {
         if (item.role === 1) {
           dimensions.push(item);
@@ -321,6 +350,7 @@ export default {
           id: this.shapeUnit.component.id,
           tabId: this.shapeUnit.component.tabId,
           type: this.shapeUnit.component.type,
+          ...this.pagination,
           ...this.options.data,
           dimensions, // 拼装维度
           measures, // 拼装度量
@@ -328,14 +358,20 @@ export default {
         .finally(() => {
           this.shapeUnit.changeLodingChart(false);
         });
-      if (res.code === 500) {
-        if (res.msg === 'IsChanged') {
+      if (res.code !== 200) {
+        if (res.code === 1054) {
           const keys = ['fields', 'filter', 'sort'];
           this.handleRedList(res.data, keys);
+          if (this.isEditMode) {
+            this.$message.error(`${text}数据异常, 请处理标红字段`);
+          }
+          return;
         }
-        this.$message.error(res.msg);
+        return this.$message.error(res.msg || '请求错误');
       }
-      this.serverData = { data: res.data };
+      this.pagination.rowsNum = res.rowsNum;
+      // this.serverData = { data: this.doWithPageData(lastPageNo, res.data) };
+      this.serverData = { data: res.data || [] };
       const keys = this.options.data.fields.map(item =>
         item.role === 2 ? `${item.defaultAggregator}_${item.alias}` : item.alias,
       );
@@ -346,6 +382,35 @@ export default {
       });
       this.doWithOptions();
       this.refreshCount += 1;
+
+      // 数据更新后的页面回滚
+      // if (pageNo) {
+      //   this.$nextTick(() => {
+      //     this.$refs['js-tbody'].$el.scrollTo(0, cellHeight * this.pagination.pageSize);
+      //   });
+      // }
+    },
+    /**
+     * @description 处理当前页数(默认保持2页数据上下浮动)
+     * @param {String} lastPageNo 旧页码
+     * @param {Array} data 数据
+     */
+    doWithPageData(lastPageNo, data) {
+      const { pageNo, pageSize } = this.pagination;
+      const rows = [].concat(this.serverData ? this.serverData.data : []);
+      // 向上滚动, 截取之前数据的前半部分, 并在头部插入
+      if (pageNo < lastPageNo) {
+        return data.concat(rows.slice(0, pageSize));
+      } else if (pageNo > lastPageNo) {
+        // 特殊情况, 即初次滚动到第2页数据时
+        if (lastPageNo === 1 && rows.length <= pageSize) {
+          return rows.concat(data);
+        }
+        // 向下滚动, 截取之前数据的后半段再插入当前数据
+        return rows.slice(pageSize).concat(data);
+      }
+      // 首页数据直接返回
+      return data;
     },
     /**
      * @description 图表获取默认数据
@@ -361,8 +426,6 @@ export default {
      */
     updateChartStyle() {
       this.doWithWidth();
-      this.doWithThead();
-      this.doWithTbody();
     },
     /**
      * @description 图表联动

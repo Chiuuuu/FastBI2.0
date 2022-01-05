@@ -214,7 +214,7 @@ export default {
      * @description 判断数值类型
      */
     getDataType(type) {
-      return ['BIGINT', 'DECIMAL', 'DOUBLE'].includes(type) ? 'num' : 'str';
+      return ['Int64', 'Decimal64(2)', 'Float64'].includes(type) ? 'num' : 'str';
     },
   },
 };

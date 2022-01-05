@@ -319,7 +319,7 @@ export default {
   },
   data() {
     return {
-      NUMBER_LIST: ['BIGINT', 'DOUBLE', 'DECIMAL'],
+      NUMBER_LIST: ['Int64', 'Float64', 'Decimal64(2)'],
       DimensionsIcon,
       MeasureIcon,
       modelForm: this.$form.createForm(this, { name: 'modelForm' }),
@@ -455,32 +455,32 @@ export default {
           children: [
             {
               name: '转换为整数',
-              dataType: 'BIGINT',
+              dataType: 'Int64',
               onClick: this.switchFieldType,
             },
             {
               name: '转换为小数',
-              dataType: 'DOUBLE',
+              dataType: 'Float64',
               onClick: this.switchFieldType,
             },
             // {
             //   name: '转换为数值',
-            //   dataType: 'DECIMAL',
+            //   dataType: 'Decimal64(2)',
             //   onClick: this.switchFieldType
             // },
             {
               name: '转换为字符串',
-              dataType: 'VARCHAR',
+              dataType: 'String',
               onClick: this.switchFieldType,
             },
             {
               name: '转换为日期',
-              dataType: 'DATE',
+              dataType: 'Date',
               onClick: this.switchFieldType,
             },
             {
               name: '转换为日期时间',
-              dataType: 'TIMESTAMP',
+              dataType: 'DateTime',
               onClick: this.switchFieldType,
             },
           ],
@@ -504,13 +504,27 @@ export default {
       pivotSchema.dimensions.forEach((item, index) => {
         const target = this.cacheFields.find(f => f.id === item.id);
         if (target) {
-          pivotSchema.dimensions.splice(index, 1, target);
+          // 判断维度还是度量, 要进行插入和删除操作
+          if (target.role === 1) {
+            pivotSchema.dimensions.splice(index, 1, target);
+          } else if (target.role === 2) {
+            // 上次转为了度量, 则将维度字段插入到度量
+            pivotSchema.dimensions.splice(index, 1);
+            pivotSchema.measures.push(target);
+          }
         }
       });
       pivotSchema.measures.forEach((item, index) => {
         const target = this.cacheFields.find(f => f.id === item.id);
         if (target) {
-          pivotSchema.measures.splice(index, 1, target);
+          // 判断维度还是度量, 要进行插入和删除操作
+          if (target.role === 2) {
+            pivotSchema.measures.splice(index, 1, target);
+          } else if (target.role === 1) {
+            // 上次转为了维度, 则将度量字段插入到维度
+            pivotSchema.measures.splice(index, 1);
+            pivotSchema.dimensions.push(target);
+          }
         }
       });
       // this.cacheFields = []
@@ -526,7 +540,16 @@ export default {
       }
     },
     switchFieldType(e, item, vm) {
+      const numTypeList = ['Int64', 'Float64', 'Decimal64(2)'];
       let dataType = item.dataType;
+      let oldType = vm.itemData.convertType;
+      // 数值类型转非数值, 修改默认聚合方式为COUNT
+      if (numTypeList.includes(oldType) && !numTypeList.includes(dataType)) {
+        vm.itemData.defaultAggregator = 'COUNT';
+      } else if (!numTypeList.includes(oldType) && numTypeList.includes(dataType)) {
+        // 非数值类型转数值, 修改默认聚合方式为SUM
+        vm.itemData.defaultAggregator = 'SUM';
+      }
       vm.itemData.convertType = dataType;
       this.handleCacheFields(vm.itemData);
       // 转换类型后, 需要同步更新筛选排序列表的状态
@@ -656,6 +679,7 @@ export default {
      * 切换数据库
      */
     async handleChangeDatabase(value, data) {
+      this.tableSearch = '';
       this.handleGetDatabaseTable(data.key);
       this.$store.dispatch('dataModel/setDatabaseId', data.key);
     },
@@ -709,7 +733,7 @@ export default {
           this.detailInfo.pivotSchema.dimensions.push(data);
         }
       }
-      this.handleCacheFields(vm.itemData);
+      this.handleCacheFields(data);
       this.handleSameName();
       this.handleDimensions();
       this.handleMeasures();
@@ -919,15 +943,15 @@ export default {
     },
     // 判断字段是否为时间日期类型
     isDate(data) {
-      return (data.convertType || data.dataType) === 'DATE';
+      return (data.convertType || data.dataType) === 'Date';
     },
     // 判断字段是否为时间日期类型
     isTimestamp(data) {
-      return (data.convertType || data.dataType) === 'TIMESTAMP';
+      return (data.convertType || data.dataType) === 'DateTime';
     },
     // 判断字段是否为文本类型
     isVarchar(data) {
-      return (data.convertType || data.dataType) === 'VARCHAR';
+      return (data.convertType || data.dataType) === 'String';
     },
     /**
      * 表格变更时, 处理筛选排序的列表

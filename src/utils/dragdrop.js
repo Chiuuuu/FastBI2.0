@@ -116,6 +116,16 @@ export default class DragDrop {
               document.body.removeChild(this.placeholder);
             } catch (error) {
               console.log(error);
+              if (ondragend) {
+                ondragend(this, event);
+              }
+              if (this.drop) {
+                if (ondrop) {
+                  ondrop(this, event);
+                }
+                this.drop = null;
+              }
+              this.placeholder = '';
             }
           }
           document.removeEventListener('mousemove', onMouseMove);

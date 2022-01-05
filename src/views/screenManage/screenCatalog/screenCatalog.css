@@ -837,8 +837,11 @@ ul {
 .database-popover .warpper .panel-body .body .table-list .ant-select-selection--single {
   height: 28px;
 }
-.database-popover .warpper .panel-body .body .list-content {
+.database-popover .warpper .panel-body .body .list-spin {
   height: calc(100vh - 190px);
+}
+.database-popover .warpper .panel-body .body .list-content {
+  height: 100%;
   position: relative;
   overflow-y: auto;
 }

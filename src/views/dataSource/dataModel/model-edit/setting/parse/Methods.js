@@ -4,7 +4,7 @@
  * @returns
  */
 function isInteger(item) {
-  return (item.convertType || item.dataType) === 'BIGINT';
+  return (item.convertType || item.dataType) === 'Int64';
 }
 
 /**
@@ -13,7 +13,7 @@ function isInteger(item) {
  * @returns
  */
 function isFloat(item) {
-  return (item.convertType || item.dataType) === 'DOUBLE';
+  return (item.convertType || item.dataType) === 'Float64';
 }
 
 /**
@@ -22,7 +22,7 @@ function isFloat(item) {
  * @returns
  */
 function isString(item) {
-  return (item.convertType || item.dataType) === 'VARCHAR';
+  return (item.convertType || item.dataType) === 'String';
 }
 
 /**
@@ -31,7 +31,7 @@ function isString(item) {
  * @returns
  */
 // function isDecimal(item) {
-//   return (item.convertType || item.dataType) === 'DECIMAL';
+//   return (item.convertType || item.dataType) === 'Decimal64(2)';
 // }
 export class Methods {
   constructor(dmType) {

@@ -57,13 +57,13 @@
       <template v-if="setType === 'convertType'">
         <a-form-model :model="modalForm" :label-col="{ span: 5 }" :wrapper-col="{ span: 12 }">
           <a-form-model-item label="字段类型" required>
-            <a-select default-value="BIGINT" style="width: 100px" v-model="modalForm.convertType">
-              <a-select-option value="BIGINT">整数</a-select-option>
-              <a-select-option value="DOUBLE">小数</a-select-option>
-              <!-- <a-select-option value="DECIMAL">数值</a-select-option> -->
-              <a-select-option value="VARCHAR">字符串</a-select-option>
-              <a-select-option value="DATE">日期</a-select-option>
-              <a-select-option value="TIMESTAMP">日期时间</a-select-option>
+            <a-select default-value="Int64" style="width: 100px" v-model="modalForm.convertType">
+              <a-select-option value="Int64">整数</a-select-option>
+              <a-select-option value="Float64">小数</a-select-option>
+              <!-- <a-select-option value="Decimal64(2)">数值</a-select-option> -->
+              <a-select-option value="String">字符串</a-select-option>
+              <a-select-option value="Date">日期</a-select-option>
+              <a-select-option value="DateTime">日期时间</a-select-option>
             </a-select>
           </a-form-model-item>
         </a-form-model>
@@ -113,7 +113,7 @@ export default {
       setType: '',
       cacheTables: '',
       modalForm: {
-        convertType: 'BIGINT',
+        convertType: 'Int64',
         role: 1,
         visible: true,
       },
@@ -216,6 +216,17 @@ export default {
         Object.keys(this.cacheTables).forEach(key => {
           this.cacheTables[key].forEach(table => {
             if (item.id === table.id) {
+              if (this.setType === 'convertType') {
+                const numTypeList = ['Int64', 'Float64', 'Decimal64(2)'];
+                let oldType = table[this.setType];
+                // 数值类型转非数值, 修改默认聚合方式为COUNT
+                if (numTypeList.includes(oldType) && !numTypeList.includes(value)) {
+                  table.defaultAggregator = 'COUNT';
+                } else if (!numTypeList.includes(oldType) && numTypeList.includes(value)) {
+                  // 非数值类型转数值, 修改默认聚合方式为SUM
+                  table.defaultAggregator = 'SUM';
+                }
+              }
               table[this.setType] = value;
             }
           });

@@ -122,32 +122,32 @@ export default {
       fieldContenxtMenu: [
         {
           name: '转换为整数',
-          dataType: 'BIGINT',
+          dataType: 'Int64',
           onClick: this.switchFieldType,
         },
         {
           name: '转换为小数',
-          dataType: 'DOUBLE',
+          dataType: 'Float64',
           onClick: this.switchFieldType,
         },
         // {
         //   name: '转换为数值',
-        //   dataType: 'DECIMAL',
+        //   dataType: 'Decimal64(2)',
         //   onClick: this.switchFieldType
         // },
         {
           name: '转换为字符串',
-          dataType: 'VARCHAR',
+          dataType: 'String',
           onClick: this.switchFieldType,
         },
         {
           name: '转换为日期',
-          dataType: 'DATE',
+          dataType: 'Date',
           onClick: this.switchFieldType,
         },
         {
           name: '转换为日期时间',
-          dataType: 'TIMESTAMP',
+          dataType: 'DateTime',
           onClick: this.switchFieldType,
         },
       ],
@@ -176,22 +176,20 @@ export default {
   filters: {
     formatField(value) {
       switch (value) {
-        case 'BIGINT':
+        case 'Int64':
           value = '整数';
           break;
-        case 'TIMESTAMP':
+        case 'DateTime':
           value = '日期时间';
           break;
-        case 'DATE':
+        case 'Date':
           value = '日期';
           break;
-        case 'DOUBLE':
+        case 'Float64':
+        case 'Decimal64(2)':
           value = '小数';
           break;
-        case 'DECIMAL':
-          value = '数值';
-          break;
-        case 'VARCHAR':
+        case 'String':
           value = '字符串';
           break;
       }
@@ -209,7 +207,16 @@ export default {
       this.$emit('checkName', e, id);
     },
     switchFieldType(e, item, vm) {
+      const numTypeList = ['Int64', 'Float64', 'Decimal64(2)'];
       let dataType = item.dataType;
+      let oldType = vm.selectData.convertType;
+      // 数值类型转非数值, 修改默认聚合方式为COUNT
+      if (numTypeList.includes(oldType) && !numTypeList.includes(dataType)) {
+        vm.selectData.defaultAggregator = 'COUNT';
+      } else if (!numTypeList.includes(oldType) && numTypeList.includes(dataType)) {
+        // 非数值类型转数值, 修改默认聚合方式为SUM
+        vm.selectData.defaultAggregator = 'SUM';
+      }
       vm.selectData.convertType = dataType;
     },
     switchRoleType(e, item, vm) {

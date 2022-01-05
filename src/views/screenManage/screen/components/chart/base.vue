@@ -8,6 +8,7 @@
 </template>
 <script>
 import { mapState, mapGetters } from 'vuex';
+import { parameter } from '@/store/modules/board';
 
 /**
  * @description chart的公共组件
@@ -16,9 +17,16 @@ export default {
   name: 'BaseChart',
   data() {
     return {
+      parameter,
       chartInstane: null, // 图表实例
       serverData: null, // 服务端数据
       dataState: 'default', //  // 数据状态("empty":数据为空(服务器返回[])|'default':初始化| 'normal':有数据)
+      pagination: {
+        // 分页参数
+        pageSize: 50,
+        pageNo: 1,
+        rowsNum: 0,
+      },
     };
   },
   inject: ['shapeUnit'],
@@ -33,9 +41,13 @@ export default {
     ...mapState({
       // 当前组件状态
       currentComState: state => state.board.currentComState,
+      model: state => state.board.model,
       tabId: state => state.app.screenInfo.tabId,
     }),
     ...mapGetters(['polymerizeType']),
+    isEditMode() {
+      return this.model === this.parameter.EDIT;
+    },
     titleStyle() {
       // 标题样式
       const { style } = this.options;
@@ -203,7 +215,8 @@ export default {
       // return [].concat(data.dimensions).concat(data.measures);
     },
     /**
-     * @description 处理isChanged标红
+     * @description 处理isChanged标红(约定特殊返回码1054)
+     * @description 返回当前模型或源中存在且可见的字段列表, 和图表引用的字段作对比
      */
     handleRedList(list, keys) {
       // 如果存在对应列表id，替换成红色
@@ -211,15 +224,28 @@ export default {
         keys.forEach(key => {
           if (key === 'filter') {
             this.options.data[key].fileList.forEach(item => {
-              if (list.includes(item.id)) {
+              const target = list.find(t => t.pivotschemaId === item.pivotschemaId);
+              // 字段不存在or被隐藏
+              if (!target) {
+                item.IsChanged = true;
+              }
+
+              // 维度度量发生改变
+              if (target && target.role !== item.role) {
                 item.IsChanged = true;
               }
             });
-            return;
           }
           if (Array.isArray(this.options.data[key])) {
             this.options.data[key].forEach(item => {
-              if (list.includes(item.id)) {
+              const target = list.find(t => t.pivotschemaId === item.pivotschemaId);
+              // 字段不存在or被隐藏
+              if (!target) {
+                item.IsChanged = true;
+              }
+
+              // 维度度量发生改变
+              if (target && target.role !== item.role) {
                 item.IsChanged = true;
               }
             });

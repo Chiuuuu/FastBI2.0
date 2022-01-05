@@ -1,10 +1,18 @@
 <template>
   <li
-    class="js-field-item field-item text-item clearfix"
     ref="js-field-item"
+    :class="[
+      'js-field-item',
+      'field-item',
+      'text-item',
+      'clearfix',
+      {
+        selected: selected,
+        invisible: !data.visible,
+      },
+    ]"
     :tabindex="100"
     :data-index="fieldIndex"
-    :class="selected ? 'selected' : ''"
     @click="handleClick"
   >
     <div :class="['prefix-icon bi-data', icon]"></div>
@@ -58,11 +66,11 @@ export default {
     icon() {
       // 对应数据类型的图标
       const icons = {
-        BIGINT: 'bi-data-int',
-        DOUBLE: 'bi-data-float',
-        VARCHAR: 'bi-data-string',
-        DATE: 'bi-data-date',
-        TIMESTAMP: 'bi-data-datetimepick',
+        Int64: 'bi-data-int',
+        Float64: 'bi-data-float',
+        String: 'bi-data-string',
+        Date: 'bi-data-date',
+        DateTime: 'bi-data-datetimepick',
       };
       return icons[this.data.dataType] || '';
     },

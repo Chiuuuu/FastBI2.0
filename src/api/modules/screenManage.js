@@ -321,7 +321,7 @@ const screenManage = {
   /**
    *@description 大屏删除数据模型|数据接入
    * @param {String} tabId id
-   * @param {String} tableId 删除的id
+   * @param {String} tableId 模型|接入的id
    */
   deleteListDataByScreenIdAndTableId(tabId, tableId) {
     return $axios.get(`/screen/pivotschema/del/${tabId}/${tableId}`);
@@ -329,7 +329,7 @@ const screenManage = {
   /**
    *@description 获取数据模型——维度度量
    * @param {String} tabId id
-   * @param {String} tableId 删除的id
+   * @param {String} tableId 模型|接入的id
    */
   getPivotschemaByModel(tableId, tabId) {
     return $axios.get(`/screen/pivotschema/model/${tableId}/${tabId}`);
@@ -337,7 +337,7 @@ const screenManage = {
   /**
    *@description 获取数据接入——维度度量
    * @param {String} tabId id
-   * @param {String} tableId 删除的id
+   * @param {String} tableId 模型|接入的id
    */
   getPivotschemaByAccess(tableId, tabId) {
     return $axios.get(`/screen/pivotschema/access/${tableId}/${tabId}`);

@@ -239,6 +239,11 @@ export default {
       const orginList = ['targe', 'max', 'min'];
       const handleList = orginList.filter(key => Array.isArray(this.options.data[key]));
       const { dimensions, measures } = this.handleGetDataParmas(handleList);
+      const {
+        style: {
+          title: { text },
+        },
+      } = this.options;
       const params = {
         id: this.shapeUnit.component.id,
         tabId: this.shapeUnit.component.tabId,
@@ -251,12 +256,16 @@ export default {
       const res = await this.$server.common.getData('/screen/graph/v2/getData', params).finally(() => {
         this.shapeUnit.changeLodingChart(false);
       });
-      if (res.code === 500) {
-        if (res.msg === 'IsChanged') {
+      if (res.code !== 200) {
+        if (res.code === 1054) {
           const keys = ['targe', 'min', 'max', 'filter'];
           this.handleRedList(res.data, keys);
+          if (this.isEditMode) {
+            this.$message.error(`${text}数据异常, 请处理标红字段`);
+          }
+          return;
         }
-        this.$message.error(res.msg);
+        return this.$message.error(res.msg);
       }
 
       this.dataState = res.data && res.data.length ? 'normal' : 'empty';

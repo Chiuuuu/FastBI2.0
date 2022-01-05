@@ -17,22 +17,29 @@
             </a-col>
           </a-row>
           <div class="search">
-            <a-input-search placeholder="搜索表名" :disabled="tableList.length === 0" @change="handleSearch" />
+            <a-input-search
+              placeholder="搜索表名"
+              :value="keyword"
+              :disabled="tableList.length === 0"
+              @change="handleSearch"
+            />
           </div>
-          <div class="list-content reset-scrollbar">
-            <ul>
-              <li
-                class="z-clickable"
-                v-for="item in list"
-                :key="item.id"
-                @click="$event => handleItemClick($event, item)"
-              >
-                <div class="title">
-                  <span>{{ item.alias }}</span>
-                </div>
-              </li>
-            </ul>
-          </div>
+          <a-spin :spinning="spinning" class="list-spin">
+            <div class="list-content reset-scrollbar">
+              <ul>
+                <li
+                  class="z-clickable"
+                  v-for="item in list"
+                  :key="item.id"
+                  @click="$event => handleItemClick($event, item)"
+                >
+                  <div class="title">
+                    <span>{{ item.alias }}</span>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </a-spin>
         </div>
       </div>
     </div>
@@ -68,6 +75,7 @@ export default {
   },
   data() {
     return {
+      spinning: false,
       databaseList: [], // 数据库列表
       databaseSelect: '', // 选中的数据库
       tableList: [], // 表列表
@@ -105,7 +113,10 @@ export default {
      */
     async getSelectDataSourceList(item) {
       if (!item) return;
-      const result = await this.$server.dataModel.getDataBaseDataInfoList(item.id, '');
+      this.spinning = true;
+      const result = await this.$server.dataModel
+        .getDataBaseDataInfoList(item.id, '')
+        .finally(() => (this.spinning = false));
       if (result && result.code === 200) {
         this.databaseList = [].concat(result.data);
         if (this.databaseList && this.databaseList.length) {
@@ -122,6 +133,7 @@ export default {
     async handleSelectDatabase(id) {
       const result = await this.$server.dataModel.getTableListById(id);
       if (result && result.code === 200) {
+        this.keyword = '';
         this.tableList = [].concat(result.data);
       } else {
         this.$message.error(result.msg || '获取数据表失败');

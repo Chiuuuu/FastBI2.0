@@ -157,6 +157,9 @@ export default {
         backgroundImage: `${this.boardPage.background.image}`,
       };
     },
+    isSpinning() {
+      return this.spinning;
+    },
   },
   watch: {
     boardPage: {
@@ -193,6 +196,7 @@ export default {
         this.cacheBoardScale = this.boardScale;
         this.fullScreenPreview();
         this.initContextMenuForScreen();
+        this.doWithRect(true);
       }
     },
   },
@@ -228,13 +232,14 @@ export default {
     },
     /**
      * @description 处理编辑区
+     * @param fullScreen 是否进入全屏
      */
-    doWithRect() {
+    doWithRect(fullScreen) {
       // 如果是从全屏退出则不需要再次处理比例
-      if (this.exitFullscreen()) return;
+      if (!fullScreen && this.exitFullscreen()) return;
       this.$nextTick(() => {
         const boardContentRect = this.$refs['js-board-content'].getBoundingClientRect();
-        const SCALE = this.setRatio(boardContentRect);
+        const SCALE = fullScreen ? 1 : this.setRatio(boardContentRect);
         this.$store.commit(boardMutaion.SET_BOARD_SCALE, {
           scale: SCALE,
         });
@@ -423,15 +428,16 @@ export default {
   },
   mounted() {
     this.$nextTick(() => {
+      // TODO: 取消自适应缩放画布, 仅在进入全屏时处理缩放比
       // this.doWithRect();
-      window.addEventListener('resize', this.doWithRect);
+      // window.addEventListener('resize', this.doWithRect);
       window.addEventListener('keyup', this.handleDeleteChart);
       this.listenerFullScreen();
       this.initContextMenuForScreen();
     });
   },
   beforeDestroy() {
-    window.removeEventListener('resize', this.doWithRect);
+    // window.removeEventListener('resize', this.doWithRect);
     window.removeEventListener('keyup', this.handleDeleteChart);
     this.removeListenerFullScreen();
   },

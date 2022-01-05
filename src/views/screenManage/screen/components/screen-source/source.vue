@@ -58,7 +58,12 @@ export default {
      */
     handleImgUrl(url) {
       // 去掉thumbnail就是原图路径
-      return process.env.VUE_APP_SERVICE_URL + url.replace('/thumbnail', '');
+      let res = window.location.origin + url.replace('/thumbnail', '');
+      // 开发环境
+      if (process && process.env && process.env.NODE_ENV === 'development') {
+        res = '/admin/dev-api' + url.replace('/thumbnail', '');
+      }
+      return res;
     },
     /**
      * @description 判断当前的图片url是否能加载

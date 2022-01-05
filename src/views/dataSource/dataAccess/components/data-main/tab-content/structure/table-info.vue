@@ -70,19 +70,18 @@ export default {
   filters: {
     formatType: function (value) {
       switch (value) {
-        case 'BIGINT':
+        case 'Int64':
         case 'INT':
           return '整数';
-        case 'DECIMAL':
-          return '数值';
-        case 'TIMESTAMP':
+        case 'DateTime':
         case 'TIME':
           return '日期时间';
-        case 'DATE':
+        case 'Date':
           return '日期';
-        case 'DOUBLE':
+        case 'Float64':
+        case 'Decimal64(2)':
           return '小数';
-        case 'VARCHAR':
+        case 'String':
           return '字符串';
         default:
           return '字符串';

@@ -1,9 +1,10 @@
-import { mutationTypes as boardMutaion } from '@/store/modules/board';
+import { parameter, mutationTypes as boardMutaion } from '@/store/modules/board';
 import cloneDeep from 'lodash/cloneDeep';
 import html2canvas from 'html2canvas';
 import JSPDF from 'jspdf';
 import { mapState } from 'vuex';
 import json2csv from 'json2csv';
+import BoardType from '@/views/screenManage/screen/setting/default-type';
 /**
  * @description 下载图片
  */
@@ -94,7 +95,29 @@ const ContenxtmenuMethodMixin = {
       screenInfo: state => state.app.screenInfo.setting,
     }),
   },
+  data() {
+    return {
+      scrolling: false,
+      curCom: {}, // 当前图表对象
+      curDataKey: '', // 当前数据类型(地图专用: fill | label)
+      pagination: {
+        // 分页参数
+        pageSize: 50, // 单次查询50条
+        pageNo: 1,
+        rowsNum: 0,
+      },
+      pageData: [],
+    };
+  },
   methods: {
+    resetPagination() {
+      this.pagination = {
+        // 分页参数
+        pageSize: 50, // 单次查询50条
+        pageNo: 1,
+        rowsNum: 0,
+      };
+    },
     /**
      * @description 右键菜单——复制图表
      */
@@ -149,9 +172,13 @@ const ContenxtmenuMethodMixin = {
       this.handleSpinning(true, '导出图表...');
       const clone = vm.$el.cloneNode(true);
       clone.style.position = 'relative';
-      const chartDom = clone.querySelector('.ant-spin-container');
-      chartDom.removeChild(chartDom.childNodes[0]);
-      chartDom.removeChild(chartDom.childNodes[0]);
+      if (this.$store.state.board.model === parameter.EDIT) {
+        const chartDom = clone.querySelector('.ant-spin-container');
+        // 删除.shape-resize
+        chartDom.removeChild(chartDom.childNodes[0]);
+        // 删除.shape-mover
+        chartDom.removeChild(chartDom.childNodes[0]);
+      }
       const canvas = vm.$el.querySelector('canvas');
       if (canvas) {
         const cloneCanvas = clone.querySelector('canvas');
@@ -210,14 +237,33 @@ const ContenxtmenuMethodMixin = {
     },
     /**
      * @description 导出csv
+     * 剩余参数index, vm
      */
-    async handleExportCsv(e, item, component, index, vm) {
+    async handleExportCsv(e, item, component) {
+      if (item.key) {
+        const chartNode = this.$slots.default[0].componentInstance;
+        let hasData = item.key === 'fillList' ? chartNode.isFillData() : chartNode.isLabelData();
+
+        // 判断当前图表数据为服务数据
+        if (!hasData) {
+          let dom = document.querySelector('.board-canvas');
+          this.$message.config({
+            getContainer: () => dom,
+          });
+          this.$message.error('该图表没有拖入图表数据');
+          return;
+        }
+      }
       if (!this.judgeHasData()) {
         return;
       }
       this.handleSpinning(true, '正在导出...');
-      const dataList = await this.getChartData(component, vm);
+      this.curDataKey = item.key;
+      this.curCom = component;
+      // 导出第一页数据
+      const dataList = await this.getChartData(component, item.key, 1);
       if (!dataList) {
+        this.handleSpinning(false);
         return;
       }
       this.handleSpinning(false);
@@ -229,31 +275,55 @@ const ContenxtmenuMethodMixin = {
      * @description 导出excel
      */
     async handleExportExcel(e, item, component) {
+      if (item.key) {
+        const chartNode = this.$slots.default[0].componentInstance;
+        let hasData = item.key === 'fillList' ? chartNode.isFillData() : chartNode.isLabelData();
+
+        // 判断当前图表数据为服务数据
+        if (!hasData) {
+          let dom = document.querySelector('.board-canvas');
+          this.$message.config({
+            getContainer: () => dom,
+          });
+          this.$message.error('该图表没有拖入图表数据');
+          return;
+        }
+      }
       if (!this.judgeHasData()) {
         return;
       }
+      const exportTypeMap = {
+        fillList: 1,
+        labelList: 2,
+      };
       const params = {
         id: component.id,
         graphName: component.name,
+        type: component.type,
+        exportType: exportTypeMap[item.key || ''] || 0,
       };
       this.handleSpinning(true, '正在导出...');
       let res = await this.$server.screenManage.exportExcel(params);
       this.handleSpinning(false);
-      if (res['code'] && res['code'] !== 200) {
-        this.$message.error(res.msg);
+      if (res.code && res.code !== 200) {
+        this.$message.error(res.msg || '请重新操作');
         return;
       }
       download(res, component.setting.style.title.text + '.xlsx', 'file');
     },
     /**
      * @description 右键菜单——查看图表数据
+     * 剩余参数 index, vm
      */
-    async handleChartDataComponent(e, item, component, index, vm) {
+    async handleChartDataComponent(e, item, component) {
       if (!this.judgeHasData()) {
         return;
       }
 
-      let dataList = await this.getChartData(component, vm, item.key);
+      this.curCom = component;
+      this.curDataKey = item.key;
+      this.resetPagination();
+      let dataList = await this.getChartData(component, item.key);
       if (!dataList) {
         return;
       }
@@ -263,9 +333,9 @@ const ContenxtmenuMethodMixin = {
       return dataList;
     },
     /**
-     * @description 右键菜单——查看图表数据
+     * 剩余参数 index, vm
      */
-    async handleChartDataComponentForMap(type, e, item, component, index, vm) {
+    async handleChartDataComponentForMap(type, e, item, component) {
       const chartNode = this.$slots.default[0].componentInstance;
       let hasData = type === 'fill' ? chartNode.isFillData() : chartNode.isLabelData();
 
@@ -279,7 +349,10 @@ const ContenxtmenuMethodMixin = {
         return;
       }
 
-      let dataList = await this.getChartData(component, vm, item.key);
+      this.curCom = component;
+      this.curDataKey = item.key;
+      this.resetPagination();
+      let dataList = await this.getChartData(component, item.key);
       if (!dataList) {
         return;
       }
@@ -305,15 +378,26 @@ const ContenxtmenuMethodMixin = {
       return true;
     },
     // 查看/导出数据 -- 构造数据
-    async getChartData(component, vm, mapKey) {
+    async getChartData(component = this.curCom, mapKey = this.curDataKey, pageNo = this.pagination.pageNo) {
       const chartNode = this.$slots.default[0].componentInstance;
       const contentInstance = this.$parent.$parent;
+      // 表格特殊处理, 1000条
+      if (component.type === BoardType.ChartTable) {
+        this.pagination.pageSize = 1000;
+        // } else if (component.type === BoardType.ChartPie) {
+        //   this.pagination.pageSize = component.setting.style.echart.customLimit;
+        // } else {
+      } else {
+        this.pagination.pageSize = 50;
+      }
       let params = {
         id: component.id,
         type: component.type,
         screenName: contentInstance.screenInfo.screenName,
         tabName: contentInstance.screenInfo.tabName,
         graphName: component.name,
+        ...this.pagination,
+        pageNo,
       };
 
       this.handleSpinning(true, '请求数据...');
@@ -325,75 +409,22 @@ const ContenxtmenuMethodMixin = {
       }
 
       let source = res.data || [];
+      this.pagination.rowsNum = res.rowsNum || 0;
 
       let columns = [];
       let rows = [];
       let tableName = [];
-      let exportList = [];
 
       if (component.type === 'ChartMap') {
         // 查看数据已拆分成查看填充层or标记层(方便表格分页)
-        if (mapKey) {
-          let aliasKeys = chartNode.handleTableColumns(Object.keys(source[mapKey][0]), mapKey);
-          columns = aliasKeys;
-          let type = '填充';
-          let row = [];
-          if (mapKey === 'fillList') {
-            row = source[mapKey];
-            type = '填充';
-          } else if (mapKey === 'labelList') {
-            row = source[mapKey];
-          }
-          rows = row;
-          let aliasObj = {};
-          aliasKeys.forEach((alias, index) => {
-            aliasObj['name' + index] = alias['colName'];
-          });
-          let cunstomRow = source[mapKey].map(row => {
-            let obj = {};
-            aliasKeys.forEach((alias, index) => {
-              obj['name' + index] = row[alias['colName']];
-            });
-            return obj;
-          });
-          let titleRow = { name0: type, name1: '', name2: '' };
-          cunstomRow = [titleRow, aliasObj].concat(cunstomRow);
-          exportList = cunstomRow.concat(exportList);
-        } else {
-          // 导出数据照旧
-          await Promise.all(
-            Object.keys(source).map(async item => {
-              if (source[item]) {
-                let aliasKeys = chartNode.handleTableColumns(Object.keys(source[item][0]), item);
-                columns.push(aliasKeys);
-                let type = '填充';
-                let row = [];
-                if (item === 'fillList') {
-                  row = source[item];
-                  type = '填充';
-                } else if (item === 'labelList') {
-                  row = source[item];
-                }
-                rows.push(row);
-                tableName.push(type);
-                let aliasObj = {};
-                aliasKeys.forEach((alias, index) => {
-                  aliasObj['name' + index] = alias['colName'];
-                });
-                let cunstomRow = source[item].map(row => {
-                  let obj = {};
-                  aliasKeys.forEach((alias, index) => {
-                    obj['name' + index] = row[alias['colName']];
-                  });
-                  return obj;
-                });
-                let titleRow = { name0: type, name1: '', name2: '' };
-                cunstomRow = [titleRow, aliasObj].concat(cunstomRow);
-                exportList = cunstomRow.concat(exportList);
-              }
-            }),
-          );
-        }
+        let aliasKeys = chartNode.handleTableColumns(Object.keys(source[mapKey][0]), mapKey);
+        columns = aliasKeys;
+        let row = source[mapKey];
+        rows = row;
+        let aliasObj = {};
+        aliasKeys.forEach((alias, index) => {
+          aliasObj['name' + index] = alias['colName'];
+        });
       } else {
         // 处理空数据
         if (!source.length) {
@@ -402,14 +433,13 @@ const ContenxtmenuMethodMixin = {
         }
         columns = chartNode.handleTableColumns(Object.keys(source[0]));
         rows = source;
-        exportList = source;
       }
       this.chartData = {
         columns,
         rows,
         tableName,
       };
-      return exportList;
+      return rows;
     },
   },
 };

@@ -308,6 +308,9 @@ export default {
      * @description 创建地理角色
      */
     handleCreateGeoRole(e, item, vm, data) {
+      if (data.dataType !== 'String') {
+        return this.$message.error('仅支持字符串类型');
+      }
       data.modelId = this.resourceId;
       this.createdMapData = data;
       this.createMapVisible = true;
@@ -418,6 +421,13 @@ export default {
           width: 14px;
           font-size: 18px;
           margin-top: 2px;
+        }
+        &.invisible {
+          pointer-events: none;
+          & > p {
+            text-decoration: line-through;
+            color: #bbb;
+          }
         }
         > p {
           margin: 0;

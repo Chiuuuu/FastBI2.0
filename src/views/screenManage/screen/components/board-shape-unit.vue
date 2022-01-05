@@ -67,15 +67,6 @@ export default {
   mixins: [ContenxtmenuMethodMixin],
   data() {
     const baseContextMenu = [
-      {
-        name: '导出',
-        readonly: true,
-        children: [
-          { name: 'excel', onClick: this.handleExportExcel },
-          { name: 'csv', onClick: this.handleExportCsv },
-          { name: '导出图片', onClick: this.handleExportImg },
-        ],
-      },
       // 右键菜单
       {
         name: '复制',
@@ -121,6 +112,15 @@ export default {
           readonly: true,
           onClick: this.handleChartDataComponent,
         },
+        {
+          name: '导出',
+          readonly: true,
+          children: [
+            { name: 'excel', onClick: this.handleExportExcel },
+            { name: 'csv', onClick: this.handleExportCsv },
+            { name: '导出图片', onClick: this.handleExportImg },
+          ],
+        },
         ...baseContextMenu,
       ],
       mapContenxtMenu: [
@@ -130,6 +130,29 @@ export default {
           children: [
             { name: '填充层', key: 'fillList', onClick: this.handleChartDataComponentForMap.bind(this, 'fill') },
             { name: '标记层', key: 'labelList', onClick: this.handleChartDataComponentForMap.bind(this, 'label') },
+          ],
+        },
+        {
+          name: '导出',
+          readonly: true,
+          children: [
+            {
+              name: 'excel',
+              readonly: true,
+              children: [
+                { name: '填充层', key: 'fillList', onClick: this.handleExportExcel.bind(this) },
+                { name: '标记层', key: 'labelList', onClick: this.handleExportExcel.bind(this) },
+              ],
+            },
+            {
+              name: 'csv',
+              readonly: true,
+              children: [
+                { name: '填充层', key: 'fillList', onClick: this.handleExportCsv.bind(this) },
+                { name: '标记层', key: 'labelList', onClick: this.handleExportCsv.bind(this) },
+              ],
+            },
+            { name: '导出图片', onClick: this.handleExportImg },
           ],
         },
         ...baseContextMenu,
@@ -164,7 +187,7 @@ export default {
   },
   computed: {
     ...mapState({
-      boardScale: state => state.board.page.size.scale,
+      boardScale: state => state.board.scale,
       model: state => state.board.model,
       componentsOrigin: state => state.board.components,
     }),
@@ -178,6 +201,9 @@ export default {
     // 是否需要导出
     isNeedExport() {
       return this.component.type.includes('Chart');
+    },
+    isSpinning() {
+      return this.spinningChart;
     },
   },
   watch: {
@@ -247,19 +273,21 @@ export default {
         };
       }
       const targetDom = this.$parent.$parent.$refs['js-board-content'];
-      // eslint-disable-next-line no-new
-      new ContextMenu({
-        vm: that,
-        menus: list.map(item => {
+
+      function loop(list) {
+        return list.map(item => {
           if (item['children'] && item.children.length) {
-            item.children.forEach(subitem => {
-              addEvent(subitem);
-            });
+            loop(item.children);
           } else {
             addEvent(item);
           }
           return item;
-        }),
+        });
+      }
+      // eslint-disable-next-line no-new
+      new ContextMenu({
+        vm: that,
+        menus: loop(list),
         target: e,
         subPosition: 'right',
         handleMarkCancel: function () {},
@@ -328,7 +356,7 @@ export default {
       });
 
       // 设置画板的比例
-      const BOARD_SCALE = this.boardScale;
+      const BOARD_SCALE = this.boardScale || 1;
 
       const SHAPE = 'shape';
 

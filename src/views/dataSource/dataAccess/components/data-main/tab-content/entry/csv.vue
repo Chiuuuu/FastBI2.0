@@ -613,6 +613,11 @@ export default {
             delimiter: this.queryDelimiter,
             database: database,
           });
+        } else {
+          const target = this.operation.find(item => item.name === name);
+          if (target) {
+            target.database = database;
+          }
         }
 
         this.$nextTick(() => {

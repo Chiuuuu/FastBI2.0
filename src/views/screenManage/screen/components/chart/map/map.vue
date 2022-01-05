@@ -374,12 +374,12 @@ export default {
           [measureAlias.replace(/(.*?)_/, '')]: data[measureAlias], // 度量
         });
       }
-      // 每个区域标记点超过20个要进行截取
-      if (datas.length > 20) {
+      // 每个区域标记点超过50个要进行截取
+      if (this.isEditMode && datas.length >= 50) {
         let overload = false;
         datas.map(item => {
-          if (item.value.length && item.value.length > 20) {
-            datas.length = 20;
+          if (item.value.length && item.value.length > 50) {
+            datas.length = 50;
             overload = true;
           }
         });
@@ -435,12 +435,12 @@ export default {
       if (labelList.length && !datas.length) {
         this.$message.error('经纬度解析失败');
       }
-      // 每个区域标记点超过20个要进行截取
-      if (datas.length > 20) {
+      // 每个区域标记点超过50个要进行截取
+      if (this.isEditMode && datas.length > 50) {
         let overload = false;
         datas.map(item => {
-          if (item.value.length && item.value.length > 20) {
-            datas.length = 20;
+          if (item.value.length && item.value.length > 50) {
+            datas.length = 50;
             overload = true;
           }
         });
@@ -482,18 +482,24 @@ export default {
      */
     async getServerData() {
       this.shapeUnit.changeLodingChart(true);
+      const {
+        style: {
+          title: { text },
+        },
+      } = this.options;
       const res = await this.$server.common
         .getData('/screen/graph/v2/getData', {
           id: this.shapeUnit.component.id,
           tabId: this.shapeUnit.component.tabId || this.tabId,
           type: this.shapeUnit.component.type,
+          ...this.pagination,
           ...this.options.data,
         })
         .finally(() => {
           this.shapeUnit.changeLodingChart(false);
         });
-      if (res.code === 500) {
-        if (res.msg === 'IsChanged') {
+      if (res.code !== 200) {
+        if (res.code === 1054) {
           const keys = [
             'dimensions',
             'measures',
@@ -505,13 +511,12 @@ export default {
             'labelLatitude',
           ];
           this.handleRedList(res.data, keys);
+          if (this.isEditMode) {
+            this.$message.error(`${text}数据异常, 请处理标红字段`);
+          }
+          return;
         }
-        this.$message.error(res.msg);
-        return;
-      }
-      if (res.code === 80002) {
-        this.$message.error(res.msg);
-        return;
+        return this.$message.error(res.msg || '请求错误');
       }
 
       // 修改状态

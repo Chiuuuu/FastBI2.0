@@ -3,13 +3,13 @@
     <div class="list-controller">
       <a-form-model layout="inline" :model="formData" ref="formData">
         <a-form-model-item :label="dataName + '：'" prop="resourceName">
-          <a-input v-model="formData.resourceName" class="form-item" placeholder="请输入"></a-input>
+          <a-input v-model="formData.resourceName" class="form-item" :placeholder="'请输入' + dataName"></a-input>
         </a-form-model-item>
         <a-form-model-item label="操作者：" prop="operator">
-          <a-input v-model="formData.operator" class="form-item" placeholder="请输入"></a-input>
+          <a-input v-model="formData.operator" class="form-item" placeholder="请输入操作者"></a-input>
         </a-form-model-item>
         <a-form-model-item label="账号：" prop="userName">
-          <a-input v-model="formData.userName" class="form-item" placeholder="请输入"></a-input>
+          <a-input v-model="formData.userName" class="form-item" placeholder="请输入账号"></a-input>
         </a-form-model-item>
         <a-form-model-item label="操作时间：" prop="operationTime">
           <!-- <a-date-picker
@@ -28,7 +28,7 @@
           ></a-range-picker>
         </a-form-model-item>
         <a-form-model-item>
-          <a-button type="primary" @click="() => getList()" :disabled="loading">查询</a-button>
+          <a-button type="primary" @click="handleGetData" :disabled="loading">查询</a-button>
         </a-form-model-item>
         <a-form-model-item>
           <a-button type="default" @click="resetForm" :disabled="loading">重置</a-button>
@@ -150,12 +150,15 @@ export default {
   },
   created() {
     this.prjId = this.projectId;
-    this.getList();
+    this.handleGetData();
   },
   methods: {
     handleProjectIdChange(projectId) {
       this.prjId = projectId;
-      this.pagination.current = 1;
+      this.resetForm();
+    },
+    handleGetData() {
+      this.pagination = this.$options.data().pagination;
       this.getList();
     },
     // 获取列表数据
@@ -182,10 +185,7 @@ export default {
     // 重置
     resetForm() {
       this.$refs.formData.resetFields();
-      this.pagination.current = 1;
-      this.$nextTick(() => {
-        this.getList();
-      });
+      this.handleGetData();
     },
     // 翻页
     handleTableChange(pagination) {

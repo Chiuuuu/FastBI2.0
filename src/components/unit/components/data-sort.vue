@@ -350,7 +350,10 @@ export default {
       if (method === 'add') {
         // 如果数据有重复则直接返回
         if (list.map(item => item.id).includes(data.id)) return list;
-
+        if (list.length >= 10) {
+          this.$message.error('最多支持拖入10个字段');
+          return list;
+        }
         arrayAddData(list, data);
       } else if (method === 'dele') {
         arrayDeleData(list, data);

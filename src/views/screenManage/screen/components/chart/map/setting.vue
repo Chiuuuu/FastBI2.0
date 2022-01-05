@@ -901,6 +901,11 @@ export default {
         eventBus: this.$EventBus,
         data: dataMap[key],
       });
+      // 如果字段清空了, 清空模型id
+      const { labelLatitude, labelLongitude, labelDimensions, labelMeasures } = this.currentCom.setting.data;
+      if (!labelLatitude.length && !labelLongitude.length && !labelDimensions.length && !labelMeasures.length) {
+        this.currentCom.setting.data.dataModelId = '';
+      }
     },
     /**
      * @description 初始化地图指标显示内容列表

@@ -24,7 +24,7 @@
           class="secondary-quota-title"
           :style="secondaryQuatoTitleStyle"
         >
-          {{ quota.secondaryQuotasTitle }}
+          {{ quota.secondaryQuotasTitle }}:
         </span>
         <!-- 次指标值 -->
         <span class="secondary-quota-quota-value" :style="secondaryQuatoValueStyle">
@@ -111,7 +111,8 @@ export default {
       const styleObj = Object.assign({}, echart['secondaryQuatoTitleLine']);
       return {
         marginBottom: `${styleObj.marginBottom || 0}px`,
-        'justify-content': `${styleObj.align}`,
+        justifyContent: `${styleObj.align}`,
+        alignItems: 'center',
       };
     },
     /**
@@ -152,11 +153,17 @@ export default {
      */
     async getServerData() {
       const { dimensions, measures } = this.handleGetDataParmas();
+      const {
+        style: {
+          title: { text },
+        },
+      } = this.options;
       const params = {
         id: this.shapeUnit.component.id,
         tabId: this.shapeUnit.component.tabId,
         type: this.shapeUnit.component.type,
         ...this.options.data,
+        ...this.pagination,
         dimensions, // 拼装维度
         measures, // 拼装度量
       };
@@ -164,12 +171,16 @@ export default {
       const res = await this.$server.common.getData('/screen/graph/v2/getData', params).finally(() => {
         this.shapeUnit.changeLodingChart(false);
       });
-      if (res.code === 500) {
-        if (res.msg === 'IsChanged') {
+      if (res.code !== 200) {
+        if (res.code === 1054) {
           const keys = ['totalQuota', 'secondaryQuota', 'filter'];
           this.handleRedList(res.data, keys);
+          if (this.isEditMode) {
+            this.$message.error(`${text}数据异常, 请处理标红字段`);
+          }
+          return;
         }
-        this.$message.error(res.msg);
+        return this.$message.error(res.msg);
       }
       // 判断是否初始化
       let needChangeFormatterList = this.dataState !== 'default';
@@ -178,7 +189,7 @@ export default {
         return;
       }
       const data = res.data[0];
-      // 处理主指标
+      // 处理主指标(有数据时, 将默认数据删除)
       const { totalQuotaTitle, totalQuotaValue } = this.doWithTotal(data);
 
       // 主指标自定义，数据改动才重置
@@ -220,9 +231,7 @@ export default {
           text: customSecTitles,
         }),
       };
-      if (customTotalTitle) {
-        mergetEchart.totalQuatoTitle = { text: customTotalTitle };
-      }
+      mergetEchart.totalQuatoTitle = { text: customTotalTitle || '' };
       // 获取数据之后需要更改限制
       this.$store.commit(boardMutation.SET_STYLE, {
         style: {
@@ -236,7 +245,9 @@ export default {
      * @description 处理主指标
      */
     doWithTotal(data) {
-      let { totalQuotaTitle, totalQuotaValue } = Object.assign({}, defaultData.data);
+      // let { totalQuotaTitle, totalQuotaValue } = Object.assign({}, defaultData.data);
+      // 无论有没有拖入主指标, 都清空标题
+      let { totalQuotaTitle, totalQuotaValue } = Object.assign({});
       if (this.options.data['totalQuota'].length) {
         const { alias: totalAlias, defaultAggregator: aggregator } = this.options.data['totalQuota'][0];
         totalQuotaTitle = totalAlias;

@@ -111,23 +111,15 @@ export default {
      * 设置表头类型
      */
     setColumnsType(item) {
-      const type = item.convertType.toUpperCase();
-      switch (type) {
-        case 'VARCHAR':
-          return '字符串';
-        case 'TIMESTAMP':
-          return '日期时间';
-        case 'DATE':
-          return '日期';
-        case 'BIGINT':
-          return '整数';
-        case 'DECIMAL':
-          return '数值';
-        case 'DOUBLE':
-          return '小数';
-        default:
-          return '未知类型';
-      }
+      var mapChinese = {
+        String: '字符串',
+        DateTime: '日期时间',
+        Date: '日期',
+        Int64: '整数',
+        'Decimal64(2)': '小数',
+        Float64: '小数',
+      };
+      return mapChinese[item.convertType] || '未知类型';
     },
     /**
      * 获取数据
