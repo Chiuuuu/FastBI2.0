@@ -1,5 +1,7 @@
 const tokenInfo = JSON.parse(window.localStorage.getItem('tokenInfo'));
 const state = {
+  globalSpinning: false, // 全局loading框
+  globalSpinTip: '', // 全局loading文案
   sidebarUnfold: false, // 侧边栏是否收起(true收起，false展开)
   navMenuActive: '1-1', // 导航菜单高亮
   adminToken: tokenInfo ? tokenInfo.token : '', // token
@@ -38,12 +40,29 @@ const mutations = {
   SET_MENUSELECTID(state, id) {
     state.menuSelectId = id;
   },
+
+  // 全局loading框
+  SET_GLOBALSPINNING(state, paylod) {
+    state.globalSpinning = paylod;
+    // 关闭时清空提示语
+    if (!paylod) {
+      state.globalSpinTip = '';
+    }
+  },
+
+  // 全局loading框文案
+  SET_GLOBALSPINTIP(state, tip) {
+    state.globalSpinTip = tip;
+  },
 };
 
 const actions = {
   set_token(state, token) {
     state.commit('SET_TOKEN', token);
     window.localStorage.setItem('tokenInfo', JSON.stringify({ token: token }));
+  },
+  set_globalSpinTip(state, tip) {
+    state.commit('SET_GLOBALSPINTIP', tip);
   },
   /**
    * @description 销毁右键菜单

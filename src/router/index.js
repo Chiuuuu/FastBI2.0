@@ -9,6 +9,12 @@ import { Modal } from 'ant-design-vue';
 import { commonRoutes } from '@/router/routes';
 Vue.use(BinUI);
 
+// 重写replace方法(直接捕捉异常不在页面报错)
+const original = VueRouter.prototype.replace;
+VueRouter.prototype.replace = function (location) {
+  return original.call(this, location).catch(err => err);
+};
+
 Vue.use(VueRouter);
 
 const whiteList = ['/login'];
