@@ -634,7 +634,13 @@ export default {
       this.$confirm({
         title: '确认提示',
         content: '您确定要删除该文件吗',
-        onOk: () => {
+        onOk: async () => {
+          if (file.id) {
+            const res = await this.$server.dataAccess.verifyDatabaseDelete({ id: file.id });
+            if (res.code !== 200) {
+              return this.$message.error(res.msg || '删除失败');
+            }
+          }
           let index = this.fileInfoList.indexOf(file);
           this.databaseList.splice(index, 1);
           this.fileInfoList.splice(index, 1);

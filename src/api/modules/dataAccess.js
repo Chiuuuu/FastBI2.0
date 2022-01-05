@@ -110,6 +110,14 @@ export default {
     return $axios.post('/source/view/extract', params);
   },
   /**
+   * @description 校验excel|csv数据源中的文件是否可删除
+   * @param {String} params.id 文件id
+   * @returns
+   */
+  verifyDatabaseDelete(params) {
+    return $axios.post('/datasource/database/verifyDel', params);
+  },
+  /**
    * @description 校验替换的excel文件
    * @param {Object} data.fileList 文件
    * @param {Object} data.replaceDatabaseId 文件id
