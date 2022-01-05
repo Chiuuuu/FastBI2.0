@@ -65,4 +65,12 @@ export default {
   getData(url, params) {
     return $axios.post(url, params);
   },
+  /**
+   * @description 修改密码
+   * @param {String} url 请求地址
+   * @param {Object} params 请求参数
+   */
+  resetPassword(url, params) {
+    return $axios.post(url, params);
+  },
 };
