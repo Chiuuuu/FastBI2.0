@@ -111,6 +111,10 @@ export default {
     FieldSelect,
   },
   props: {
+    isCustomSql: {
+      type: Boolean,
+      default: false,
+    },
     tableData: {
       type: Array,
       default: () => [],

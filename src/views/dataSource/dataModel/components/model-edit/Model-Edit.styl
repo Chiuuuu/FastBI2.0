@@ -1,8 +1,18 @@
-@import "../dataModel-common.styl";
+@import "../../dataModel-common.styl";
 .Model-Edit {
     .left {
-        position relative
-        z-index 501
+        position: relative;
+        overflow-y: auto;
+        z-index: 501;
+
+        .left-spin-container {
+            height: 192px;    
+        }
+        .source-select-options {
+            display: flex;
+            justify-content: space-between;  
+            align-items: center;  
+        }
         .sheet_list {
             margin-top: 15px;
             color: #01040f;
@@ -48,11 +58,23 @@
                 }
             }
         }
+        .SQL_View .sheet_list {
+            height: calc(100% - 50px);
+        }
         .table_list {
-            height: calc(50% - 140px);
+            height: calc(50% - 150px);
+            min-height: 200px;
         }
         .table_list.no-sql {
-            height: calc(100% - 250px);
+            height: calc(100% - 260px);
+        }
+        .view_icon {
+            float: right;
+            margin-top: 5px;
+            margin-right: 10px;
+            font-size: 16px;
+            color: #617bff;
+            cursor: pointer;
         }
         .SQL_View {
             color: #000;
@@ -60,14 +82,6 @@
             .view_title {
                 line-height: normal;
             }
-            .view_icon {
-                float: right;
-                margin-top: 5px;
-                margin-right: 10px;
-                font-size: 16px;
-                color: #677cf7;
-                cursor: pointer;
-            } 
             .sheet_list_item {
                 padding-right: 70px;
                 text-align: left;
@@ -103,7 +117,7 @@
             margin-top: 14px;
         }
         .draw_board {
-            height: calc(50% - 88px);
+            height: calc(50% - 108px);
             overflow: auto;
             // border-top: 10px solid #f6f6f6;
             border-bottom: 1px solid #efefef;

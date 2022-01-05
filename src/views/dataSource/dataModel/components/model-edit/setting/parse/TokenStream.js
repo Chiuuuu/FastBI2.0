@@ -76,6 +76,14 @@ export class TokenStream {
       name: 'ROUND', // 四舍五入
       max: 2,
     },
+    {
+      name: 'REPLACE', // 替换1
+      got: 3,
+    },
+    {
+      name: 'REPLACE1', // 替换2
+      got: 4,
+    },
     // {
     //   name: 'INT', // 向下取整
     //   got: 1

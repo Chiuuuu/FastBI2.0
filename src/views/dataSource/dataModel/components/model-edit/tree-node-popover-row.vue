@@ -85,7 +85,7 @@ export default {
         .pop();
 
       if (leftNode && rightNode) {
-        this.error = leftNode.dataType !== rightNode.dataType;
+        this.error = leftNode.convertType !== rightNode.convertType;
         if (!this.error) {
           this.$emit('update-condition', this.index, row, this.$data);
         }

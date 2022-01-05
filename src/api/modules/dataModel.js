@@ -13,8 +13,17 @@ export default {
    * @param {String|Number} dataSourceId
    * @returns
    */
-  getDatabaseList(dataSourceId) {
+  getModelDataSourceList(dataSourceId) {
     return $axios.get(`/model/datasource/returnDataModelSourceList/${dataSourceId}`);
+  },
+  /**
+   * @description 校验当前模型数据源是否能删除
+   * @param {*} id 数据源id
+   * @param {*} params.tables 已拖入的表
+   * @returns
+   */
+  actionVerifyDelModelToSource(id, params) {
+    return $axios.post(`/model/datasource/verifyDelModelToSource/${id}`, params);
   },
   /**
    * @description 编辑状态, 根据数据源id获取数据库
@@ -23,7 +32,7 @@ export default {
    * @returns
    */
   getDataBaseDataInfoList(id, tableId) {
-    return $axios.get(`/model/datamodel/getDataBaseDataInfoList/${id}/${tableId || '1'}`);
+    return $axios.get(`/model/datamodel/getDataBaseDataInfoList/${id || 1}/${tableId || 1}`);
   },
   /**
    * @description 编辑状态, 根据模型id获取模型信息

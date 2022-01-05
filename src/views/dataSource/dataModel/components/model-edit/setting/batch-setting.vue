@@ -25,6 +25,7 @@
           :header="handleGetPanelName(value[0].tableName)"
         >
           <BatchSettingItem
+            :isCustomSql="$parent.isCustomSql"
             :tableData="value"
             @deleteSelectAllRows="handleDeleteSelectAllRows"
             @onSelectAllRows="handleSelectAllRows"

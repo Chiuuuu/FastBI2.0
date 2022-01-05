@@ -15,6 +15,24 @@
         <div class="scrollable scrollbar">
           <div class="description">
             <span class="d-s" :title="detailInfo.description">描述：{{ detailInfo.description }}</span>
+            <template v-if="detailInfo.resourceTraceabilityDTO">
+              <br />
+              <span class="d-s">
+                创建人：
+                <template v-if="!detailInfo.resourceTraceabilityDTO.userDeleted">
+                  {{ detailInfo.resourceTraceabilityDTO.userName }}
+                </template>
+                <template v-else style="color: red">用户已被删除</template>
+              </span>
+              <span class="d-s">&nbsp;&nbsp;创建日期： {{ detailInfo.resourceTraceabilityDTO.gmtCreate }}</span>
+              <span class="d-s" v-if="detailInfo.resourceTraceabilityDTO.resourceName">
+                &nbsp;&nbsp;来源模型：
+                <template v-if="!detailInfo.resourceTraceabilityDTO.resourceDeleted">
+                  {{ detailInfo.resourceTraceabilityDTO.resourceName }}
+                </template>
+                <template v-else style="color: red">模型已被删除</template>
+              </span>
+            </template>
           </div>
           <!-- <p class="tips"><a-icon theme="filled" type="exclamation-circle" style="margin-right: 2px;" />下方表显示红色表示表在数据源已被删除，请您删除此表。表显示黄色表示表中列字段发生了变动，请您重新构建表关联关系。</p> -->
           <div class="draw_board scrollbar">
@@ -106,7 +124,7 @@
 
 <script>
 import TreeNode from './show-tree-node';
-import CheckTable from '../../model-edit/setting/check-table';
+import CheckTable from '../model-edit/setting/check-table';
 import { Node, conversionTree } from '../../util';
 import { hasPermission } from '@/utils/permission';
 import { mapState } from 'vuex';
@@ -221,18 +239,6 @@ export default {
         this.$message.error(result.msg);
       }
     },
-    /**
-     * 编辑时根据modelId获取数据源
-     */
-    async handleGetDataSource() {
-      // 第一个数据库id
-      const datsource = await this.$server.dataModel.getDataSourceList(this.modelId);
-      console.log('根据modelId获取数据源', datsource);
-      const data = datsource.data[0];
-      const datasourceId = data ? data.datasourceId : '';
-      this.$store.dispatch('dataModel/setDatasourceId', datasourceId);
-      return datasourceId;
-    },
     // 打开模态框
     openModal() {
       this.visible = true;
@@ -242,16 +248,16 @@ export default {
      */
     edit() {
       // this.$router.push({ path: `/dataSource/Model-Edit/${this.modelId}` })
-      this.handleGetDataSource().then(id => {
-        this.$router.push({
-          name: 'modelEdit',
-          query: {
-            type: 'edit',
-            datasourceId: id,
-            modelId: this.modelId,
-          },
-        });
+      // this.handleGetDataSource().then(id => {
+      this.$router.push({
+        name: 'modelEdit',
+        query: {
+          type: 'edit',
+          // datasourceId: id,
+          modelId: this.modelId,
+        },
       });
+      // });
     },
     /**
      * 处理树形组件

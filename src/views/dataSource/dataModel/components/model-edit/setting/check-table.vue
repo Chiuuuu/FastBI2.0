@@ -13,8 +13,18 @@
     @cancel="handleClose"
   >
     <template #footer>
+      <div class="tips">
+        <a-icon theme="filled" type="exclamation-circle" style="margin-right: 2px" />
+        最多可导出前50万条数据
+      </div>
       <a-button key="back" @click="handleClose">取消</a-button>
-      <a-button key="submit" type="primary" v-if="hasEditPermission" :loading="confirmLoading" @click="handleExport">
+      <a-button
+        key="submit"
+        type="primary"
+        v-if="hasEditPermission"
+        :loading="confirmLoading || loading"
+        @click="handleExport"
+      >
         导出宽表
       </a-button>
     </template>
@@ -176,6 +186,8 @@ export default {
     },
     async handleExport() {
       this.confirmLoading = true;
+      this.$store.commit('common/SET_GLOBALSPINNING', true);
+      this.handleDownloadProgress();
       const params = {
         ...this.detailInfo,
         pivotSchema: {
@@ -184,31 +196,66 @@ export default {
       };
       const result = await this.$server.dataModel.actionDownloadfile(params).finally(() => {
         this.confirmLoading = false;
+        this.$store.commit('common/SET_GLOBALSPINNING', false);
       });
 
       if (result['code'] && result['code'] !== 200) {
         // xlsx有错的情况，将blob对象转成json
-        const reader = new FileReader();
-        reader.readAsText(result.data);
-        reader.onload = () => {
-          const readerResult = JSON.parse(reader.result); // 此处的msg就是后端返回的msg内容
-          this.$message.error(readerResult.msg);
-        };
+        // const reader = new FileReader()
+        // reader.readAsText(result.data)
+        // reader.onload = () => {
+        //   const readerResult = JSON.parse(reader.result) // 此处的msg就是后端返回的msg内容
+        //   this.$message.error(readerResult.msg)
+        // }
         return;
       }
-      let blob = new Blob([result], {
-        type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-      });
-      let url = window.URL.createObjectURL(blob); // 通过URL.createObjectURL生成文件路径
+      // let blob = new Blob([result], {
+      //   type:
+      //     'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+      // })
+      // let url = window.URL.createObjectURL(blob) // 通过URL.createObjectURL生成文件路径
+      // let a = document.createElement('a') // 创建a标签
+      // a.style.display = 'none'
+      // a.href = url // 设置href属性为文件路径，download属性可以设置文件名称
+      // a.download = '宽表数据.xlsx'
+
+      // document.querySelectorAll('body')[0].appendChild(a) // 将a标签添加到页面并模拟点击
+      // a.click()
+      // window.URL.revokeObjectURL(url) // 释放掉blob对象
+
       let a = document.createElement('a'); // 创建a标签
       a.style.display = 'none';
-      a.href = url; // 设置href属性为文件路径，download属性可以设置文件名称
+      a.href = process.env.VUE_APP_SERVICE_URL + result.data.filePath;
       a.download = '宽表数据.xlsx';
-
-      document.querySelectorAll('body')[0].appendChild(a); // 将a标签添加到页面并模拟点击
+      document.querySelectorAll('body')[0].appendChild(a);
       a.click();
-      window.URL.revokeObjectURL(url); // 释放掉blob对象
+      document.querySelectorAll('body')[0].removeChild(a);
       this.handleClose();
+    },
+    // 导出进度条模拟
+    handleDownloadProgress() {
+      let progress = 0;
+      let timer = null;
+      const close = () => {
+        clearTimeout(timer);
+        timer = null;
+        progress = null;
+      };
+      const loop = () => {
+        if (progress >= 99) {
+          close();
+          return;
+        }
+        this.$store.dispatch('common/set_globalSpinTip', `文件生成中, 请不要进行其他操作 ${progress}%`);
+        timer = setTimeout(() => {
+          progress += 3;
+          loop();
+        }, 6000);
+      };
+      loop();
+      this.$once('hook:beforeDestroy', () => {
+        close();
+      });
     },
     handleClose() {
       this.$emit('close');
@@ -221,6 +268,13 @@ export default {
 .widthModal {
   @{deep} .ant-modal-body {
     padding: 0;
+  }
+  .tips {
+    float: left;
+    color: #677cf7;
+    i {
+      color: #677cf7;
+    }
   }
 }
 .table-area {

@@ -1,42 +1,47 @@
 <template>
   <div class="Model-Edit">
-    <div class="left">
-      <div class="menu_title">
-        <span>数据接入</span>
+    <div class="left scrollbar">
+      <div class="left-spin-container">
+        <a-spin :spinning="databaseSpinning">
+          <div class="menu_search">
+            <span class="search_span">数据接入</span>
+            <a-icon class="view_icon" type="plus-square" @click="openModal('source-list')" />
+          </div>
+          <a-select
+            :value="datasourceId"
+            option-label-prop="label"
+            class="menu_select"
+            @change="handleSelectDatasource"
+          >
+            <a-select-option
+              v-for="item in datasourceList"
+              :key="item.id"
+              :value="item.id"
+              :label="item.name"
+              :type="item.type"
+            >
+              <div style="display: flex; justify-content: space-between; align-items: center">
+                <span>{{ item.name }}</span>
+                <a-icon type="delete" title="删除" :aria-label="item.name" @click.stop="deleteDatasource(item)" />
+              </div>
+            </a-select-option>
+          </a-select>
+          <template v-if="!isCustomSql">
+            <a-divider />
+            <div class="menu_search">
+              <span class="search_span">数据库</span>
+            </div>
+            <a-select v-model="databaseName" class="menu_select" @change="handleChangeDatabase">
+              <a-select-option v-for="database in databaseList" :key="database.id" :value="database.name">
+                {{ database.name || datasourceName }}
+              </a-select-option>
+            </a-select>
+          </template>
+        </a-spin>
       </div>
-      <!-- 临时方案, 不写class了 -->
-      <div
-        :title="datasourceName"
-        style="
-          width: calc(100% - 30px);
-          color: #01040f;
-          margin: 0 15px;
-          white-space: nowrap;
-          text-overflow: ellipsis;
-          overflow: hidden;
-        "
-      >
-        {{ datasourceName }}
-      </div>
-      <!-- <div class="selector"> -->
-      <!-- <a-select default-value="银行账户" style="width: 94%;">
-          <a-select-option value="SQL Server">
-            SQL Server
-          </a-select-option>
-        </a-select> -->
-      <!-- </div> -->
       <a-divider />
-      <div class="menu_search">
-        <span class="search_span">数据库</span>
-      </div>
-      <a-select v-model="databaseName" class="menu_select" @change="handleChangeDatabase">
-        <a-select-option v-for="database in databaseList" :key="database.id" :value="database.name">
-          {{ database.name }}
-        </a-select-option>
-      </a-select>
-      <a-divider />
-      <div class="table_list" :class="{ 'no-sql': !isDatabase }">
-        <div class="menu_search">
+      <a-spin :spinning="tableSpinning" class="table_list" :class="{ 'no-sql': !isDatabase || isCustomSql }">
+        <div class="menu_search" v-if="!isCustomSql">
           <span class="search_span">表</span>
           <a-input placeholder="请输入关键词搜索" :value="tableSearch" @change="handleSearchTable" class="search_input">
             <a-icon slot="prefix" type="search" />
@@ -48,9 +53,9 @@
           :list="tableSearchList"
           @on-left-drag-leave="handleLeftDragLeave"
         ></edit-left>
-      </div>
-      <!-- <a-divider /> -->
-      <div v-if="isDatabase" class="SQL_View table_list">
+      </a-spin>
+      <a-spin :spinning="tableSpinning" v-if="isDatabase && !isCustomSql" class="SQL_View table_list">
+        <a-divider />
         <div class="menu_search">
           <span class="search_span">自定义SQL视图</span>
           <a-icon class="view_icon" type="plus-square" @click="handleAddSQL('new')" />
@@ -83,7 +88,7 @@
             </a-menu>
           </a-dropdown>
         </div> -->
-      </div>
+      </a-spin>
     </div>
     <div class="right" ref="rightBody" :class="{ add_new: model === 'add' }">
       <div class="header" v-if="model === 'edit'">
@@ -117,13 +122,35 @@
       <div class="description">
         <span class="d-s" :title="detailInfo.description">描述： {{ detailInfo.description }}</span>
         <a-icon type="edit" v-on:click="openModal('describe-setting')" class="d-s-icon" />
+        <template v-if="detailInfo.resourceTraceabilityDTO">
+          <br />
+          <span class="d-s">
+            创建人：
+            <template v-if="!detailInfo.resourceTraceabilityDTO.userDeleted">
+              {{ detailInfo.resourceTraceabilityDTO.userName }}
+            </template>
+            <template v-else style="color: red">用户已被删除</template>
+          </span>
+          <span class="d-s">&nbsp;&nbsp;创建日期： {{ detailInfo.resourceTraceabilityDTO.gmtCreate }}</span>
+          <span class="d-s" v-if="detailInfo.resourceTraceabilityDTO.resourceName">
+            &nbsp;&nbsp;来源模型：
+            <template v-if="!detailInfo.resourceTraceabilityDTO.resourceDeleted">
+              {{ detailInfo.resourceTraceabilityDTO.resourceName }}
+            </template>
+            <template v-else style="color: red">模型已被删除</template>
+          </span>
+        </template>
       </div>
       <p class="tips">
         <a-icon theme="filled" type="exclamation-circle" style="margin-right: 2px" />
         下方表显示红色表示表在数据源已被删除，请您删除此表。表显示黄色表示表中列字段发生了变动，请您重新构建表关联关系。
       </p>
       <div class="draw_board scrollbar">
-        <edit-right-top ref="rightTopRef" :detailInfo="detailInfo"></edit-right-top>
+        <edit-right-top
+          ref="rightTopRef"
+          @tableSelect="table => handleGetDatabase('table', table)"
+          :detailInfo="detailInfo"
+        ></edit-right-top>
       </div>
       <div class="detail scrollbar">
         <div class="detail_header">
@@ -230,11 +257,13 @@
         :description="detailInfo.description"
         :rename-data="panelData"
         :union-data="unionNode"
+        :except-list="datasourceList.map(item => item.id)"
         @showGroupbyModal="openModal('field-aggregator')"
         @get-fetch-param="handleGetFetchParams"
         @close="close"
         @success="data => componentSuccess(data)"
         @handleSaveFilterSort="handleSaveFilterSort"
+        @sourceSelected="handleAddDatasource"
       />
 
       <div class="submit_btn">
@@ -271,6 +300,7 @@ import CreateView from './setting/create-view';
 import PanelItem from './panel-item';
 import FieldAggregator from './setting/field-handler/field-aggregator';
 import FieldFilterSort from './setting/field-handler/field-filter-sort';
+import SourceList from '../sourceList';
 import { hasPermission } from '@/utils/permission';
 import groupBy from 'lodash/groupBy';
 import keys from 'lodash/keys';
@@ -300,6 +330,7 @@ export default {
     CreateView, // 创建视图
     FieldAggregator, // 数据筛选
     FieldFilterSort, // 数据排序
+    SourceList, // 数据源选择
   },
   provide() {
     return {
@@ -324,9 +355,13 @@ export default {
       MeasureIcon,
       modelForm: this.$form.createForm(this, { name: 'modelForm' }),
       spinning: false,
+      databaseSpinning: false, // 库loading
+      tableSpinning: false, // 表loading
       detailInfo: '',
       datasourceName: '',
+      datasourceList: [],
       isDatabase: false, // 是否是SQL数据源, 控制自定义SQL渲染
+      isCustomSql: false, // 是否自定义Sql标识
       tableSearch: '', // 表搜索关键字
       searchList: [],
       databaseName: '', // 当前数据库
@@ -373,6 +408,7 @@ export default {
       datasource: state => state.dataModel.datasource, // 数据源
       privileges: state => state.common.privileges,
       datasourceId: state => state.dataModel.datasourceId, // 数据源
+      databaseId: state => state.dataModel.databaseId, // 数据库
     }),
     model() {
       return this.$route.query.type;
@@ -409,10 +445,11 @@ export default {
     },
   },
   async mounted() {
-    this.handleGetDatabaseList();
     if (this.model === 'add') {
+      this.handleGetNewModelDataSource();
       await this.handleGetAddModelDatamodel();
     } else if (this.model === 'edit') {
+      await this.handleGetDataSource();
       await this.handleGetData(this.$route.query.modelId);
       this.$store.dispatch('dataModel/setModelId', this.$route.query.modelId);
       this.$store.commit('common/SET_MENUSELECTID', this.$route.query.modelId);
@@ -426,6 +463,23 @@ export default {
     this.$store.commit('common/SET_MENUSELECTID', -1);
   },
   methods: {
+    /**
+     * 编辑时根据modelId获取数据源
+     */
+    async handleGetDataSource() {
+      // 第一个数据库id
+      const res = await this.$server.dataModel.getDataSourceList(this.$route.query.modelId);
+      if (res.code === 200 && res.data) {
+        this.datasourceList = res.data;
+        const data = res.data[0];
+        if (data) {
+          // 对标select change事件的参数
+          this.handleSelectDatasource(data.id, { data: { attrs: { ...data } } });
+        }
+      } else {
+        this.datasourceList = [];
+      }
+    },
     /** 组合右键菜单 */
     handleComboContextmenus(type) {
       const arry = [
@@ -591,16 +645,85 @@ export default {
       this.handleFilterSort();
       this.handleGroupField();
     },
-    async handleGetDatabaseList() {
+    async handleGetNewModelDataSource() {
       if (!this.$route.query.datasourceId) return (this.datasourceName = '');
-      const result = await this.$server.dataModel.getDatabaseList(this.$route.query.datasourceId);
+      const result = await this.$server.dataModel.getModelDataSourceList(this.$route.query.datasourceId);
       if (result.code === 200) {
         const baseBalck = [11, 12]; // 黑名单
         const type = result.data.type;
         this.isDatabase = !baseBalck.some(item => item === type);
-        this.datasourceName = result.data.name;
+        this.isCustomSql = type === 13;
+        this.datasourceList = [result.data];
+        this.$store.dispatch('dataModel/setDatasourceId', result.data.id);
       } else {
         this.$message.error(result.msg);
+      }
+    },
+    // 添加数据源
+    handleAddDatasource(sourceData) {
+      if (sourceData.id === this.datasourceId) return;
+      const target = this.datasourceList.find(item => item.id === sourceData.id);
+      if (!target) {
+        this.datasourceList.push(sourceData);
+      }
+      // 对标select change事件的参数
+      this.handleSelectDatasource(sourceData.id, { data: { attrs: { ...sourceData } } });
+    },
+    /**
+     * @description 选中数据源
+     * @param id 数据源id
+     * @param option 选中项(有a-select传入, 也有手动传入, 注意参数一致性)
+     * @param fetch 不请求数据库列表
+     */
+    handleSelectDatasource(id, option, fetch = true) {
+      const baseBalck = [11, 12]; // 黑名单
+      // type获取方式有2种, 一种是传入的, 一种需要从数据源列表搜索
+      let type = option.data.attrs.type;
+      if (!type) {
+        const target = this.datasourceList.find(item => item.id === id);
+        if (target) {
+          type = target.type;
+        }
+      }
+      this.isDatabase = !baseBalck.some(item => item === type);
+      this.isCustomSql = type === 13;
+      this.$store.dispatch('dataModel/setDatasourceId', id);
+      const privileges = [].concat(this.privileges);
+      this.$router.replace({ path: this.$route.path, query: { ...this.$route.query, datasourceId: id } });
+      // 路由跳转后重新覆盖当前权限
+      this.$store.commit('common/SET_PRIVILEGES', privileges);
+      fetch && this.handleGetDatabase('source');
+    },
+    // 删除数据源
+    async deleteDatasource({ id }) {
+      const index = this.datasourceList.findIndex(item => item.id === id);
+      const deleteFunction = () => {
+        this.datasourceList.splice(index, 1);
+        if (this.datasourceList.length) {
+          const data = this.datasourceList[0];
+          this.handleSelectDatasource(data.id, { data: { attrs: { ...data } } });
+        } else {
+          // 没有其他选中项, 则清空下面的库表
+          this.$store.dispatch('dataModel/setDatasourceId', '');
+          this.databaseList = [];
+          this.databaseName = '';
+          this.$store.dispatch('dataModel/setDatabaseId', '');
+          this.leftMenuList = [];
+          this.rightMenuList = [];
+        }
+      };
+      if (index > -1) {
+        if (this.detailInfo.config && this.detailInfo.config.tables.length) {
+          const res = await this.$server.dataModel.actionVerifyDelModelToSource(id, this.detailInfo.config);
+          if (res.code === 200) {
+            deleteFunction();
+          } else {
+            this.$message.error(res.msg || '该数据源已被引用, 请先删除拖入的表');
+          }
+        } else {
+          // 当前没有拖入表, 不调校验接口直接删除
+          deleteFunction();
+        }
       }
     },
     /**
@@ -620,7 +743,7 @@ export default {
         this.$store.dispatch('dataModel/setAddModelId', result.data.id);
         this.$store.commit('common/SET_PRIVILEGES', [0]); // 新增赋予所有权限
         this.$nextTick(() => {
-          this.handleGetDatabase();
+          this.handleGetDatabase('source');
         });
       } else {
         this.$message.error(result.msg);
@@ -628,25 +751,44 @@ export default {
     },
     /**
      * 根据数据源获取数据库(暂时只支持显示第一个库)
+     * @param type table | source 根据表或源获取库
+     * @param selectTable 选中的表id
      */
-    async handleGetDatabase() {
-      const len = this.detailInfo.config.tables ? this.detailInfo.config.tables.length : 0;
-      let tableId = '';
-      if (len > 0) {
-        tableId = this.detailInfo.config.tables[len - 1].tableId;
+    async handleGetDatabase(type, selectTable) {
+      this.tableSearch = '';
+      let tableId = 1;
+      if (type === 'table') {
+        const len = this.detailInfo.config.tables ? this.detailInfo.config.tables.length : 0;
+        if (selectTable) {
+          tableId = selectTable.tableId;
+          // 如果刚好在当前库下, 可以直接返回
+          const tableList = [].concat(this.leftMenuList, this.rightMenuList);
+          if (selectTable && tableList.some(item => item.id === tableId)) {
+            return;
+          }
+        } else if (len > 0) {
+          tableId = this.detailInfo.config.tables[len - 1].tableId;
+        }
       }
-      if (!this.$route.query.datasourceId) {
+      if (type === 'source' && !this.$route.query.datasourceId) {
         this.databaseList = [];
         this.databaseName = '';
+        this.$store.dispatch('dataModel/setDatabaseId', '');
         return;
       }
-      const result = await this.$server.dataModel.getDataBaseDataInfoList(this.$route.query.datasourceId, tableId);
+      const datasourceId = type === 'source' ? this.$route.query.datasourceId : 1;
+      this.databaseSpinning = true;
+      const result = await this.$server.dataModel.getDataBaseDataInfoList(datasourceId, tableId).finally(() => {
+        this.databaseSpinning = false;
+      });
 
       if (result.code === 200) {
         this.databaseList = result.data;
         this.databaseName = this.databaseList.length && this.databaseList.length > 0 ? this.databaseList[0].name : '';
         if (this.databaseList.length && this.databaseList.length > 0) {
           this.handleGetDatabaseTable(result.data[0].id);
+          // 选中数据源
+          this.handleSelectDatasource(result.data[0].datasourceId, { data: { attrs: { ...result.data[0] } } }, false);
         }
         // this.handleDimensions()
         // this.handleMeasures()
@@ -656,7 +798,10 @@ export default {
     },
     // 获取当前库下的表
     async handleGetDatabaseTable(id) {
-      const listResult = await this.$server.dataModel.getTableListById(id);
+      this.tableSpinning = true;
+      const listResult = await this.$server.dataModel.getTableListById(id).finally(() => {
+        this.tableSpinning = false;
+      });
       if (listResult.code === 200) {
         this.leftMenuList = [].concat(
           listResult.data.filter(item => {
@@ -673,7 +818,7 @@ export default {
     handleSearchTable: debounce(function (event) {
       const value = event.target.value;
       this.tableSearch = value ? value.trim() : value;
-      this.searchList = this.leftMenuList.filter(item => item.name.toLowerCase().indexOf(value.toLowerCase()) > -1);
+      this.searchList = this.leftMenuList.filter(item => item.alias.toLowerCase().indexOf(value.toLowerCase()) > -1);
     }, 400),
     /**
      * 切换数据库
@@ -1097,7 +1242,6 @@ export default {
         // 校验缺失字段
         this.doWithMissing(this.cacheDimensions, result.data.pivotSchema);
         this.doWithMissing(this.cacheMeasures, result.data.pivotSchema);
-
         this.$store.commit('common/SET_PRIVILEGES', result.data.privileges || []);
 
         this.handleSameName();
@@ -1105,7 +1249,7 @@ export default {
         this.handleMeasures();
         this.handleGroupField();
         this.$nextTick(() => {
-          this.handleGetDatabase();
+          this.handleGetDatabase('table');
         });
       } else {
         this.$message.error(result.msg);
@@ -1203,8 +1347,11 @@ export default {
     handleSQLDelete(item) {
       this.$server.dataModel
         .deleCustomSql({
-          name: item.name,
-          tableId: item.id,
+          view: {
+            name: item.name,
+            tableId: item.id,
+          },
+          config: this.detailInfo.config,
         })
         .then(res => {
           if (res.code === 200) {
@@ -1461,6 +1608,7 @@ export default {
      * 模型保存接口 cover: 是否覆盖大屏
      */
     async actionSaveModel(params, cover) {
+      await this.handleSaveModelSourceId();
       let result;
       this.spinning = true;
       if (cover) {
@@ -1473,9 +1621,6 @@ export default {
         });
       }
       if (result.code === 200) {
-        if (this.model === 'add') {
-          await this.handleSaveModelSourceId();
-        }
         this.$message
           .success({
             content: this.model === 'add' ? '保存成功' : '编辑成功',
@@ -1496,7 +1641,8 @@ export default {
      */
     async handleSaveModelSourceId() {
       this.$server.dataModel.saveDatasource({
-        sourceDatasourceList: new Array(this.datasource),
+        // sourceDatasourceList: new Array(this.datasource),
+        sourceDatasourceList: this.datasourceList,
         dataModelId: this.model === 'add' ? this.addModelId : this.modelId,
       });
     },

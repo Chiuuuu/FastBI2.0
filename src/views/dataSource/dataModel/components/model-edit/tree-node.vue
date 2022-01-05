@@ -2,10 +2,17 @@
   <div class="box">
     <div class="item table-item" ref="itemRef">
       <h6
-        :class="['dragable', { 'table-red': nodeData.props.status === 2, 'table-yellow': nodeData.props.status === 1 }]"
+        :class="[
+          'dragable',
+          {
+            'table-red': nodeData.props.status === 2,
+            'table-yellow': nodeData.props.status === 1,
+            active: nodeData.props.id === selectTableId,
+          },
+        ]"
         :draggable="isDrag"
         @mouseleave.stop="handleMouseLeave"
-        @mousedown.stop="handleMouseDown"
+        @mousedown.stop="handleMouseDown($event, nodeData)"
         @dragstart.stop="handleDragStart($event, nodeData, dataIndex)"
         @dragenter.stop="handleDragEnter"
         @dragleave.stop="handleDragLeave"
@@ -82,20 +89,23 @@
     <div class="wrap">
       <tree-node
         v-for="(item, subindex) in nodeData.children"
+        v-on="$listeners"
         :key="subindex"
         :node-data="item"
         :data-index="subindex"
         :detailInfo="detailInfo"
         :errorTables="errorTables"
+        @tableSelect="table => $store.dispatch('dataModel/setSelectTableId', table.id)"
       ></tree-node>
     </div>
   </div>
 </template>
 <script>
-import { Utils, Node } from '../util';
+import { Utils, Node } from '../../util';
 import findIndex from 'lodash/findIndex';
 import pullAllBy from 'lodash/pullAllBy';
 import TreeNodePoporverRow from './tree-node-popover-row';
+import { mapState } from 'vuex';
 export default {
   name: 'tree-node',
   inject: ['nodeStatus'],
@@ -155,6 +165,9 @@ export default {
     };
   },
   computed: {
+    ...mapState({
+      selectTableId: state => state.dataModel.selectTableId, // 选中的表
+    }),
     joinLength() {
       return this.nodeData.props.join && this.nodeData.props.join.conditions.length;
     },
@@ -386,9 +399,11 @@ export default {
       if (matchArry) {
         matchArry.forEach(value => {
           const matchStr = value.match(/(\[)(.+)(\])/);
-          const key = matchStr[2] ? matchStr[2] : '';
-          if (key && key === alias) {
-            rawExpr = rawExpr.replace(value, '<此位置字段丢失>');
+          if (matchStr) {
+            const key = matchStr[2] ? matchStr[2] : '';
+            if (key && key === alias) {
+              rawExpr = rawExpr.replace(value, '<此位置字段丢失>');
+            }
           }
         });
       }
@@ -407,8 +422,11 @@ export default {
         mIndex,
       };
     },
-    handleMouseDown() {
+    handleMouseDown(event, item) {
       this.isDrag = true;
+      const data = item.getProps();
+      this.$store.dispatch('dataModel/setSelectTableId', data.id);
+      this.$emit('tableSelect', data);
     },
     handleMouseLeave() {
       this.isDrag = false;
@@ -446,6 +464,7 @@ export default {
         const getNode = await this.root.getJoin(current, dragNode);
         const renderNode = new Node(getNode);
         current.add(renderNode);
+        this.$store.dispatch('dataModel/setSelectTableId', getNode.id);
         await this.root.handleUpdate({
           tables: this.detailInfo.config.tables,
         });
@@ -601,6 +620,9 @@ export default {
               background-color: #FFC6C6;
               border: 1px solid #FF0000;
             }
+            &.active {
+              border: 1px solid #617bff;
+            }
         }
         .union {
             position: absolute;
@@ -743,7 +765,7 @@ export default {
                 width: 48px;
                 height: 30px;
                 margin: 10px auto 8px;
-                background: #fff url("../../../../assets/images/tableRelat.png") no-repeat;
+                background: #fff url("../../../../../assets/images/tableRelat.png") no-repeat;
                 &-01{
                   background-position: 0 0
                 }

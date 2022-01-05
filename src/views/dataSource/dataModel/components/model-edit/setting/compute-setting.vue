@@ -217,6 +217,26 @@ const expression = [
     groups: ['calculation'],
   },
   {
+    id: 'REPLACE',
+    name: '替换字符串1',
+    expression: 'REPLACE：用其他文本来替换原始文本中的部分内容，最终返回一个字符串。',
+    description:
+      'REPLACE（原字符串，子串，替换串）:原字符串为需要被替换部分字符串的字符串，子串为需要替换的指定字符串，替换串为用来替换指定字符串的字符串。',
+    example: 'REPLACE("abcd","bc","**")="a**d"',
+    syntax: 'REPLACE(表达式, "", "")',
+    groups: ['calculation'],
+  },
+  {
+    id: 'REPLACE1',
+    name: '替换字符串2',
+    expression: 'REPLACE1：用其他文本来替换原始文本中的部分内容，最终返回一个字符串。',
+    description:
+      'REPLACE1（原字符串,替换开始数,替换数量,替换串）:原字符串为需要被替换部分字符串的字符串，替换开始数为从原字符串替换字符的开始数，替换数量为替换字符的数量，替换串为用来替换的字符串。',
+    example: 'REPLACE1("abcde",2,3,"***")="a***de"',
+    syntax: 'REPLACE1(表达式, 1, 2, "")',
+    groups: ['calculation'],
+  },
+  {
     id: 'GROUPBY',
     name: '指定聚合',
     expression: '指定聚合',

@@ -12,6 +12,7 @@
     <template v-else>
       <tree-node
         v-for="(item, index) in renderTables"
+        v-on="$listeners"
         :key="index"
         :node-data="item"
         :data-index="index"
@@ -22,7 +23,7 @@
   </div>
 </template>
 <script>
-import { Utils, Node, conversionTree } from '../util';
+import { Utils, Node, conversionTree } from '../../util';
 import { mapState } from 'vuex';
 import TreeNode from './tree-node';
 export default {

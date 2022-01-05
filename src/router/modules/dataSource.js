@@ -4,7 +4,7 @@ const RouteView = () => import('@/layout/routeView');
 const PageView = () => import('@/layout/pageView');
 const dataAccessView = () => import('@/views/dataSource/dataAccess/dataAccess');
 const dataModelView = () => import('@/views/dataSource/dataModel/dataModel');
-const dataModelEditView = () => import('@/views/dataSource/dataModel/model-edit/Model-Edit');
+const dataModelEditView = () => import('@/views/dataSource/dataModel/components/model-edit/Model-Edit');
 
 export default {
   path: '/dataSource',
