@@ -127,6 +127,7 @@ const modelList = [
   { name: 'hive', type: '5' },
   { name: 'excel', type: '11' },
   { name: 'csv', type: '12' },
+  { name: 'customSql', text: '自定义SQL', type: '13' },
 ];
 export default {
   name: 'dataMenu',
@@ -338,6 +339,8 @@ export default {
             this.$store.dispatch('dataAccess/setModelType', 'excel');
           } else if (result.data.type === 12) {
             this.$store.dispatch('dataAccess/setModelType', 'csv');
+          } else if (result.data.type === 13) {
+            this.$store.dispatch('dataAccess/setModelType', 'customSql');
           }
           this.$store.dispatch('dataAccess/setModelInfo', result.data.properties);
           this.$store.dispatch('dataAccess/setModelName', result.data.name);

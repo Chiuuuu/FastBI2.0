@@ -312,6 +312,9 @@ export default {
   },
   mounted() {
     this.handleGetData();
+    if (this.modelType === 'customSql') {
+      this.columns.pop();
+    }
   },
   filters: {
     formatField(value) {

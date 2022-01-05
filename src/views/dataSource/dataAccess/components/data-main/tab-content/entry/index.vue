@@ -20,6 +20,7 @@ import Oracle from './oracle';
 import Hive from './hive';
 import Excel from './excel';
 import Csv from './csv';
+import CustomSql from './customSql';
 export default {
   name: 'tabContentEntry',
   components: {
@@ -28,6 +29,7 @@ export default {
     hive: Hive,
     excel: Excel,
     csv: Csv,
+    customSql: CustomSql,
   },
   data() {
     return {

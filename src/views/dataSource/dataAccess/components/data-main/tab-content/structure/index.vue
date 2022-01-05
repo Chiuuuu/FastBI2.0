@@ -7,12 +7,22 @@
       </a-radio-group>
       <a-row type="flex" align="middle">
         <a-col :span="6" style="padding-left: 20px">
-          <a-input :value="tableKeyword" @change="handleGetTableKeyword" placeholder="请输入表名">
+          <a-input
+            v-if="modelType !== 'customSql'"
+            :value="tableKeyword"
+            @change="handleGetTableKeyword"
+            placeholder="请输入表名"
+          >
             <a-icon slot="prefix" type="search" />
           </a-input>
         </a-col>
         <a-col :span="4" style="padding-left: 10px">
-          <a-select v-show="tableType === 0" style="width: 100%" :value="database" @change="handleChangeDatabase">
+          <a-select
+            v-show="tableType === 0 && modelType !== 'customSql'"
+            style="width: 100%"
+            :value="database"
+            @change="handleChangeDatabase"
+          >
             <a-select-option v-for="item in databaseList" :key="item.name" :value="item.name">
               {{ item.name }}
             </a-select-option>
@@ -30,7 +40,7 @@
             </a-button>
             <a-button
               v-if="hasBtnPermissionEdit || hasBtnPermissionSchedule"
-              v-show="showExtractBtn"
+              v-show="showExtractBtn || modelType === 'customSql'"
               type="primary"
               class="select_button"
               style="margin-left: 10px"
@@ -49,23 +59,34 @@
             >
               批量定时抽取
             </a-button>
-            <a-dropdown v-if="['excel', 'csv'].indexOf(modelType) === -1" :trigger="['click']">
-              <a-button type="primary" style="margin-left: 10px">
-                更多
-                <a-icon type="down" />
-              </a-button>
-              <a-menu slot="overlay">
-                <a-menu-item>
-                  <span @click="handleSyncTable">同步库表结构</span>
-                </a-menu-item>
-                <a-menu-item v-if="tableType === 0 && hasBtnPermissionSchedule" v-show="showExtractBtn">
-                  <span @click="showExtractLog">定时抽取记录</span>
-                </a-menu-item>
-                <a-menu-item v-if="tableType === 0 && hasBtnPermissionSchedule" v-show="showExtractBtn">
-                  <span @click="showSetting('batchList')">批量任务列表</span>
-                </a-menu-item>
-              </a-menu>
-            </a-dropdown>
+            <a-button
+              v-if="modelType === 'customSql'"
+              type="primary"
+              style="margin-left: 10px"
+              @click="showExtractLog"
+              class="select_button"
+            >
+              定时抽取记录
+            </a-button>
+            <template v-else>
+              <a-dropdown v-if="['excel', 'csv'].indexOf(modelType) === -1" :trigger="['click']">
+                <a-button type="primary" style="margin-left: 10px">
+                  更多
+                  <a-icon type="down" />
+                </a-button>
+                <a-menu slot="overlay">
+                  <a-menu-item>
+                    <span @click="handleSyncTable">同步库表结构</span>
+                  </a-menu-item>
+                  <a-menu-item v-if="tableType === 0 && hasBtnPermissionSchedule" v-show="showExtractBtn">
+                    <span @click="showExtractLog">定时抽取记录</span>
+                  </a-menu-item>
+                  <a-menu-item v-if="tableType === 0 && hasBtnPermissionSchedule" v-show="showExtractBtn">
+                    <span @click="showSetting('batchList')">批量任务列表</span>
+                  </a-menu-item>
+                </a-menu>
+              </a-dropdown>
+            </template>
           </a-row>
         </a-col>
       </a-row>
@@ -400,7 +421,7 @@ export default {
           scopedSlots: { customRender: 'extractStatus' },
         },
         {
-          title: '修改时间',
+          title: '最后一次更新时间',
           key: 'gmtModified',
           width: 200,
           dataIndex: 'gmtModified',
@@ -449,7 +470,7 @@ export default {
         databaseName = this.databaseName;
       }
       // 当前库组列表没有默认数据库(即没有权限)则不掉接口
-      if (!databaseName) {
+      if (!databaseName && this.modelType !== 'customSql') {
         this.spinning = false;
         this.data = [];
         this.$store.dispatch('dataAccess/setReadRows', this.data);
@@ -459,8 +480,13 @@ export default {
       }
 
       // 获取数据库id
-      const database = this.databaseList.find(item => item.name === databaseName);
-      this.databaseId = database ? database.id : '';
+      // 自定义sql直接取databaseList第一个id
+      if (this.modelType === 'customSql') {
+        this.databaseId = this.databaseList[0].id;
+      } else {
+        const database = this.databaseList.find(item => item.name === databaseName);
+        this.databaseId = database ? database.id : '';
+      }
       const params = {
         databaseName,
         databaseId: this.databaseId,
@@ -591,8 +617,11 @@ export default {
       } else if (this.selectedRows.length > 10) {
         return this.$message.error('一次抽取最多只能选择10个');
       }
-      const code = await this.handleVerifyTable(this.selectedRows.map(item => item.id));
-      if (code === 'hasDelete' || code === 'error') return;
+      // 自定义sql不做表结构校验
+      if (this.modelType !== 'customSql') {
+        const code = await this.handleVerifyTable(this.selectedRows.map(item => item.id));
+        if (code === 'hasDelete' || code === 'error') return;
+      }
       // 源表抽取
       let result;
       if (this.tableType === 0) {
@@ -686,8 +715,11 @@ export default {
         } else if (this.selectedRows.length > 10) {
           return this.$message.error('最多只能选择10项');
         }
-        const code = await this.handleVerifyTable(this.selectedRows.map(item => item.id));
-        if (code === 'hasDelete' || code === 'error') return;
+        // 自定义sql不做表结构校验
+        if (this.modelType !== 'customSql') {
+          const code = await this.handleVerifyTable(this.selectedRows.map(item => item.id));
+          if (code === 'hasDelete' || code === 'error') return;
+        }
         this.clickRows = this.selectedRows;
         this.visible2 = true;
       } else if (type === 'batchList') {
@@ -735,15 +767,16 @@ export default {
         if (this.$refs.extract.modalSpin) this.$refs.extract.modalSpin = false;
       });
       if (res.code === 200) {
-        // 校验当前表
-        const code = await this.handleVerifyTable(res.data.map(item => item.target)).finally(() => {
-          if (this.$refs.extract.modalSpin) this.$refs.extract.modalSpin = false;
-        });
-        if (code === 'hasDelete' || code === 'error') {
-          return code;
-        } else {
-          this.regData = res.data;
+        // 校验当前表 自定义sql不做表结构校验
+        if (this.modelType !== 'customSql') {
+          const code = await this.handleVerifyTable(res.data.map(item => item.target)).finally(() => {
+            if (this.$refs.extract.modalSpin) this.$refs.extract.modalSpin = false;
+          });
+          if (code === 'hasDelete' || code === 'error') {
+            return code;
+          }
         }
+        this.regData = res.data;
       } else {
         this.$message.error(res.msg);
         if (this.$refs.extract.modalSpin) this.$refs.extract.modalSpin = false;
@@ -756,9 +789,13 @@ export default {
         code = await this.handleGetRegularInfo(data);
       } else {
         this.regData = [];
-        code = await this.handleVerifyTable(this.clickRows.map(item => item.id));
-        if (this.$refs.extract) this.$refs.extract.modalSpin = false;
+        // 自定义sql不做表结构校验
+        if (this.modelType !== 'customSql') {
+          code = await this.handleVerifyTable(this.clickRows.map(item => item.id));
+          if (this.$refs.extract) this.$refs.extract.modalSpin = false;
+        }
       }
+      this.$refs.extract.modalSpin = false;
       if (code === 'hasDelete' || code === 'error') return;
       this.visible2 = true;
     },
