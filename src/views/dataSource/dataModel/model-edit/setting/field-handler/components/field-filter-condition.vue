@@ -148,8 +148,13 @@ export default {
   },
   created() {
     if (this.conditionData.modeType !== 0) {
-      const checkedData = this.conditionData.rule.ruleFilterList;
-      this.checkedData = [].concat(checkedData);
+      // 从最新数据中过滤掉被删除的行数据
+      const conditions = this.conditionData.rule.ruleFilterList;
+      if (conditions && conditions[0] && typeof conditions[0] !== 'object') {
+        this.checkedData = [].concat(this.conditionData.rule.ruleFilterList);
+      } else {
+        this.checkedData = [];
+      }
       this.getFieldData();
     }
     // 列表赋值
@@ -329,23 +334,17 @@ export default {
     },
     // 更新列表数据后, 处理选中项
     handleCheckedList(list) {
-      // 之前保存的选中项
-      // const allList = this.conditionData.rule.ruleFilterList;
-      // 重新赋值前如果是全选状态, 选中当前所有筛选项
-      const checkAll = this.checkedData.length > 0 && this.checkedData.length === this.pageDataRows.length;
+      let checkAll = this.checkAll;
+      if (this.pageDataRows <= 50) {
+        checkAll =
+          this.checkedData.length > 0 &&
+          this.checkedData.length === this.pageDataRows.filter(item => this.checkedData.includes(item)).length;
+      }
       this.pageDataRows = list;
       if (checkAll) {
-        // this.checkedData = [].concat(this.pageDataRows);
         this.checkedData = this.checkedData
           .concat(this.pageDataRows)
           .filter((item, index, arr) => arr.indexOf(item) === index);
-      } else {
-        // 不是全选状态, 对新的数据进行勾选过滤
-        // if (this.fetchType === 'search') {
-        //   this.checkedData = [].concat(list.filter(item => allList.includes(item)));
-        // } else if (this.fetchType === 'scroll') {
-        //   this.checkedData.push(...list.filter(item => allList.includes(item)));
-        // }
       }
     },
     async getFieldData() {
@@ -414,6 +413,7 @@ export default {
         // const checkedData = this.conditionData.rule.ruleFilterList.filter(item => this.dataRows.includes(item)) || [];
         // this.checkedData = [].concat(checkedData);
         // this.conditionData.rule.ruleFilterList = checkedData;
+        this.checkedData = this.conditionData.rule.ruleFilterList;
         this.pagination.rowsNum = res.rowsNum;
         this.dataRowsResult = this.dataRows;
       } else {
